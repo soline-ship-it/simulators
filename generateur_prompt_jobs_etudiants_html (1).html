@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Générateur de Prompts Étudiants</title>
+  <style>
+    * { font-family: Arial, sans-serif; }
+    body { margin: 0; padding: 15px; line-height: 1.5; font-size: 15px; }
+    h1 { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
+    select, textarea, button { width: 100%; padding: 10px; margin: 10px 0; font-size: 15px; border-radius: 6px; border: 1px solid #ccc; font-family: inherit; }
+    .note { background: #f7f7f7; padding: 10px; border-radius: 6px; font-size: 14px; }
+    #result { white-space: pre-wrap; background: #fafafa; border: 1px solid #ccc; padding: 12px; margin-top: 15px; border-radius: 6px; font-size: 15px; }
+    label { font-weight: bold; font-size: 15px; }
+    #copyBtn { background:#333; color:#fff; border:none; border-radius:6px; padding:12px; width:100%; font-size:15px; font-family: inherit; }
+</style>
+</head>
+<body>
+
+<h1>Générateur de Prompts : CV ou Préparation d’Entretien</h1>
+<p>Sélectionne ton besoin, ton job, ajoute les infos demandées et génère le prompt.</p>
+
+<div class="note">
+  <strong>Après génération :</strong><br>
+  ➜ Copie-colle le texte<br>
+  ➜ Va sur https://chat.openai.com/<br>
+  ➜ Envoie-le tel quel.<br>
+  (ChatGPT te dira ensuite comment passer en mode audio si tu prépares un entretien.)
+</div>
+
+<label>Ton besoin :</label>
+<select id="choix">
+  <option value="cv">Évaluer mon CV</option>
+  <option value="entretien">Me préparer à un entretien</option>
+</select>
+
+<label>Type de job :</label>
+<select id="job">
+  <option value="Vente / caisse">Vente / caisse</option>
+  <option value="Service en restauration">Service en restauration</option>
+  <option value="Restauration rapide">Restauration rapide</option>
+  <option value="Bar / café">Bar / café</option>
+  <option value="Préparation de commandes / logistique">Préparation de commandes / logistique</option>
+  <option value="Hôte·sse d'accueil">Hôte·sse d'accueil</option>
+  <option value="Animation / centre de loisirs">Animation / centre de loisirs</option>
+  <option value="Grande distribution">Grande distribution</option>
+  <option value="Support téléphonique simple">Support téléphonique simple</option>
+  <option value="Livreur vélo / scooter">Livreur vélo / scooter</option>
+  <option value="Babysitting">Babysitting</option>
+  <option value="Aide aux devoirs">Aide aux devoirs</option>
+  <option value="Autre">Autre (décris ci‑dessous)</option>
+</select>
+
+<textarea id="autreJob" placeholder="Si tu as choisi 'Autre', décris ton job."></textarea>
+
+<label>Ton CV :</label>
+<div class="note" style="margin-top:-5px; margin-bottom:10px;">
+Tu peux soit coller ton CV en texte ici,<br>
+ou écrire : <strong>voir pièce jointe</strong>.<br>
+▶ Dans ce cas, quand tu utiliseras ton prompt sur ChatGPT,<br>
+<strong>tu devras ajouter ton CV en pièce jointe (PDF ou image)</strong> juste avant d'envoyer le message.
+</div>
+<textarea id="cv" placeholder="Colle ici ton CV OU écris : voir pièce jointe."></textarea>
+
+<label>Offre d'emploi (optionnel) :</label>
+<textarea id="offre" placeholder="Copie-colle une offre ici si tu veux."></textarea>
+
+<button onclick="generatePrompt()">Générer le prompt</button>
+
+<h2>Ton prompt :</h2>
+<div id="result"></div>
+
+<script>
+function generatePrompt() {
+  const choix = document.getElementById("choix").value;
+  let job = document.getElementById("job").value;
+  const autre = document.getElementById("autreJob").value.trim();
+  if (job === "Autre" && autre) job = autre;
+
+  const cv = document.getElementById("cv").value.trim();
+  const offre = document.getElementById("offre").value.trim();
+
+  let prompt = "";
+
+  if (choix === "cv") {
+    prompt = `Je veux que tu évalues mon CV pour un job étudiant.
+
+Job visé : ${job}.
+Mon CV : ${cv || "(voir pièce jointe)"}.
+${offre ? "Voici aussi une offre d'emploi : " + offre : ""}
+
+Ta mission :
+- Me faire un retour simple et court.
+- Points forts.
+- Points à améliorer.
+- Les 3 choses prioritaires à corriger.
+- Me dire si mon CV correspond au job.
+
+Important :
+- Style simple.
+- Phrases courtes.
+- Pas de jargon.
+- Pas de blabla.`;
+  }
+
+  if (choix === "entretien") {
+    prompt = `Je veux une préparation rapide à un entretien pour un job étudiant.
+
+Job : ${job}.
+Mon CV : ${cv || "(voir pièce jointe)"}.
+${offre ? "Offre d'emploi visée : " + offre : ""}
+
+Ta mission :
+- Me donner 5 questions typiques.
+- Proposer des réponses modèles très courtes.
+- Puis lancer une simulation : tu joues le recruteur.
+- Pose les questions une par une.
+- À la fin, explique-moi comment passer en mode audio sur ChatGPT.
+
+Important :
+- Style simple.
+- Phrases courtes.
+- Pas de jargon.
+- Pas de blabla.`;
+  }
+
+  document.getElementById("result").textContent = prompt;
+}
+</script>
+
+<button id="copyBtn" style="margin-top:10px; background:#333; color:#fff; border:none; border-radius:6px; padding:12px; width:100%; font-size:15px;">Copier le prompt</button>
+
+<script>
+document.getElementById("copyBtn").onclick = function() {
+  const txt = document.getElementById("result").textContent;
+  navigator.clipboard.writeText(txt);
+  alert("Le prompt a été copié !");
+};
+</script>
+
+</body>
+</html>
