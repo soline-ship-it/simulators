@@ -60,6 +60,7 @@
       margin-bottom: 22px;
     }
 
+    /* ✅ FIX APPLIED HERE */
     input[type="text"],
     textarea,
     select {
@@ -68,6 +69,7 @@
       border-radius: 10px;
       border: 1px solid #d1d5db;
       font-size: 15px;
+      box-sizing: border-box;
     }
 
     textarea {
@@ -228,7 +230,7 @@
       <!-- OUTPUT -->
       <div class="card" style="display:flex;flex-direction:column;">
         <label>Generated prompt</label>
-        <div id="output" class="output">Click “Generate the prompt” to see the result.</div>
+        <div id="output" class="output"></div>
         <button class="btn-secondary" onclick="copyPrompt()">Copy the prompt</button>
       </div>
 
@@ -292,7 +294,9 @@ ${extra || "None"}
     }
 
     function copyPrompt() {
-      navigator.clipboard.writeText(document.getElementById("output").textContent);
+      const text = document.getElementById("output").textContent;
+      if (!text) return;
+      navigator.clipboard.writeText(text);
       alert("Prompt copied!");
     }
   </script>
