@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Les prompts IA d'Adeline</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .card { transition: all 0.3s ease; }
+        .card:hover { transform: translateY(-2px); }
+        #adeline-span { transition: color 0.3s ease; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen font-sans text-slate-900">
+    <div class="max-w-2xl mx-auto p-4 md:p-8">
+        <header class="mb-10 text-center md:text-left">
+            <h1 class="text-4xl font-extrabold tracking-tight text-slate-800">
+                Les prompts IA d'<span id="adeline-span" class="text-emerald-600">Adeline</span>
+            </h1>
+            <p class="text-slate-500 text-lg mt-2">Ton générateur de prompts sur-mesure, pour tes créations et tes cours.</p>
+        </header>
+
+        <!-- Sélecteur de mode -->
+        <div class="flex gap-4 mb-8">
+            <button onclick="switchMode('boutique')" id="btn-boutique" class="flex-1 py-4 px-4 rounded-2xl font-bold bg-emerald-600 text-white shadow-lg shadow-emerald-200 transition-all">🌿 Boutique & Création</button>
+            <button onclick="switchMode('ecole')" id="btn-ecole" class="flex-1 py-4 px-4 rounded-2xl font-bold bg-white text-slate-600 border border-slate-200 hover:border-emerald-300 transition-all">🎓 École & Pédagogie</button>
+        </div>
+
+        <!-- Formulaire Boutique -->
+        <div id="form-boutique" class="space-y-6">
+            <div class="bg-white p-6 rounded-3xl shadow-sm space-y-5 border border-slate-100">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Saison</label>
+                        <select id="b-saison" class="w-full p-3 bg-slate-50 rounded-xl border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none">
+                            <option value="Printemps">Printemps</option>
+                            <option value="Été">Été</option>
+                            <option value="Automne">Automne</option>
+                            <option value="Hiver">Hiver</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Objectif</label>
+                        <select id="b-obj" class="w-full p-3 bg-slate-50 rounded-xl border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none">
+                            <option value="image">Générer une image (Inspiration)</option>
+                            <option value="idee">Idées de compo (Liste technique)</option>
+                            <option value="marketing">Post Instagram / Story</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Type de création</label>
+                    <select id="b-type" class="w-full p-3 bg-slate-50 rounded-xl border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none">
+                        <option>Bouquet de mariée (rond, flou, cascade)</option>
+                        <option>Composition de deuil (coussin, dessus de cercueil)</option>
+                        <option>Décoration de vitrine saisonnière</option>
+                        <option>Centre de table événementiel</option>
+                        <option>Brassée de saison (fleurs à longues tiges)</option>
+                        <option>Décoration d'arche ou structure</option>
+                        <option>Atelier floral (fiche technique simplifiée)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Style & Ambiance</label>
+                    <input type="text" id="b-style" placeholder="Ex: Bohème chic, minimaliste, baroque, champêtre..." class="w-full p-3 bg-slate-50 rounded-xl border-none ring-1 ring-slate-200 outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Fleurs ou couleurs souhaitées</label>
+                    <input type="text" id="b-fleurs" placeholder="Ex: Roses anciennes, feuillage vaporeux, tons pastels..." class="w-full p-3 bg-slate-50 rounded-xl border-none ring-1 ring-slate-200 outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulaire École -->
+        <div id="form-ecole" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-3xl shadow-sm space-y-5 border border-slate-100">
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Ce que tu veux créer</label>
+                    <select id="e-obj" class="w-full p-3 bg-slate-50 rounded-xl border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option>Déroulé pédagogique complet</option>
+                        <option>Grille d'évaluation critériée</option>
+                        <option>Sujet d'examen blanc (CAP/BP)</option>
+                        <option>Fiche technique de démonstration</option>
+                        <option>Résumé de cours pour les élèves</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Sujet technique</label>
+                    <input type="text" id="e-theme" placeholder="Ex: Le bouquet vrillé, piquage en mousse, symétrie..." class="w-full p-3 bg-slate-50 rounded-xl border-none ring-1 ring-slate-200 outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Niveau du groupe</label>
+                    <select id="e-niveau" class="w-full p-3 bg-slate-50 rounded-xl border-none ring-1 ring-slate-200 outline-none focus:ring-2 focus:ring-blue-500">
+                        <option>Débutants (CAP 1)</option>
+                        <option>Intermédiaires (CAP 2)</option>
+                        <option>Avancés (BP / BTM)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <button onclick="generatePrompt()" class="w-full mt-8 bg-slate-800 text-white py-4 rounded-2xl font-bold text-lg hover:bg-black transition-all shadow-xl active:scale-95">✨ Générer mon prompt précis</button>
+
+        <!-- Zone de résultat -->
+        <div id="result-container" class="hidden mt-10 space-y-4">
+            <div class="flex justify-between items-end">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Ton prompt à copier :</h3>
+                <button onclick="copyPrompt()" class="bg-emerald-50 text-emerald-700 px-4 py-2 rounded-xl text-sm font-bold hover:bg-emerald-100 transition-colors">Copier le texte</button>
+            </div>
+            <div class="relative">
+                <pre id="result-text" class="bg-white p-6 rounded-3xl border-2 border-emerald-50 text-slate-700 whitespace-pre-wrap text-sm leading-relaxed shadow-inner overflow-x-auto"></pre>
+            </div>
+            
+            <!-- Bloc Conseil dynamique -->
+            <div class="bg-amber-50 p-6 rounded-3xl border border-amber-100 shadow-sm">
+                <h4 class="text-amber-900 font-bold mb-3 flex items-center text-lg">💡 Conseil pour Adeline</h4>
+                <div id="advice-content" class="text-sm text-amber-800 leading-relaxed">
+                    <!-- Le contenu sera injecté par JS -->
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-16 pb-8 text-center border-t border-slate-100 pt-8">
+            <p class="text-slate-400 text-sm">Créé avec amour par Soline 💚</p>
+        </footer>
+    </div>
+
+    <script>
+        let currentMode = 'boutique';
+
+        const adviceBoutique = `Colle ce texte dans <strong>ChatGPT</strong> ou <strong>Gemini</strong>. <br><br>
+            Si tu as des images qui peuvent servir d'inspiration, ajoute-les en pièce(s) jointe(s) avant de cliquer sur "envoyer".<br><br>
+            Si le premier résultat ne te convient pas, réoriente l'IA ! Écris-lui simplement ce que tu aimerais changer. <br>
+            <em>Exemple : "Il faudrait plus de feuillages" ou "Non, plutôt un style plus vaporeux".</em>`;
+
+        const adviceEcole = `Colle ce texte dans <strong>ChatGPT</strong> ou <strong>Gemini</strong>. <br><br>
+            Si tu as des documents existants (fiche pédagogique, photos de démos), ajoute-les en pièce(s) jointe(s) avant de cliquer sur "envoyer".<br><br>
+            Si le contenu généré doit être affiné, réoriente l'IA ! <br>
+            <em>Exemple : "Modifie la question 2, à la place mets un focus sur...", "Simplifie les étapes techniques pour des CAP 1" ou "Ajoute une partie sur la sécurité".</em>`;
+
+        function switchMode(mode) {
+            currentMode = mode;
+            const btnB = document.getElementById('btn-boutique');
+            const btnE = document.getElementById('btn-ecole');
+            const formB = document.getElementById('form-boutique');
+            const formE = document.getElementById('form-ecole');
+            const adviceBox = document.getElementById('advice-content');
+            const adelineSpan = document.getElementById('adeline-span');
+
+            if(mode === 'boutique') {
+                btnB.className = "flex-1 py-4 px-4 rounded-2xl font-bold bg-emerald-600 text-white shadow-lg shadow-emerald-200";
+                btnE.className = "flex-1 py-4 px-4 rounded-2xl font-bold bg-white text-slate-600 border border-slate-200 transition-all";
+                formB.classList.remove('hidden');
+                formE.classList.add('hidden');
+                adviceBox.innerHTML = adviceBoutique;
+                adelineSpan.className = "text-emerald-600";
+            } else {
+                btnE.className = "flex-1 py-4 px-4 rounded-2xl font-bold bg-blue-600 text-white shadow-lg shadow-blue-200";
+                btnB.className = "flex-1 py-4 px-4 rounded-2xl font-bold bg-white text-slate-600 border border-slate-200 transition-all";
+                formE.classList.remove('hidden');
+                formB.classList.add('hidden');
+                adviceBox.innerHTML = adviceEcole;
+                adelineSpan.className = "text-blue-600";
+            }
+        }
+
+        function generatePrompt() {
+            let prompt = "";
+            if(currentMode === 'boutique') {
+                const type = document.getElementById('b-type').value;
+                const style = document.getElementById('b-style').value;
+                const fleurs = document.getElementById('b-fleurs').value;
+                const saison = document.getElementById('b-saison').value;
+                const obj = document.getElementById('b-obj').value;
+
+                const prep = saison === "Printemps" ? "au" : "en";
+
+                let action = "";
+                if(obj === 'image') action = "Génère une description visuelle photoréaliste et artistique de haute qualité. Imagine un rendu haute définition avec une lumière naturelle de début de journée qui met en valeur les textures.";
+                if(obj === 'idee') action = "Propose une liste de composants détaillée (noms botaniques), une structure de prix estimée et les étapes de montage technique pas à pas.";
+                if(obj === 'marketing') action = "Rédige un post Instagram captivant, poétique et professionnel pour ma boutique, avec des hashtags pertinents pour une clientèle angevine amatrice de belles fleurs.";
+
+                prompt = `Agis en tant que designer expert floral basé à Angers (49), France. Tu es reconnu pour ton style moderne et ta connaissance parfaite des variétés horticoles de saison.
+
+Contexte : Nous sommes ${prep} ${saison}.
+Projet : ${type}.
+Style souhaité : ${style}.
+Éléments clés à intégrer : ${fleurs}.
+
+${action}
+
+Exigences de l'experte : 
+- Utilise uniquement des végétaux de saison disponibles en Europe à cette période. 
+- Favorise le mouvement naturel des tiges, la légèreté et des harmonies chromatiques élégantes. 
+- Ne propose pas de variétés hors saison.`;
+            } else {
+                const obj = document.getElementById('e-obj').value;
+                const theme = document.getElementById('e-theme').value;
+                const niveau = document.getElementById('e-niveau').value;
+                
+                prompt = `Agis en tant que formatrice d'excellence en art floral (niveau CAP/BP). Tu prépares un support pédagogique structuré pour tes élèves.
+
+Objectif de la demande : ${obj}.
+Thématique technique : "${theme}".
+Niveau des élèves : ${niveau}.
+
+Consignes de rédaction : 
+1. Utilise un ton pédagogique, précis et professionnel. Sois exigeante sur la technique (gestuelle, sécurité, soin du végétal).
+2. Structure ta réponse avec des titres clairs et des points clés.
+3. Inclus des "astuces d'atelier" (conseils de pro qu'on ne trouve pas dans les manuels scolaires).
+4. Si j'ai joint des documents à ce message, sers-toi de leur contenu comme base principale pour respecter ma propre méthode d'enseignement.`;
+            }
+
+            document.getElementById('result-text').innerText = prompt;
+            document.getElementById('result-container').classList.remove('hidden');
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        function copyPrompt() {
+            const text = document.getElementById('result-text').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.querySelector('#result-container button');
+                btn.innerText = "Copié !";
+                setTimeout(() => btn.innerText = "Copier le texte", 2000);
+            });
+        }
+
+        window.onload = () => switchMode('boutique');
+    </script>
+</body>
+</html>
