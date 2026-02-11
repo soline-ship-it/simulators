@@ -15,7 +15,7 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      overflow-x: hidden; /* Prevent scrollbar from cat */
+      overflow-x: hidden;
     }
 
     .container {
@@ -27,7 +27,7 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.05);
       text-align: center;
       position: relative;
-      overflow: hidden; /* Clips the cat inside the card */
+      /* overflow: hidden; Removed to let the cat peek out */
     }
 
     h1 {
@@ -44,21 +44,21 @@
       margin-bottom: 30px;
     }
 
-    /* Dancing Cat Animation */
+    /* Cute Peeking Cat Animation */
     .cat-container {
       position: absolute;
-      bottom: 0;
-      left: -100px;
-      width: 80px;
-      animation: walkAcross 12s linear infinite;
-      pointer-events: none; /* Allows clicking through the cat */
+      top: -55px;
+      right: 20px;
+      width: 90px;
+      height: auto;
+      animation: floatCat 3s ease-in-out infinite;
       z-index: 10;
-      opacity: 0.9;
+      pointer-events: none;
     }
 
-    @keyframes walkAcross {
-      0% { left: -100px; }
-      100% { left: 110%; } /* Walks off screen */
+    @keyframes floatCat {
+      0%, 100% { transform: translateY(0) rotate(5deg); }
+      50% { transform: translateY(-8px) rotate(5deg); }
     }
 
     /* Progress Bar */
@@ -264,8 +264,10 @@
       </p>
       <button class="btn-start" onclick="startQuiz()">Start quiz</button>
       
-      <!-- CAT ANIMATION -->
-      <img src="https://media.giphy.com/media/GeimqsH0TLDt4tScGw/giphy.gif" alt="Walking Cat" class="cat-container">
+      <p class="footer-note">Created by Soline Avrillas 💜</p>
+
+      <!-- CAT IMAGE -->
+      <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Animals/Cat.png" alt="Cute Cat" class="cat-container">
     </div>
 
     <!-- QUIZ SCREEN -->
@@ -305,8 +307,8 @@
 
       <p class="footer-note">Created by Soline Avrillas 💜</p>
 
-      <!-- CAT ANIMATION -->
-      <img src="https://media.giphy.com/media/GeimqsH0TLDt4tScGw/giphy.gif" alt="Walking Cat" class="cat-container">
+      <!-- CAT IMAGE -->
+      <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Animals/Cat.png" alt="Cute Cat" class="cat-container">
     </div>
 
   </div>
