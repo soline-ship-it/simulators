@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Prompt generator for great copy</title>
 
   <style>
@@ -16,6 +17,7 @@
     h1 {
       text-align: center;
       margin-bottom: 6px;
+      color: #111827;
     }
 
     h2 {
@@ -24,10 +26,12 @@
       font-weight: 500;
       font-size: 16px;
       color: #4b5563;
+      margin-bottom: 40px;
     }
 
     em {
       color: #6b7280;
+      font-style: normal;
     }
 
     .container {
@@ -40,69 +44,120 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 40px;
-      margin-top: 44px;
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      body {
+        padding: 20px;
+      }
     }
 
     .card {
       background: white;
       padding: 32px;
       border-radius: 16px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      height: fit-content;
     }
 
     label {
       display: block;
       font-weight: 600;
       margin-bottom: 8px;
+      font-size: 14px;
+      color: #374151;
     }
 
     .field {
-      margin-bottom: 22px;
+      margin-bottom: 24px;
     }
 
-    /* ✅ FIX APPLIED HERE */
+    .hidden {
+      display: none;
+    }
+
     input[type="text"],
     textarea,
     select {
       width: 100%;
-      padding: 14px 16px;
-      border-radius: 10px;
+      padding: 12px 16px;
+      border-radius: 8px;
       border: 1px solid #d1d5db;
-      font-size: 15px;
+      font-size: 14px;
       box-sizing: border-box;
+      transition: border-color 0.2s;
+      background-color: #fff;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: #6d28d9;
+      box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.1);
     }
 
     textarea {
       resize: vertical;
-      min-height: 120px;
+      min-height: 100px;
       line-height: 1.5;
+      font-family: inherit;
+    }
+
+    .warning-note {
+      display: block;
+      color: #b91c1c;
+      font-size: 12px;
+      margin-top: 6px;
+      background: #fef2f2;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #fee2e2;
+    }
+
+    .checkbox-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 12px;
     }
 
     .checkbox-group label {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       font-weight: 400;
-      margin-bottom: 10px;
+      margin-bottom: 0;
       cursor: pointer;
+      font-size: 14px;
     }
 
     .checkbox-group input {
       width: 16px;
       height: 16px;
+      accent-color: #6d28d9;
+    }
+
+    .output-container {
+      position: sticky;
+      top: 32px;
     }
 
     .output {
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-      padding: 20px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 24px;
       border-radius: 12px;
       white-space: pre-wrap;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-family: "Menlo", "Monaco", "Courier New", monospace;
       font-size: 13px;
-      line-height: 1.5;
-      flex-grow: 1;
+      line-height: 1.6;
+      color: #334155;
+      min-height: 300px;
       margin-bottom: 16px;
+      overflow-x: auto;
     }
 
     .btn-primary {
@@ -110,11 +165,12 @@
       color: white;
       font-weight: 600;
       border: none;
-      border-radius: 10px;
-      padding: 14px 18px;
+      border-radius: 8px;
+      padding: 14px 20px;
       cursor: pointer;
       width: 100%;
       font-size: 15px;
+      transition: background 0.2s;
     }
 
     .btn-primary:hover {
@@ -122,25 +178,26 @@
     }
 
     .btn-secondary {
-      background: #111827;
+      background: #1f2937;
       color: white;
       font-weight: 600;
       border: none;
-      border-radius: 10px;
-      padding: 12px 16px;
+      border-radius: 8px;
+      padding: 14px 20px;
       cursor: pointer;
       width: 100%;
-      font-size: 14px;
+      font-size: 15px;
+      transition: background 0.2s;
     }
 
     .btn-secondary:hover {
-      background: #000;
+      background: #111827;
     }
 
     footer {
       text-align: center;
-      margin-top: 40px;
-      color: #6b7280;
+      margin-top: 60px;
+      color: #9ca3af;
       font-size: 13px;
     }
   </style>
@@ -158,7 +215,7 @@
 
         <div class="field">
           <label>What do you need help with?</label>
-          <select id="useCase">
+          <select id="useCase" onchange="toggleFields()">
             <option value="writing">Writing</option>
             <option value="localization">Localization</option>
             <option value="quality">Quality check</option>
@@ -186,37 +243,41 @@
           </div>
         </div>
 
-        <div class="field">
+        <!-- This field hides if Quality Check is selected -->
+        <div class="field" id="outputTypeContainer">
           <label>What kind of output do you need?</label>
           <select id="outputType">
-            <option>A single best version</option>
-            <option>Several alternatives</option>
+            <option value="single">A single best version</option>
+            <option value="multiple">Several alternatives</option>
           </select>
         </div>
 
         <div class="field">
           <label>Where will this copy be used?</label>
-          <select id="format">
+          <select id="format" onchange="toggleOtherFormat()">
             <option value="">— Select a format —</option>
-            <option>Blog article</option>
-            <option>Customer case study</option>
-            <option>Email</option>
-            <option>FAQ</option>
-            <option>Marketing key messages</option>
-            <option>Paid ad</option>
-            <option>Push notification</option>
-            <option>Website copy / Landing page</option>
+            <option value="Blog article">Blog article</option>
+            <option value="Customer case study">Customer case study</option>
+            <option value="Email">Email</option>
+            <option value="FAQ">FAQ</option>
+            <option value="Marketing key messages">Marketing key messages</option>
+            <option value="Paid ad">Paid ad</option>
+            <option value="Push notification">Push notification</option>
+            <option value="Website copy">Website copy / Landing page</option>
+            <option value="other">Other...</option>
           </select>
+          <input type="text" id="otherFormatInput" class="hidden" style="margin-top: 10px;" placeholder="Specify the format (e.g. Video Script, UX Microcopy)...">
         </div>
 
         <div class="field">
           <label>Characters limit</label>
-          <textarea id="limit" placeholder="e.g.&#10;Headline: 50ch&#10;Body: 300ch"></textarea>
+          <textarea id="limit" placeholder="e.g.&#10;Headline: 50ch&#10;Body: 300ch" style="min-height: 80px;"></textarea>
+          <span class="warning-note">⚠️ <strong>Critical:</strong> Be as specific as possible. The bot will strictly adhere to these numbers.</span>
         </div>
 
         <div class="field">
           <label>Enter your first draft / source copy</label>
-          <textarea id="content" placeholder="Paste your copy here"></textarea>
+          <textarea id="content" placeholder="Paste your copy here" style="min-height: 150px;"></textarea>
         </div>
 
         <div class="field">
@@ -228,10 +289,12 @@
       </div>
 
       <!-- OUTPUT -->
-      <div class="card" style="display:flex;flex-direction:column;">
-        <label>Generated prompt</label>
-        <div id="output" class="output"></div>
-        <button class="btn-secondary" onclick="copyPrompt()">Copy the prompt</button>
+      <div class="output-container">
+        <div class="card" style="display:flex;flex-direction:column; height: 100%;">
+          <label>Generated prompt</label>
+          <div id="output" class="output"></div>
+          <button class="btn-secondary" onclick="copyPrompt()">Copy the prompt</button>
+        </div>
       </div>
 
     </div>
@@ -240,64 +303,138 @@
   </div>
 
   <script>
+    function toggleFields() {
+      const useCase = document.getElementById("useCase").value;
+      const outputTypeContainer = document.getElementById("outputTypeContainer");
+      
+      // Hide Output Type if it is a Quality Check (User wants the best fix, not options usually)
+      if (useCase === "quality") {
+        outputTypeContainer.classList.add("hidden");
+      } else {
+        outputTypeContainer.classList.remove("hidden");
+      }
+    }
+
+    function toggleOtherFormat() {
+      const formatSelect = document.getElementById("format");
+      const otherInput = document.getElementById("otherFormatInput");
+      
+      if (formatSelect.value === "other") {
+        otherInput.classList.remove("hidden");
+        otherInput.focus();
+      } else {
+        otherInput.classList.add("hidden");
+      }
+    }
+
     function generatePrompt() {
+      // 1. Gather Data
       const useCase = document.getElementById("useCase").value;
       const speaker = document.getElementById("speakerLevel").value;
-      const outputType = document.getElementById("outputType").value;
-      const format = document.getElementById("format").value;
+      const outputTypeVal = document.getElementById("outputType").value;
+      const formatSelect = document.getElementById("format").value;
+      const otherFormat = document.getElementById("otherFormatInput").value;
       const limit = document.getElementById("limit").value;
       const content = document.getElementById("content").value;
       const extra = document.getElementById("extra").value;
+      
+      // Determine final format string
+      let finalFormat = formatSelect === "other" ? otherFormat : formatSelect;
 
+      // Get Languages
       const langs = [...document.querySelectorAll("input[type=checkbox]:checked")]
         .map(cb => cb.value);
 
+      // 2. Bot Selection Logic
       let bots = "";
       if (useCase === "quality") {
         bots = "@QualityGuard";
       } else {
-        bots = langs.map(l => `${l}_Tolki`).join(" ");
+        // If no language selected, default to generic Tolki, otherwise map specific bots
+        bots = langs.length > 0 ? langs.map(l => `@${l}_Tolki`).join(" ") : "@Tolki";
       }
 
-      let nativeNote = "";
+      // 3. Construct Instructions based on Use Case
+      let taskInstruction = "";
+      let outputInstruction = "";
+      
+      if (useCase === "quality") {
+        taskInstruction = "Your task is to strictly review and improve the quality of the copy provided below. Focus on grammar, syntax, Qonto tone of voice, and clarity.";
+        outputInstruction = "Provide the corrected version followed by a bulleted list of the specific changes made and why.";
+      } else if (useCase === "localization") {
+        taskInstruction = "Your task is to localize the content below. Do not just translate; adapt the meaning, cultural references, and tone to fit the target market while maintaining the original intent.";
+        outputInstruction = outputTypeVal === "single" 
+          ? "Provide the single best localized version." 
+          : "Provide 2-3 distinct localized options ranging from literal to more creative adaptations.";
+      } else {
+        taskInstruction = "Your task is to write high-converting, professional copy based on the source material and context provided.";
+        outputInstruction = outputTypeVal === "single"
+          ? "Provide the single best version."
+          : "Provide 3 distinct options (Conservative, Balanced, Creative).";
+      }
+
+      // 4. Native Speaker Note
+      let speakerContext = "";
       if (speaker === "non-native") {
-        nativeNote = "\nIMPORTANT: I am not a native speaker. Please think carefully and deliver the single best possible option. No alternatives needed — I trust your judgment.\n";
+        speakerContext = "IMPORTANT: I am a non-native speaker. Please pay extra attention to nuance and flow. I trust your judgment—deliver the best possible native-sounding result.";
+      } else {
+        speakerContext = "I am a native speaker looking for refinement and polish.";
       }
 
-      const prompt = `${bots}
+      // 5. Build the Prompt String (Markdown style for better LLM parsing)
+      const prompt = `
+${bots}
 
-TASK:
-${useCase === "quality"
-  ? "Review and improve the quality of the copy below."
-  : useCase === "localization"
-    ? "Localize the content below accurately while preserving meaning, intent, and tone."
-    : "Write high-quality copy based on the instructions below."}
+# TASK
+${taskInstruction}
 
-OUTPUT REQUIREMENTS:
-- Output type: ${outputType}
-${format ? "- Format: " + format : ""}
-${limit ? "- Characters limit:\n" + limit : ""}
+# STRICT CONSTRAINTS
+${finalFormat ? `- **Format:** ${finalFormat}` : ""}
+${limit ? `- **CHARACTER LIMITS (CRITICAL):**\n  ${limit.replace(/\n/g, "\n  ")}\n  ⚠️ **INSTRUCTION:** strict adherence to these limits is required. Do not exceed them.` : "- **Length:** concise and optimized for the format."}
 
-CONTEXT:
-${nativeNote}
+# CONTEXT & INSTRUCTIONS
+${speakerContext}
+${outputInstruction}
+${extra ? `\n**Additional Guidance:**\n${extra}` : ""}
 
-SOURCE CONTENT:
----
+# SOURCE CONTENT
+"""
 ${content || "[Paste content here]"}
----
+"""
+`.trim();
 
-ADDITIONAL GUIDANCE:
-${extra || "None"}
-`;
-
-      document.getElementById("output").textContent = prompt.trim();
+      document.getElementById("output").textContent = prompt;
     }
 
     function copyPrompt() {
       const text = document.getElementById("output").textContent;
       if (!text) return;
-      navigator.clipboard.writeText(text);
-      alert("Prompt copied!");
+      
+      // Modern clipboard API
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          const btn = document.querySelector('.btn-secondary');
+          const originalText = btn.textContent;
+          btn.textContent = "Copied! ✅";
+          setTimeout(() => btn.textContent = originalText, 2000);
+        });
+      } else {
+        // Fallback
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-9999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          document.execCommand('copy');
+          alert("Prompt copied!");
+        } catch (err) {
+          console.error('Unable to copy', err);
+        }
+        document.body.removeChild(textArea);
+      }
     }
   </script>
 </body>
