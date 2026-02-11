@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tolki & QualityGuard Training Quiz</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+      background: #f6f7f9;
+      margin: 0;
+      padding: 20px;
+      color: #1f2937;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      background: white;
+      padding: 40px;
+      border-radius: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    h1 {
+      color: #111827;
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+
+    h2 {
+      color: #6b7280;
+      font-weight: 500;
+      font-size: 16px;
+      margin-top: 0;
+      margin-bottom: 30px;
+    }
+
+    /* Progress Bar */
+    .progress-container {
+      width: 100%;
+      background-color: #e5e7eb;
+      height: 6px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: #6d28d9;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Questions & Options */
+    .question {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      line-height: 1.5;
+      text-align: left;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-btn {
+      background: #f9fafb;
+      border: 2px solid #e5e7eb;
+      padding: 16px;
+      border-radius: 12px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 15px;
+      transition: all 0.2s;
+      color: #374151;
+      position: relative;
+    }
+
+    .option-btn:hover:not(.disabled) {
+      border-color: #6d28d9;
+      background: #f5f3ff;
+    }
+
+    .option-btn.correct {
+      background: #ecfdf5;
+      border-color: #10b981;
+      color: #065f46;
+    }
+
+    .option-btn.wrong {
+      background: #fef2f2;
+      border-color: #ef4444;
+      color: #991b1b;
+      opacity: 0.7;
+    }
+
+    .disabled {
+      cursor: default;
+      pointer-events: none;
+    }
+
+    /* Feedback Section */
+    .feedback {
+      margin-top: 24px;
+      padding: 20px;
+      border-radius: 12px;
+      background: #f8fafc;
+      text-align: left;
+      font-size: 14px;
+      line-height: 1.6;
+      display: none; /* Hidden by default */
+      border-left: 4px solid #6d28d9;
+    }
+
+    .feedback strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #6d28d9;
+    }
+
+    /* Styles for links inside feedback */
+    .feedback a {
+      color: #4338ca; /* Darker purple/indigo */
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .feedback a:hover {
+      color: #3730a3;
+    }
+
+    /* Buttons Container */
+    .buttons-container {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      justify-content: center;
+    }
+
+    /* Buttons */
+    .btn-next, .btn-start, .btn-restart, .btn-prev {
+      background: #6d28d9;
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-prev {
+      background: #9ca3af;
+    }
+
+    .btn-next:hover, .btn-start:hover, .btn-restart:hover {
+      background: #5b21b6;
+    }
+
+    .btn-prev:hover {
+      background: #6b7280;
+    }
+
+    .btn-next, .btn-prev {
+      display: none; /* Hidden logic handled in JS */
+      flex: 1;
+    }
+
+    /* Screens */
+    .screen {
+      display: none;
+    }
+    .screen.active {
+      display: block;
+    }
+
+    .emoji-score {
+      font-size: 48px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .contact-card {
+      background: #f3f4f6;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #4b5563;
+    }
+    
+    a {
+      color: #6d28d9;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- START SCREEN -->
+    <div id="start-screen" class="screen active">
+      <div style="font-size: 40px; margin-bottom: 20px;">🎓</div>
+      <h1>Time to train!</h1>
+      <h2>Master resources available for copy creation at Qonto and become an ambassador for them</h2>
+      <p style="margin-bottom: 30px; line-height: 1.6;">
+        Think you know how to create the best copy at Qonto? <br>
+        Test your knowledge, learn the best practices, and become a prompt wizard.
+      </p>
+      <button class="btn-start" onclick="startQuiz()">Start quiz</button>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div id="quiz-screen" class="screen">
+      <div class="progress-container">
+        <div id="progress-bar" class="progress-bar"></div>
+      </div>
+      
+      <div id="question-text" class="question"></div>
+      <div id="options-container" class="options-grid"></div>
+      
+      <div id="feedback" class="feedback"></div>
+      
+      <div class="buttons-container">
+        <button id="prev-btn" class="btn-prev" onclick="prevQuestion()">Previous</button>
+        <button id="next-btn" class="btn-next" onclick="nextQuestion()">Next question</button>
+      </div>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div id="result-screen" class="screen">
+      <span id="score-emoji" class="emoji-score">🎉</span>
+      <h1 id="score-title">Yeah!</h1>
+      <p id="score-text" style="font-size: 18px; margin-bottom: 30px;"></p>
+      
+      <div class="contact-card">
+        <p><strong>Questions? Suggestions?</strong></p>
+        <p>Reach out to <strong>Soline Avrillas</strong> directly.</p>
+        <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 15px 0;">
+        <p>Visit our <a href="#">Self-Service Hub</a> (Use it, break it, and give feedback on what's missing!)</p>
+      </div>
+
+      <button class="btn-restart" onclick="restartQuiz()">Retake quiz</button>
+    </div>
+
+  </div>
+
+  <script>
+    // --- QUIZ DATA ---
+    const questions = [
+      {
+        question: "What is Tolki made for?",
+        options: [
+          "To write",
+          "To localize",
+          "To write and localize"
+        ],
+        correct: 2,
+        explainer: "<strong>That's right! It helps with both.</strong><br>You can use: ES_Tolki, IT_Tolki, DE_Tolki, FR_Tolki, EN_Tolki, PO_Tolki, NL_Tolki.<br><br>Check out our guides for <a href='https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf' target='_blank'>Writing with Tolki</a> and <a href='https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf?p=24d31ee4c696812ab5c1ee03e3aeda5e&pm=c' target='_blank'>Localizing with Tolki</a>."
+      },
+      {
+        question: "To save 30 minutes+ of rewriting later, what is the absolute first thing you should do before writing?",
+        options: [
+          "Open Dust immediately",
+          "Define your business value, target audience, and key claims",
+          "Start writing your draft directly to get ideas flowing"
+        ],
+        correct: 1,
+        explainer: "<strong>Scope first!</strong> Spending 5 minutes defining your scope (Goal, Audience, Market, Channel) saves you 30 minutes+ of rewriting later. Always start with the 'Why' and 'Who'."
+      },
+      {
+        question: "What is the ONE tool you should ALWAYS go to for a quality check of your copy?",
+        options: [
+          "Your favorite bot in Dust",
+          "Google Translate",
+          "@QualityGuard in Dust",
+          "Just trust your gut"
+        ],
+        correct: 2,
+        explainer: "<strong>QualityGuard is your safety net.</strong> It automatically reviews Grammar, Fluency, and Tone of Voice. It also flags compliance issues. <br><br><a href='https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c' target='_blank'>Link to QualityGuard guide</a>."
+      },
+      {
+        question: "You need to write a very specific content piece, like a Sales Deck or a Survey Email with strict guidelines. What tool should you use?",
+        options: [
+          "Standard Tolki agent (e.g., @FR_Tolki)",
+          "A dedicated bot + QualityGuard",
+          "ChatGPT or any bot in Dust",
+          "Write it manually without AI"
+        ],
+        correct: 1,
+        explainer: "<strong>Use the specialist!</strong> If a dedicated bot exists, use it. If not, you can use Tolki but you must be extremely specific in your prompt: attach visual examples, define precise character limits, and strict constraints. We can also help you build a dedicated bot—reach out to Soline!"
+      },
+      {
+        question: "You're looking for specific guidelines on how to write and create content for a specific market, like Italy for example. Where do you go?",
+        options: [
+          "Dust, and ask any bot",
+          "The self-service content guide for the given market",
+          "Tolki_IT (or any market specific Tolki) in Dust",
+          "Ask the Comms Partners or someone else on Slack"
+        ],
+        correct: 1,
+        explainer: "<strong>There are market-specific guides for you!</strong> It was done by the former content team and you can also maintain it! <a href='https://www.notion.so/qonto/24d31ee4c69680a98a22eeea0202b192?v=2b031ee4c69680e69dd8000c853d964c&source=copy_link' target='_blank'>Access the database with the existing guides per market here</a>. <br><br>And don't forget the <a href='https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c' target='_blank'>Self-Service Hub</a> for all generic resources."
+      },
+      {
+        question: "Which of these prompts is the BEST for localizing copy?",
+        options: [
+          "@Tolki_FR Translate this to French: [copy]",
+          "@Tolki_FR Make this sound French: [copy]",
+          "@Tolki_FR Localize this marketing email for French freelancers.<br><strong>Goal:</strong> Drive adoption for Pay Later.<br><strong>Format:</strong> Marketing Email.<br><strong>Audience:</strong> Freelancers who have already used other features...<br><strong>Limits:</strong> Subject 35-42ch, Preview 60ch.<br><strong>Context:</strong> This email will be received as part of the Pay Later campaign. Here are the key claims for it in French [Approved claims].<br><strong>Draft:</strong> [Copy]"
+        ],
+        correct: 2,
+        explainer: "<strong>Context is King.</strong> The best prompt includes the Format, Audience, Goal, and specific Character Limits. 'Translate' is too simple; 'Localize' with context yields high-converting copy."
+      },
+      {
+        question: "QualityGuard flagged a sensitive info or pricing claim in your draft. Tolki didn't auto-fix it. What do you do?",
+        options: [
+          "Publish it anyway, AI knows best",
+          "Manually verify the pricing with Product/Legal teams",
+          "Ask Tolki to check",
+          "It's not my responsibility, I just ask my manager"
+        ],
+        correct: 1,
+        explainer: "<strong>Compliance is on YOU.</strong> QualityGuard flags compliance issues (Pricing, Dates, Limits) but never auto-fixes them. When you're in charge of copy creation, you're also accountable to check facts."
+      },
+      {
+        question: "QualityGuard gives your Tone of Voice a 2/5 score. What is a likely reason?",
+        options: [
+          "Your text sounded robotic and too formal",
+          "The text is too long",
+          "You sounded too self-promotional (Company-centric instead of Customer-centric)",
+          "You used too many emojis"
+        ],
+        correct: [0, 1, 2, 3], // All answers are correct!
+        explainer: "<strong>Customer-centric always.</strong> Really, it could have been any of these answers, ahah! A low ToV score often means you are violating core Qonto principles. Make sure you know our <a href='https://www.notion.so/qonto/Tone-of-Voice-11531ee4c69680cc9fb5e4608759f755' target='_blank'>Tone of Voice guide</a>."
+      },
+      {
+        question: "You're working directly in Qontent, our dear CMS, creating copy and localizing from there. What do you need to do before publishing?",
+        options: [
+          "Go ask QualityGuard in Dust for a quality check before we launch.",
+          "Just check the character count and publish.",
+          "Trust the automated translation completely."
+        ],
+        correct: 0,
+        explainer: "<strong>Yes, as much as we would love having everything perfect in Qontent, on edge, it's not the case yet.</strong> So for now, you do have to go to Dust and check with QualityGuard still. We're investigating other solutions, AI moves fast! Bear with us. And come talk to us if you have suggestions!"
+      },
+      {
+        question: "You used Tolki to write and QualityGuard to polish. Are you done?",
+        options: [
+          "Yes, ship it!",
+          "No, you should still have a native speaker review it whenever possible",
+          "No, you need to ask a professional copywriter first"
+        ],
+        correct: 1,
+        explainer: "<strong>AI is a co-pilot, not a replacement.</strong> Always review the output yourself, and if you are not a native speaker, try to get a quick native check before hitting publish. No need for a pro copywriter—a native speaker (Market PMMs or reps) is enough."
+      }
+    ];
+
+    // --- LOGIC ---
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let answers = new Array(questions.length).fill(null); // Store answers
+    
+    const startScreen = document.getElementById('start-screen');
+    const quizScreen = document.getElementById('quiz-screen');
+    const resultScreen = document.getElementById('result-screen');
+    
+    const questionText = document.getElementById('question-text');
+    const optionsContainer = document.getElementById('options-container');
+    const feedbackDiv = document.getElementById('feedback');
+    const nextBtn = document.getElementById('next-btn');
+    const prevBtn = document.getElementById('prev-btn');
+    const progressBar = document.getElementById('progress-bar');
+
+    function startQuiz() {
+      startScreen.classList.remove('active');
+      quizScreen.classList.add('active');
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      // Reset visible state
+      feedbackDiv.style.display = 'none';
+      nextBtn.style.display = 'none';
+      optionsContainer.innerHTML = '';
+      
+      const currentQ = questions[currentQuestionIndex];
+      questionText.innerHTML = currentQ.question;
+      
+      // Update buttons
+      prevBtn.style.display = currentQuestionIndex === 0 ? 'none' : 'block';
+
+      // Update Progress
+      const progressPercent = ((currentQuestionIndex) / questions.length) * 100;
+      progressBar.style.width = `${progressPercent}%`;
+
+      // Create Options
+      currentQ.options.forEach((opt, index) => {
+        const btn = document.createElement('div');
+        btn.className = 'option-btn';
+        btn.innerHTML = opt;
+        
+        // If already answered, restore state
+        if (answers[currentQuestionIndex] !== null) {
+           btn.classList.add('disabled');
+           const isCorrect = Array.isArray(currentQ.correct) 
+             ? currentQ.correct.includes(index) 
+             : index === currentQ.correct;
+
+           const userChoseThis = index === answers[currentQuestionIndex];
+
+           if (isCorrect) {
+             // If this option is correct, mark it green
+             btn.classList.add('correct');
+           } 
+           
+           if (userChoseThis && !isCorrect) {
+             // If user chose this and it was wrong, mark it red
+             btn.classList.add('wrong');
+           }
+        } else {
+           btn.onclick = () => checkAnswer(index, btn);
+        }
+        
+        optionsContainer.appendChild(btn);
+      });
+
+      // If already answered, show feedback and next button
+      if (answers[currentQuestionIndex] !== null) {
+        feedbackDiv.innerHTML = currentQ.explainer;
+        feedbackDiv.style.display = 'block';
+        nextBtn.style.display = 'block';
+      }
+    }
+
+    function checkAnswer(selectedIndex, selectedBtn) {
+      const currentQ = questions[currentQuestionIndex];
+      const allOptions = document.querySelectorAll('.option-btn');
+      
+      // Save answer
+      answers[currentQuestionIndex] = selectedIndex;
+
+      // Check correctness
+      const isCorrect = Array.isArray(currentQ.correct) 
+        ? currentQ.correct.includes(selectedIndex)
+        : selectedIndex === currentQ.correct;
+
+      // Disable all clicks
+      allOptions.forEach(btn => btn.classList.add('disabled'));
+
+      if (isCorrect) {
+        selectedBtn.classList.add('correct');
+        score++;
+      } else {
+        selectedBtn.classList.add('wrong');
+        
+        // Highlight the correct one(s)
+        if (Array.isArray(currentQ.correct)) {
+           currentQ.correct.forEach(idx => {
+             allOptions[idx].classList.add('correct');
+           });
+        } else {
+           allOptions[currentQ.correct].classList.add('correct');
+        }
+      }
+
+      // Show Feedback
+      feedbackDiv.innerHTML = currentQ.explainer;
+      feedbackDiv.style.display = 'block';
+      nextBtn.style.display = 'block';
+    }
+
+    function nextQuestion() {
+      currentQuestionIndex++;
+      
+      if (currentQuestionIndex < questions.length) {
+        loadQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        loadQuestion();
+      }
+    }
+
+    function showResults() {
+      quizScreen.classList.remove('active');
+      resultScreen.classList.add('active');
+      
+      // Recalculate score based on stored answers
+      let finalScore = 0;
+      answers.forEach((ans, idx) => {
+        const q = questions[idx];
+        const isCorrect = Array.isArray(q.correct)
+          ? q.correct.includes(ans)
+          : ans === q.correct;
+          
+        if (isCorrect) finalScore++;
+      });
+
+      const scorePercent = Math.round((finalScore / questions.length) * 100);
+      document.getElementById('score-text').textContent = `Your score is ${finalScore}/${questions.length} (${scorePercent}%)`;
+      
+      const emojiEl = document.getElementById('score-emoji');
+      const titleEl = document.getElementById('score-title');
+
+      if (scorePercent === 100) {
+        emojiEl.textContent = "🏆";
+        titleEl.textContent = "Perfect Score!";
+      } else if (scorePercent >= 70) {
+        emojiEl.textContent = "🎉";
+        titleEl.textContent = "Great Job!";
+      } else {
+        emojiEl.textContent = "📚";
+        titleEl.textContent = "Keep Learning!";
+      }
+    }
+
+    function restartQuiz() {
+      currentQuestionIndex = 0;
+      score = 0;
+      answers = new Array(questions.length).fill(null);
+      resultScreen.classList.remove('active');
+      startQuiz();
+    }
+
+  </script>
+</body>
+</html>
