@@ -15,6 +15,7 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      overflow-x: hidden; /* Prevent scrollbar from cat */
     }
 
     .container {
@@ -26,7 +27,7 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.05);
       text-align: center;
       position: relative;
-      overflow: hidden;
+      overflow: hidden; /* Clips the cat inside the card */
     }
 
     h1 {
@@ -41,6 +42,23 @@
       font-size: 16px;
       margin-top: 0;
       margin-bottom: 30px;
+    }
+
+    /* Dancing Cat Animation */
+    .cat-container {
+      position: absolute;
+      bottom: 0;
+      left: -100px;
+      width: 80px;
+      animation: walkAcross 12s linear infinite;
+      pointer-events: none; /* Allows clicking through the cat */
+      z-index: 10;
+      opacity: 0.9;
+    }
+
+    @keyframes walkAcross {
+      0% { left: -100px; }
+      100% { left: 110%; } /* Walks off screen */
     }
 
     /* Progress Bar */
@@ -171,6 +189,8 @@
       font-weight: 600;
       cursor: pointer;
       transition: background 0.2s;
+      position: relative;
+      z-index: 20; /* Ensure buttons are above the cat */
     }
 
     .btn-prev {
@@ -212,6 +232,12 @@
       font-size: 14px;
       color: #4b5563;
     }
+
+    .footer-note {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #9ca3af;
+    }
     
     a {
       color: #6d28d9;
@@ -237,6 +263,9 @@
         Test your knowledge, learn the best practices, and become a prompt wizard.
       </p>
       <button class="btn-start" onclick="startQuiz()">Start quiz</button>
+      
+      <!-- CAT ANIMATION -->
+      <img src="https://media.giphy.com/media/GeimqsH0TLDt4tScGw/giphy.gif" alt="Walking Cat" class="cat-container">
     </div>
 
     <!-- QUIZ SCREEN -->
@@ -269,10 +298,15 @@
         <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 15px 0;">
         <p>Visit our <a href="https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c" target="_blank">Self-Service Hub</a> (Use it, break it, and give feedback on what's missing!)</p>
         <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 15px 0;">
-        <p><strong>Help spread the word!</strong><br>Share the Self-Service Hub and this quiz 🤓</p>
+        <p><strong>Help spread the word!</strong><br>Share this quiz with your team 🤓</p>
       </div>
 
       <button class="btn-restart" onclick="restartQuiz()">Retake quiz</button>
+
+      <p class="footer-note">Created by Soline Avrillas 💜</p>
+
+      <!-- CAT ANIMATION -->
+      <img src="https://media.giphy.com/media/GeimqsH0TLDt4tScGw/giphy.gif" alt="Walking Cat" class="cat-container">
     </div>
 
   </div>
@@ -320,7 +354,7 @@
           "Write it manually without AI"
         ],
         correct: 1,
-        explainer: "<strong>Use the specialist!</strong> If a dedicated bot exists, use it. If not, you can use Tolki but you must be extremely specific in your prompt: attach visual examples, define precise character limits, and strict constraints. We can also help you build a dedicated bot—reach out to Soline!<br><br>And check out this <a href='https://www.notion.so/qonto/24d31ee4c69680a98a22eeea0202b192?v=24d31ee4c696801db59f000cac2a1d5f&source=copy_link' target='_blank'>list of standards and dedicated bots for specific content pieces</a> (non-exhaustive, we are currently improving it)."
+        explainer: "<strong>Use the specialist!</strong> If a dedicated bot exists, use it. If not, you can use Tolki but you must be extremely specific in your prompt: attach visual examples, define precise character limits, and strict constraints. We can also help you build a dedicated bot—reach out to Soline!<br><br>Check out this <a href='https://www.notion.so/qonto/24d31ee4c69680a98a22eeea0202b192?v=24d31ee4c696801db59f000cac2a1d5f&source=copy_link' target='_blank'>non-exhaustive list of standards and dedicated bots</a> (we are currently improving it)."
       },
       {
         question: "You're looking for specific guidelines on how to write and create content for a specific market, like Italy for example. Where do you go?",
@@ -397,7 +431,7 @@
     const resultScreen = document.getElementById('result-screen');
     
     const questionText = document.getElementById('question-text');
-    const questionCounter = document.getElementById('question-counter'); // Get counter element
+    const questionCounter = document.getElementById('question-counter'); 
     const optionsContainer = document.getElementById('options-container');
     const feedbackDiv = document.getElementById('feedback');
     const nextBtn = document.getElementById('next-btn');
