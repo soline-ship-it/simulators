@@ -255,7 +255,9 @@
         <p><strong>Questions? Suggestions?</strong></p>
         <p>Reach out to <strong>Soline Avrillas</strong> directly.</p>
         <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 15px 0;">
-        <p>Visit our <a href="#">Self-Service Hub</a> (Use it, break it, and give feedback on what's missing!)</p>
+        <p>Visit our <a href="https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c" target="_blank">Self-Service Hub</a> (Use it, break it, and give feedback on what's missing!)</p>
+        <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 15px 0;">
+        <p><strong>Help spread the word!</strong><br>Share the Self-Service Hub and this quiz 🤓</p>
       </div>
 
       <button class="btn-restart" onclick="restartQuiz()">Retake quiz</button>
@@ -520,6 +522,7 @@
       });
 
       const scorePercent = Math.round((finalScore / questions.length) * 100);
+
       document.getElementById('score-text').textContent = `Your score is ${finalScore}/${questions.length} (${scorePercent}%)`;
       
       const emojiEl = document.getElementById('score-emoji');
