@@ -222,11 +222,16 @@
           </select>
         </div>
 
+        <!-- NEW FIELD: Goal -->
         <div class="field">
-          <label>Who are you?</label>
-          <select id="speakerLevel">
-            <option value="native">Native speaker</option>
-            <option value="non-native">Non-native speaker</option>
+          <label>What is the primary goal of this copy?</label>
+          <select id="goal">
+            <option value="convert">Convert (Drive sign-ups, sales, or actions)</option>
+            <option value="educate">Educate (Explain complex topics clearly)</option>
+            <option value="inform">Inform (Announce features, updates, or news)</option>
+            <option value="engage">Engage (Build brand love & relationship)</option>
+            <option value="retain">Retain (Reduce churn, support existing clients)</option>
+            <option value="reassure">Reassure (Trust, security, compliance)</option>
           </select>
         </div>
 
@@ -241,6 +246,15 @@
             <label><input type="checkbox" value="PO"> Portuguese (PT)</label>
             <label><input type="checkbox" value="ES"> Spanish (ES)</label>
           </div>
+        </div>
+
+        <!-- MOVED FIELD: Speaker Level -->
+        <div class="field">
+          <label>Who are you?</label>
+          <select id="speakerLevel">
+            <option value="native">Native speaker</option>
+            <option value="non-native">Non-native speaker</option>
+          </select>
         </div>
 
         <!-- This field hides if Quality Check is selected -->
@@ -330,6 +344,7 @@
     function generatePrompt() {
       // 1. Gather Data
       const useCase = document.getElementById("useCase").value;
+      const goal = document.getElementById("goal").value; // New Field
       const speaker = document.getElementById("speakerLevel").value;
       const outputTypeVal = document.getElementById("outputType").value;
       const formatSelect = document.getElementById("format").value;
@@ -354,7 +369,19 @@
         bots = langs.length > 0 ? langs.map(l => `@${l}_Tolki`).join(" ") : "@Tolki";
       }
 
-      // 3. Construct Instructions based on Use Case
+      // 3. Goal Instructions Mapping
+      const goalInstructions = {
+        convert: "Focus on persuasion, strong value propositions, and clear Calls to Action (CTAs). The copy should drive the user to take a specific step immediately.",
+        educate: "Focus on clarity, structure, and simplicity. Break down complex concepts into digestible information. Use a helpful and didactic tone.",
+        inform: "Focus on factual accuracy, conciseness, and directness. Deliver the news or update efficiently without unnecessary fluff.",
+        engage: "Focus on storytelling, brand personality, and building a connection. The tone should be warm, relatable, and typically Qonto.",
+        retain: "Focus on empathy, support, and reminding the user of the value they get. The tone should be appreciative and helpful.",
+        reassure: "Focus on authority, transparency, and professional reliability. Use calming and confident language to build trust."
+      };
+      
+      const selectedGoalInstruction = goalInstructions[goal] || "Write high-quality copy suitable for the context.";
+
+      // 4. Construct Instructions based on Use Case
       let taskInstruction = "";
       let outputInstruction = "";
       
@@ -373,7 +400,7 @@
           : "Provide 3 distinct options (Conservative, Balanced, Creative).";
       }
 
-      // 4. Native Speaker Note
+      // 5. Native Speaker Note
       let speakerContext = "";
       if (speaker === "non-native") {
         speakerContext = "IMPORTANT: I am a non-native speaker. Please pay extra attention to nuance and flow. I trust your judgment—deliver the best possible native-sounding result.";
@@ -381,12 +408,15 @@
         speakerContext = "I am a native speaker looking for refinement and polish.";
       }
 
-      // 5. Build the Prompt String (Markdown style for better LLM parsing)
+      // 6. Build the Prompt String (Markdown style for better LLM parsing)
       const prompt = `
 ${bots}
 
 # TASK
 ${taskInstruction}
+
+# GOAL & APPROACH
+${selectedGoalInstruction}
 
 # STRICT CONSTRAINTS
 ${finalFormat ? `- **Format:** ${finalFormat}` : ""}
