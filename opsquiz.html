@@ -291,15 +291,17 @@
       padding: 20px;
       border-radius: 12px;
       margin-top: 20px;
+      margin-bottom: 24px;
       font-size: 14px;
       color: #4b5563;
     }
 
     .footer-note {
-      margin-top: 30px;
+      margin-top: 20px; /* Reduced margin to bring it closer to the CTA */
       font-size: 13px;
       color: #6b7280;
       font-weight: 500;
+      text-align: center;
     }
     
     a {
@@ -359,7 +361,7 @@
       
       <div class="contact-card">
         <p><strong>Questions? Suggestions?</strong></p>
-        <p>Reach out to <strong>Soline Avrillas</strong> directly.</p>
+        <p id="dynamic-reach-out">Reach out to <strong>Soline Avrillas</strong> directly.</p>
         <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 15px 0;">
         <p>Visit our <a href="https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c" target="_blank">Self-Service Hub</a> (Use it, break it, and give feedback on what's missing!)</p>
         <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 15px 0;">
@@ -637,6 +639,14 @@
       
       const emojiEl = document.getElementById('score-emoji');
       const titleEl = document.getElementById('score-title');
+      const reachOutEl = document.getElementById('dynamic-reach-out');
+
+      // Update specific text based on score being below 8
+      if (finalScore < 8) {
+        reachOutEl.innerHTML = "Reach out to <strong>Soline</strong>, what do you need to get things done more efficiently in autonomy?";
+      } else {
+        reachOutEl.innerHTML = "Reach out to <strong>Soline Avrillas</strong> directly.";
+      }
 
       if (scorePercent === 100) {
         emojiEl.textContent = "🏆";
