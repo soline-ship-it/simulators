@@ -296,6 +296,47 @@
       color: #4b5563;
     }
 
+    /* TL;DR Card Styles */
+    .tldr-card {
+      background: #f5f3ff;
+      border: 1px solid #ddd6fe;
+      padding: 24px;
+      border-radius: 12px;
+      margin-top: -10px;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+    
+    .tldr-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #5b21b6;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .tldr-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      font-size: 14px;
+      color: #374151;
+      line-height: 1.6;
+    }
+    
+    .tldr-list li {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    
+    .tldr-list li:last-child {
+      margin-bottom: 0;
+    }
+
     .footer-note {
       margin-top: 20px;
       font-size: 13px;
@@ -359,6 +400,18 @@
       <h1 id="score-title">Yeah!</h1>
       <p id="score-text" style="font-size: 18px; margin-bottom: 30px;"></p>
       
+      <!-- TL;DR RECAP CARD -->
+      <div class="tldr-card">
+        <div class="tldr-title">💡 TL;DR: Your Copy Cheat Sheet</div>
+        <ul class="tldr-list">
+          <li><span>🎯</span> <div><strong>Scope first:</strong> Always define your goal, audience, and limits before opening a bot.</div></li>
+          <li><span>🤖</span> <div><strong>Tolki writes & localizes:</strong> Use market-specific Tolkis with rich context to create your draft.</div></li>
+          <li><span>🛡️</span> <div><strong>QualityGuard checks:</strong> Mandatory for reviewing Grammar, Fluency, and Tone of Voice.</div></li>
+          <li><span>⚠️</span> <div><strong>You own compliance:</strong> AI flags sensitive data, but <em>you</em> must verify the facts and pricing.</div></li>
+          <li><span>📚</span> <div><strong>Go to the Hub:</strong> Find dedicated bots and market guidelines in the Self-Service Hub.</div></li>
+        </ul>
+      </div>
+
       <div class="contact-card">
         <p><strong>Questions? Suggestions?</strong></p>
         <p id="dynamic-reach-out">Reach out to <strong>Soline Avrillas</strong> directly.</p>
@@ -531,7 +584,7 @@
       const currentQ = questions[currentQuestionIndex];
       questionText.innerHTML = currentQ.question;
       
-      prevBtn.style.display = currentQuestionIndex === 0 ? 'none' : 'block';
+      prevBtn.style.display = 'block';
 
       const progressPercent = ((currentQuestionIndex) / questions.length) * 100;
       progressBar.style.width = `${progressPercent}%`;
@@ -616,6 +669,9 @@
       if (currentQuestionIndex > 0) {
         currentQuestionIndex--;
         loadQuestion();
+      } else if (currentQuestionIndex === 0) {
+        document.getElementById('quiz-screen').classList.remove('active');
+        document.getElementById('start-screen').classList.add('active');
       }
     }
 
