@@ -418,23 +418,22 @@
       <div class="tldr-card">
         <div class="tldr-title">TL;DR: Your cheat sheet</div>
         <ul class="tldr-list">
-          <li><strong>Scope first:</strong> Always define your goal, audience, and limits before opening a bot.</li>
-          <li><strong>The prompt matters:</strong> The more precise you are, the better the output. Context and constraints are key.</li>
-          <li><strong>Tolki <a href="https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf" target="_blank">writes</a> & <a href="https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf?p=24d31ee4c696812ab5c1ee03e3aeda5e&pm=c" target="_blank">localizes</a>:</strong> Use market-specific Tolkis with rich context to create your draft.</li>
-          <li><strong><a href="https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c" target="_blank">QualityGuard</a> checks:</strong> Mandatory for reviewing Grammar, Fluency, and Tone of Voice.</li>
-          <li><strong>You own compliance:</strong> AI flags sensitive data, but <em>you</em> must verify the facts and pricing.</li>
-          <li><strong>Use our hub:</strong> Find all resources there including dedicated bots and market guidelines.</li>
+          <li><strong>Scope first:</strong> Define goal, audience, and limits before starting.</li>
+          <li><strong>Prompting matters:</strong> Be precise. Context and constraints are key.</li>
+          <li><strong>Tolki <a href="https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf" target="_blank">writes</a> & <a href="https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf?p=24d31ee4c696812ab5c1ee03e3aeda5e&pm=c" target="_blank">localizes</a>:</strong> Use market-specific agents with rich context.</li>
+          <li><strong><a href="https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c" target="_blank">QualityGuard</a> checks:</strong> Mandatory for Grammar, Fluency, and Tone.</li>
+          <li><strong>You own compliance:</strong> Verify all facts, dates, and pricing yourself.</li>
+          <li><strong>Use the Hub:</strong> Your one-stop shop for bots and guidelines.</li>
         </ul>
         <p class="tldr-note">That's where we're at now! But AI evolves fast, and we're improving. Please help us do so.</p>
       </div>
 
       <div class="contact-card">
-        <p><strong>Questions? Suggestions?</strong></p>
-        <p id="dynamic-reach-out">Reach out to <strong>Soline Avrillas</strong> directly.</p>
+        <p><strong>Questions?</strong> <span id="dynamic-reach-out">Reach out to <strong>Soline Avrillas</strong> directly.</span></p>
         <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 15px 0;">
-        <p>Visit our <a href="https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c" target="_blank">Self-Service Hub</a> (Use it, break it, and give feedback on what's missing!)</p>
+        <p><a href="https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c" target="_blank">Visit the Self-Service Hub</a> (Use it, break it, give feedback!)</p>
         <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 15px 0;">
-        <p><strong>Help spread the word!</strong><br>Share this quiz with your team 🤓</p>
+        <p><strong>Spread the word!</strong> Share this quiz with your team 🤓</p>
       </div>
 
       <button class="btn-restart" onclick="restartQuiz()">Retake quiz</button>
@@ -451,17 +450,17 @@
     // --- QUIZ DATA ---
     const questions = [
       {
-        question: "What is Tolki made for?",
+        question: "What can Tolki help with?",
         options: [
           "To write",
           "To localize",
           "To write and localize"
         ],
         correct: 2,
-        explainer: "<strong>That's right! It helps with both.</strong><br>You can use: ES_Tolki, IT_Tolki, DE_Tolki, FR_Tolki, EN_Tolki, PO_Tolki, NL_Tolki.<br><br>Check out our guides for <a href='https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf' target='_blank'>Writing with Tolki</a> and <a href='https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf?p=24d31ee4c696812ab5c1ee03e3aeda5e&pm=c' target='_blank'>Localizing with Tolki</a>."
+        explainer: "<strong>Fortunately, it helps with both!</strong><br>You can use: ES_Tolki, IT_Tolki, DE_Tolki, FR_Tolki, EN_Tolki, PO_Tolki, NL_Tolki.<br><br>Check out our guides for <a href='https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf' target='_blank'>Writing with Tolki</a> and <a href='https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf?p=24d31ee4c696812ab5c1ee03e3aeda5e&pm=c' target='_blank'>Localizing with Tolki</a>."
       },
       {
-        question: "To avoid losing time on rewriting, what is the absolute first thing you should do before writing?",
+        question: "To save 30 minutes+ of rewriting later, what is the absolute first thing you should do before writing?",
         options: [
           "Open Dust immediately",
           "Define your business value, target audience, and key claims",
@@ -493,7 +492,7 @@
         explainer: "<strong>Use the specialist!</strong> If a dedicated bot exists, use it. If not, you can use Tolki but you must be extremely specific in your prompt: attach visual examples, define precise character limits, and strict constraints. We can also help you build a dedicated bot—reach out to Soline!<br><br>Check out this <a href='https://www.notion.so/qonto/24d31ee4c69680a98a22eeea0202b192?v=24d31ee4c696801db59f000cac2a1d5f&source=copy_link' target='_blank'>non-exhaustive list of standards and dedicated bots</a> (we are currently improving it)."
       },
       {
-        question: "You're looking for specific guidelines on how to write and create content for a specific market, like Italy for example. Where do you go?",
+        question: "You need specific content guidelines for a market (e.g. Italy). Where do you look?",
         options: [
           "Dust, and ask any bot",
           "The self-service content guide for the given market",
@@ -504,7 +503,7 @@
         explainer: "<strong>There are market-specific guides for you!</strong> It was done by the former content team and you can also maintain it! <a href='https://www.notion.so/qonto/24d31ee4c69680a98a22eeea0202b192?v=2b031ee4c69680e69dd8000c853d964c&source=copy_link' target='_blank'>Access the database with the existing guides per market here</a>. <br><br>And don't forget the <a href='https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c' target='_blank'>Self-Service Hub</a> for all generic resources."
       },
       {
-        question: "Which of these prompts is the BEST for localizing copy?",
+        question: "Which of these prompts yields the best localization?",
         options: [
           "@Tolki_FR Translate this to French: [copy]",
           "@Tolki_FR Make this sound French: [copy]",
@@ -556,7 +555,7 @@
         explainer: "<strong>AI is a co-pilot, not a replacement.</strong> Always review the output yourself, and if you are not a native speaker, try to get a quick native check before hitting publish. No need for a pro copywriter—a native speaker (Market PMMs or reps) is enough.<br><br>Here is the <a href='https://www.notion.so/qonto/Growth-Efficiency-Clarify-Roles-Responsibilities-2ae31ee4c69680428660d48ba4b67658#2ae31ee4c6968093b5f0fbb7fdafe2d9' target='_blank'>official list of PoCs for localization</a>!"
       },
       {
-        question: "You have a bot of your own that you really like using to create content, but it's not part of the <a href='https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c' target='_blank' style='color: inherit; text-decoration: underline;'>Self-Service Hub</a>. Is it ok to use it still?",
+        question: "You love a specific bot that isn't in the Self-Service Hub. Can you use it?",
         options: [
           "Not really, today the only approved AI tool for writing at Qonto is Tolki.",
           "Yes, use whatever you want as long as the text looks good to you.",
