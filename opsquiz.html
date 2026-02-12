@@ -318,8 +318,8 @@
     }
     
     .tldr-list {
-      list-style-type: none;
-      padding: 0;
+      list-style-type: disc;
+      padding-left: 20px;
       margin: 0;
       font-size: 14px;
       color: #374151;
@@ -328,13 +328,27 @@
     
     .tldr-list li {
       margin-bottom: 10px;
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
     }
     
     .tldr-list li:last-child {
       margin-bottom: 0;
+    }
+
+    .tldr-card a {
+      color: #4338ca;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    
+    .tldr-card a:hover {
+      color: #3730a3;
+    }
+
+    .tldr-note {
+      margin-top: 16px;
+      font-size: 13px;
+      color: #6b7280;
+      font-style: italic;
     }
 
     .footer-note {
@@ -402,14 +416,16 @@
       
       <!-- TL;DR RECAP CARD -->
       <div class="tldr-card">
-        <div class="tldr-title">💡 TL;DR: Your Copy Cheat Sheet</div>
+        <div class="tldr-title">TL;DR: Your cheat sheet</div>
         <ul class="tldr-list">
-          <li><span>🎯</span> <div><strong>Scope first:</strong> Always define your goal, audience, and limits before opening a bot.</div></li>
-          <li><span>🤖</span> <div><strong>Tolki writes & localizes:</strong> Use market-specific Tolkis with rich context to create your draft.</div></li>
-          <li><span>🛡️</span> <div><strong>QualityGuard checks:</strong> Mandatory for reviewing Grammar, Fluency, and Tone of Voice.</div></li>
-          <li><span>⚠️</span> <div><strong>You own compliance:</strong> AI flags sensitive data, but <em>you</em> must verify the facts and pricing.</div></li>
-          <li><span>📚</span> <div><strong>Go to the Hub:</strong> Find dedicated bots and market guidelines in the Self-Service Hub.</div></li>
+          <li><strong>Scope first:</strong> Always define your goal, audience, and limits before opening a bot.</li>
+          <li><strong>The prompt matters:</strong> The more precise you are, the better the output. Context and constraints are key.</li>
+          <li><strong>Tolki <a href="https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf" target="_blank">writes</a> & <a href="https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf?p=24d31ee4c696812ab5c1ee03e3aeda5e&pm=c" target="_blank">localizes</a>:</strong> Use market-specific Tolkis with rich context to create your draft.</li>
+          <li><strong><a href="https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c" target="_blank">QualityGuard</a> checks:</strong> Mandatory for reviewing Grammar, Fluency, and Tone of Voice.</li>
+          <li><strong>You own compliance:</strong> AI flags sensitive data, but <em>you</em> must verify the facts and pricing.</li>
+          <li><strong>Use our hub:</strong> Find all resources there including dedicated bots and market guidelines.</li>
         </ul>
+        <p class="tldr-note">That's where we're at now! But AI evolves fast, and we're improving. Please help us do so.</p>
       </div>
 
       <div class="contact-card">
