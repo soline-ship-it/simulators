@@ -27,7 +27,6 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.05);
       text-align: center;
       position: relative;
-      /* overflow: hidden; Removed to let the cat peek out */
     }
 
     h1 {
@@ -149,7 +148,7 @@
       text-align: left;
       font-size: 14px;
       line-height: 1.6;
-      display: none; /* Hidden by default */
+      display: none;
       border-left: 4px solid #6d28d9;
     }
 
@@ -159,15 +158,78 @@
       color: #6d28d9;
     }
 
-    /* Styles for links inside feedback */
     .feedback a {
-      color: #4338ca; /* Darker purple/indigo */
+      color: #4338ca;
       text-decoration: underline;
       text-underline-offset: 2px;
     }
 
     .feedback a:hover {
       color: #3730a3;
+    }
+
+    /* Mockup for the Dust Skill Card */
+    .dust-skill-card {
+      background: #f9fafb;
+      border-radius: 16px;
+      padding: 16px;
+      margin: 16px 0;
+      border: 1px solid #e5e7eb;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    
+    .dust-skill-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .dust-skill-icon-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .dust-skill-icon {
+      background: #eff6ff;
+      color: #3b82f6;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    
+    .dust-skill-title {
+      font-weight: 600;
+      color: #111827;
+      font-size: 14px;
+    }
+    
+    .dust-skill-add {
+      background: white;
+      border: 1px solid #d1d5db;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #374151;
+    }
+    
+    .dust-skill-desc {
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+    
+    .dust-skill-details {
+      font-size: 13px;
+      color: #4b5563;
+      font-weight: 600;
     }
 
     /* Buttons Container */
@@ -190,7 +252,7 @@
       cursor: pointer;
       transition: background 0.2s;
       position: relative;
-      z-index: 20; /* Ensure buttons are above the cat */
+      z-index: 20;
     }
 
     .btn-prev {
@@ -206,7 +268,7 @@
     }
 
     .btn-next, .btn-prev {
-      display: none; /* Hidden logic handled in JS */
+      display: none;
       flex: 1;
     }
 
@@ -235,8 +297,9 @@
 
     .footer-note {
       margin-top: 30px;
-      font-size: 12px;
-      color: #9ca3af;
+      font-size: 13px;
+      color: #6b7280;
+      font-weight: 500;
     }
     
     a {
@@ -264,7 +327,7 @@
       </p>
       <button class="btn-start" onclick="startQuiz()">Start quiz</button>
       
-      <p class="footer-note">Created by Soline Avrillas 💜</p>
+      <p class="footer-note">By Soline Avrillas ❤️</p>
 
       <!-- CAT IMAGE -->
       <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Animals/Cat.png" alt="Cute Cat" class="cat-container">
@@ -305,7 +368,7 @@
 
       <button class="btn-restart" onclick="restartQuiz()">Retake quiz</button>
 
-      <p class="footer-note">Created by Soline Avrillas 💜</p>
+      <p class="footer-note">By Soline Avrillas ❤️</p>
 
       <!-- CAT IMAGE -->
       <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Animals/Cat.png" alt="Cute Cat" class="cat-container">
@@ -398,7 +461,7 @@
           "You sounded too self-promotional (Company-centric instead of Customer-centric)",
           "You used too many emojis"
         ],
-        correct: [0, 1, 2, 3], // All answers are correct!
+        correct: [0, 1, 2, 3], 
         explainer: "<strong>Customer-centric always.</strong> Really, it could have been any of these answers, ahah! A low ToV score often means you are violating core Qonto principles. Make sure you know our <a href='https://www.notion.so/qonto/Tone-of-Voice-11531ee4c69680cc9fb5e4608759f755' target='_blank'>Tone of Voice guide</a>."
       },
       {
@@ -419,14 +482,24 @@
           "No, you need to ask a professional copywriter first"
         ],
         correct: 1,
-        explainer: "<strong>AI is a co-pilot, not a replacement.</strong> Always review the output yourself, and if you are not a native speaker, try to get a quick native check before hitting publish. No need for a pro copywriter—a native speaker (Market PMMs or reps) is enough."
+        explainer: "<strong>AI is a co-pilot, not a replacement.</strong> Always review the output yourself, and if you are not a native speaker, try to get a quick native check before hitting publish. No need for a pro copywriter—a native speaker (Market PMMs or reps) is enough.<br><br>Here is the <a href='https://www.notion.so/qonto/Growth-Efficiency-Clarify-Roles-Responsibilities-2ae31ee4c69680428660d48ba4b67658#2ae31ee4c6968093b5f0fbb7fdafe2d9' target='_blank'>official list of PoCs for localization</a>!"
+      },
+      {
+        question: "You have a bot of your own that you really like using to create content, but it's not part of the <a href='https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c' target='_blank' style='color: inherit; text-decoration: underline;'>Self-Service Hub</a>. Is it ok to use it still?",
+        options: [
+          "Not really, today the only approved AI tool for writing at Qonto is Tolki.",
+          "Yes, use whatever you want as long as the text looks good to you.",
+          "Yes, but let's talk! We can add the new Qonto Tone of Voice skill to your bot."
+        ],
+        correct: 2,
+        explainer: "<strong>Let's talk about it!</strong> We now have a Tone of Voice \"skill\" in Dust that can be added to any bot. Let's test it together!<br><br><div class='dust-skill-card'><div class='dust-skill-header'><div class='dust-skill-icon-title'><div class='dust-skill-icon'>🔊</div><div class='dust-skill-title'>Qonto Tone of Voice Guidelines</div></div><div class='dust-skill-add'>+ Add</div></div><div class='dust-skill-desc'>Ensures all written communication adheres to Qonto's Tone of Voice pillars, grammar conventions,...</div><div class='dust-skill-details'>Skill details</div></div><br><em>Note: It's still in the testing phase, so we recommend you use Tolki today, and you must in any case use QualityGuard for your final checks!</em>"
       }
     ];
 
     // --- LOGIC ---
     let currentQuestionIndex = 0;
     let score = 0;
-    let answers = new Array(questions.length).fill(null); // Store answers
+    let answers = new Array(questions.length).fill(null); 
     
     const startScreen = document.getElementById('start-screen');
     const quizScreen = document.getElementById('quiz-screen');
@@ -447,31 +520,25 @@
     }
 
     function loadQuestion() {
-      // Reset visible state
       feedbackDiv.style.display = 'none';
       nextBtn.style.display = 'none';
       optionsContainer.innerHTML = '';
       
-      // Update Counter
       questionCounter.textContent = `Question ${currentQuestionIndex + 1}/${questions.length}`;
 
       const currentQ = questions[currentQuestionIndex];
       questionText.innerHTML = currentQ.question;
       
-      // Update buttons
       prevBtn.style.display = currentQuestionIndex === 0 ? 'none' : 'block';
 
-      // Update Progress
       const progressPercent = ((currentQuestionIndex) / questions.length) * 100;
       progressBar.style.width = `${progressPercent}%`;
 
-      // Create Options
       currentQ.options.forEach((opt, index) => {
         const btn = document.createElement('div');
         btn.className = 'option-btn';
         btn.innerHTML = opt;
         
-        // If already answered, restore state
         if (answers[currentQuestionIndex] !== null) {
            btn.classList.add('disabled');
            const isCorrect = Array.isArray(currentQ.correct) 
@@ -481,12 +548,10 @@
            const userChoseThis = index === answers[currentQuestionIndex];
 
            if (isCorrect) {
-             // If this option is correct, mark it green
              btn.classList.add('correct');
            } 
            
            if (userChoseThis && !isCorrect) {
-             // If user chose this and it was wrong, mark it red
              btn.classList.add('wrong');
            }
         } else {
@@ -496,7 +561,6 @@
         optionsContainer.appendChild(btn);
       });
 
-      // If already answered, show feedback and next button
       if (answers[currentQuestionIndex] !== null) {
         feedbackDiv.innerHTML = currentQ.explainer;
         feedbackDiv.style.display = 'block';
@@ -508,15 +572,12 @@
       const currentQ = questions[currentQuestionIndex];
       const allOptions = document.querySelectorAll('.option-btn');
       
-      // Save answer
       answers[currentQuestionIndex] = selectedIndex;
 
-      // Check correctness
       const isCorrect = Array.isArray(currentQ.correct) 
         ? currentQ.correct.includes(selectedIndex)
         : selectedIndex === currentQ.correct;
 
-      // Disable all clicks
       allOptions.forEach(btn => btn.classList.add('disabled'));
 
       if (isCorrect) {
@@ -525,7 +586,6 @@
       } else {
         selectedBtn.classList.add('wrong');
         
-        // Highlight the correct one(s)
         if (Array.isArray(currentQ.correct)) {
            currentQ.correct.forEach(idx => {
              allOptions[idx].classList.add('correct');
@@ -535,7 +595,6 @@
         }
       }
 
-      // Show Feedback
       feedbackDiv.innerHTML = currentQ.explainer;
       feedbackDiv.style.display = 'block';
       nextBtn.style.display = 'block';
@@ -562,7 +621,6 @@
       quizScreen.classList.remove('active');
       resultScreen.classList.add('active');
       
-      // Recalculate score based on stored answers
       let finalScore = 0;
       answers.forEach((ans, idx) => {
         const q = questions[idx];
