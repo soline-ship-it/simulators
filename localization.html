@@ -65,16 +65,15 @@
       let channelOptions = [];
       if (answers.role === 'CRM Manager') {
         channelOptions = [ { label: 'CRM / Email', value: 'CRM / Email' } ];
-      } else if (answers.role === 'Channel Owner (Ads/Social/Video)') {
+      } else if (answers.role === 'Other Channel Owner') {
         channelOptions = [
+          { label: 'Website', value: 'Website' },
           { label: 'Social Media', value: 'Social Media' },
           { label: 'Paid Ads', value: 'Paid Ads' },
           { label: 'Video Content', value: 'Video Content' }
         ];
-      } else if (answers.role === 'Other Channel Owner (Website)') {
-        channelOptions = [ { label: 'Website', value: 'Website' } ];
       } else {
-        // Comms Partner or Local Market POC sees all standard options
+        // Comms Partner sees all standard options
         channelOptions = [
           { label: 'Website', value: 'Website' },
           { label: 'CRM / Email', value: 'CRM / Email' },
@@ -90,9 +89,7 @@
           options: [
             { label: 'Comms Partner (Global projects)', value: 'Comms Partner' },
             { label: 'CRM Manager', value: 'CRM Manager' },
-            { label: 'Local Market POC', value: 'Local Market POC' },
-            { label: 'Channel Owner (Ads/Social/Video)', value: 'Channel Owner (Ads/Social/Video)' },
-            { label: 'Other Channel Owner (Website)', value: 'Other Channel Owner (Website)' }
+            { label: 'Other Channel Owner (Website, Ads, Video, Social...)', value: 'Other Channel Owner' }
           ]
         },
         { id: 'channel', title: 'Which channel is this content for?', type: 'single', options: channelOptions },
@@ -258,10 +255,12 @@
 
         // Generate Steps dynamically based on answers
         const pocNamesString = getPocNames(answers.language);
-        let masterOwner = answers.role === 'Local Market POC' ? 'Project Owner' : answers.role;
+        const displayRole = answers.role === 'Other Channel Owner' ? 'Channel Owner' : answers.role;
+        
+        let masterOwner = displayRole;
         let locOwner = pocNamesString;
         let qcOwner = pocNamesString;
-        let uploadOwner = answers.role;
+        let uploadOwner = displayRole;
 
         // CRM Manager rules overrides
         if (answers.role === 'CRM Manager' || answers.channel === 'CRM / Email') {
@@ -271,9 +270,9 @@
            uploadOwner = 'CRM Manager';
         }
 
-        // Website rules overrides
+        // Website rules overrides (Local POC always uploads website pages)
         if (answers.channel === 'Website') {
-           uploadOwner = pocNamesString; // Local POC always uploads website pages
+           uploadOwner = pocNamesString; 
         }
 
         // Tools assembly
@@ -301,7 +300,7 @@
           { num: 1, title: 'EN Master Copy', owner: masterOwner, desc: 'Create EN master with channel bot. Use QualityGuard if not EN-native.', tools: masterTools },
           { num: 2, title: 'Localization', owner: locOwner, desc: 'Handle the localization for the selected market(s).', tools: locTools },
           { num: 3, title: 'Quality Check', owner: qcOwner, desc: 'Run QualityGuard as a mandatory first step. Request native review if the translator is not native.', tools: qcTools },
-          { num: 4, title: 'Content Upload', owner: uploadOwner, desc: answers.channel === 'Website' && answers.role === 'Comms Partner' ? '⚠️ Comms Partners do NOT upload website pages. The Local Market POC must duplicate the page in Qontent.' : 'Upload the finalized localized content to the platform.', tools: uploadTools },
+          { num: 4, title: 'Content Upload', owner: uploadOwner, desc: answers.channel === 'Website' ? '⚠️ Page duplication in other languages is 100% owned by Local Teams. They will duplicate the page in Qontent.' : 'Upload the finalized localized content to the platform.', tools: uploadTools },
         ];
 
         return (
