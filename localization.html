@@ -65,13 +65,14 @@
       let channelOptions = [];
       if (answers.role === 'CRM Manager') {
         channelOptions = [ { label: 'CRM / Email', value: 'CRM / Email' } ];
-      } else if (answers.role === 'Other Channel Owner') {
+      } else if (answers.role === 'Channel Owner (Ads/Social/Video)') {
         channelOptions = [
-          { label: 'Website', value: 'Website' },
           { label: 'Social Media', value: 'Social Media' },
           { label: 'Paid Ads', value: 'Paid Ads' },
           { label: 'Video Content', value: 'Video Content' }
         ];
+      } else if (answers.role === 'Other Channel Owner (Website)') {
+        channelOptions = [ { label: 'Website', value: 'Website' } ];
       } else {
         // Comms Partner sees all standard options
         channelOptions = [
@@ -89,7 +90,8 @@
           options: [
             { label: 'Comms Partner (Global projects)', value: 'Comms Partner' },
             { label: 'CRM Manager', value: 'CRM Manager' },
-            { label: 'Other Channel Owner (Website, Ads, Video, Social...)', value: 'Other Channel Owner' }
+            { label: 'Channel Owner (Ads/Social/Video)', value: 'Channel Owner (Ads/Social/Video)' },
+            { label: 'Other Channel Owner (Website)', value: 'Other Channel Owner (Website)' }
           ]
         },
         { id: 'channel', title: 'Which channel is this content for?', type: 'single', options: channelOptions },
@@ -135,7 +137,6 @@
         }
       };
 
-      // Retrieves POC names for multiple selected languages
       const getPocNames = (langs) => {
         if (!langs || langs.length === 0) return 'Local Market POCs';
         return langs.map(lang => {
@@ -166,7 +167,6 @@
             </div>
 
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 min-h-[400px]">
-              {/* Progress Bar */}
               <div className="mb-8">
                 <div className="flex justify-between text-sm text-slate-600 mb-3 font-medium">
                   <span>Question {step + 1} of {questions.length}</span>
@@ -209,7 +209,6 @@
                 })}
               </div>
 
-              {/* Multiple choice requires a "Continue" button */}
               {isMultiple && (
                 <button 
                   onClick={() => setStep(step + 1)} 
@@ -234,7 +233,6 @@
       };
 
       const renderResults = () => {
-        // High-Visibility Stop
         if (answers.projectType === 'High-visibility') {
           return (
             <div className="max-w-4xl mx-auto w-full pt-10 pb-20 px-4">
@@ -253,29 +251,47 @@
           );
         }
 
-        // Generate Steps dynamically based on answers
         const pocNamesString = getPocNames(answers.language);
-        const displayRole = answers.role === 'Other Channel Owner' ? 'Channel Owner' : answers.role;
         
+        // Clean up the role name for display (remove parenthesis)
+        let displayRole = answers.role;
+        if (displayRole === 'Other Channel Owner (Website)' || displayRole === 'Channel Owner (Ads/Social/Video)') {
+          displayRole = 'Channel Owner';
+        }
+
         let masterOwner = displayRole;
         let locOwner = pocNamesString;
         let qcOwner = pocNamesString;
-        let uploadOwner = displayRole;
+        
+        // --- NEW UPLOAD OWNER LOGIC ---
+        // Completely derived from the Channel selected, NOT the Role.
+        let uploadOwner = '';
+        let uploadDesc = '';
 
-        // CRM Manager rules overrides
+        if (answers.channel === 'CRM / Email') {
+          uploadOwner = 'CRM Manager';
+          uploadDesc = 'The CRM Manager uploads the finalized localized content in Qontent.';
+        } else if (['Social Media', 'Paid Ads', 'Video Content'].includes(answers.channel)) {
+          uploadOwner = 'Channel Owner';
+          uploadDesc = 'The Channel Owner handles the upload of the finalized localized content directly to the platform.';
+        } else if (answers.channel === 'Website') {
+          if (answers.role === 'Comms Partner') {
+            uploadOwner = 'Comms Partner (Current) / Local Market POC (Target)';
+            uploadDesc = '⚠️ Note: Page duplication in other languages should ideally be 100% owned by Local Teams at the localization stage (NOT Comms Partners). However, you may currently still handle it in Qontent.';
+          } else {
+            uploadOwner = 'Local Market POC';
+            uploadDesc = 'The Local Market POC duplicates the page in Qontent for their respective language.';
+          }
+        }
+
+        // --- CRM MANAGER OVERRIDES ---
         if (answers.role === 'CRM Manager' || answers.channel === 'CRM / Email') {
            masterOwner = 'CRM Manager';
            locOwner = 'CRM Manager';
            qcOwner = 'CRM Manager';
-           uploadOwner = 'CRM Manager';
         }
 
-        // Website rules overrides (Local POC always uploads website pages)
-        if (answers.channel === 'Website') {
-           uploadOwner = pocNamesString; 
-        }
-
-        // Tools assembly
+        // --- TOOLS ---
         const masterTools = ['Tolki in Dust', 'Channel-specific bot (linked to ToV skill)'];
         if (answers.channel === 'Website' || answers.channel === 'CRM / Email') masterTools.push('Qontent');
         masterTools.push('QualityGuard in Dust (if not EN-native)');
@@ -285,8 +301,6 @@
 
         const qcTools = ['QualityGuard in Dust (MANDATORY)'];
         if (answers.channel === 'CRM / Email') qcTools.push('Request proofread in #proofread-crm on Slack');
-        
-        // Check if Dutch or Portuguese is in the selected languages array
         if (answers.language && (answers.language.includes('Dutch') || answers.language.includes('Portuguese'))) {
           qcTools.push('#new-markets-localization-help (for native NL/PT support)');
         }
@@ -300,13 +314,12 @@
           { num: 1, title: 'EN Master Copy', owner: masterOwner, desc: 'Create EN master with channel bot. Use QualityGuard if not EN-native.', tools: masterTools },
           { num: 2, title: 'Localization', owner: locOwner, desc: 'Handle the localization for the selected market(s).', tools: locTools },
           { num: 3, title: 'Quality Check', owner: qcOwner, desc: 'Run QualityGuard as a mandatory first step. Request native review if the translator is not native.', tools: qcTools },
-          { num: 4, title: 'Content Upload', owner: uploadOwner, desc: answers.channel === 'Website' ? '⚠️ Page duplication in other languages is 100% owned by Local Teams. They will duplicate the page in Qontent.' : 'Upload the finalized localized content to the platform.', tools: uploadTools },
+          { num: 4, title: 'Content Upload', owner: uploadOwner, desc: uploadDesc, tools: uploadTools },
         ];
 
         return (
           <div className="max-w-4xl mx-auto w-full pt-10 pb-20 px-4">
             
-            {/* Header Summary Banner */}
             <div className="bg-[#F8F5FF] border border-[#E9D5FF] rounded-2xl p-6 mb-8 flex gap-12 text-sm flex-wrap">
               <div>
                 <div className="text-purple-700 font-bold mb-1">Project Type:</div>
@@ -335,7 +348,6 @@
               </div>
             </div>
 
-            {/* Steps List */}
             <div className="space-y-6">
               {steps.map((s) => (
                 <div key={s.num} className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex gap-6">
@@ -363,7 +375,6 @@
               ))}
             </div>
 
-            {/* Self-serve Notion Link Banner */}
             {answers.projectType === 'Standard content' && (
               <div className="mt-8 bg-blue-50 border border-blue-200 rounded-2xl p-6 text-center shadow-sm">
                 <BookOpen className="w-8 h-8 text-blue-500 mx-auto mb-3" />
@@ -398,7 +409,6 @@
       return (
         <div className="flex flex-col min-h-screen">
           
-          {/* Top Navigation & Toggle */}
           <div className="flex flex-col sm:flex-row items-center justify-between py-4 px-8 bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50 gap-4">
             <div>
               <h1 className="text-xl font-bold text-slate-900">Localization Workflow</h1>
@@ -422,7 +432,6 @@
             </div>
           </div>
 
-          {/* Render Views based on state */}
           {view === 'path' ? (
             <PathFinder />
           ) : (
@@ -431,7 +440,6 @@
               onClick={(e) => { if (e.target === e.currentTarget) setSelectedStep(null); }}
             >
               <div className="min-w-max pb-12">
-                {/* LIGNE 1 : CERCLES */}
                 <div className="flex items-start gap-6 mb-8">
                   {WORKFLOW_STEPS.map((step, index) => {
                     const isSelected = selectedStep === step.id;
@@ -467,7 +475,6 @@
                   })}
                 </div>
 
-                {/* LIGNE 2 : CARTES DÉTAILLÉES */}
                 <div className="flex items-start gap-6">
                   {WORKFLOW_STEPS.map((step, index) => {
                     const isSelected = selectedStep === step.id;
@@ -514,7 +521,6 @@
                   })}
                 </div>
 
-                {/* ZONE PARTAGÉE POCS */}
                 <div className={`transition-all duration-500 ${shouldDimPocCard ? 'opacity-30 grayscale-[30%]' : 'opacity-100'}`}>
                   <div className="flex items-start gap-6 mt-8">
                     <div className="w-72 shrink-0"></div><div className="w-10 shrink-0"></div>
