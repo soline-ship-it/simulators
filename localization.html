@@ -6,28 +6,24 @@
   <title>Localization Workflow</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
-  
   <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.20/babel.min.js"></script>
 </head>
 <body class="bg-slate-50">
   
   <div id="error-box" style="color: red; padding: 20px; font-weight: bold; font-family: monospace;"></div>
-  
   <div id="root"></div>
 
   <script>
     window.addEventListener('error', function(e) {
-      document.getElementById('error-box').innerText += "Erreur technique : " + e.message + "\n(Vérifiez que vous n'avez pas de bloqueur de script ou de pare-feu strict)";
+      document.getElementById('error-box').innerText += "Erreur technique : " + e.message;
     });
   </script>
 
   <script type="text/babel">
     const { useState } = React;
 
-    // Remplacement des icônes Lucide par des SVGs purs
     const ChevronRight = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="9 18 15 12 9 6"></polyline></svg>;
     const AlertTriangle = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>;
     const Wrench = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>;
@@ -153,10 +149,13 @@
           {/* Workflow Steps */}
           <div className="flex-1 overflow-x-auto p-8">
             <div className="min-w-max pb-12">
+              
+              {/* LIGNE 1 : CERCLES */}
               <div className="flex items-start gap-6 mb-8">
                 {WORKFLOW_STEPS.map((step, index) => (
                   <div key={step.id} className="flex items-start gap-6">
-                    <div className="flex flex-col items-center gap-4">
+                    {/* On force la colonne du cercle à faire exactement 288px (w-72) pour s'aligner sur la carte */}
+                    <div className="flex flex-col items-center gap-4 w-72 shrink-0">
                       <button
                         onClick={() => setSelectedStep(selectedStep === step.id ? null : step.id)}
                         className={`
@@ -186,8 +185,9 @@
                       )}
                     </div>
 
+                    {/* On force l'espacement de la flèche à 40px (w-10) */}
                     {index < WORKFLOW_STEPS.length - 1 && (
-                      <div className="flex items-center" style={{ marginTop: '70px' }}>
+                      <div className="flex items-center justify-center w-10 shrink-0" style={{ marginTop: '70px' }}>
                         <ChevronRight className="w-10 h-10 text-slate-300" />
                       </div>
                     )}
@@ -195,11 +195,12 @@
                 ))}
               </div>
 
-              {/* Détails */}
+              {/* LIGNE 2 : CARTES DÉTAILLÉES */}
               <div className="flex items-start gap-6">
                 {WORKFLOW_STEPS.map((step, index) => (
                   <div key={`detail-${step.id}`} className="flex items-start gap-6">
-                    <div className="flex flex-col items-center gap-4 w-72">
+                    {/* Colonne de la carte à 288px (w-72) */}
+                    <div className="flex flex-col items-center gap-4 w-72 shrink-0">
                       <div
                         className={`
                           w-full p-5 bg-white border border-slate-200 shadow-md rounded-xl
@@ -279,30 +280,33 @@
                         )}
                       </div>
                     </div>
-                    {index < WORKFLOW_STEPS.length - 1 && <div className="w-10" />}
+                    {/* Espacement de 40px (w-10) entre les cartes */}
+                    {index < WORKFLOW_STEPS.length - 1 && <div className="w-10 shrink-0" />}
                   </div>
                 ))}
               </div>
 
-              {/* Shared Local POCs Card */}
+              {/* LIGNES VERTICALES POUR POCS */}
               <div className="flex items-start gap-6 mt-8">
-                <div className="w-72"></div><div className="w-10"></div>
-                <div className="w-72 flex flex-col items-center"><div className="w-0.5 h-8 bg-gradient-to-b from-indigo-400 to-indigo-500"></div></div>
-                <div className="w-10"></div>
-                <div className="w-72 flex flex-col items-center"><div className="w-0.5 h-8 bg-gradient-to-b from-indigo-400 to-indigo-500"></div></div>
+                <div className="w-72 shrink-0"></div><div className="w-10 shrink-0"></div>
+                <div className="w-72 shrink-0 flex flex-col items-center"><div className="w-0.5 h-8 bg-gradient-to-b from-indigo-400 to-indigo-500"></div></div>
+                <div className="w-10 shrink-0"></div>
+                <div className="w-72 shrink-0 flex flex-col items-center"><div className="w-0.5 h-8 bg-gradient-to-b from-indigo-400 to-indigo-500"></div></div>
               </div>
 
+              {/* LIGNE HORIZONTALE PARTAGÉE (Largeur recalculée pour englober parfaitement les étapes 2 et 3) */}
               <div className="flex items-start gap-6">
-                <div className="w-72"></div><div className="w-10"></div>
-                <div className="flex items-center" style={{ width: 'calc(288px + 40px + 288px)' }}>
+                <div className="w-72 shrink-0"></div><div className="w-10 shrink-0"></div>
+                <div className="flex items-center" style={{ width: '664px' }}>
                   <div className="h-0.5 w-full bg-gradient-to-r from-indigo-500 via-indigo-400 to-indigo-500"></div>
                 </div>
               </div>
 
+              {/* CARTE PARTAGÉE DES POCS */}
               <div className="flex items-start gap-6 mt-4">
-                <div className="w-72"></div><div className="w-10"></div>
-                <div className="flex justify-center" style={{ width: 'calc(288px + 40px + 288px)' }}>
-                  <div className="w-96 p-5 bg-gradient-to-br from-indigo-50 to-blue-50 border-indigo-300 border-2 shadow-lg rounded-xl">
+                <div className="w-72 shrink-0"></div><div className="w-10 shrink-0"></div>
+                <div className="flex justify-center shrink-0" style={{ width: '664px' }}>
+                  <div className="w-full max-w-xl p-5 bg-gradient-to-br from-indigo-50 to-blue-50 border-indigo-300 border-2 shadow-lg rounded-xl">
                     <div className="flex items-center gap-2 mb-3">
                       <UsersIcon className="w-5 h-5 text-indigo-600" />
                       <span className="text-sm font-bold text-indigo-700">LOCAL POCS & CONTACTS</span>
