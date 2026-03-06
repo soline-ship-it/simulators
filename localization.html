@@ -41,7 +41,7 @@
              href="https://www.notion.so/qonto/Check-copy-quality-24d31ee4c6968193bc6bc98d7f613d93?source=copy_link" 
              target="_blank" 
              rel="noopener noreferrer" 
-             className="text-indigo-600 font-bold hover:underline"
+             className="text-blue-600 font-bold hover:underline"
              onClick={(e) => e.stopPropagation()}
           >
             QualityGuard
@@ -50,18 +50,17 @@
       );
     };
 
-    // --- DATA ---
+    // --- DATA (With pastel colors applied) ---
     const WORKFLOW_STEPS = [
-      { id: 1, title: 'EN Master Copy', subtitle: 'Create English source content', color: 'from-purple-500 to-purple-600', owner: 'Project Owner (varies by context):\n• Comms Partner for Global projects\n• CRM Manager for CRM-specific projects', tools: ['Tolki in Dust (AI-generated content creation)', 'Channel-specific Dust bot (linked to ToV skill)', 'Qontent (for Website/CRM, directly in-platform)'], notes: ['💡 ALWAYS use QualityGuard in Dust if master copy is not delivered by an EN-native speaker', '⚡ Exception: High-visibility creative (not self-serve) → Creative Factory'] },
-      { id: 2, title: 'Localization', subtitle: 'Generate localized versions', color: 'from-blue-500 to-blue-600', owner: 'Owner (varies by context):\n• Local Market POC (standard)\n• CRM Manager for CRM projects (due to high volume)', tools: ['Tolki in Dust', 'Channel-specific Dust bot (linked to ToV skill)', 'Qontent (for Website and CRM)'], gaps: ['No standardized request path for localization (only #proofread-crm exists for CRM)'], questions: ['Is the current POC list sustainable or should we review it?', 'Should we standardize a single process to request localization from local POCs?'] },
-      { id: 3, title: 'AI Quality Check + Native Review', subtitle: '⚠️ MANDATORY step', color: 'from-green-500 to-green-600', owner: 'Local Market POC (or person who delivered the localization in step 2)', tools: ['QualityGuard in Dust (AI copy quality check) — MANDATORY first step', 'Native review (if needed): When the translator is not a native speaker OR no designated native speaker exists', 'CRM-specific process: Request proofread in #proofread-crm on Slack AFTER QualityGuard validation', 'For native support for 🇳🇱 Dutch and 🇵🇹 Portuguese: #new-markets-localization-help on Slack'], notes: ['🔍 Focus: Tone of Voice alignment, clarity, and grammar — NOT content accuracy or factual validation', '⚠️ IMPORTANT: Compliance remains your responsibility'] },
-      { id: 4, title: 'Content Upload & Publishing', subtitle: 'Deploy localized content', color: 'from-teal-500 to-teal-600', owner: 'Upload owner (varies by channel):\n• Website: Local Market POC duplicates page in Qontent\n• CRM: CRM Manager uploads in Qontent\n• Ads, Social, Video: Channel POC handles upload on platform', tools: ['Website: Qontent', 'CRM: Qontent', 'Other platforms: Channel POC in charge'], gaps: ['Website: Page duplication in other languages should be 100% owned by Local Teams at localization stage—NOT Comms Partners.'] },
-      { id: 5, title: 'Red Bin Logging', subtitle: 'Track & fix issues', color: 'from-red-500 to-red-600', owner: 'Anyone involved in the workflow', tools: ['Red Bin logging form/database'], notes: ['• Purpose: Log quality issues discovered after launch OR broken delivery processes', '• Analyze: Machine/Human/Method failure → implement permanent fix'] },
+      { id: 1, title: 'EN Master Copy', subtitle: 'Create English source content', color: 'bg-indigo-50 border-2 border-indigo-200 text-indigo-900', owner: 'Project Owner (varies by context):\n• Comms Partner for Global projects\n• CRM Manager for CRM-specific projects', tools: ['Tolki in Dust (AI-generated content creation)', 'Channel-specific Dust bot (linked to ToV skill)', 'Qontent (for Website/CRM, directly in-platform)'], notes: ['💡 ALWAYS use QualityGuard in Dust if master copy is not delivered by an EN-native speaker', '⚡ Exception: High-visibility creative (not self-serve) → Creative Factory'] },
+      { id: 2, title: 'Localization', subtitle: 'Generate localized versions', color: 'bg-blue-50 border-2 border-blue-200 text-blue-900', owner: 'Owner (varies by context):\n• Local Market POC (standard)\n• CRM Manager for CRM projects (due to high volume)', tools: ['Tolki in Dust', 'Channel-specific Dust bot (linked to ToV skill)', 'Qontent (for Website and CRM)'], gaps: ['No standardized request path for localization (only #proofread-crm exists for CRM)'], questions: ['Is the current POC list sustainable or should we review it?', 'Should we standardize a single process to request localization from local POCs?'] },
+      { id: 3, title: 'AI Quality Check + Native Review', subtitle: '⚠️ MANDATORY step', color: 'bg-emerald-50 border-2 border-emerald-200 text-emerald-900', owner: 'Local Market POC (or person who delivered the localization in step 2)', tools: ['QualityGuard in Dust (AI copy quality check) — MANDATORY first step', 'Native review (if needed): When the translator is not a native speaker OR no designated native speaker exists', 'CRM-specific process: Request proofread in #proofread-crm on Slack AFTER QualityGuard validation', 'For native support for 🇳🇱 Dutch and 🇵🇹 Portuguese: #new-markets-localization-help on Slack'], notes: ['🔍 Focus: Tone of Voice alignment, clarity, and grammar — NOT content accuracy or factual validation', '⚠️ IMPORTANT: Compliance remains your responsibility'] },
+      { id: 4, title: 'Content Upload & Publishing', subtitle: 'Deploy localized content', color: 'bg-sky-50 border-2 border-sky-200 text-sky-900', owner: 'Upload owner (varies by channel):\n• Website: Local Market POC duplicates page in Qontent\n• CRM: CRM Manager uploads in Qontent\n• Ads, Social, Video: Channel POC handles upload on platform', tools: ['Website: Qontent', 'CRM: Qontent', 'Other platforms: Channel POC in charge'], gaps: ['Website: Page duplication in other languages should be 100% owned by Local Teams at localization stage—NOT Comms Partners.'] },
+      { id: 5, title: 'Red Bin Logging', subtitle: 'Track & fix issues', color: 'bg-red-50 border-2 border-red-200 text-red-900', owner: 'Anyone involved in the workflow', tools: ['Red Bin logging form/database'], notes: ['• Purpose: Log quality issues discovered after launch OR broken delivery processes', '• Analyze: Machine/Human/Method failure → implement permanent fix'] },
     ];
 
-    // Dynamic Quiz generation based on previous answers
+    // Dynamic Quiz generation based on answers
     const getQuizQuestions = (answers) => {
-      // Logic for filtering channels based on selected role
       let channelOptions = [];
       if (answers.role === 'CRM Manager') {
         channelOptions = [ { label: 'CRM / Email', value: 'CRM / Email' } ];
@@ -74,7 +73,7 @@
       } else if (answers.role === 'Other Channel Owner (Website)') {
         channelOptions = [ { label: 'Website', value: 'Website' } ];
       } else {
-        // Comms Partner sees all standard options
+        // Comms Partner
         channelOptions = [
           { label: 'Website', value: 'Website' },
           { label: 'CRM / Email', value: 'CRM / Email' },
@@ -141,15 +140,15 @@
         if (!langs || langs.length === 0) return 'Local Market POCs';
         return langs.map(lang => {
           switch(lang) {
-            case 'French': return '@Delphine de Roquemaurel';
-            case 'German': return '@Hannah Lüdicke';
-            case 'Italian': return '@lollo';
-            case 'Spanish': return '@cristina.gomez';
-            case 'Portuguese': return '@Julia Latorre';
-            case 'Dutch': return '@rosemarijn.disseldorp (non-SEO), @Dimitri Jordens (SEO), @stijn.teves (partnerships)';
+            case 'French': return '🇫🇷 @Delphine de Roquemaurel';
+            case 'German': return '🇩🇪 @Hannah Lüdicke';
+            case 'Italian': return '🇮🇹 @lollo';
+            case 'Spanish': return '🇪🇸 @cristina.gomez';
+            case 'Portuguese': return '🇵🇹 @Julia Latorre';
+            case 'Dutch': return '🇳🇱 @rosemarijn.disseldorp (non-SEO), @Dimitri Jordens (SEO), @stijn.teves (partnerships)';
             default: return 'Local Market POCs';
           }
-        }).join(', ');
+        }).join('\n');
       };
 
       const renderQuiz = () => {
@@ -173,7 +172,7 @@
                   <span>{progress}%</span>
                 </div>
                 <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-purple-500 to-purple-400 transition-all duration-300" style={{ width: `${progress}%` }}></div>
+                  <div className="h-full bg-indigo-500 transition-all duration-300" style={{ width: `${progress}%` }}></div>
                 </div>
               </div>
 
@@ -188,10 +187,10 @@
                         key={opt.value}
                         onClick={() => handleToggleMultiple(question.id, opt.value)}
                         className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 flex justify-between items-center group 
-                          ${isSelected ? 'border-purple-500 bg-purple-50 text-purple-900' : 'border-slate-200 hover:border-purple-300 bg-white text-slate-700'}`}
+                          ${isSelected ? 'border-indigo-500 bg-indigo-50 text-indigo-900' : 'border-slate-200 hover:border-indigo-300 bg-white text-slate-700'}`}
                       >
                         <span className="font-semibold">{opt.label}</span>
-                        {isSelected && <CheckCircle2 className="w-6 h-6 text-purple-600" />}
+                        {isSelected && <CheckCircle2 className="w-6 h-6 text-indigo-600" />}
                       </button>
                     );
                   } else {
@@ -199,10 +198,10 @@
                       <button
                         key={opt.value}
                         onClick={() => handleSingleSelect(question.id, opt.value)}
-                        className="w-full text-left p-4 rounded-xl border border-slate-200 hover:border-blue-500 hover:bg-slate-50 transition-all duration-200 flex justify-between items-center group bg-white"
+                        className="w-full text-left p-4 rounded-xl border border-slate-200 hover:border-indigo-500 hover:bg-slate-50 transition-all duration-200 flex justify-between items-center group bg-white"
                       >
                         <span className="font-semibold text-slate-700">{opt.label}</span>
-                        <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-blue-500" />
+                        <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-indigo-500" />
                       </button>
                     );
                   }
@@ -213,7 +212,7 @@
                 <button 
                   onClick={() => setStep(step + 1)} 
                   disabled={currentMultipleSelections.length === 0}
-                  className="mt-6 w-full py-4 bg-purple-600 text-white font-bold rounded-xl hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="mt-6 w-full py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   Generate My Workflow
                 </button>
@@ -253,45 +252,41 @@
 
         const pocNamesString = getPocNames(answers.language);
         
-        // Clean up the role name for display (remove parenthesis)
         let displayRole = answers.role;
-        if (displayRole === 'Other Channel Owner (Website)' || displayRole === 'Channel Owner (Ads/Social/Video)') {
-          displayRole = 'Channel Owner';
-        }
+        if (displayRole === 'Other Channel Owner (Website)') displayRole = 'Channel Owner (Website)';
+        if (displayRole === 'Channel Owner (Ads/Social/Video)') displayRole = 'Channel Owner (Ads/Social/Video)';
 
         let masterOwner = displayRole;
         let locOwner = pocNamesString;
         let qcOwner = pocNamesString;
         
-        // --- NEW UPLOAD OWNER LOGIC ---
-        // Completely derived from the Channel selected, NOT the Role.
+        // --- NEW STRICT LOGIC FOR UPLOAD OWNER (FIXING THE COMMS PARTNER BUG) ---
         let uploadOwner = '';
         let uploadDesc = '';
 
         if (answers.channel === 'CRM / Email') {
           uploadOwner = 'CRM Manager';
-          uploadDesc = 'The CRM Manager uploads the finalized localized content in Qontent.';
+          uploadDesc = 'Upload the finalized localized content in Qontent.';
         } else if (['Social Media', 'Paid Ads', 'Video Content'].includes(answers.channel)) {
           uploadOwner = 'Channel Owner';
-          uploadDesc = 'The Channel Owner handles the upload of the finalized localized content directly to the platform.';
+          uploadDesc = 'Upload the finalized localized content directly to the platform.';
         } else if (answers.channel === 'Website') {
           if (answers.role === 'Comms Partner') {
             uploadOwner = 'Comms Partner (Current) / Local Market POC (Target)';
             uploadDesc = '⚠️ Note: Page duplication in other languages should ideally be 100% owned by Local Teams at the localization stage (NOT Comms Partners). However, you may currently still handle it in Qontent.';
           } else {
-            uploadOwner = 'Local Market POC';
-            uploadDesc = 'The Local Market POC duplicates the page in Qontent for their respective language.';
+            uploadOwner = 'Channel Owner (Website)';
+            uploadDesc = 'Duplicate the page in Qontent for the respective languages.';
           }
         }
 
-        // --- CRM MANAGER OVERRIDES ---
+        // Apply strict CRM Manager overrides for steps 1, 2, 3
         if (answers.role === 'CRM Manager' || answers.channel === 'CRM / Email') {
            masterOwner = 'CRM Manager';
            locOwner = 'CRM Manager';
            qcOwner = 'CRM Manager';
         }
 
-        // --- TOOLS ---
         const masterTools = ['Tolki in Dust', 'Channel-specific bot (linked to ToV skill)'];
         if (answers.channel === 'Website' || answers.channel === 'CRM / Email') masterTools.push('Qontent');
         masterTools.push('QualityGuard in Dust (if not EN-native)');
@@ -308,42 +303,41 @@
 
         const uploadTools = [];
         if (answers.channel === 'Website' || answers.channel === 'CRM / Email') uploadTools.push('Qontent');
-        else uploadTools.push('Upload directly on platform (' + answers.channel + ')');
+        else uploadTools.push(`Upload directly on platform (${answers.channel})`);
 
         const steps = [
-          { num: 1, title: 'EN Master Copy', owner: masterOwner, desc: 'Create EN master with channel bot. Use QualityGuard if not EN-native.', tools: masterTools },
-          { num: 2, title: 'Localization', owner: locOwner, desc: 'Handle the localization for the selected market(s).', tools: locTools },
-          { num: 3, title: 'Quality Check', owner: qcOwner, desc: 'Run QualityGuard as a mandatory first step. Request native review if the translator is not native.', tools: qcTools },
-          { num: 4, title: 'Content Upload', owner: uploadOwner, desc: uploadDesc, tools: uploadTools },
+          { num: 1, title: 'EN Master Copy', owner: masterOwner, desc: 'Create EN master with channel bot. Use QualityGuard if not EN-native.', tools: masterTools, colorBg: 'bg-indigo-100', colorText: 'text-indigo-800' },
+          { num: 2, title: 'Localization', owner: locOwner, desc: 'Handle the localization for the selected market(s).', tools: locTools, colorBg: 'bg-blue-100', colorText: 'text-blue-800' },
+          { num: 3, title: 'Quality Check', owner: qcOwner, desc: 'Run QualityGuard as a mandatory first step. Request native review if the translator is not native.', tools: qcTools, colorBg: 'bg-emerald-100', colorText: 'text-emerald-800' },
+          { num: 4, title: 'Content Upload', owner: uploadOwner, desc: uploadDesc, tools: uploadTools, colorBg: 'bg-sky-100', colorText: 'text-sky-800' },
         ];
 
         return (
           <div className="max-w-4xl mx-auto w-full pt-10 pb-20 px-4">
             
-            <div className="bg-[#F8F5FF] border border-[#E9D5FF] rounded-2xl p-6 mb-8 flex gap-12 text-sm flex-wrap">
+            <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-6 mb-8 flex gap-12 text-sm flex-wrap">
               <div>
-                <div className="text-purple-700 font-bold mb-1">Project Type:</div>
+                <div className="text-indigo-800 font-bold mb-1">Project Type:</div>
                 <div className="text-slate-800 font-medium">{answers.projectType}</div>
               </div>
               <div>
-                <div className="text-purple-700 font-bold mb-1">Languages:</div>
+                <div className="text-indigo-800 font-bold mb-1">Languages:</div>
                 <div className="text-slate-800 font-medium flex items-center gap-2">
                   {answers.language && answers.language.map(lang => {
                     switch(lang) {
-                      case 'French': return '🇫🇷 ';
-                      case 'German': return '🇩🇪 ';
-                      case 'Italian': return '🇮🇹 ';
-                      case 'Spanish': return '🇪🇸 ';
-                      case 'Portuguese': return '🇵🇹 ';
-                      case 'Dutch': return '🇳🇱 ';
+                      case 'French': return '🇫🇷';
+                      case 'German': return '🇩🇪';
+                      case 'Italian': return '🇮🇹';
+                      case 'Spanish': return '🇪🇸';
+                      case 'Portuguese': return '🇵🇹';
+                      case 'Dutch': return '🇳🇱';
                       default: return '';
                     }
-                  }).join('')}
-                  {answers.language ? answers.language.join(', ') : ''}
+                  }).join(' ')}
                 </div>
               </div>
               <div>
-                <div className="text-purple-700 font-bold mb-1">Channel:</div>
+                <div className="text-indigo-800 font-bold mb-1">Channel:</div>
                 <div className="text-slate-800 font-medium">{answers.channel}</div>
               </div>
             </div>
@@ -351,14 +345,14 @@
             <div className="space-y-6">
               {steps.map((s) => (
                 <div key={s.num} className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex gap-6">
-                  <div className="w-10 h-10 shrink-0 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                  <div className={`w-10 h-10 shrink-0 ${s.colorBg} ${s.colorText} rounded-full flex items-center justify-center font-bold text-lg`}>
                     {s.num}
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-slate-900 mb-2">{s.num}. {s.title}</h3>
-                    <div className="flex items-center gap-2 mb-3">
-                      <UserIcon className="w-5 h-5 text-blue-600" />
-                      <span className="font-bold text-blue-600">{s.owner}</span>
+                    <div className="flex items-start gap-2 mb-3">
+                      <UserIcon className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                      <span className="font-bold text-blue-600 whitespace-pre-line leading-relaxed">{s.owner}</span>
                     </div>
                     <p className="text-slate-700 mb-4">{formatLinks(s.desc)}</p>
                     
@@ -400,7 +394,7 @@
       return step < questions.length ? renderQuiz() : renderResults();
     };
 
-    // --- MAIN APP (Handles Toggle) ---
+    // --- MAIN APP ---
     function App() {
       const [view, setView] = useState('path');
       const [selectedStep, setSelectedStep] = useState(null);
@@ -435,11 +429,13 @@
           {view === 'path' ? (
             <PathFinder />
           ) : (
+            // The onClick here allows users to click anywhere on the background to deselect the step
             <div 
-              className="flex-1 overflow-x-auto p-8 animate-in fade-in duration-500"
-              onClick={(e) => { if (e.target === e.currentTarget) setSelectedStep(null); }}
+              className="flex-1 overflow-x-auto p-8 animate-in fade-in duration-500 cursor-pointer"
+              onClick={() => setSelectedStep(null)}
             >
-              <div className="min-w-max pb-12">
+              <div className="min-w-max pb-12 cursor-default" onClick={(e) => e.stopPropagation()}>
+                {/* LIGNE 1 : CERCLES */}
                 <div className="flex items-start gap-6 mb-8">
                   {WORKFLOW_STEPS.map((step, index) => {
                     const isSelected = selectedStep === step.id;
@@ -452,18 +448,17 @@
                             className={`
                               relative flex flex-col items-center justify-center
                               w-40 h-40 rounded-full cursor-pointer
-                              bg-gradient-to-br ${step.color} shadow-lg transition-all duration-300 hover:scale-105
-                              ${isSelected ? 'ring-4 ring-blue-500 scale-105 shadow-2xl' : ''}
-                              ${step.title.includes('MANDATORY') || step.subtitle.includes('MANDATORY') ? 'ring-4 ring-amber-400 animate-pulse' : ''}
+                              ${step.color} shadow-lg transition-all duration-300 hover:scale-105
+                              ${isSelected ? 'ring-4 ring-blue-300 scale-105 shadow-xl' : ''}
                             `}
                           >
-                            <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-white text-slate-900 flex items-center justify-center font-bold text-lg shadow-lg border-2 border-slate-200">{step.id}</div>
-                            <div className="text-white text-center px-4">
+                            <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-white text-slate-900 flex items-center justify-center font-bold text-lg shadow-sm border-2 border-slate-200">{step.id}</div>
+                            <div className="text-center px-4">
                               <div className="font-bold text-sm mb-1">{step.title}</div>
                               <div className="text-xs opacity-90">{step.subtitle}</div>
                             </div>
                           </button>
-                          {(step.id === 2 || step.id === 3) ? <div className="w-0.5 h-16 bg-gradient-to-b from-slate-400 to-indigo-400" /> : <div className="w-0.5 h-8 bg-gradient-to-b from-slate-300 to-transparent" />}
+                          {(step.id === 2 || step.id === 3) ? <div className="w-0.5 h-16 bg-slate-300" /> : <div className="w-0.5 h-8 bg-gradient-to-b from-slate-200 to-transparent" />}
                         </div>
                         {index < WORKFLOW_STEPS.length - 1 && (
                           <div className={`flex items-center justify-center w-10 shrink-0 transition-opacity duration-500 ${isDimmed ? 'opacity-30' : 'opacity-100'}`} style={{ marginTop: '70px' }}>
@@ -475,6 +470,7 @@
                   })}
                 </div>
 
+                {/* LIGNE 2 : CARTES DÉTAILLÉES */}
                 <div className="flex items-start gap-6">
                   {WORKFLOW_STEPS.map((step, index) => {
                     const isSelected = selectedStep === step.id;
@@ -482,7 +478,7 @@
                     return (
                       <div key={`detail-${step.id}`} className="flex items-start gap-6">
                         <div className={`flex flex-col items-center gap-4 w-72 shrink-0 transition-all duration-500 ${isDimmed ? 'opacity-30 scale-[0.98]' : 'opacity-100 scale-100'}`}>
-                          <div className={`w-full p-5 bg-white border border-slate-200 shadow-md rounded-xl transition-all duration-300 ${isSelected ? 'ring-2 ring-blue-500 shadow-xl border-blue-200 bg-blue-50/10' : ''}`}>
+                          <div className={`w-full p-5 bg-white border border-slate-200 shadow-sm rounded-xl transition-all duration-300 ${isSelected ? 'ring-2 ring-blue-400 shadow-lg border-blue-200 bg-blue-50/10' : ''}`}>
                             {step.owner && (
                               <div className="mb-4">
                                 <div className="flex items-center gap-2 mb-2"><UserIcon className="w-4 h-4 text-blue-600" /><span className="text-xs font-bold text-slate-600">OWNER</span></div>
@@ -491,8 +487,8 @@
                             )}
                             {step.tools && step.tools.length > 0 && (
                               <div className="mb-4">
-                                <div className="flex items-center gap-2 mb-2"><Wrench className="w-4 h-4 text-green-600" /><span className="text-xs font-bold text-slate-600">TOOLS</span></div>
-                                <ul className="space-y-1.5 pl-1">{step.tools.map((tool, idx) => (<li key={idx} className="text-xs text-slate-700 leading-relaxed flex gap-2"><span className="text-green-500">•</span> <span>{formatLinks(tool)}</span></li>))}</ul>
+                                <div className="flex items-center gap-2 mb-2"><Wrench className="w-4 h-4 text-slate-600" /><span className="text-xs font-bold text-slate-600">TOOLS</span></div>
+                                <ul className="space-y-1.5 pl-1">{step.tools.map((tool, idx) => (<li key={idx} className="text-xs text-slate-700 leading-relaxed flex gap-2"><span className="text-slate-400">•</span> <span>{formatLinks(tool)}</span></li>))}</ul>
                               </div>
                             )}
                             {step.notes && step.notes.length > 0 && (
@@ -521,24 +517,25 @@
                   })}
                 </div>
 
+                {/* ZONE PARTAGÉE POCS */}
                 <div className={`transition-all duration-500 ${shouldDimPocCard ? 'opacity-30 grayscale-[30%]' : 'opacity-100'}`}>
                   <div className="flex items-start gap-6 mt-8">
                     <div className="w-72 shrink-0"></div><div className="w-10 shrink-0"></div>
-                    <div className="w-72 shrink-0 flex flex-col items-center"><div className="w-0.5 h-8 bg-gradient-to-b from-indigo-400 to-indigo-500"></div></div>
+                    <div className="w-72 shrink-0 flex flex-col items-center"><div className="w-0.5 h-8 bg-slate-300"></div></div>
                     <div className="w-10 shrink-0"></div>
-                    <div className="w-72 shrink-0 flex flex-col items-center"><div className="w-0.5 h-8 bg-gradient-to-b from-indigo-400 to-indigo-500"></div></div>
+                    <div className="w-72 shrink-0 flex flex-col items-center"><div className="w-0.5 h-8 bg-slate-300"></div></div>
                   </div>
                   <div className="flex items-start gap-6">
                     <div className="w-72 shrink-0"></div><div className="w-10 shrink-0"></div>
-                    <div className="flex items-center" style={{ width: '664px' }}><div className="h-0.5 w-full bg-gradient-to-r from-indigo-500 via-indigo-400 to-indigo-500"></div></div>
+                    <div className="flex items-center" style={{ width: '664px' }}><div className="h-0.5 w-full bg-slate-300"></div></div>
                   </div>
                   <div className="flex items-start gap-6 mt-4">
                     <div className="w-72 shrink-0"></div><div className="w-10 shrink-0"></div>
                     <div className="flex justify-center shrink-0" style={{ width: '664px' }}>
-                      <div className="w-full max-w-xl p-5 bg-gradient-to-br from-indigo-50 to-blue-50 border-indigo-300 border-2 shadow-lg rounded-xl">
-                        <div className="flex items-center gap-2 mb-3"><UsersIcon className="w-5 h-5 text-indigo-600" /><span className="text-sm font-bold text-indigo-700">LOCAL POCS & CONTACTS</span><span className="text-xs text-indigo-500 ml-auto">(for Steps 2 & 3)</span></div>
-                        <div className="text-xs text-indigo-900 leading-relaxed whitespace-pre-line">
-                          {'👥 Dedicated Local POCs for localization:\n• France: @Delphine de Roquemaurel\n• Germany: @Hannah Lüdicke\n• Italy: @lollo\n• Spain: @cristina.gomez\n• Portugal: @Julia Latorre\n• Netherlands:\n  - Non-SEO/non-partnerships: @rosemarijn.disseldorp\n  - SEO: @Dimitri Jordens\n  - Partnerships: @stijn.teves\n• Slack help: #new-markets-localization-help'}
+                      <div className="w-full max-w-xl p-6 bg-white border-slate-200 border shadow-sm rounded-xl">
+                        <div className="flex items-center gap-2 mb-4"><UsersIcon className="w-5 h-5 text-slate-700" /><span className="text-sm font-bold text-slate-800">LOCAL POCS & CONTACTS</span><span className="text-xs text-slate-500 ml-auto">(for Steps 2 & 3)</span></div>
+                        <div className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">
+                          {'👥 Dedicated Local POCs for localization:\n🇫🇷 France: @Delphine de Roquemaurel\n🇩🇪 Germany: @Hannah Lüdicke\n🇮🇹 Italy: @lollo\n🇪🇸 Spain: @cristina.gomez\n🇵🇹 Portugal: @Julia Latorre\n🇳🇱 Netherlands:\n  - Non-SEO/non-partnerships: @rosemarijn.disseldorp\n  - SEO: @Dimitri Jordens\n  - Partnerships: @stijn.teves\n\n💬 Slack help: #new-markets-localization-help'}
                         </div>
                       </div>
                     </div>
