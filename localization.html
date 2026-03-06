@@ -12,12 +12,14 @@
 </head>
 <body class="bg-slate-50">
   
-  <div id="error-box" style="color: red; padding: 20px; font-weight: bold; font-family: monospace;"></div>
+  <div id="error-box" style="color: red; padding: 20px; font-weight: bold; font-family: monospace; display: none;"></div>
   <div id="root"></div>
 
   <script>
     window.addEventListener('error', function(e) {
-      document.getElementById('error-box').innerText += "Erreur technique : " + e.message;
+      const errBox = document.getElementById('error-box');
+      errBox.style.display = 'block';
+      errBox.innerText += "Erreur technique : " + e.message + "\n";
     });
   </script>
 
@@ -30,7 +32,6 @@
     const UserIcon = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>;
     const Clock = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>;
     const HelpCircle = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>;
-    const Download = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>;
     const UsersIcon = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>;
 
     const WORKFLOW_STEPS = [
@@ -118,206 +119,215 @@
     function WorkflowStepper() {
       const [selectedStep, setSelectedStep] = useState(null);
 
-      const exportAsJSON = () => {
-        const blob = new Blob([JSON.stringify(WORKFLOW_STEPS, null, 2)], {
-          type: 'application/json',
-        });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'localization-workflow.json';
-        a.click();
-        URL.revokeObjectURL(url);
-      };
+      // Logique pour estomper la carte POC si on clique sur une étape qui n'est ni la 2 ni la 3
+      const shouldDimPocCard = selectedStep !== null && selectedStep !== 2 && selectedStep !== 3;
 
       return (
-        <div className="flex flex-col bg-gradient-to-br from-slate-50 via-white to-slate-100 min-h-screen font-sans">
-          {/* Header */}
-          <div className="flex items-center justify-between p-6 bg-white border-b border-slate-200 shadow-sm sticky top-0 z-10">
+        <div 
+          className="flex flex-col bg-gradient-to-br from-slate-50 via-white to-slate-100 min-h-screen font-sans"
+          onClick={(e) => {
+            // Permet de désélectionner si on clique dans le vide
+            if (e.target === e.currentTarget) setSelectedStep(null);
+          }}
+        >
+          {/* Header (Espace vertical réduit avec py-4 au lieu de p-6) */}
+          <div className="flex items-center justify-between py-4 px-8 bg-white border-b border-slate-200 shadow-sm sticky top-0 z-10">
             <div>
-              <h1 className="text-2xl font-bold text-slate-900">Localization Workflow for Global Projects</h1>
+              <h1 className="text-xl font-bold text-slate-900">Localization Workflow for Global Projects</h1>
             </div>
-            <button
-              onClick={exportAsJSON}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium border border-slate-300 rounded-md hover:bg-slate-50 transition-colors text-slate-700 shadow-sm"
-            >
-              <Download className="w-4 h-4" />
-              Export
-            </button>
+            {/* Bouton Export supprimé */}
           </div>
 
           {/* Workflow Steps */}
-          <div className="flex-1 overflow-x-auto p-8">
+          <div 
+            className="flex-1 overflow-x-auto p-8"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setSelectedStep(null);
+            }}
+          >
             <div className="min-w-max pb-12">
               
               {/* LIGNE 1 : CERCLES */}
               <div className="flex items-start gap-6 mb-8">
-                {WORKFLOW_STEPS.map((step, index) => (
-                  <div key={step.id} className="flex items-start gap-6">
-                    {/* On force la colonne du cercle à faire exactement 288px (w-72) pour s'aligner sur la carte */}
-                    <div className="flex flex-col items-center gap-4 w-72 shrink-0">
-                      <button
-                        onClick={() => setSelectedStep(selectedStep === step.id ? null : step.id)}
-                        className={`
-                          relative flex flex-col items-center justify-center
-                          w-40 h-40 rounded-full cursor-pointer
-                          bg-gradient-to-br ${step.color}
-                          shadow-lg
-                          transition-all duration-300
-                          hover:scale-105
-                          ${selectedStep === step.id ? 'ring-4 ring-blue-400 scale-105' : ''}
-                          ${step.title.includes('MANDATORY') || step.subtitle.includes('MANDATORY') ? 'ring-4 ring-amber-400 animate-pulse' : ''}
-                        `}
-                      >
-                        <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-white text-slate-900 flex items-center justify-center font-bold text-lg shadow-lg border-2 border-slate-200">
-                          {step.id}
-                        </div>
-                        <div className="text-white text-center px-4">
-                          <div className="font-bold text-sm mb-1">{step.title}</div>
-                          <div className="text-xs opacity-90">{step.subtitle}</div>
-                        </div>
-                      </button>
+                {WORKFLOW_STEPS.map((step, index) => {
+                  const isSelected = selectedStep === step.id;
+                  const isDimmed = selectedStep !== null && !isSelected;
+                  
+                  return (
+                    <div key={step.id} className="flex items-start gap-6">
+                      <div className={`flex flex-col items-center gap-4 w-72 shrink-0 transition-all duration-500 ${isDimmed ? 'opacity-30 grayscale-[30%]' : 'opacity-100'}`}>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedStep(isSelected ? null : step.id);
+                          }}
+                          className={`
+                            relative flex flex-col items-center justify-center
+                            w-40 h-40 rounded-full cursor-pointer
+                            bg-gradient-to-br ${step.color}
+                            shadow-lg
+                            transition-all duration-300
+                            hover:scale-105
+                            ${isSelected ? 'ring-4 ring-blue-500 scale-105 shadow-2xl' : ''}
+                            ${step.title.includes('MANDATORY') || step.subtitle.includes('MANDATORY') ? 'ring-4 ring-amber-400 animate-pulse' : ''}
+                          `}
+                        >
+                          <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-white text-slate-900 flex items-center justify-center font-bold text-lg shadow-lg border-2 border-slate-200">
+                            {step.id}
+                          </div>
+                          <div className="text-white text-center px-4">
+                            <div className="font-bold text-sm mb-1">{step.title}</div>
+                            <div className="text-xs opacity-90">{step.subtitle}</div>
+                          </div>
+                        </button>
 
-                      {(step.id === 2 || step.id === 3) ? (
-                        <div className="w-0.5 h-16 bg-gradient-to-b from-slate-400 to-indigo-400" />
-                      ) : (
-                        <div className="w-0.5 h-8 bg-gradient-to-b from-slate-300 to-transparent" />
+                        {(step.id === 2 || step.id === 3) ? (
+                          <div className="w-0.5 h-16 bg-gradient-to-b from-slate-400 to-indigo-400" />
+                        ) : (
+                          <div className="w-0.5 h-8 bg-gradient-to-b from-slate-300 to-transparent" />
+                        )}
+                      </div>
+
+                      {index < WORKFLOW_STEPS.length - 1 && (
+                        <div className={`flex items-center justify-center w-10 shrink-0 transition-opacity duration-500 ${isDimmed ? 'opacity-30' : 'opacity-100'}`} style={{ marginTop: '70px' }}>
+                          <ChevronRight className="w-10 h-10 text-slate-300" />
+                        </div>
                       )}
                     </div>
-
-                    {/* On force l'espacement de la flèche à 40px (w-10) */}
-                    {index < WORKFLOW_STEPS.length - 1 && (
-                      <div className="flex items-center justify-center w-10 shrink-0" style={{ marginTop: '70px' }}>
-                        <ChevronRight className="w-10 h-10 text-slate-300" />
-                      </div>
-                    )}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {/* LIGNE 2 : CARTES DÉTAILLÉES */}
               <div className="flex items-start gap-6">
-                {WORKFLOW_STEPS.map((step, index) => (
-                  <div key={`detail-${step.id}`} className="flex items-start gap-6">
-                    {/* Colonne de la carte à 288px (w-72) */}
-                    <div className="flex flex-col items-center gap-4 w-72 shrink-0">
-                      <div
-                        className={`
-                          w-full p-5 bg-white border border-slate-200 shadow-md rounded-xl
-                          transition-all duration-300
-                          ${selectedStep === step.id ? 'ring-2 ring-blue-500 shadow-xl' : ''}
-                        `}
-                      >
-                        {step.owner && (
-                          <div className="mb-4">
-                            <div className="flex items-center gap-2 mb-2">
-                              <UserIcon className="w-4 h-4 text-blue-600" />
-                              <span className="text-xs font-bold text-slate-600">OWNER</span>
-                            </div>
-                            <p className="text-sm text-slate-900 whitespace-pre-line leading-relaxed">{step.owner}</p>
-                          </div>
-                        )}
+                {WORKFLOW_STEPS.map((step, index) => {
+                  const isSelected = selectedStep === step.id;
+                  const isDimmed = selectedStep !== null && !isSelected;
 
-                        {step.tools && step.tools.length > 0 && (
-                          <div className="mb-4">
-                            <div className="flex items-center gap-2 mb-2">
-                              <Wrench className="w-4 h-4 text-green-600" />
-                              <span className="text-xs font-bold text-slate-600">TOOLS</span>
+                  return (
+                    <div key={`detail-${step.id}`} className="flex items-start gap-6">
+                      <div className={`flex flex-col items-center gap-4 w-72 shrink-0 transition-all duration-500 ${isDimmed ? 'opacity-30 scale-[0.98]' : 'opacity-100 scale-100'}`}>
+                        <div
+                          className={`
+                            w-full p-5 bg-white border border-slate-200 shadow-md rounded-xl
+                            transition-all duration-300
+                            ${isSelected ? 'ring-2 ring-blue-500 shadow-xl border-blue-200 bg-blue-50/10' : ''}
+                          `}
+                        >
+                          {step.owner && (
+                            <div className="mb-4">
+                              <div className="flex items-center gap-2 mb-2">
+                                <UserIcon className="w-4 h-4 text-blue-600" />
+                                <span className="text-xs font-bold text-slate-600">OWNER</span>
+                              </div>
+                              <p className="text-sm text-slate-900 whitespace-pre-line leading-relaxed">{step.owner}</p>
                             </div>
-                            <ul className="space-y-1.5 pl-1">
-                              {step.tools.map((tool, idx) => (
-                                <li key={idx} className="text-xs text-slate-700 leading-relaxed flex gap-2">
-                                  <span className="text-green-500">•</span> <span>{tool}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
+                          )}
 
-                        {step.notes && step.notes.length > 0 && (
-                          <div className="mb-4">
-                            <div className="text-xs font-bold text-slate-600 mb-2">NOTES</div>
-                            <ul className="space-y-1.5 pl-1">
-                              {step.notes.map((note, idx) => (
-                                <li key={idx} className="text-xs text-slate-700 leading-relaxed whitespace-pre-line">
-                                  {note}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-
-                        {step.gaps && step.gaps.length > 0 && (
-                          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                            <div className="flex items-center gap-2 mb-2">
-                              <AlertTriangle className="w-4 h-4 text-red-600" />
-                              <span className="text-xs font-bold text-red-700">PROCESS GAPS</span>
+                          {step.tools && step.tools.length > 0 && (
+                            <div className="mb-4">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Wrench className="w-4 h-4 text-green-600" />
+                                <span className="text-xs font-bold text-slate-600">TOOLS</span>
+                              </div>
+                              <ul className="space-y-1.5 pl-1">
+                                {step.tools.map((tool, idx) => (
+                                  <li key={idx} className="text-xs text-slate-700 leading-relaxed flex gap-2">
+                                    <span className="text-green-500">•</span> <span>{tool}</span>
+                                  </li>
+                                ))}
+                              </ul>
                             </div>
-                            <ul className="space-y-1 pl-1">
-                              {step.gaps.map((gap, idx) => (
-                                <li key={idx} className="text-xs text-red-700 leading-relaxed flex gap-2">
-                                  <span className="text-red-500">•</span> <span>{gap}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
+                          )}
 
-                        {step.questions && step.questions.length > 0 && (
-                          <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                            <div className="flex items-center gap-2 mb-2">
-                              <HelpCircle className="w-4 h-4 text-amber-600" />
-                              <span className="text-xs font-bold text-amber-700">OPEN QUESTIONS</span>
+                          {step.notes && step.notes.length > 0 && (
+                            <div className="mb-4">
+                              <div className="text-xs font-bold text-slate-600 mb-2">NOTES</div>
+                              <ul className="space-y-1.5 pl-1">
+                                {step.notes.map((note, idx) => (
+                                  <li key={idx} className="text-xs text-slate-700 leading-relaxed whitespace-pre-line">
+                                    {note}
+                                  </li>
+                                ))}
+                              </ul>
                             </div>
-                            <ul className="space-y-1 pl-1">
-                              {step.questions.map((question, idx) => (
-                                <li key={idx} className="text-xs text-amber-700 leading-relaxed flex gap-2">
-                                  <span className="text-amber-500">•</span> <span>{question}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
+                          )}
+
+                          {step.gaps && step.gaps.length > 0 && (
+                            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <AlertTriangle className="w-4 h-4 text-red-600" />
+                                <span className="text-xs font-bold text-red-700">PROCESS GAPS</span>
+                              </div>
+                              <ul className="space-y-1 pl-1">
+                                {step.gaps.map((gap, idx) => (
+                                  <li key={idx} className="text-xs text-red-700 leading-relaxed flex gap-2">
+                                    <span className="text-red-500">•</span> <span>{gap}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {step.questions && step.questions.length > 0 && (
+                            <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <HelpCircle className="w-4 h-4 text-amber-600" />
+                                <span className="text-xs font-bold text-amber-700">OPEN QUESTIONS</span>
+                              </div>
+                              <ul className="space-y-1 pl-1">
+                                {step.questions.map((question, idx) => (
+                                  <li key={idx} className="text-xs text-amber-700 leading-relaxed flex gap-2">
+                                    <span className="text-amber-500">•</span> <span>{question}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      {index < WORKFLOW_STEPS.length - 1 && <div className="w-10 shrink-0" />}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* ZONE PARTAGÉE POCS */}
+              <div className={`transition-all duration-500 ${shouldDimPocCard ? 'opacity-30 grayscale-[30%]' : 'opacity-100'}`}>
+                {/* LIGNES VERTICALES POUR POCS */}
+                <div className="flex items-start gap-6 mt-8">
+                  <div className="w-72 shrink-0"></div><div className="w-10 shrink-0"></div>
+                  <div className="w-72 shrink-0 flex flex-col items-center"><div className="w-0.5 h-8 bg-gradient-to-b from-indigo-400 to-indigo-500"></div></div>
+                  <div className="w-10 shrink-0"></div>
+                  <div className="w-72 shrink-0 flex flex-col items-center"><div className="w-0.5 h-8 bg-gradient-to-b from-indigo-400 to-indigo-500"></div></div>
+                </div>
+
+                {/* LIGNE HORIZONTALE PARTAGÉE */}
+                <div className="flex items-start gap-6">
+                  <div className="w-72 shrink-0"></div><div className="w-10 shrink-0"></div>
+                  <div className="flex items-center" style={{ width: '664px' }}>
+                    <div className="h-0.5 w-full bg-gradient-to-r from-indigo-500 via-indigo-400 to-indigo-500"></div>
+                  </div>
+                </div>
+
+                {/* CARTE PARTAGÉE DES POCS */}
+                <div className="flex items-start gap-6 mt-4">
+                  <div className="w-72 shrink-0"></div><div className="w-10 shrink-0"></div>
+                  <div className="flex justify-center shrink-0" style={{ width: '664px' }}>
+                    <div className="w-full max-w-xl p-5 bg-gradient-to-br from-indigo-50 to-blue-50 border-indigo-300 border-2 shadow-lg rounded-xl">
+                      <div className="flex items-center gap-2 mb-3">
+                        <UsersIcon className="w-5 h-5 text-indigo-600" />
+                        <span className="text-sm font-bold text-indigo-700">LOCAL POCS & CONTACTS</span>
+                        <span className="text-xs text-indigo-500 ml-auto">(for Steps 2 & 3)</span>
+                      </div>
+                      <div className="text-xs text-indigo-900 leading-relaxed whitespace-pre-line">
+                        {'👥 Dedicated Local POCs for localization:\n• France: @Delphine de Roquemaurel\n• Germany: @Hannah Lüdicke\n• Italy: @lollo\n• Spain: @cristina.gomez\n• Portugal: @Julia Latorre\n• Netherlands:\n  - Non-SEO/non-partnerships: @rosemarijn.disseldorp\n  - SEO: @Dimitri Jordens\n  - Partnerships: @stijn.teves\n• Slack help: #new-markets-localization-help'}
                       </div>
                     </div>
-                    {/* Espacement de 40px (w-10) entre les cartes */}
-                    {index < WORKFLOW_STEPS.length - 1 && <div className="w-10 shrink-0" />}
-                  </div>
-                ))}
-              </div>
-
-              {/* LIGNES VERTICALES POUR POCS */}
-              <div className="flex items-start gap-6 mt-8">
-                <div className="w-72 shrink-0"></div><div className="w-10 shrink-0"></div>
-                <div className="w-72 shrink-0 flex flex-col items-center"><div className="w-0.5 h-8 bg-gradient-to-b from-indigo-400 to-indigo-500"></div></div>
-                <div className="w-10 shrink-0"></div>
-                <div className="w-72 shrink-0 flex flex-col items-center"><div className="w-0.5 h-8 bg-gradient-to-b from-indigo-400 to-indigo-500"></div></div>
-              </div>
-
-              {/* LIGNE HORIZONTALE PARTAGÉE (Largeur recalculée pour englober parfaitement les étapes 2 et 3) */}
-              <div className="flex items-start gap-6">
-                <div className="w-72 shrink-0"></div><div className="w-10 shrink-0"></div>
-                <div className="flex items-center" style={{ width: '664px' }}>
-                  <div className="h-0.5 w-full bg-gradient-to-r from-indigo-500 via-indigo-400 to-indigo-500"></div>
-                </div>
-              </div>
-
-              {/* CARTE PARTAGÉE DES POCS */}
-              <div className="flex items-start gap-6 mt-4">
-                <div className="w-72 shrink-0"></div><div className="w-10 shrink-0"></div>
-                <div className="flex justify-center shrink-0" style={{ width: '664px' }}>
-                  <div className="w-full max-w-xl p-5 bg-gradient-to-br from-indigo-50 to-blue-50 border-indigo-300 border-2 shadow-lg rounded-xl">
-                    <div className="flex items-center gap-2 mb-3">
-                      <UsersIcon className="w-5 h-5 text-indigo-600" />
-                      <span className="text-sm font-bold text-indigo-700">LOCAL POCS & CONTACTS</span>
-                      <span className="text-xs text-indigo-500 ml-auto">(for Steps 2 & 3)</span>
-                    </div>
-                    <div className="text-xs text-indigo-900 leading-relaxed whitespace-pre-line">
-                      {'👥 Dedicated Local POCs for localization:\n• France: @Delphine de Roquemaurel\n• Germany: @Hannah Lüdicke\n• Italy: @lollo\n• Spain: @cristina.gomez\n• Portugal: @Julia Latorre\n• Netherlands:\n  - Non-SEO/non-partnerships: @rosemarijn.disseldorp\n  - SEO: @Dimitri Jordens\n  - Partnerships: @stijn.teves\n• Slack help: #new-markets-localization-help'}
-                    </div>
                   </div>
                 </div>
               </div>
+              
             </div>
           </div>
         </div>
