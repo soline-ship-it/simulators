@@ -28,6 +28,27 @@
     const HelpCircle = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>;
     const Wrench = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>;
     const UsersIcon = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>;
+    const CheckCircle2 = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>;
+    const BookOpen = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>;
+
+    // --- HELPER: TEXT FORMATTER FOR HYPERLINKS ---
+    const formatLinks = (text) => {
+      if (typeof text !== 'string') return text;
+      const parts = text.split(/(QualityGuard)/g);
+      return parts.map((part, i) => 
+        part === 'QualityGuard' ? (
+          <a key={i} 
+             href="https://www.notion.so/qonto/Check-copy-quality-24d31ee4c6968193bc6bc98d7f613d93?source=copy_link" 
+             target="_blank" 
+             rel="noopener noreferrer" 
+             className="text-indigo-600 font-bold hover:underline"
+             onClick={(e) => e.stopPropagation()}
+          >
+            QualityGuard
+          </a>
+        ) : part
+      );
+    };
 
     // --- DATA ---
     const WORKFLOW_STEPS = [
@@ -38,77 +59,106 @@
       { id: 5, title: 'Red Bin Logging', subtitle: 'Track & fix issues', color: 'from-red-500 to-red-600', owner: 'Anyone involved in the workflow', tools: ['Red Bin logging form/database'], notes: ['• Purpose: Log quality issues discovered after launch OR broken delivery processes', '• Analyze: Machine/Human/Method failure → implement permanent fix'] },
     ];
 
-    const QUIZ_QUESTIONS = [
-      {
-        id: 'role',
-        title: 'What is your role?',
-        options: [
-          { label: 'Comms Partner (Global projects)', value: 'Comms Partner' },
-          { label: 'CRM Manager', value: 'CRM Manager' },
-          { label: 'Local Market POC', value: 'Local Market POC' },
-          { label: 'Channel Owner (Ads/Social/Video)', value: 'Channel Owner' }
-        ]
-      },
-      {
-        id: 'channel',
-        title: 'Which channel is this content for?',
-        options: [
+    // Dynamic Quiz generation based on previous answers
+    const getQuizQuestions = (answers) => {
+      // Logic for filtering channels based on selected role
+      let channelOptions = [];
+      if (answers.role === 'CRM Manager') {
+        channelOptions = [ { label: 'CRM / Email', value: 'CRM / Email' } ];
+      } else if (answers.role === 'Channel Owner (Ads/Social/Video)') {
+        channelOptions = [
+          { label: 'Social Media', value: 'Social Media' },
+          { label: 'Paid Ads', value: 'Paid Ads' },
+          { label: 'Video Content', value: 'Video Content' }
+        ];
+      } else if (answers.role === 'Other Channel Owner (Website)') {
+        channelOptions = [ { label: 'Website', value: 'Website' } ];
+      } else {
+        // Comms Partner or Local Market POC sees all standard options
+        channelOptions = [
           { label: 'Website', value: 'Website' },
           { label: 'CRM / Email', value: 'CRM / Email' },
           { label: 'Social Media', value: 'Social Media' },
           { label: 'Paid Ads', value: 'Paid Ads' },
           { label: 'Video Content', value: 'Video Content' }
-        ]
-      },
-      {
-        id: 'projectType',
-        title: 'What type of project is this?',
-        options: [
-          { label: 'High-visibility creative (brand campaign, major launch)', value: 'High-visibility' },
-          { label: 'Standard content (self-serve)', value: 'Standard content' }
-        ]
-      },
-      {
-        id: 'language',
-        title: 'Which language/market are you targeting?',
-        options: [
-          { label: '🇫🇷 French', value: 'French' },
-          { label: '🇩🇪 German', value: 'German' },
-          { label: '🇮🇹 Italian', value: 'Italian' },
-          { label: '🇪🇸 Spanish', value: 'Spanish' },
-          { label: '🇵🇹 Portuguese', value: 'Portuguese' },
-          { label: '🇳🇱 Dutch', value: 'Dutch' },
-          { label: '🌍 Multiple / All Markets', value: 'Multiple Markets' }
-        ]
+        ];
       }
-    ];
+
+      return [
+        {
+          id: 'role', title: 'What is your role?', type: 'single',
+          options: [
+            { label: 'Comms Partner (Global projects)', value: 'Comms Partner' },
+            { label: 'CRM Manager', value: 'CRM Manager' },
+            { label: 'Local Market POC', value: 'Local Market POC' },
+            { label: 'Channel Owner (Ads/Social/Video)', value: 'Channel Owner (Ads/Social/Video)' },
+            { label: 'Other Channel Owner (Website)', value: 'Other Channel Owner (Website)' }
+          ]
+        },
+        { id: 'channel', title: 'Which channel is this content for?', type: 'single', options: channelOptions },
+        {
+          id: 'projectType', title: 'What type of project is this?', type: 'single',
+          options: [
+            { label: 'High-visibility creative (brand campaign, major launch)', value: 'High-visibility' },
+            { label: 'Standard content (self-serve)', value: 'Standard content' }
+          ]
+        },
+        {
+          id: 'language', title: 'Which language(s)/market(s) are you targeting? (Select all that apply)', type: 'multiple',
+          options: [
+            { label: '🇫🇷 French', value: 'French' },
+            { label: '🇩🇪 German', value: 'German' },
+            { label: '🇮🇹 Italian', value: 'Italian' },
+            { label: '🇪🇸 Spanish', value: 'Spanish' },
+            { label: '🇵🇹 Portuguese', value: 'Portuguese' },
+            { label: '🇳🇱 Dutch', value: 'Dutch' }
+          ]
+        }
+      ];
+    };
 
     // --- COMPONENT: QUIZ WIZARD ---
     const PathFinder = () => {
       const [answers, setAnswers] = useState({});
       const [step, setStep] = useState(0);
 
-      const handleSelect = (value) => {
-        const currentQuestion = QUIZ_QUESTIONS[step];
-        setAnswers({ ...answers, [currentQuestion.id]: value });
+      const questions = getQuizQuestions(answers);
+
+      const handleSingleSelect = (id, value) => {
+        setAnswers({ ...answers, [id]: value });
         setStep(step + 1);
       };
 
-      const getPocName = (lang) => {
-        switch(lang) {
-          case 'French': return '@Delphine de Roquemaurel';
-          case 'German': return '@Hannah Lüdicke';
-          case 'Italian': return '@lollo';
-          case 'Spanish': return '@cristina.gomez';
-          case 'Portuguese': return '@Julia Latorre';
-          case 'Dutch': return '@rosemarijn.disseldorp (non-SEO), @Dimitri Jordens (SEO), @stijn.teves (partnerships)';
-          default: return 'Local Market POCs';
+      const handleToggleMultiple = (id, value) => {
+        const currentList = answers[id] || [];
+        if (currentList.includes(value)) {
+          setAnswers({ ...answers, [id]: currentList.filter(v => v !== value) });
+        } else {
+          setAnswers({ ...answers, [id]: [...currentList, value] });
         }
       };
 
+      // Retrieves POC names for multiple selected languages
+      const getPocNames = (langs) => {
+        if (!langs || langs.length === 0) return 'Local Market POCs';
+        return langs.map(lang => {
+          switch(lang) {
+            case 'French': return '@Delphine de Roquemaurel';
+            case 'German': return '@Hannah Lüdicke';
+            case 'Italian': return '@lollo';
+            case 'Spanish': return '@cristina.gomez';
+            case 'Portuguese': return '@Julia Latorre';
+            case 'Dutch': return '@rosemarijn.disseldorp (non-SEO), @Dimitri Jordens (SEO), @stijn.teves (partnerships)';
+            default: return 'Local Market POCs';
+          }
+        }).join(', ');
+      };
+
       const renderQuiz = () => {
-        const question = QUIZ_QUESTIONS[step];
-        const progress = Math.round(((step + 1) / QUIZ_QUESTIONS.length) * 100);
+        const question = questions[step];
+        const progress = Math.round(((step + 1) / questions.length) * 100);
+        const isMultiple = question.type === 'multiple';
+        const currentMultipleSelections = answers[question.id] || [];
 
         return (
           <div className="max-w-4xl mx-auto w-full pt-10 pb-20 px-4">
@@ -122,7 +172,7 @@
               {/* Progress Bar */}
               <div className="mb-8">
                 <div className="flex justify-between text-sm text-slate-600 mb-3 font-medium">
-                  <span>Question {step + 1} of {QUIZ_QUESTIONS.length}</span>
+                  <span>Question {step + 1} of {questions.length}</span>
                   <span>{progress}%</span>
                 </div>
                 <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
@@ -133,17 +183,45 @@
               <h3 className="text-xl font-bold text-slate-900 mb-6">{question.title}</h3>
               
               <div className="space-y-3">
-                {question.options.map((opt) => (
-                  <button
-                    key={opt.value}
-                    onClick={() => handleSelect(opt.value)}
-                    className="w-full text-left p-4 rounded-xl border border-slate-200 hover:border-blue-500 hover:bg-slate-50 transition-all duration-200 flex justify-between items-center group bg-white"
-                  >
-                    <span className="font-semibold text-slate-700">{opt.label}</span>
-                    <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-blue-500" />
-                  </button>
-                ))}
+                {question.options.map((opt) => {
+                  if (isMultiple) {
+                    const isSelected = currentMultipleSelections.includes(opt.value);
+                    return (
+                      <button
+                        key={opt.value}
+                        onClick={() => handleToggleMultiple(question.id, opt.value)}
+                        className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 flex justify-between items-center group 
+                          ${isSelected ? 'border-purple-500 bg-purple-50 text-purple-900' : 'border-slate-200 hover:border-purple-300 bg-white text-slate-700'}`}
+                      >
+                        <span className="font-semibold">{opt.label}</span>
+                        {isSelected && <CheckCircle2 className="w-6 h-6 text-purple-600" />}
+                      </button>
+                    );
+                  } else {
+                    return (
+                      <button
+                        key={opt.value}
+                        onClick={() => handleSingleSelect(question.id, opt.value)}
+                        className="w-full text-left p-4 rounded-xl border border-slate-200 hover:border-blue-500 hover:bg-slate-50 transition-all duration-200 flex justify-between items-center group bg-white"
+                      >
+                        <span className="font-semibold text-slate-700">{opt.label}</span>
+                        <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-blue-500" />
+                      </button>
+                    );
+                  }
+                })}
               </div>
+
+              {/* Multiple choice requires a "Continue" button */}
+              {isMultiple && (
+                <button 
+                  onClick={() => setStep(step + 1)} 
+                  disabled={currentMultipleSelections.length === 0}
+                  className="mt-6 w-full py-4 bg-purple-600 text-white font-bold rounded-xl hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Generate My Workflow
+                </button>
+              )}
 
               {step > 0 && (
                 <button 
@@ -179,13 +257,13 @@
         }
 
         // Generate Steps dynamically based on answers
-        const pocOwner = getPocName(answers.language);
-        let masterOwner = answers.role;
-        let locOwner = pocOwner;
-        let qcOwner = pocOwner;
+        const pocNamesString = getPocNames(answers.language);
+        let masterOwner = answers.role === 'Local Market POC' ? 'Project Owner' : answers.role;
+        let locOwner = pocNamesString;
+        let qcOwner = pocNamesString;
         let uploadOwner = answers.role;
 
-        // CRM Manager rules
+        // CRM Manager rules overrides
         if (answers.role === 'CRM Manager' || answers.channel === 'CRM / Email') {
            masterOwner = 'CRM Manager';
            locOwner = 'CRM Manager';
@@ -193,15 +271,14 @@
            uploadOwner = 'CRM Manager';
         }
 
-        // Website rules
+        // Website rules overrides
         if (answers.channel === 'Website') {
-           uploadOwner = pocOwner; // Local POC always uploads website
+           uploadOwner = pocNamesString; // Local POC always uploads website pages
         }
 
         // Tools assembly
-        const masterTools = ['Tolki in Dust'];
+        const masterTools = ['Tolki in Dust', 'Channel-specific bot (linked to ToV skill)'];
         if (answers.channel === 'Website' || answers.channel === 'CRM / Email') masterTools.push('Qontent');
-        else masterTools.push('Channel-specific bot (linked to ToV skill)');
         masterTools.push('QualityGuard in Dust (if not EN-native)');
 
         const locTools = ['Tolki in Dust', 'Channel-specific bot (linked to ToV skill)'];
@@ -209,7 +286,11 @@
 
         const qcTools = ['QualityGuard in Dust (MANDATORY)'];
         if (answers.channel === 'CRM / Email') qcTools.push('Request proofread in #proofread-crm on Slack');
-        if (answers.language === 'Dutch' || answers.language === 'Portuguese') qcTools.push('#new-markets-localization-help (for native support)');
+        
+        // Check if Dutch or Portuguese is in the selected languages array
+        if (answers.language && (answers.language.includes('Dutch') || answers.language.includes('Portuguese'))) {
+          qcTools.push('#new-markets-localization-help (for native NL/PT support)');
+        }
         qcTools.push('Native review (if needed)');
 
         const uploadTools = [];
@@ -217,8 +298,8 @@
         else uploadTools.push('Upload directly on platform (' + answers.channel + ')');
 
         const steps = [
-          { num: 1, title: 'EN Master Copy', owner: masterOwner, desc: 'Create EN master. ALWAYS use QualityGuard if you are not an EN-native speaker.', tools: masterTools },
-          { num: 2, title: 'Localization', owner: locOwner, desc: `Handle the localization for the ${answers.language} market.`, tools: locTools },
+          { num: 1, title: 'EN Master Copy', owner: masterOwner, desc: 'Create EN master with channel bot. Use QualityGuard if not EN-native.', tools: masterTools },
+          { num: 2, title: 'Localization', owner: locOwner, desc: 'Handle the localization for the selected market(s).', tools: locTools },
           { num: 3, title: 'Quality Check', owner: qcOwner, desc: 'Run QualityGuard as a mandatory first step. Request native review if the translator is not native.', tools: qcTools },
           { num: 4, title: 'Content Upload', owner: uploadOwner, desc: answers.channel === 'Website' && answers.role === 'Comms Partner' ? '⚠️ Comms Partners do NOT upload website pages. The Local Market POC must duplicate the page in Qontent.' : 'Upload the finalized localized content to the platform.', tools: uploadTools },
         ];
@@ -226,23 +307,27 @@
         return (
           <div className="max-w-4xl mx-auto w-full pt-10 pb-20 px-4">
             
-            {/* Header Summary Banner (from Image 7) */}
-            <div className="bg-[#F8F5FF] border border-[#E9D5FF] rounded-2xl p-6 mb-8 flex gap-12 text-sm">
+            {/* Header Summary Banner */}
+            <div className="bg-[#F8F5FF] border border-[#E9D5FF] rounded-2xl p-6 mb-8 flex gap-12 text-sm flex-wrap">
               <div>
                 <div className="text-purple-700 font-bold mb-1">Project Type:</div>
                 <div className="text-slate-800 font-medium">{answers.projectType}</div>
               </div>
               <div>
-                <div className="text-purple-700 font-bold mb-1">Language:</div>
+                <div className="text-purple-700 font-bold mb-1">Languages:</div>
                 <div className="text-slate-800 font-medium flex items-center gap-2">
-                  {answers.language === 'Dutch' && '🇳🇱'}
-                  {answers.language === 'French' && '🇫🇷'}
-                  {answers.language === 'German' && '🇩🇪'}
-                  {answers.language === 'Italian' && '🇮🇹'}
-                  {answers.language === 'Spanish' && '🇪🇸'}
-                  {answers.language === 'Portuguese' && '🇵🇹'}
-                  {answers.language === 'Multiple Markets' && '🌍'} 
-                  {answers.language}
+                  {answers.language && answers.language.map(lang => {
+                    switch(lang) {
+                      case 'French': return '🇫🇷 ';
+                      case 'German': return '🇩🇪 ';
+                      case 'Italian': return '🇮🇹 ';
+                      case 'Spanish': return '🇪🇸 ';
+                      case 'Portuguese': return '🇵🇹 ';
+                      case 'Dutch': return '🇳🇱 ';
+                      default: return '';
+                    }
+                  }).join('')}
+                  {answers.language ? answers.language.join(', ') : ''}
                 </div>
               </div>
               <div>
@@ -264,13 +349,13 @@
                       <UserIcon className="w-5 h-5 text-blue-600" />
                       <span className="font-bold text-blue-600">{s.owner}</span>
                     </div>
-                    <p className="text-slate-700 mb-4">{s.desc}</p>
+                    <p className="text-slate-700 mb-4">{formatLinks(s.desc)}</p>
                     
                     <div className="bg-[#F8FAFC] rounded-xl p-4 text-sm">
                       <div className="font-bold text-slate-700 mb-2">TOOLS:</div>
                       <ul className="space-y-1">
                         {s.tools.map((t, idx) => (
-                          <li key={idx} className="text-slate-600">• {t}</li>
+                          <li key={idx} className="text-slate-600">• {formatLinks(t)}</li>
                         ))}
                       </ul>
                     </div>
@@ -278,6 +363,17 @@
                 </div>
               ))}
             </div>
+
+            {/* Self-serve Notion Link Banner */}
+            {answers.projectType === 'Standard content' && (
+              <div className="mt-8 bg-blue-50 border border-blue-200 rounded-2xl p-6 text-center shadow-sm">
+                <BookOpen className="w-8 h-8 text-blue-500 mx-auto mb-3" />
+                <h4 className="text-lg font-bold text-blue-900 mb-2">Need more help?</h4>
+                <p className="text-blue-800">
+                  Find more resources for self-serve projects in our <a href="https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?source=copy_link#31931ee4c6968014b900cf7161ec49ab" target="_blank" rel="noopener noreferrer" className="font-bold underline hover:text-blue-600 transition-colors">Self-service Content Hub</a>!
+                </p>
+              </div>
+            )}
 
             <div className="mt-10 flex justify-center">
               <button 
@@ -291,12 +387,12 @@
         );
       };
 
-      return step < QUIZ_QUESTIONS.length ? renderQuiz() : renderResults();
+      return step < questions.length ? renderQuiz() : renderResults();
     };
 
     // --- MAIN APP (Handles Toggle) ---
     function App() {
-      const [view, setView] = useState('path'); // Set 'path' as default to show off the new feature!
+      const [view, setView] = useState('path');
       const [selectedStep, setSelectedStep] = useState(null);
       const shouldDimPocCard = selectedStep !== null && selectedStep !== 2 && selectedStep !== 3;
 
@@ -309,7 +405,6 @@
               <h1 className="text-xl font-bold text-slate-900">Localization Workflow</h1>
             </div>
             
-            {/* UI Toggle exactly like screenshot */}
             <div className="flex bg-[#F1F5F9] p-1 rounded-xl">
               <button 
                 onClick={() => setView('workflow')}
@@ -391,13 +486,13 @@
                             {step.tools && step.tools.length > 0 && (
                               <div className="mb-4">
                                 <div className="flex items-center gap-2 mb-2"><Wrench className="w-4 h-4 text-green-600" /><span className="text-xs font-bold text-slate-600">TOOLS</span></div>
-                                <ul className="space-y-1.5 pl-1">{step.tools.map((tool, idx) => (<li key={idx} className="text-xs text-slate-700 leading-relaxed flex gap-2"><span className="text-green-500">•</span> <span>{tool}</span></li>))}</ul>
+                                <ul className="space-y-1.5 pl-1">{step.tools.map((tool, idx) => (<li key={idx} className="text-xs text-slate-700 leading-relaxed flex gap-2"><span className="text-green-500">•</span> <span>{formatLinks(tool)}</span></li>))}</ul>
                               </div>
                             )}
                             {step.notes && step.notes.length > 0 && (
                               <div className="mb-4">
                                 <div className="text-xs font-bold text-slate-600 mb-2">NOTES</div>
-                                <ul className="space-y-1.5 pl-1">{step.notes.map((note, idx) => (<li key={idx} className="text-xs text-slate-700 leading-relaxed whitespace-pre-line">{note}</li>))}</ul>
+                                <ul className="space-y-1.5 pl-1">{step.notes.map((note, idx) => (<li key={idx} className="text-xs text-slate-700 leading-relaxed whitespace-pre-line">{formatLinks(note)}</li>))}</ul>
                               </div>
                             )}
                             {step.gaps && step.gaps.length > 0 && (
