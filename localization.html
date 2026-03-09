@@ -48,15 +48,14 @@
     };
 
     // --- WORKFLOW DATA (STRICT TRACK LOGIC) ---
-    // Tracks available: 'global', 'channel', 'crm'
     const WORKFLOW_STEPS = [
       {
         id: 1, title: 'EN Master Copy', subtitle: 'Create English source content',
         colorCircle: 'from-fuchsia-300 to-fuchsia-400', 
         colorHighlight: 'ring-fuchsia-300 shadow-fuchsia-200',
         useCases: [
-          { primaryTrack: 'global', tracks: ['global'], label: 'Global projects', owner: 'Comms partner / PMM', tools: ['Tolki in Dust', 'Qontent (if Website)', 'QualityGuard in Dust (if non-EN native)'] },
-          { primaryTrack: 'crm', tracks: ['crm'], label: 'CRM-specific projects', owner: 'CRM Manager', tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust (if non-EN native)'] },
+          { primaryTrack: 'global', tracks: ['global'], label: 'Global projects (incl. one-shot CRM)', owner: 'Comms partner / PMM', tools: ['Tolki in Dust', 'Qontent (if Website/CRM)', 'QualityGuard in Dust (if non-EN native)'] },
+          { primaryTrack: 'crm', tracks: ['crm'], label: 'CRM-specific (Automations, Lifecycle...)', owner: 'CRM Manager', tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust (if non-EN native)'] },
           { primaryTrack: 'channel', tracks: ['channel'], label: 'Channel-specific projects', owner: 'Channel Owner', tools: ['Channel-specific Dust bot', 'QualityGuard in Dust (if non-EN native)'] },
         ],
         notes: ['💡 Exception: High-visibility creative (not self-serve) → Creative Factory'],
@@ -67,11 +66,11 @@
         colorCircle: 'from-purple-400 to-purple-500', 
         colorHighlight: 'ring-purple-300 shadow-purple-200',
         useCases: [
-          { primaryTrack: 'global', tracks: ['global', 'channel'], label: 'Standard (Web, Social, Ads...)', owner: 'Local Market POC', tools: ['Tolki OR Channel-specific Dust bot', 'Qontent (for Website)'] },
-          { primaryTrack: 'crm', tracks: ['crm'], label: 'CRM-specific projects', owner: 'CRM Manager', tools: ['Tolki in Dust', 'Qontent'] },
+          { primaryTrack: 'global', tracks: ['global', 'channel'], label: 'Standard (Web, Social, Ads, One-shot CRM...)', owner: 'Local Market POC', tools: ['Tolki OR Channel-specific Dust bot', 'Qontent (for Website/CRM)'] },
+          { primaryTrack: 'crm', tracks: ['crm'], label: 'CRM-specific (Automations, Lifecycle...)', owner: 'CRM Manager', tools: ['Tolki in Dust', 'Qontent'] },
         ],
-        questions: ['Is the current POC list sustainable (e.g. FR)?', 'Should we assign POCs per channel instead?'],
-        gaps: ['No standardized request path for localization across channels (only #proofread-crm exists).'] 
+        questions: ['Is the current POC list sustainable (e.g. FR)? Volume will likely be an issue.', 'Should we assign POCs per channel instead?'],
+        gaps: ['No standardized request path for localization across channels (only #proofread-crm exists).', 'Today (March 2026), in reality, Comms Partners or Project Owners often still perform localization themselves even if not native.'] 
       },
       {
         id: 3, title: 'Quality Check', subtitle: '⚠️ MANDATORY step',
@@ -79,8 +78,8 @@
         colorHighlight: 'ring-violet-400 shadow-violet-300',
         pulse: true, 
         useCases: [
-          { primaryTrack: 'global', tracks: ['global', 'channel'], label: 'Standard (Web, Social, Ads...)', owner: 'Local Market POC', tools: ['QualityGuard in Dust (First step)', 'Native review (if translator is not native OR if High Impact project)'] },
-          { primaryTrack: 'crm', tracks: ['crm'], label: 'CRM-specific projects', owner: 'CRM Manager', tools: ['QualityGuard in Dust (First step)', 'Request proofread in #proofread-crm on Slack AFTER QualityGuard validation'] },
+          { primaryTrack: 'global', tracks: ['global', 'channel'], label: 'Standard (Web, Social, Ads, One-shot CRM...)', owner: 'Local Market POC', tools: ['QualityGuard in Dust (First step)', 'Native review (if translator is not native OR if High Impact project)'] },
+          { primaryTrack: 'crm', tracks: ['crm'], label: 'CRM-specific (Automations, Lifecycle...)', owner: 'CRM Manager', tools: ['QualityGuard in Dust (First step)', 'Request proofread in #proofread-crm on Slack AFTER QualityGuard validation'] },
         ],
         notes: ['Focus: Tone of Voice alignment, clarity, and grammar — NOT content accuracy.', 'For native support for 🇳🇱 Dutch and 🇵🇹 Portuguese: #new-markets-localization-help on Slack.', '⚠️ IMPORTANT: Compliance remains your responsibility.'],
         gaps: ['Decision framework for native review not formally documented.'] 
@@ -90,9 +89,9 @@
         colorCircle: 'from-blue-400 to-blue-500', 
         colorHighlight: 'ring-blue-300 shadow-blue-200',
         useCases: [
-          { primaryTrack: 'global', tracks: ['global', 'channel'], label: 'Website (Standard)', owner: 'Local Market POC', tools: ['Qontent (Duplicate page)'] },
+          { primaryTrack: 'website', tracks: ['global', 'channel'], label: 'Website (Standard)', owner: 'Local Market POC', tools: ['Qontent (Duplicate page)'] },
           { primaryTrack: 'channel', tracks: ['global', 'channel'], label: 'Ads, Social, Video, Other (Standard)', owner: 'Channel Owner', tools: ['Directly on platform'] },
-          { primaryTrack: 'crm', tracks: ['crm'], label: 'CRM-specific projects', owner: 'CRM Manager', tools: ['Qontent'] },
+          { primaryTrack: 'crm', tracks: ['global', 'crm'], label: 'CRM (One-shot & Specific)', owner: 'CRM Manager', tools: ['Qontent'] },
         ],
         gaps: ['Website: Page duplication in other languages should be 100% owned by Local Teams at localization stage—NOT Comms Partners.']
       },
@@ -124,6 +123,7 @@
         // Comms partner / PMM
         channelOptions = [
           { label: 'Website', value: 'Website' },
+          { label: 'CRM / Email', value: 'CRM / Email' },
           { label: 'Social Media', value: 'Social Media' },
           { label: 'Paid Ads', value: 'Paid Ads' },
           { label: 'Video Content', value: 'Video Content' },
@@ -256,7 +256,7 @@
 
               {/* HIGHLY VISIBLE NOTE FOR PROJECT TYPE */}
               {question.id === 'projectType' && (
-                <div className="mt-8 p-5 bg-amber-50 border-2 border-amber-200 rounded-xl flex gap-4 shadow-sm">
+                <div className="mt-8 p-5 bg-amber-50 border border-amber-200 rounded-xl flex gap-4 shadow-sm">
                   <span className="text-2xl mt-0.5">💡</span>
                   <p className="text-sm text-amber-900 leading-relaxed">
                     <strong>Not sure if your project is self-serve or request-based?</strong><br/>
@@ -319,13 +319,23 @@
         let uploadOwner = '';
         let uploadDesc = '';
 
-        // --- STRICT UPLOAD LOGIC ---
-        if (answers.role === 'CRM Manager' || answers.channel === 'CRM / Email') {
-           masterOwner = 'CRM Manager';
-           locOwner = 'CRM Manager';
-           qcOwner = 'CRM Manager';
-           uploadOwner = 'CRM Manager';
-           uploadDesc = 'Upload the finalized localized content in Qontent.';
+        // --- STRICT UPLOAD & CRM LOGIC ---
+        if (answers.channel === 'CRM / Email') {
+            if (answers.role === 'CRM Manager') {
+               // Normal CRM Flow
+               masterOwner = 'CRM Manager';
+               locOwner = 'CRM Manager';
+               qcOwner = 'CRM Manager';
+               uploadOwner = 'CRM Manager';
+               uploadDesc = 'Upload the finalized localized content in Qontent.';
+            } else {
+               // One-shot Global CRM Flow (Comms Partner creates, Local POC translates, CRM uploads)
+               masterOwner = displayRole; // Comms partner / PMM
+               locOwner = pocNamesString;
+               qcOwner = pocNamesString;
+               uploadOwner = 'CRM Manager';
+               uploadDesc = 'The CRM Manager handles the upload of the finalized localized content in Qontent.';
+            }
         } else if (answers.role === 'Comms partner / PMM') {
             if (answers.channel === 'Website') {
                 uploadOwner = 'Local Market POC';
@@ -353,7 +363,7 @@
         if (answers.channel === 'Website' || answers.channel === 'CRM / Email') locTools.push('Qontent');
 
         const qcTools = ['QualityGuard in Dust (First step)'];
-        if (answers.channel === 'CRM / Email') {
+        if (answers.channel === 'CRM / Email' && answers.role === 'CRM Manager') {
           qcTools.push('Request proofread in #proofread-crm on Slack AFTER QualityGuard validation');
         } else {
           qcTools.push('Native review (if translator is not native OR if High Impact project)');
@@ -364,13 +374,13 @@
 
         const uploadTools = [];
         if (answers.channel === 'Website' || answers.channel === 'CRM / Email') uploadTools.push('Qontent');
-        else uploadTools.push(`Directly on platform`);
+        else uploadTools.push(`Upload directly on platform`);
 
         // Using exactly the same color classes as the workflow circles
         const steps = [
           { num: 1, title: 'EN Master Copy', owner: masterOwner, desc: 'Create EN master with channel bot. Use QualityGuard if not EN-native.', tools: masterTools, colorBg: 'bg-fuchsia-400' },
           { num: 2, title: 'First-Pass Translation', owner: locOwner, desc: 'Handle the localization for the selected market(s).', tools: locTools, colorBg: 'bg-purple-500' },
-          { num: 3, title: 'Quality Check', owner: qcOwner, desc: answers.channel === 'CRM / Email' ? 'Run QualityGuard and request proofread.' : 'Run QualityGuard as a mandatory first step. Request native review if needed.', tools: qcTools, colorBg: 'bg-violet-600' },
+          { num: 3, title: 'Quality Check', owner: qcOwner, desc: answers.channel === 'CRM / Email' && answers.role === 'CRM Manager' ? 'Run QualityGuard and request proofread.' : 'Run QualityGuard as a mandatory first step. Request native review if needed.', tools: qcTools, colorBg: 'bg-violet-600' },
           { num: 4, title: 'Content Upload', owner: uploadOwner, desc: uploadDesc, tools: uploadTools, colorBg: 'bg-blue-400' },
         ];
 
@@ -677,9 +687,8 @@
                     <div className="w-[340px] shrink-0"></div><div className="w-10 shrink-0"></div>
                     <div className="flex justify-center shrink-0" style={{ width: '720px' }}>
                       <div className="w-full max-w-xl p-6 bg-white border-slate-200 border shadow-sm rounded-xl">
-                        <div className="flex items-center gap-2 mb-4"><UsersIcon className="w-5 h-5 text-slate-700" /><span className="text-sm font-bold text-slate-800">LOCAL POCS & CONTACTS</span><span className="text-xs text-slate-500 ml-auto">(for Steps 2 & 3)</span></div>
                         <div className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">
-                          {'👥 Dedicated Local POCs for localization:\n🇫🇷 France: @Delphine de Roquemaurel\n🇩🇪 Germany: @Hannah Lüdicke\n🇮🇹 Italy: @lollo\n🇪🇸 Spain: @cristina.gomez\n🇵🇹 Portugal: @Julia Latorre\n🇳🇱 Netherlands:\n  - Non-SEO/non-partnerships: @rosemarijn.disseldorp\n  - SEO: @Dimitri Jordens\n  - Partnerships: @stijn.teves\n\n💬 Slack help: #new-markets-localization-help'}
+                          {'🇫🇷 France: @Delphine de Roquemaurel\n🇩🇪 Germany: @Hannah Lüdicke\n🇮🇹 Italy: @lollo\n🇪🇸 Spain: @cristina.gomez\n🇵🇹 Portugal: @Julia Latorre\n🇳🇱 Netherlands:\n  - Non-SEO/non-partnerships: @rosemarijn.disseldorp\n  - SEO: @Dimitri Jordens\n  - Partnerships: @stijn.teves\n\n💬 Slack help: #new-markets-localization-help'}
                         </div>
                       </div>
                     </div>
