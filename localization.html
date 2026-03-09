@@ -47,55 +47,56 @@
       });
     };
 
-    // --- NEW STRUCTURED DATA FOR CLARITY ---
+    // --- WORKFLOW DATA ---
     const WORKFLOW_STEPS = [
       {
         id: 1, title: 'EN Master Copy', subtitle: 'Create English source content',
-        colorCircle: 'from-fuchsia-400 to-fuchsia-500', 
+        colorCircle: 'from-fuchsia-300 to-fuchsia-400', 
         colorHighlight: 'ring-fuchsia-300 shadow-fuchsia-200',
         useCases: [
-          { label: 'Global Projects', owner: 'Comms partner / PMM', tools: ['Tolki in Dust', 'Qontent (if Website)'] },
-          { label: 'CRM Projects', owner: 'CRM Manager', tools: ['Tolki in Dust', 'Qontent'] },
-          { label: 'Other Channels', owner: 'Channel Owner', tools: ['Channel-specific Dust bot'] },
+          { label: 'Global Projects', owner: 'Comms partner / PMM', tools: ['Tolki in Dust', 'Qontent (if Website)', 'QualityGuard in Dust (if non-EN native)'] },
+          { label: 'CRM Projects', owner: 'CRM Manager', tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust (if non-EN native)'] },
+          { label: 'Other Channels', owner: 'Channel Owner', tools: ['Channel-specific Dust bot', 'QualityGuard in Dust (if non-EN native)'] },
         ],
-        notes: ['💡 ALWAYS use QualityGuard in Dust if master copy is not delivered by an EN-native speaker.', '⚡ Exception: High-visibility creative (not self-serve) → Creative Factory'],
+        notes: ['💡 Exception: High-visibility creative (not self-serve) → Creative Factory'],
+        gaps: ['No standardized request path for localization across channels (only #proofread-crm exists).']
       },
       {
-        id: 2, title: 'Localization', subtitle: 'Generate localized versions',
-        colorCircle: 'from-purple-500 to-purple-600', 
+        id: 2, title: 'First-Pass Translation', subtitle: 'Generate localized versions',
+        colorCircle: 'from-purple-400 to-purple-500', 
         colorHighlight: 'ring-purple-300 shadow-purple-200',
         useCases: [
-          { label: 'Standard (Web, Social, Ads...)', owner: 'Local Market POC', tools: ['Tolki in Dust', 'Channel-specific Dust bot', 'Qontent (if Website)'] },
+          { label: 'Standard (Web, Social, Ads...)', owner: 'Local Market POC', tools: ['Tolki OR Channel-specific Dust bot', 'Qontent (for Website)'] },
           { label: 'CRM Projects (Due to volume)', owner: 'CRM Manager', tools: ['Tolki in Dust', 'Qontent'] },
         ],
-        gaps: ['No standardized request path for localization (only #proofread-crm exists for CRM).'],
-        questions: ['Is the current POC list sustainable or should we review it?', 'Should we standardize a single process to request localization from local POCs?']
+        questions: ['Is the current POC list sustainable (e.g. FR)?', 'Should we assign POCs per channel instead?']
       },
       {
-        id: 3, title: 'AI Quality Check + Native Review', subtitle: '⚠️ MANDATORY step',
+        id: 3, title: 'Quality Check', subtitle: '⚠️ MANDATORY step',
         colorCircle: 'from-violet-600 to-violet-700', 
         colorHighlight: 'ring-violet-400 shadow-violet-300',
-        pulse: true, // Bright & pulsing to attract attention
+        pulse: true, 
         useCases: [
-          { label: 'All Projects (Mandatory Base)', owner: 'Local Market POC (or CRM Manager)', tools: ['QualityGuard in Dust (First step)', 'Native review (if translator is not native)'] },
+          { label: 'All Projects (Mandatory Base)', owner: 'Local Market POC (or CRM Manager)', tools: ['QualityGuard in Dust (First step)', 'Native review (if translator is not native OR if High Impact project)'] },
           { label: 'CRM Specific Add-on', owner: 'CRM Manager', tools: ['Request proofread in #proofread-crm on Slack AFTER QualityGuard validation'] },
         ],
-        notes: ['🔍 Focus: Tone of Voice alignment, clarity, and grammar — NOT content accuracy.', '💬 For native support for 🇳🇱 Dutch and 🇵🇹 Portuguese: #new-markets-localization-help on Slack.', '⚠️ IMPORTANT: Compliance remains your responsibility.']
+        notes: ['🔍 Focus: Tone of Voice alignment, clarity, and grammar — NOT content accuracy.', '💬 For native support for 🇳🇱 Dutch and 🇵🇹 Portuguese: #new-markets-localization-help on Slack.', '⚠️ IMPORTANT: Compliance remains your responsibility.'],
+        gaps: ['QualityGuard is mandatory, but enforcement mechanism unclear (no gate/approval step).', 'Decision framework for native review not formally documented.']
       },
       {
         id: 4, title: 'Content Upload & Publishing', subtitle: 'Deploy localized content',
-        colorCircle: 'from-blue-500 to-blue-600', 
+        colorCircle: 'from-blue-400 to-blue-500', 
         colorHighlight: 'ring-blue-300 shadow-blue-200',
         useCases: [
           { label: 'Website', owner: 'Local Market POC', tools: ['Qontent (Duplicate page)'] },
           { label: 'CRM / Email', owner: 'CRM Manager', tools: ['Qontent'] },
           { label: 'Ads, Social, Video, Other', owner: 'Channel Owner', tools: ['Directly on platform'] },
         ],
-        gaps: ['Website: Page duplication in other languages should be 100% owned by Local Teams at localization stage—NOT Comms Partners.']
+        gaps: ['Website: Page duplication in other languages should be 100% owned by Local Teams at localization stage—NOT Comms Partners.', 'Video: No clear request process for video localization (subtitles, voiceovers).', 'Ads: Fast turnaround conflicts with review time.']
       },
       {
         id: 5, title: 'Red Bin Logging', subtitle: 'Track & fix issues',
-        colorCircle: 'from-red-400 to-red-500', 
+        colorCircle: 'from-red-300 to-red-400', 
         colorHighlight: 'ring-red-300 shadow-red-200',
         useCases: [
           { label: 'All Channels', owner: 'Anyone involved in the workflow', tools: ['Red Bin logging form/database'] }
@@ -104,7 +105,7 @@
       }
     ];
 
-    // Dynamic Quiz Logic
+    // --- DYNAMIC QUIZ LOGIC ---
     const getQuizQuestions = (answers) => {
       let channelOptions = [];
       if (answers.role === 'CRM Manager') {
@@ -254,9 +255,13 @@
 
               {/* Special Note for Project Type Question */}
               {question.id === 'projectType' && (
-                <p className="text-sm text-slate-500 mt-6 p-4 bg-slate-50 rounded-lg border border-slate-100">
-                  Not sure if your project is self-serve or request-based? Check <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer" className="text-blue-600 font-bold hover:underline">Panorama</a> and the <a href="https://www.notion.so/qonto/Comms-Toolbox-2ca31ee4c69680a2afcec1f5ce13e6c1" target="_blank" rel="noopener noreferrer" className="text-blue-600 font-bold hover:underline">Toolbox</a> first.
-                </p>
+                <div className="mt-6 p-4 bg-yellow-50/80 border border-yellow-200 rounded-xl flex gap-3 shadow-sm">
+                  <span className="text-xl">💡</span>
+                  <p className="text-sm text-yellow-800">
+                    <strong>Not sure if your project is self-serve or request-based?</strong><br/>
+                    Check <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer" className="text-blue-600 font-bold hover:underline">Panorama</a> and the <a href="https://www.notion.so/qonto/Comms-Toolbox-2ca31ee4c69680a2afcec1f5ce13e6c1" target="_blank" rel="noopener noreferrer" className="text-blue-600 font-bold hover:underline">Toolbox</a> first.
+                  </p>
+                </div>
               )}
 
               {isMultiple && (
@@ -306,36 +311,45 @@
         let displayRole = answers.role;
         if (displayRole === 'Other channel owners (Website, Paid ads, etc.)') displayRole = 'Channel Owner';
 
+        // Base Owners
         let masterOwner = displayRole;
         let locOwner = pocNamesString;
         let qcOwner = pocNamesString;
-        
         let uploadOwner = '';
         let uploadDesc = '';
 
-        if (answers.channel === 'CRM / Email') {
-          uploadOwner = 'CRM Manager';
-          uploadDesc = 'Upload the finalized localized content in Qontent.';
-        } else if (['Social Media', 'Paid Ads', 'Video Content', 'Other'].includes(answers.channel)) {
-          uploadOwner = 'Channel Owner';
-          uploadDesc = `Upload the finalized localized content directly to the platform (${answers.channel}).`;
-        } else if (answers.channel === 'Website') {
-          if (answers.role === 'Comms partner / PMM') {
-            uploadOwner = 'Comms Partner (Current) / Local Market POC (Target)';
-            uploadDesc = '⚠️ Note: Page duplication in other languages should ideally be 100% owned by Local Teams at the localization stage (NOT Comms Partners). However, you may currently still handle it in Qontent.';
-          } else {
-            uploadOwner = 'Local Market POC';
-            uploadDesc = 'The Local Market POC duplicates the page in Qontent for their respective language.';
-          }
-        }
-
-        // Apply strict CRM Manager overrides
+        // --- STRICT UPLOAD LOGIC ---
+        // CRM handles everything CRM
         if (answers.role === 'CRM Manager' || answers.channel === 'CRM / Email') {
            masterOwner = 'CRM Manager';
            locOwner = 'CRM Manager';
            qcOwner = 'CRM Manager';
+           uploadOwner = 'CRM Manager';
+           uploadDesc = 'Upload the finalized localized content in Qontent.';
+        } 
+        // Comms Partner logic
+        else if (answers.role === 'Comms partner / PMM') {
+            if (answers.channel === 'Website') {
+                uploadOwner = 'Local Market POC';
+                uploadDesc = '⚠️ Note: Page duplication in other languages is 100% owned by Local Teams at the localization stage (NOT Comms Partners). The Local Market POC duplicates the page in Qontent.';
+            } else {
+                // If Comms partner creates social/ads copy, they still don't upload it. Channel owner does.
+                uploadOwner = 'Channel Owner';
+                uploadDesc = `Upload the finalized localized content directly to the platform (${answers.channel}).`;
+            }
+        } 
+        // Channel Owner Logic
+        else {
+            if (answers.channel === 'Website') {
+                uploadOwner = 'Local Market POC';
+                uploadDesc = 'The Local Market POC duplicates the page in Qontent for their respective language.';
+            } else {
+                uploadOwner = 'Channel Owner';
+                uploadDesc = `Upload the finalized localized content directly to the platform (${answers.channel}).`;
+            }
         }
 
+        // --- TOOLS ASSEMBLY ---
         const masterTools = ['Tolki in Dust', 'Channel-specific bot (linked to ToV skill)'];
         if (answers.channel === 'Website' || answers.channel === 'CRM / Email') masterTools.push('Qontent');
         masterTools.push('QualityGuard in Dust (if not EN-native)');
@@ -348,7 +362,8 @@
         if (answers.language && (answers.language.includes('Dutch') || answers.language.includes('Portuguese'))) {
           qcTools.push('#new-markets-localization-help (for native NL/PT support)');
         }
-        qcTools.push('Native review (if needed)');
+        // Project Type is Self-Serve, so Native review is optional but recommended
+        qcTools.push('Native review (Optional, but required if translator is not native)');
 
         const uploadTools = [];
         if (answers.channel === 'Website' || answers.channel === 'CRM / Email') uploadTools.push('Qontent');
@@ -356,8 +371,8 @@
 
         // Using exactly the same color classes as the workflow circles
         const steps = [
-          { num: 1, title: 'EN Master Copy', owner: masterOwner, desc: 'Create EN master with channel bot. Use QualityGuard if not EN-native.', tools: masterTools, colorBg: 'bg-fuchsia-500' },
-          { num: 2, title: 'Localization', owner: locOwner, desc: 'Handle the localization for the selected market(s).', tools: locTools, colorBg: 'bg-purple-500' },
+          { num: 1, title: 'EN Master Copy', owner: masterOwner, desc: 'Create EN master with channel bot. Use QualityGuard if not EN-native.', tools: masterTools, colorBg: 'bg-fuchsia-400' },
+          { num: 2, title: 'First-Pass Translation', owner: locOwner, desc: 'Handle the localization for the selected market(s).', tools: locTools, colorBg: 'bg-purple-500' },
           { num: 3, title: 'Quality Check', owner: qcOwner, desc: 'Run QualityGuard as a mandatory first step. Request native review if the translator is not native.', tools: qcTools, colorBg: 'bg-violet-600' },
           { num: 4, title: 'Content Upload', owner: uploadOwner, desc: uploadDesc, tools: uploadTools, colorBg: 'bg-blue-500' },
         ];
@@ -453,12 +468,13 @@
       return (
         <div className="flex flex-col min-h-screen">
           
+          {/* HEADER */}
           <div className="flex flex-col sm:flex-row items-center justify-between py-4 px-8 bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50 gap-4">
             <div>
               <h1 className="text-xl font-bold text-slate-900">Localization Workflow</h1>
             </div>
             
-            <div className="flex bg-[#F1F5F9] p-1 rounded-xl">
+            <div className="flex bg-[#F1F5F9] p-1 rounded-xl border border-slate-200">
               <button 
                 onClick={() => setView('workflow')}
                 className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg transition-all ${view === 'workflow' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
@@ -476,13 +492,16 @@
             </div>
           </div>
 
+          {/* MAIN CONTENT AREA */}
           {view === 'path' ? (
             <PathFinder />
           ) : (
+            // Full background click handler to deselect step
             <div 
-              className="flex-1 w-full h-full min-h-screen overflow-x-auto p-8 animate-in fade-in duration-500 cursor-pointer"
+              className="flex-1 w-full min-h-screen overflow-x-auto p-8 animate-in fade-in duration-500 cursor-pointer bg-slate-50/50"
               onClick={() => setSelectedStep(null)}
             >
+              {/* Internal container stops propagation so clicking INSIDE cards doesn't deselect */}
               <div className="min-w-max pb-12 cursor-default" onClick={(e) => e.stopPropagation()}>
                 
                 {/* LIGNE 1 : CERCLES */}
@@ -521,7 +540,7 @@
                   })}
                 </div>
 
-                {/* LIGNE 2 : CARTES DÉTAILLÉES REFAITES */}
+                {/* LIGNE 2 : CARTES DÉTAILLÉES (CLAIRES ET STRUCTURÉES) */}
                 <div className="flex items-start gap-6">
                   {WORKFLOW_STEPS.map((step, index) => {
                     const isSelected = selectedStep === step.id;
@@ -531,7 +550,7 @@
                         <div className={`flex flex-col items-center gap-4 w-[340px] shrink-0 transition-all duration-500 ${isDimmed ? 'opacity-30 scale-[0.98]' : 'opacity-100 scale-100'}`}>
                           <div className={`w-full p-5 bg-white border border-slate-200 shadow-sm rounded-xl transition-all duration-300 ${isSelected ? `ring-2 ${step.colorHighlight} shadow-lg bg-slate-50/50` : ''}`}>
                             
-                            {/* NOUVEL AFFICHAGE DES USE CASES */}
+                            {/* AFFICHAGE DES USE CASES */}
                             {step.useCases && step.useCases.map((uc, i) => (
                               <div key={i} className="mb-4 bg-slate-50 border border-slate-100 rounded-lg p-3 shadow-sm">
                                 <div className="text-[10px] font-bold text-violet-600 uppercase tracking-wider mb-2">{uc.label}</div>
@@ -550,7 +569,7 @@
                               </div>
                             ))}
 
-                            {/* NOTES & GAPS */}
+                            {/* NOTES */}
                             {step.notes && step.notes.length > 0 && (
                               <div className="mt-4 pt-4 border-t border-slate-100">
                                 <div className="flex items-center gap-2 mb-2">
@@ -565,6 +584,7 @@
                               </div>
                             )}
 
+                            {/* PROCESS GAPS */}
                             {step.gaps && step.gaps.length > 0 && (
                               <div className="mt-4 p-3 bg-red-50 border border-red-100 rounded-lg">
                                 <div className="flex items-center gap-2 mb-2">
@@ -579,6 +599,7 @@
                               </div>
                             )}
 
+                            {/* QUESTIONS */}
                             {step.questions && step.questions.length > 0 && (
                               <div className="mt-4 p-3 bg-amber-50 border border-amber-100 rounded-lg">
                                 <div className="flex items-center gap-2 mb-2">
@@ -624,6 +645,7 @@
                     </div>
                   </div>
                 </div>
+                
               </div>
             </div>
           )}
