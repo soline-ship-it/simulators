@@ -35,62 +35,65 @@
     // --- HELPER: FORMAT LINKS ---
     const formatTextWithLinks = (text) => {
       if (typeof text !== 'string') return text;
+      // We look for QualityGuard OR Red Bin logging... to replace with links
       const parts = text.split(/(QualityGuard|Red Bin logging form\/database)/g);
       return parts.map((part, i) => {
         if (part === 'QualityGuard') {
-          return <a key={i} href="https://www.notion.so/qonto/Check-copy-quality-24d31ee4c6968193bc6bc98d7f613d93?source=copy_link" target="_blank" rel="noopener noreferrer" className="text-blue-600 font-bold hover:underline" onClick={e => e.stopPropagation()}>QualityGuard</a>;
+          return <a key={i} href="https://www.notion.so/qonto/Check-copy-quality-24d31ee4c6968193bc6bc98d7f613d93?source=copy_link" target="_blank" rel="noopener noreferrer" className="text-violet-600 font-bold hover:underline" onClick={e => e.stopPropagation()}>QualityGuard</a>;
         }
         if (part === 'Red Bin logging form/database') {
-          return <a key={i} href="https://www.notion.so/qonto/Growth-Efficiency-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658?source=copy_link#31931ee4c6968068814de2683bf18120" target="_blank" rel="noopener noreferrer" className="text-red-600 font-bold hover:underline" onClick={e => e.stopPropagation()}>Red Bin logging form/database</a>;
+          return <a key={i} href="https://www.notion.so/qonto/Growth-Efficiency-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658?source=copy_link#31931ee4c6968068814de2683bf18120" target="_blank" rel="noopener noreferrer" className="text-red-500 font-bold hover:underline" onClick={e => e.stopPropagation()}>Red Bin logging form/database</a>;
         }
         return part;
       });
     };
 
-    // --- WORKFLOW DATA ---
+    // --- WORKFLOW DATA (Tracks added for interactivity) ---
+    // Tracks available: 'global', 'crm', 'channel', 'website'
     const WORKFLOW_STEPS = [
       {
         id: 1, title: 'EN Master Copy', subtitle: 'Create English source content',
         colorCircle: 'from-fuchsia-300 to-fuchsia-400', 
         colorHighlight: 'ring-fuchsia-300 shadow-fuchsia-200',
         useCases: [
-          { label: 'Global Projects', owner: 'Comms partner / PMM', tools: ['Tolki in Dust', 'Qontent (if Website)', 'QualityGuard in Dust (if non-EN native)'] },
-          { label: 'CRM Projects', owner: 'CRM Manager', tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust (if non-EN native)'] },
-          { label: 'Other Channels', owner: 'Channel Owner', tools: ['Channel-specific Dust bot', 'QualityGuard in Dust (if non-EN native)'] },
+          { primaryTrack: 'global', tracks: ['global', 'website'], label: 'Global projects', owner: 'Comms partner / PMM', tools: ['Tolki in Dust', 'Qontent (if Website)', 'QualityGuard in Dust (if non-EN native)'] },
+          { primaryTrack: 'crm', tracks: ['crm'], label: 'CRM-specific projects', owner: 'CRM Manager', tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust (if non-EN native)'] },
+          { primaryTrack: 'channel', tracks: ['channel'], label: 'Channel-specific projects', owner: 'Channel Owner', tools: ['Channel-specific Dust bot', 'QualityGuard in Dust (if non-EN native)'] },
         ],
         notes: ['💡 Exception: High-visibility creative (not self-serve) → Creative Factory'],
-        gaps: ['No standardized request path for localization across channels (only #proofread-crm exists).']
+        gaps: []
       },
       {
         id: 2, title: 'First-Pass Translation', subtitle: 'Generate localized versions',
         colorCircle: 'from-purple-400 to-purple-500', 
         colorHighlight: 'ring-purple-300 shadow-purple-200',
         useCases: [
-          { label: 'Standard (Web, Social, Ads...)', owner: 'Local Market POC', tools: ['Tolki OR Channel-specific Dust bot', 'Qontent (for Website)'] },
-          { label: 'CRM Projects (Due to volume)', owner: 'CRM Manager', tools: ['Tolki in Dust', 'Qontent'] },
+          { primaryTrack: 'global', tracks: ['global', 'website', 'channel'], label: 'Standard (Web, Social, Ads...)', owner: 'Local Market POC', tools: ['Tolki OR Channel-specific Dust bot', 'Qontent (for Website)'] },
+          { primaryTrack: 'crm', tracks: ['crm'], label: 'CRM-specific projects', owner: 'CRM Manager', tools: ['Tolki in Dust', 'Qontent'] },
         ],
-        questions: ['Is the current POC list sustainable (e.g. FR)?', 'Should we assign POCs per channel instead?']
+        questions: ['Is the current POC list sustainable (e.g. FR)?', 'Should we assign POCs per channel instead?'],
+        gaps: ['No standardized request path for localization across channels (only #proofread-crm exists).'] // Gap moved here
       },
       {
         id: 3, title: 'Quality Check', subtitle: '⚠️ MANDATORY step',
         colorCircle: 'from-violet-600 to-violet-700', 
         colorHighlight: 'ring-violet-400 shadow-violet-300',
-        pulse: true, 
+        pulse: true, // Clignotant
         useCases: [
-          { label: 'All Projects (Mandatory Base)', owner: 'Local Market POC (or CRM Manager)', tools: ['QualityGuard in Dust (First step)', 'Native review (if translator is not native OR if High Impact project)'] },
-          { label: 'CRM Specific Add-on', owner: 'CRM Manager', tools: ['Request proofread in #proofread-crm on Slack AFTER QualityGuard validation'] },
+          { primaryTrack: 'global', tracks: ['global', 'website', 'channel', 'crm'], label: 'All projects (Mandatory Base)', owner: 'Local Market POC (or CRM Manager)', tools: ['QualityGuard in Dust (First step)', 'Native review (if translator is not native OR if High Impact project)'] },
+          { primaryTrack: 'crm', tracks: ['crm'], label: 'CRM-specific add-on', owner: 'CRM Manager', tools: ['Request proofread in #proofread-crm on Slack AFTER QualityGuard validation'] },
         ],
         notes: ['🔍 Focus: Tone of Voice alignment, clarity, and grammar — NOT content accuracy.', '💬 For native support for 🇳🇱 Dutch and 🇵🇹 Portuguese: #new-markets-localization-help on Slack.', '⚠️ IMPORTANT: Compliance remains your responsibility.'],
-        gaps: ['QualityGuard is mandatory, but enforcement mechanism unclear (no gate/approval step).', 'Decision framework for native review not formally documented.']
+        gaps: ['Decision framework for native review not formally documented.'] // Old Gap text removed
       },
       {
         id: 4, title: 'Content Upload & Publishing', subtitle: 'Deploy localized content',
         colorCircle: 'from-blue-400 to-blue-500', 
         colorHighlight: 'ring-blue-300 shadow-blue-200',
         useCases: [
-          { label: 'Website', owner: 'Local Market POC', tools: ['Qontent (Duplicate page)'] },
-          { label: 'CRM / Email', owner: 'CRM Manager', tools: ['Qontent'] },
-          { label: 'Ads, Social, Video, Other', owner: 'Channel Owner', tools: ['Directly on platform'] },
+          { primaryTrack: 'website', tracks: ['global', 'website'], label: 'Website', owner: 'Local Market POC', tools: ['Qontent (Duplicate page)'] },
+          { primaryTrack: 'crm', tracks: ['crm'], label: 'CRM-specific projects', owner: 'CRM Manager', tools: ['Qontent'] },
+          { primaryTrack: 'channel', tracks: ['channel'], label: 'Ads, Social, Video, Other', owner: 'Channel Owner', tools: ['Directly on platform'] },
         ],
         gaps: ['Website: Page duplication in other languages should be 100% owned by Local Teams at localization stage—NOT Comms Partners.', 'Video: No clear request process for video localization (subtitles, voiceovers).', 'Ads: Fast turnaround conflicts with review time.']
       },
@@ -99,7 +102,7 @@
         colorCircle: 'from-red-300 to-red-400', 
         colorHighlight: 'ring-red-300 shadow-red-200',
         useCases: [
-          { label: 'All Channels', owner: 'Anyone involved in the workflow', tools: ['Red Bin logging form/database'] }
+          { primaryTrack: 'global', tracks: ['global', 'website', 'channel', 'crm'], label: 'All Channels', owner: 'Anyone involved in the workflow', tools: ['Red Bin logging form/database'] }
         ],
         notes: ['• Purpose: Log quality issues discovered after launch OR broken delivery processes.', '• Analyze: Machine/Human/Method failure → implement permanent fix.']
       }
@@ -253,7 +256,7 @@
                 })}
               </div>
 
-              {/* Special Note for Project Type Question */}
+              {/* Note explicative pour Project Type */}
               {question.id === 'projectType' && (
                 <div className="mt-6 p-4 bg-yellow-50/80 border border-yellow-200 rounded-xl flex gap-3 shadow-sm">
                   <span className="text-xl">💡</span>
@@ -311,45 +314,36 @@
         let displayRole = answers.role;
         if (displayRole === 'Other channel owners (Website, Paid ads, etc.)') displayRole = 'Channel Owner';
 
-        // Base Owners
         let masterOwner = displayRole;
         let locOwner = pocNamesString;
         let qcOwner = pocNamesString;
+        
         let uploadOwner = '';
         let uploadDesc = '';
 
-        // --- STRICT UPLOAD LOGIC ---
-        // CRM handles everything CRM
+        if (answers.channel === 'CRM / Email') {
+          uploadOwner = 'CRM Manager';
+          uploadDesc = 'Upload the finalized localized content in Qontent.';
+        } else if (['Social Media', 'Paid Ads', 'Video Content', 'Other'].includes(answers.channel)) {
+          uploadOwner = 'Channel Owner';
+          uploadDesc = `Upload the finalized localized content directly to the platform (${answers.channel}).`;
+        } else if (answers.channel === 'Website') {
+          if (answers.role === 'Comms partner / PMM') {
+            uploadOwner = 'Comms Partner (Current) / Local Market POC (Target)';
+            uploadDesc = '⚠️ Note: Page duplication in other languages should ideally be 100% owned by Local Teams at the localization stage (NOT Comms Partners). However, you may currently still handle it in Qontent.';
+          } else {
+            uploadOwner = 'Local Market POC';
+            uploadDesc = 'The Local Market POC duplicates the page in Qontent for their respective language.';
+          }
+        }
+
+        // Apply strict CRM Manager overrides
         if (answers.role === 'CRM Manager' || answers.channel === 'CRM / Email') {
            masterOwner = 'CRM Manager';
            locOwner = 'CRM Manager';
            qcOwner = 'CRM Manager';
-           uploadOwner = 'CRM Manager';
-           uploadDesc = 'Upload the finalized localized content in Qontent.';
-        } 
-        // Comms Partner logic
-        else if (answers.role === 'Comms partner / PMM') {
-            if (answers.channel === 'Website') {
-                uploadOwner = 'Local Market POC';
-                uploadDesc = '⚠️ Note: Page duplication in other languages is 100% owned by Local Teams at the localization stage (NOT Comms Partners). The Local Market POC duplicates the page in Qontent.';
-            } else {
-                // If Comms partner creates social/ads copy, they still don't upload it. Channel owner does.
-                uploadOwner = 'Channel Owner';
-                uploadDesc = `Upload the finalized localized content directly to the platform (${answers.channel}).`;
-            }
-        } 
-        // Channel Owner Logic
-        else {
-            if (answers.channel === 'Website') {
-                uploadOwner = 'Local Market POC';
-                uploadDesc = 'The Local Market POC duplicates the page in Qontent for their respective language.';
-            } else {
-                uploadOwner = 'Channel Owner';
-                uploadDesc = `Upload the finalized localized content directly to the platform (${answers.channel}).`;
-            }
         }
 
-        // --- TOOLS ASSEMBLY ---
         const masterTools = ['Tolki in Dust', 'Channel-specific bot (linked to ToV skill)'];
         if (answers.channel === 'Website' || answers.channel === 'CRM / Email') masterTools.push('Qontent');
         masterTools.push('QualityGuard in Dust (if not EN-native)');
@@ -362,7 +356,6 @@
         if (answers.language && (answers.language.includes('Dutch') || answers.language.includes('Portuguese'))) {
           qcTools.push('#new-markets-localization-help (for native NL/PT support)');
         }
-        // Project Type is Self-Serve, so Native review is optional but recommended
         qcTools.push('Native review (Optional, but required if translator is not native)');
 
         const uploadTools = [];
@@ -422,7 +415,10 @@
                     <p className="text-slate-700 mb-4">{formatTextWithLinks(s.desc)}</p>
                     
                     <div className="bg-[#F8FAFC] rounded-xl p-4 text-sm border border-slate-100">
-                      <div className="font-bold text-slate-500 mb-2 uppercase text-xs">Tools</div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Wrench className="w-4 h-4 text-slate-500" />
+                        <span className="font-bold text-slate-500 uppercase text-xs">Tools</span>
+                      </div>
                       <ul className="space-y-1">
                         {s.tools.map((t, idx) => (
                           <li key={idx} className="text-slate-700 font-medium">• {formatTextWithLinks(t)}</li>
@@ -463,7 +459,17 @@
     function App() {
       const [view, setView] = useState('workflow');
       const [selectedStep, setSelectedStep] = useState(null);
-      const shouldDimPocCard = selectedStep !== null && selectedStep !== 2 && selectedStep !== 3;
+      // NEW STATE: track highlighter
+      const [selectedTrack, setSelectedTrack] = useState(null);
+
+      const shouldDimPocCard = (selectedStep !== null && selectedStep !== 2 && selectedStep !== 3) || 
+                               (selectedTrack !== null && selectedTrack !== 'global' && selectedTrack !== 'website');
+
+      // Handle clicking anywhere to clear selection
+      const handleBackgroundClick = () => {
+        setSelectedStep(null);
+        setSelectedTrack(null);
+      };
 
       return (
         <div className="flex flex-col min-h-screen">
@@ -476,14 +482,14 @@
             
             <div className="flex bg-[#F1F5F9] p-1 rounded-xl border border-slate-200">
               <button 
-                onClick={() => setView('workflow')}
+                onClick={() => {setView('workflow'); handleBackgroundClick();}}
                 className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg transition-all ${view === 'workflow' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
               >
                 <WorkflowIcon className="w-4 h-4" />
                 Full Workflow
               </button>
               <button 
-                onClick={() => setView('path')}
+                onClick={() => {setView('path'); handleBackgroundClick();}}
                 className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg transition-all ${view === 'path' ? 'bg-slate-900 shadow-sm text-white' : 'text-slate-500 hover:text-slate-700'}`}
               >
                 <GitBranchIcon className="w-4 h-4" />
@@ -496,14 +502,28 @@
           {view === 'path' ? (
             <PathFinder />
           ) : (
-            // Full background click handler to deselect step
             <div 
-              className="flex-1 w-full min-h-screen overflow-x-auto p-8 animate-in fade-in duration-500 cursor-pointer bg-slate-50/50"
-              onClick={() => setSelectedStep(null)}
+              className="flex-1 w-full min-h-screen overflow-x-auto p-8 animate-in fade-in duration-500 cursor-pointer bg-[#F8FAFC]"
+              onClick={handleBackgroundClick}
             >
-              {/* Internal container stops propagation so clicking INSIDE cards doesn't deselect */}
               <div className="min-w-max pb-12 cursor-default" onClick={(e) => e.stopPropagation()}>
                 
+                {/* LÉGENDE */}
+                <div className="flex items-center gap-6 mb-10 px-5 py-3 bg-white rounded-xl border border-slate-200 shadow-sm w-max">
+                  <div className="text-sm font-bold text-slate-400 uppercase tracking-wider mr-2">Legend</div>
+                  <div className="flex items-center gap-2">
+                    <UserIcon className="w-5 h-5 text-blue-600" />
+                    <span className="text-sm text-slate-700 font-medium">Owner (Responsible)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Wrench className="w-5 h-5 text-slate-400" />
+                    <span className="text-sm text-slate-700 font-medium">Tools (Used to deliver task)</span>
+                  </div>
+                  <div className="flex items-center gap-2 ml-4">
+                    <span className="text-sm text-indigo-500 font-bold bg-indigo-50 px-2 py-1 rounded-md">💡 Tip: Click on a card inside a step to highlight its path</span>
+                  </div>
+                </div>
+
                 {/* LIGNE 1 : CERCLES */}
                 <div className="flex items-start gap-6 mb-8">
                   {WORKFLOW_STEPS.map((step, index) => {
@@ -513,13 +533,13 @@
                       <div key={step.id} className="flex items-start gap-6">
                         <div className={`flex flex-col items-center gap-4 w-[340px] shrink-0 transition-all duration-500 ${isDimmed ? 'opacity-30 grayscale-[30%]' : 'opacity-100'}`}>
                           <button
-                            onClick={(e) => { e.stopPropagation(); setSelectedStep(isSelected ? null : step.id); }}
+                            onClick={(e) => { e.stopPropagation(); setSelectedStep(isSelected ? null : step.id); setSelectedTrack(null); }}
                             className={`
                               relative flex flex-col items-center justify-center
                               w-40 h-40 rounded-full cursor-pointer
                               bg-gradient-to-br ${step.colorCircle} text-white shadow-lg transition-all duration-300 hover:scale-105
                               ${isSelected ? `ring-4 ${step.colorHighlight} scale-105 shadow-xl` : ''}
-                              ${step.pulse ? 'ring-4 ring-violet-300 animate-pulse' : ''}
+                              ${step.pulse && !isSelected ? 'ring-4 ring-violet-300 animate-pulse' : ''}
                             `}
                           >
                             <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-white text-slate-900 flex items-center justify-center font-bold text-lg shadow-sm border-2 border-slate-200">{step.id}</div>
@@ -540,43 +560,60 @@
                   })}
                 </div>
 
-                {/* LIGNE 2 : CARTES DÉTAILLÉES (CLAIRES ET STRUCTURÉES) */}
+                {/* LIGNE 2 : CARTES DÉTAILLÉES (INTERACTIVES PAR USE CASE) */}
                 <div className="flex items-start gap-6">
                   {WORKFLOW_STEPS.map((step, index) => {
-                    const isSelected = selectedStep === step.id;
-                    const isDimmed = selectedStep !== null && !isSelected;
+                    const isStepSelected = selectedStep === step.id;
+                    const isStepDimmed = selectedStep !== null && !isStepSelected;
+                    
                     return (
                       <div key={`detail-${step.id}`} className="flex items-start gap-6">
-                        <div className={`flex flex-col items-center gap-4 w-[340px] shrink-0 transition-all duration-500 ${isDimmed ? 'opacity-30 scale-[0.98]' : 'opacity-100 scale-100'}`}>
-                          <div className={`w-full p-5 bg-white border border-slate-200 shadow-sm rounded-xl transition-all duration-300 ${isSelected ? `ring-2 ${step.colorHighlight} shadow-lg bg-slate-50/50` : ''}`}>
+                        <div className={`flex flex-col items-center gap-4 w-[340px] shrink-0 transition-all duration-500 ${isStepDimmed ? 'opacity-30 scale-[0.98]' : 'opacity-100 scale-100'}`}>
+                          <div className={`w-full p-5 bg-white border border-slate-200 shadow-sm rounded-xl transition-all duration-300 ${isStepSelected ? `ring-2 ${step.colorHighlight} shadow-lg bg-slate-50/50` : ''}`}>
                             
-                            {/* AFFICHAGE DES USE CASES */}
-                            {step.useCases && step.useCases.map((uc, i) => (
-                              <div key={i} className="mb-4 bg-slate-50 border border-slate-100 rounded-lg p-3 shadow-sm">
-                                <div className="text-[10px] font-bold text-violet-600 uppercase tracking-wider mb-2">{uc.label}</div>
-                                
-                                <div className="flex items-start gap-2 mb-2">
-                                  <UserIcon className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-                                  <span className="text-sm font-bold text-slate-800">{uc.owner}</span>
+                            {/* AFFICHAGE DES USE CASES CLICABLES */}
+                            {step.useCases && step.useCases.map((uc, i) => {
+                              const isTrackActive = selectedTrack === null || uc.tracks.includes(selectedTrack);
+                              const isSpecificallySelected = selectedTrack !== null && uc.tracks.includes(selectedTrack);
+
+                              return (
+                                <div 
+                                  key={i} 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedStep(null); // Clear step focus when clicking a track
+                                    setSelectedTrack(selectedTrack === uc.primaryTrack ? null : uc.primaryTrack);
+                                  }}
+                                  className={`mb-4 border rounded-xl p-4 transition-all duration-300 cursor-pointer hover:border-violet-300 hover:shadow-md
+                                    ${!isTrackActive ? 'opacity-30 grayscale-[50%] bg-slate-50 border-slate-100' : ''}
+                                    ${isSpecificallySelected ? 'border-violet-400 bg-violet-50/50 ring-1 ring-violet-200 shadow-sm' : 'bg-white border-slate-200 shadow-sm'}
+                                  `}
+                                >
+                                  <div className="text-[11px] font-bold text-violet-700 uppercase tracking-wider mb-3">{uc.label}</div>
+                                  
+                                  <div className="flex items-start gap-2 mb-3">
+                                    <UserIcon className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                                    <span className="text-sm font-bold text-slate-800">{uc.owner}</span>
+                                  </div>
+                                  
+                                  <div className="flex items-start gap-2">
+                                    <Wrench className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
+                                    <ul className="text-sm text-slate-600">
+                                      {uc.tools.map((t, j) => <li key={j} className="mb-1">• {formatTextWithLinks(t)}</li>)}
+                                    </ul>
+                                  </div>
                                 </div>
-                                
-                                <div className="flex items-start gap-2">
-                                  <Wrench className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
-                                  <ul className="text-sm text-slate-600">
-                                    {uc.tools.map((t, j) => <li key={j}>• {formatTextWithLinks(t)}</li>)}
-                                  </ul>
-                                </div>
-                              </div>
-                            ))}
+                              );
+                            })}
 
                             {/* NOTES */}
                             {step.notes && step.notes.length > 0 && (
                               <div className="mt-4 pt-4 border-t border-slate-100">
                                 <div className="flex items-center gap-2 mb-2">
                                   <FileText className="w-4 h-4 text-slate-500" />
-                                  <span className="text-xs font-bold text-slate-500 uppercase">Notes</span>
+                                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Notes</span>
                                 </div>
-                                <ul className="space-y-1.5 pl-1">
+                                <ul className="space-y-2 pl-1">
                                   {step.notes.map((note, idx) => (
                                     <li key={idx} className="text-xs text-slate-600 leading-relaxed whitespace-pre-line">{formatTextWithLinks(note)}</li>
                                   ))}
@@ -589,11 +626,11 @@
                               <div className="mt-4 p-3 bg-red-50 border border-red-100 rounded-lg">
                                 <div className="flex items-center gap-2 mb-2">
                                   <AlertTriangle className="w-4 h-4 text-red-500" />
-                                  <span className="text-xs font-bold text-red-600 uppercase">Process Gaps</span>
+                                  <span className="text-xs font-bold text-red-600 uppercase tracking-wider">Process Gaps</span>
                                 </div>
-                                <ul className="space-y-1 pl-1">
+                                <ul className="space-y-1.5 pl-1">
                                   {step.gaps.map((gap, idx) => (
-                                    <li key={idx} className="text-xs text-red-600 leading-relaxed flex gap-2"><span className="text-red-400">•</span> <span>{gap}</span></li>
+                                    <li key={idx} className="text-xs text-red-700 leading-relaxed flex gap-2"><span className="text-red-400 mt-0.5">🔺</span> <span>{gap}</span></li>
                                   ))}
                                 </ul>
                               </div>
@@ -604,11 +641,11 @@
                               <div className="mt-4 p-3 bg-amber-50 border border-amber-100 rounded-lg">
                                 <div className="flex items-center gap-2 mb-2">
                                   <HelpCircle className="w-4 h-4 text-amber-500" />
-                                  <span className="text-xs font-bold text-amber-600 uppercase">Open Questions</span>
+                                  <span className="text-xs font-bold text-amber-600 uppercase tracking-wider">Open Questions</span>
                                 </div>
-                                <ul className="space-y-1 pl-1">
+                                <ul className="space-y-1.5 pl-1">
                                   {step.questions.map((q, idx) => (
-                                    <li key={idx} className="text-xs text-amber-700 leading-relaxed flex gap-2"><span className="text-amber-400">•</span> <span>{q}</span></li>
+                                    <li key={idx} className="text-xs text-amber-800 leading-relaxed flex gap-2"><span className="text-amber-400 mt-0.5">•</span> <span>{q}</span></li>
                                   ))}
                                 </ul>
                               </div>
