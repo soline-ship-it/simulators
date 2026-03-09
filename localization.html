@@ -47,16 +47,16 @@
       });
     };
 
-    // --- WORKFLOW DATA (CLEAN & SIMPLE) ---
+    // --- WORKFLOW DATA WITH INTERACTIVE TRACKS ---
     const WORKFLOW_STEPS = [
       {
         id: 1, title: 'EN Master Copy', subtitle: 'Create English source content',
         colorCircle: 'from-fuchsia-400 to-fuchsia-500', 
         colorHighlight: 'ring-fuchsia-300 shadow-fuchsia-200',
         useCases: [
-          { label: 'Global projects', owner: 'Comms partner / PMM', tools: ['Tolki in Dust', 'Qontent (if Website)', 'QualityGuard in Dust (if non-EN native)'] },
-          { label: 'CRM-specific projects', owner: 'CRM Manager', tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust (if non-EN native)'] },
-          { label: 'Channel-specific projects', owner: 'Channel Owner', tools: ['Channel-specific Dust bot', 'QualityGuard in Dust (if non-EN native)'] },
+          { primaryTrack: 'global', tracks: ['global', 'website'], label: 'Global projects', owner: 'Comms partner / PMM', tools: ['Tolki in Dust', 'Qontent (if Website)', 'QualityGuard in Dust (if non-EN native)'] },
+          { primaryTrack: 'crm', tracks: ['crm'], label: 'CRM-specific projects', owner: 'CRM Manager', tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust (if non-EN native)'] },
+          { primaryTrack: 'channel', tracks: ['channel'], label: 'Channel-specific projects', owner: 'Channel Owner', tools: ['Channel-specific Dust bot', 'QualityGuard in Dust (if non-EN native)'] },
         ],
         notes: ['💡 Exception: High-visibility creative (not self-serve) → Creative Factory'],
         gaps: []
@@ -66,8 +66,8 @@
         colorCircle: 'from-purple-500 to-purple-600', 
         colorHighlight: 'ring-purple-300 shadow-purple-200',
         useCases: [
-          { label: 'Standard (Web, Social, Ads...)', owner: 'Local Market POC', tools: ['Tolki OR Channel-specific Dust bot', 'Qontent (for Website)'] },
-          { label: 'CRM-specific projects', owner: 'CRM Manager', tools: ['Tolki in Dust', 'Qontent'] },
+          { primaryTrack: 'global', tracks: ['global', 'website', 'channel'], label: 'Standard (Web, Social, Ads...)', owner: 'Local Market POC', tools: ['Tolki OR Channel-specific Dust bot', 'Qontent (for Website)'] },
+          { primaryTrack: 'crm', tracks: ['crm'], label: 'CRM-specific projects', owner: 'CRM Manager', tools: ['Tolki in Dust', 'Qontent'] },
         ],
         questions: ['Is the current POC list sustainable (e.g. FR)?', 'Should we assign POCs per channel instead?'],
         gaps: ['No standardized request path for localization across channels (only #proofread-crm exists).'] 
@@ -78,19 +78,20 @@
         colorHighlight: 'ring-violet-400 shadow-violet-300',
         pulse: true, 
         useCases: [
-          { label: 'Standard (Web, Social, Ads...)', owner: 'Local Market POC (or CRM Manager)', tools: ['QualityGuard in Dust (First step)', 'Native review (if translator is not native OR if High Impact project)'] },
-          { label: 'CRM-specific projects', owner: 'CRM Manager', tools: ['Request proofread in #proofread-crm on Slack AFTER QualityGuard validation'] },
+          { primaryTrack: 'global', tracks: ['global', 'website', 'channel', 'crm'], label: 'Standard (Web, Social, Ads...)', owner: 'Local Market POC (or CRM Manager)', tools: ['QualityGuard in Dust (First step)', 'Native review (if translator is not native OR if High Impact project)'] },
+          { primaryTrack: 'crm', tracks: ['crm'], label: 'CRM-specific add-on', owner: 'CRM Manager', tools: ['Request proofread in #proofread-crm on Slack AFTER QualityGuard validation'] },
         ],
-        notes: ['Focus: Tone of Voice alignment, clarity, and grammar — NOT content accuracy.', 'For native support for 🇳🇱 Dutch and 🇵🇹 Portuguese: #new-markets-localization-help on Slack.', '⚠️ IMPORTANT: Compliance remains your responsibility.']
+        notes: ['Focus: Tone of Voice alignment, clarity, and grammar — NOT content accuracy.', 'For native support for 🇳🇱 Dutch and 🇵🇹 Portuguese: #new-markets-localization-help on Slack.', '⚠️ IMPORTANT: Compliance remains your responsibility.'],
+        gaps: ['Decision framework for native review not formally documented.'] 
       },
       {
         id: 4, title: 'Content Upload & Publishing', subtitle: 'Deploy localized content',
         colorCircle: 'from-blue-500 to-blue-600', 
         colorHighlight: 'ring-blue-300 shadow-blue-200',
         useCases: [
-          { label: 'Website (Standard)', owner: 'Local Market POC', tools: ['Qontent (Duplicate page)'] },
-          { label: 'Ads, Social, Video, Other (Standard)', owner: 'Channel Owner', tools: ['Directly on platform'] },
-          { label: 'CRM-specific projects', owner: 'CRM Manager', tools: ['Qontent'] },
+          { primaryTrack: 'website', tracks: ['global', 'website'], label: 'Website (Standard)', owner: 'Local Market POC', tools: ['Qontent (Duplicate page)'] },
+          { primaryTrack: 'channel', tracks: ['global', 'channel'], label: 'Ads, Social, Video, Other (Standard)', owner: 'Channel Owner', tools: ['Directly on platform'] },
+          { primaryTrack: 'crm', tracks: ['crm'], label: 'CRM-specific projects', owner: 'CRM Manager', tools: ['Qontent'] },
         ],
         gaps: ['Website: Page duplication in other languages should be 100% owned by Local Teams at localization stage—NOT Comms Partners.']
       },
@@ -99,7 +100,7 @@
         colorCircle: 'from-red-400 to-red-500', 
         colorHighlight: 'ring-red-300 shadow-red-200',
         useCases: [
-          { label: 'All Channels', owner: 'Anyone involved in the workflow', tools: ['Red Bin logging form/database'] }
+          { primaryTrack: 'global', tracks: ['global', 'website', 'channel', 'crm'], label: 'All Channels', owner: 'Anyone involved in the workflow', tools: ['Red Bin logging form/database'] }
         ],
         notes: ['Purpose: Log quality issues discovered after launch OR broken delivery processes.', 'Analyze: Machine/Human/Method failure → implement permanent fix.']
       }
@@ -252,9 +253,8 @@
                 })}
               </div>
 
-              {/* HIGHLY VISIBLE NOTE FOR PROJECT TYPE */}
               {question.id === 'projectType' && (
-                <div className="mt-8 p-5 bg-amber-50 border-2 border-amber-200 rounded-xl flex gap-4 shadow-sm">
+                <div className="mt-8 p-5 bg-amber-50 border border-amber-200 rounded-xl flex gap-4 shadow-sm">
                   <span className="text-2xl mt-0.5">💡</span>
                   <p className="text-sm text-amber-900 leading-relaxed">
                     <strong>Not sure if your project is self-serve or request-based?</strong><br/>
@@ -361,7 +361,7 @@
         if (answers.channel === 'Website' || answers.channel === 'CRM / Email') uploadTools.push('Qontent');
         else uploadTools.push(`Upload directly on platform`);
 
-        // Array representing the generated path
+        // Using exactly the same color classes as the workflow circles
         const steps = [
           { num: 1, title: 'EN Master Copy', owner: masterOwner, desc: 'Create EN master with channel bot. Use QualityGuard if not EN-native.', tools: masterTools, colorBg: 'bg-fuchsia-400' },
           { num: 2, title: 'First-Pass Translation', owner: locOwner, desc: 'Handle the localization for the selected market(s).', tools: locTools, colorBg: 'bg-purple-500' },
@@ -458,10 +458,16 @@
     function App() {
       const [view, setView] = useState('workflow');
       const [selectedStep, setSelectedStep] = useState(null);
+      const [selectedTrack, setSelectedTrack] = useState(null);
 
-      // Handle clicking anywhere on background to clear step selection
+      // Dimming logic for the bottom Local POCs card
+      const shouldDimPocCard = (selectedStep !== null && selectedStep !== 2 && selectedStep !== 3) || 
+                               (selectedTrack === 'crm'); // CRM Managers do not need the standard Local POCs list
+
+      // Click background to deselect everything
       const handleBackgroundClick = () => {
         setSelectedStep(null);
+        setSelectedTrack(null);
       };
 
       return (
@@ -495,12 +501,10 @@
           {view === 'path' ? (
             <PathFinder />
           ) : (
-            // Full background click handler to deselect step
             <div 
               className="flex-1 w-full min-h-screen overflow-x-auto p-8 animate-in fade-in duration-500 cursor-pointer bg-[#F8FAFC]"
               onClick={handleBackgroundClick}
             >
-              {/* Internal container stops propagation so clicking INSIDE cards doesn't deselect */}
               <div className="min-w-max pb-12 cursor-default" onClick={(e) => e.stopPropagation()}>
                 
                 {/* LÉGENDE */}
@@ -514,6 +518,9 @@
                     <Wrench className="w-5 h-5 text-slate-400" />
                     <span className="text-sm text-slate-700 font-medium">Tools (Used to deliver task)</span>
                   </div>
+                  <div className="flex items-center gap-2 ml-4">
+                    <span className="text-sm text-indigo-500 font-bold bg-indigo-50 px-3 py-1.5 rounded-lg border border-indigo-100">💡 Tip: Click inside a box to highlight its entire path across steps!</span>
+                  </div>
                 </div>
 
                 {/* LIGNE 1 : CERCLES */}
@@ -525,7 +532,7 @@
                       <div key={step.id} className="flex items-start gap-6">
                         <div className={`flex flex-col items-center gap-4 w-[340px] shrink-0 transition-all duration-500 ${isDimmed ? 'opacity-30 grayscale-[30%]' : 'opacity-100'}`}>
                           <button
-                            onClick={(e) => { e.stopPropagation(); setSelectedStep(isSelected ? null : step.id); }}
+                            onClick={(e) => { e.stopPropagation(); setSelectedStep(isSelected ? null : step.id); setSelectedTrack(null); }}
                             className={`
                               relative flex flex-col items-center justify-center
                               w-40 h-40 rounded-full cursor-pointer
@@ -552,7 +559,7 @@
                   })}
                 </div>
 
-                {/* LIGNE 2 : CARTES DÉTAILLÉES */}
+                {/* LIGNE 2 : CARTES DÉTAILLÉES (INTERACTIVES PAR CHEMIN) */}
                 <div className="flex items-start gap-6">
                   {WORKFLOW_STEPS.map((step, index) => {
                     const isStepSelected = selectedStep === step.id;
@@ -564,26 +571,40 @@
                           <div className={`w-full p-5 bg-white border border-slate-200 shadow-sm rounded-xl transition-all duration-300 ${isStepSelected ? `ring-2 ${step.colorHighlight} shadow-lg bg-slate-50/50` : ''}`}>
                             
                             {/* AFFICHAGE DES USE CASES */}
-                            {step.useCases && step.useCases.map((uc, i) => (
-                              <div 
-                                key={i} 
-                                className="mb-4 border border-slate-200 rounded-xl p-4 bg-white shadow-sm"
-                              >
-                                <div className="text-[11px] font-bold text-violet-700 uppercase tracking-wider mb-3">{uc.label}</div>
-                                
-                                <div className="flex items-start gap-2 mb-3">
-                                  <UserIcon className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-                                  <span className="text-sm font-bold text-slate-800">{uc.owner}</span>
+                            {step.useCases && step.useCases.map((uc, i) => {
+                              // Logique pour estomper si on a cliqué sur un "Track"
+                              const isTrackActive = selectedTrack === null || selectedTrack === 'all' || uc.tracks.includes(selectedTrack);
+                              const isSpecificallySelected = selectedTrack !== null && uc.tracks.includes(selectedTrack);
+
+                              return (
+                                <div 
+                                  key={i} 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedStep(null); // Annule le focus de la grande bulle
+                                    setSelectedTrack(selectedTrack === uc.primaryTrack ? null : uc.primaryTrack); // Active le chemin cliqué
+                                  }}
+                                  className={`mb-4 border rounded-xl p-4 transition-all duration-300 cursor-pointer hover:border-violet-300 hover:shadow-md
+                                    ${!isTrackActive ? 'opacity-30 grayscale-[50%] bg-slate-50 border-slate-100' : ''}
+                                    ${isSpecificallySelected ? 'border-violet-400 bg-violet-50/50 ring-1 ring-violet-200 shadow-sm' : 'bg-white border-slate-200 shadow-sm'}
+                                  `}
+                                >
+                                  <div className="text-[11px] font-bold text-violet-700 uppercase tracking-wider mb-3">{uc.label}</div>
+                                  
+                                  <div className="flex items-start gap-2 mb-3">
+                                    <UserIcon className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                                    <span className="text-sm font-bold text-slate-800">{uc.owner}</span>
+                                  </div>
+                                  
+                                  <div className="flex items-start gap-2">
+                                    <Wrench className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
+                                    <ul className="text-sm text-slate-600">
+                                      {uc.tools.map((t, j) => <li key={j} className="mb-1">• {formatTextWithLinks(t)}</li>)}
+                                    </ul>
+                                  </div>
                                 </div>
-                                
-                                <div className="flex items-start gap-2">
-                                  <Wrench className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
-                                  <ul className="text-sm text-slate-600">
-                                    {uc.tools.map((t, j) => <li key={j} className="mb-1">• {formatTextWithLinks(t)}</li>)}
-                                  </ul>
-                                </div>
-                              </div>
-                            ))}
+                              );
+                            })}
 
                             {/* NOTES */}
                             {step.notes && step.notes.length > 0 && (
@@ -638,7 +659,7 @@
                 </div>
 
                 {/* ZONE PARTAGÉE POCS */}
-                <div className={`transition-all duration-500 ${(selectedStep !== null && selectedStep !== 2 && selectedStep !== 3) ? 'opacity-30 grayscale-[30%]' : 'opacity-100'}`}>
+                <div className={`transition-all duration-500 ${shouldDimPocCard ? 'opacity-30 grayscale-[30%]' : 'opacity-100'}`}>
                   <div className="flex items-start gap-6 mt-8">
                     <div className="w-[340px] shrink-0"></div><div className="w-10 shrink-0"></div>
                     <div className="w-[340px] shrink-0 flex flex-col items-center"><div className="w-0.5 h-8 bg-slate-300"></div></div>
