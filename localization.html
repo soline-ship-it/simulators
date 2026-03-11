@@ -31,13 +31,13 @@
     const CheckCircle2 = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>;
     const BookOpen = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>;
     const FileText = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>;
+    const ThumbsUp = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>;
 
     // --- HELPER: FORMAT LINKS ---
-    // Modified to accept stepId for conditional Tolki linking
+    // Modified to conditionally link Tolki based on step context
     const formatTextWithLinks = (text, stepId) => {
       if (typeof text !== 'string') return text;
-      // We look for QualityGuard, Red Bin logging, and Tolki variations
-      const parts = text.split(/(QualityGuard|Red Bin logging form\/database|Tolki OR Channel-specific Dust bot|Tolki in Dust|Tolki)/g);
+      const parts = text.split(/(QualityGuard|Red Bin logging form\/database|Tolki in Dust|Tolki)/g);
       return parts.map((part, i) => {
         if (part === 'QualityGuard') {
           return <a key={i} href="https://www.notion.so/qonto/Check-copy-quality-24d31ee4c6968193bc6bc98d7f613d93?source=copy_link" target="_blank" rel="noopener noreferrer" className="text-violet-600 font-bold hover:underline" onClick={e => e.stopPropagation()}>QualityGuard</a>;
@@ -45,11 +45,11 @@
         if (part === 'Red Bin logging form/database') {
           return <a key={i} href="https://www.notion.so/qonto/Growth-Efficiency-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658?source=copy_link#31931ee4c6968068814de2683bf18120" target="_blank" rel="noopener noreferrer" className="text-red-500 font-bold hover:underline" onClick={e => e.stopPropagation()}>Red Bin logging form/database</a>;
         }
-        if (part === 'Tolki in Dust' || part === 'Tolki OR Channel-specific Dust bot' || part === 'Tolki') {
+        if (part === 'Tolki in Dust' || part === 'Tolki') {
           const url = stepId === 1 
             ? "https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf" 
             : "https://www.notion.so/qonto/Localize-24d31ee4c696812ab5c1ee03e3aeda5e?source=copy_link";
-          return <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="text-blue-600 font-bold hover:underline" onClick={e => e.stopPropagation()}>{part}</a>;
+          return <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="text-violet-600 font-bold hover:underline" onClick={e => e.stopPropagation()}>{part}</a>;
         }
         return part;
       });
@@ -103,8 +103,8 @@
           '⚠️ IMPORTANT: Compliance remains your responsibility.'
         ],
         gaps: [
-          'Decision framework for native review not formally documented.',
-          'No standardized request path for localization across channels (only #proofread-crm exists).'
+          'No standardized request path for localization across channels (only #proofread-crm exists).',
+          'Decision framework for native review not formally documented.'
         ] 
       },
       {
@@ -165,26 +165,36 @@
         { id: 'channel', title: 'Which channel is this content for?', type: 'single', options: channelOptions }
       ];
 
-      // CRM specific path
-      if (answers.channel === 'CRM / Email') {
+      // Logic routing based on Role
+      if (answers.role === 'Comms partner / PMM') {
         qs.push({
-          id: 'crmType', title: 'What type of CRM project is this?', type: 'single',
+          id: 'managementType', title: 'How is this project managed?', type: 'single',
           options: [
-            { label: 'CRM - One-shot (Global project)', value: 'CRM - One-shot' },
-            { label: 'CRM - Lifecycle (Automations, etc.)', value: 'CRM - Lifecycle' }
+            { label: 'Global project, led by PMM/Comms Partners', value: 'Global' },
+            { label: 'Project owned by channel owner, end-to-end', value: 'ChannelE2E' }
           ]
         });
-      }
-
-      // Website specific path
-      if (answers.channel === 'Website') {
-        qs.push({
-          id: 'websiteType', title: 'How is this Website project managed?', type: 'single',
-          options: [
-            { label: 'Standard (Handoff to Local POCs for localization)', value: 'Standard' },
-            { label: 'End-to-End (You handle localization via Tolki)', value: 'End-to-End' }
-          ]
-        });
+      } else {
+        // CRM specific path
+        if (answers.channel === 'CRM / Email') {
+          qs.push({
+            id: 'crmType', title: 'What type of CRM project is this?', type: 'single',
+            options: [
+              { label: 'CRM - One-shot (Global project)', value: 'CRM - One-shot' },
+              { label: 'CRM - Lifecycle (Automations, etc.)', value: 'CRM - Lifecycle' }
+            ]
+          });
+        }
+        // Website specific path
+        if (answers.channel === 'Website') {
+          qs.push({
+            id: 'websiteType', title: 'How is this Website project managed?', type: 'single',
+            options: [
+              { label: 'Standard (Handoff to Local POCs for localization)', value: 'Standard' },
+              { label: 'End-to-End (You handle localization via Tolki)', value: 'End-to-End' }
+            ]
+          });
+        }
       }
 
       qs.push({
@@ -361,8 +371,16 @@
         let displayRole = answers.role;
         if (displayRole === 'Other channel owners (Website, Paid ads, etc.)') displayRole = 'Channel Owner';
 
+        // Handling the Comms Partner End-to-End delegation override
+        let effectivelyChannelOwnerE2E = false;
+        if (answers.managementType === 'ChannelE2E') {
+            effectivelyChannelOwnerE2E = true;
+            displayRole = 'Channel Owner';
+        }
+
         // Logic Flags
-        const isE2E = (answers.channel === 'Paid Ads' && answers.projectType === 'Self-serve') ||
+        const isE2E = effectivelyChannelOwnerE2E ||
+                      (answers.channel === 'Paid Ads' && answers.projectType === 'Self-serve') ||
                       (answers.channel === 'CRM / Email' && answers.crmType === 'CRM - Lifecycle') ||
                       (answers.channel === 'Website' && answers.websiteType === 'End-to-End');
 
@@ -374,35 +392,45 @@
         let uploadDesc = '';
 
         // Specific Roles Overrides
-        if (answers.channel === 'Paid Ads') {
+        if (answers.channel === 'CRM / Email') {
+            if (isE2E) {
+               masterOwner = 'Project Owner (PMM or CRM Manager)';
+               locOwner = 'Project Owner (PMM or CRM Manager)';
+               uploadOwner = 'Project Owner (PMM or CRM Manager)';
+               uploadDesc = 'The Project Owner uploads the finalized localized content in Qontent.';
+            } else {
+               masterOwner = answers.role === 'Comms partner / PMM' ? 'Comms partner / PMM' : 'CRM Manager';
+               locOwner = pocNamesString;
+               uploadOwner = 'CRM Manager';
+               uploadDesc = 'The CRM Manager handles the upload of the finalized localized content in Qontent.';
+            }
+        } else if (answers.channel === 'Paid Ads') {
             if (answers.projectType === 'Request') {
                 masterOwner = 'Creative writer OR Comms Partner';
                 uploadOwner = 'Paid Ads Manager';
                 uploadDesc = 'The Paid Ads Manager handles the upload of the finalized localized content directly to the platform.';
             } else {
+                masterOwner = 'Paid Ads Manager';
+                locOwner = 'Paid Ads Manager';
                 uploadOwner = 'Paid Ads Manager';
                 uploadDesc = 'The Paid Ads Manager uploads the finalized localized content directly to the platform.';
             }
         } else if (isE2E) {
-            uploadOwner = displayRole === 'Comms partner / PMM' ? 'Project Owner' : displayRole;
-            uploadDesc = 'The Project Owner uploads the finalized localized content directly to the platform/CMS.';
+            let specOwner = answers.channel === 'Website' ? 'Website Manager' : 'Channel Owner';
+            masterOwner = specOwner;
+            locOwner = specOwner;
+            uploadOwner = specOwner;
+            uploadDesc = `The ${specOwner} uploads the finalized localized content directly to the platform/CMS.`;
         } else {
-            // Standard (Handoff) logic
-            if (answers.channel === 'CRM / Email') {
-                uploadOwner = 'CRM Manager';
-                uploadDesc = 'The CRM Manager handles the upload of the finalized localized content in Qontent.';
-            } else if (answers.channel === 'Website') {
+            if (answers.channel === 'Website') {
                 uploadOwner = 'Local Market POC';
-                uploadDesc = 'The Local Market POC duplicates the page in Qontent for their respective language.';
+                uploadDesc = answers.role === 'Comms partner / PMM' 
+                  ? '⚠️ Note: Page duplication in other languages is 100% owned by Local Teams at the localization stage (NOT Comms Partners). The Local Market POC duplicates the page in Qontent.'
+                  : 'The Local Market POC duplicates the page in Qontent for their respective language.';
             } else {
                 uploadOwner = displayRole;
-                uploadDesc = `Upload the finalized localized content directly to the platform.`;
+                uploadDesc = `Upload the finalized localized content directly to the platform (${answers.channel}).`;
             }
-        }
-
-        // Adjust master owner naming for better UX
-        if (answers.role === 'CRM Manager' && !isE2E) {
-            masterOwner = 'CRM Manager';
         }
 
         // --- TOOLS ASSEMBLY ---
@@ -422,7 +450,9 @@
         }
 
         const qcTools = ['QualityGuard in Dust (First step)'];
-        if (isE2E) {
+        if (answers.channel === 'CRM / Email' && isE2E) {
+            qcTools.push('Project Owner requests proofread in #proofread-crm on Slack AFTER QualityGuard validation');
+        } else if (isE2E) {
             qcTools.push('Project Owner requests proofread from Local POCs (e.g. in #proofread-crm on Slack)');
         } else {
             qcTools.push('Native review (Optional, but required if translator is not native)');
@@ -446,7 +476,11 @@
             <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 mb-8 flex gap-12 text-sm flex-wrap">
               <div>
                 <div className="text-violet-700 font-bold mb-1 uppercase text-xs tracking-wider">Project Type</div>
-                <div className="text-slate-800 font-medium">{answers.projectType} {answers.websiteType ? `(${answers.websiteType})` : ''}</div>
+                <div className="text-slate-800 font-medium">
+                   {answers.projectType} 
+                   {answers.websiteType ? ` (${answers.websiteType})` : ''}
+                   {answers.managementType === 'ChannelE2E' ? ' (End-to-End)' : ''}
+                </div>
               </div>
               <div>
                 <div className="text-violet-700 font-bold mb-1 uppercase text-xs tracking-wider">Languages</div>
@@ -487,9 +521,9 @@
 
                     {s.ruleOfThumb && (
                       <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-xl flex gap-3 shadow-sm">
-                        <span className="text-xl mt-0.5">👍</span>
+                        <ThumbsUp className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
                         <p className="text-sm text-green-900 leading-relaxed">
-                          <strong>Rule of thumb:</strong> {s.ruleOfThumb}
+                          <strong>Rule of thumb:</strong> {formatTextWithLinks(s.ruleOfThumb, s.num)}
                         </p>
                       </div>
                     )}
@@ -691,7 +725,7 @@
                             {step.ruleOfThumb && (
                               <div className="mt-4 pt-4 border-t border-slate-100">
                                 <div className="p-3 bg-green-50 border border-green-200 rounded-lg flex gap-2 shadow-sm">
-                                  <span className="text-base mt-0.5">👍</span>
+                                  <ThumbsUp className="w-4 h-4 text-green-600 shrink-0 mt-0.5" />
                                   <p className="text-xs text-green-900 leading-relaxed">
                                     <strong>Rule of thumb:</strong> {formatTextWithLinks(step.ruleOfThumb, step.id)}
                                   </p>
@@ -774,7 +808,7 @@
                           <span className="text-xs text-slate-500 ml-auto">(for Steps 2 & 3)</span>
                         </div>
                         <div className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">
-                          {'🇫🇷 France: @Delphine de Roquemaurel\n🇩🇪 Germany: @Hannah Lüdicke\n🇮🇹 Italy: @lollo\n🇪🇸 Spain: @cristina.gomez\n🇵🇹 Portugal: @Julia Latorre\n🇳🇱 Netherlands:\n  - Non-SEO/non-partnerships: @rosemarijn.disseldorp\n  - SEO: @Dimitri Jordens\n  - Partnerships: @stijn.teves\n\n💬 Slack help: #new-markets-localization-help (for 🇳🇱 Dutch and 🇵🇹 Portuguese native support)'}
+                          {'🇫🇷 France: @Delphine de Roquemaurel\n🇩🇪 Germany: @Hannah Lüdicke\n🇮🇹 Italy: @lollo\n🇪🇸 Spain: @cristina.gomez\n🇵🇹 Portugal: @Julia Latorre\n🇳🇱 Netherlands:\n  - Non-SEO/non-partnerships: @rosemarijn.disseldorp\n  - SEO: @Dimitri Jordens\n  - Partnerships: @stijn.teves\n\n💬 Slack help: #new-markets-localization-help (for 🇳🇱 Dutch and 🇵🇹 Portuguese native support only today)'}
                         </div>
                       </div>
                     </div>
