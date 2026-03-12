@@ -62,7 +62,7 @@
       });
     };
 
-    // --- WORKFLOW DATA (STANDARD vs END-TO-END) ---
+    // --- WORKFLOW DATA (CONSISTENT ORDERING: Global -> CRM -> Website -> Ads) ---
     const WORKFLOW_STEPS = [
       {
         id: 1, title: 'EN Master Copy', subtitle: 'Create English source content',
@@ -119,8 +119,8 @@
         colorCircle: 'from-blue-400 to-blue-500', 
         colorHighlight: 'ring-blue-300 shadow-blue-200',
         useCases: [
-          { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'Website (Standard)', owner: 'Local Market POC', tools: ['Qontent (Duplicate page)'] },
           { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'CRM - One-shot', owner: 'CRM Manager', tools: ['Qontent'] },
+          { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'Website (Standard)', owner: 'Local Market POC', tools: ['Qontent (Duplicate page)'] },
           { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'Paid Ads (High-Vis)', owner: 'Paid Ads Manager', tools: ['Directly on platform'] },
           { primaryTrack: 'e2e', tracks: ['crm_e2e', 'web_e2e', 'ads_e2e', 'all'], label: 'End-to-End Projects (CRM, Web, Ads)', owner: 'Project Owner', tools: ['Upload directly in platform / Qontent'] },
         ],
@@ -152,8 +152,8 @@
       } else {
         // Comms partner / PMM
         channelOptions = [
-          { label: 'Website', value: 'Website' },
           { label: 'CRM / Email', value: 'CRM / Email' },
+          { label: 'Website', value: 'Website' },
           { label: 'Paid Ads', value: 'Paid Ads' },
           { label: 'Video Content', value: 'Video Content' },
           { label: 'Other', value: 'Other' }
@@ -374,11 +374,20 @@
         let displayRole = answers.role;
         if (displayRole === 'Other channel owners (Website, Paid ads, etc.)') displayRole = 'Channel Owner';
 
-        // Logic Flags (Comms Partners are always treated as 'Standard Handoff' now)
-        const isE2E = (answers.role !== 'Comms partner / PMM') && (
-                      (answers.channel === 'Paid Ads' && answers.projectType === 'Self-serve') ||
-                      (answers.channel === 'CRM / Email' && answers.crmType === 'CRM - Lifecycle') ||
-                      (answers.channel === 'Website' && answers.websiteType === 'End-to-End'));
+        // Handling the Comms Partner End-to-End delegation override
+        let effectivelyChannelOwnerE2E = false;
+        if (answers.managementType === 'ChannelE2E') {
+            effectivelyChannelOwnerE2E = true;
+            displayRole = 'Channel Owner';
+        }
+
+        // Logic Flags (Comms Partners are standard handoffs unless they chose ChannelE2E)
+        const isE2E = effectivelyChannelOwnerE2E ||
+                      (answers.role !== 'Comms partner / PMM' && (
+                        (answers.channel === 'Paid Ads' && answers.projectType === 'Self-serve') ||
+                        (answers.channel === 'CRM / Email' && answers.crmType === 'CRM - Lifecycle') ||
+                        (answers.channel === 'Website' && answers.websiteType === 'End-to-End')
+                      ));
 
         // Base Owners
         let masterOwner = displayRole;
@@ -475,6 +484,7 @@
                 <div className="text-slate-800 font-medium">
                    {answers.projectType} 
                    {answers.websiteType ? ` (${answers.websiteType})` : ''}
+                   {answers.managementType === 'ChannelE2E' ? ' (End-to-End)' : ''}
                 </div>
               </div>
               <div>
@@ -518,7 +528,7 @@
                       <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-xl flex gap-3 shadow-sm">
                         <ThumbsUp className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
                         <p className="text-sm text-green-900 leading-relaxed">
-                          <strong>Rule of thumb:</strong> {s.ruleOfThumb}
+                          <strong>Rule of thumb:</strong> {formatTextWithLinks(s.ruleOfThumb, s.num)}
                         </p>
                       </div>
                     )}
@@ -720,14 +730,8 @@
                                   key={i} 
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    // If we are clicking the 'all' step 1 block, we highlight 'all'
-                                    if (uc.primaryTrack === 'all') {
-                                        setSelectedStep(null);
-                                        setSelectedTrack(selectedTrack === 'all' ? null : 'all');
-                                    } else {
-                                        setSelectedStep(null); 
-                                        setSelectedTrack(selectedTrack === uc.primaryTrack ? null : uc.primaryTrack); 
-                                    }
+                                    setSelectedStep(null); 
+                                    setSelectedTrack(selectedTrack === uc.primaryTrack ? null : uc.primaryTrack); 
                                   }}
                                   className={`mb-4 border rounded-xl p-4 transition-all duration-300 cursor-pointer hover:border-violet-300 hover:shadow-md
                                     ${!isTrackActive ? 'opacity-30 grayscale-[50%] bg-slate-50 border-slate-100' : ''}
