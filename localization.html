@@ -62,7 +62,7 @@
       });
     };
 
-    // --- WORKFLOW DATA ---
+    // --- WORKFLOW DATA (STANDARD vs END-TO-END) ---
     const WORKFLOW_STEPS = [
       {
         id: 1, title: 'EN Master Copy', subtitle: 'Create English source content',
@@ -172,16 +172,9 @@
         { id: 'channel', title: 'Which channel is this content for?', type: 'single', options: channelOptions }
       ];
 
-      // Logic routing based on Role & Channel
-      if (answers.role === 'Comms partner / PMM') {
-        qs.push({
-          id: 'managementType', title: 'How is this project managed?', type: 'single',
-          options: [
-            { label: 'Global project, led by PMM/Comms Partners', value: 'Global' },
-            { label: 'Project owned by channel owner, end-to-end', value: 'ChannelE2E' }
-          ]
-        });
-      } else {
+      // Logic routing based on Role & Channel. 
+      // Comms Partners do NOT see specific routing questions, they always follow standard handoff.
+      if (answers.role !== 'Comms partner / PMM') {
         // CRM specific path
         if (answers.channel === 'CRM / Email') {
           qs.push({
@@ -381,20 +374,11 @@
         let displayRole = answers.role;
         if (displayRole === 'Other channel owners (Website, Paid ads, etc.)') displayRole = 'Channel Owner';
 
-        // Handling the Comms Partner End-to-End delegation override
-        let effectivelyChannelOwnerE2E = false;
-        if (answers.managementType === 'ChannelE2E') {
-            effectivelyChannelOwnerE2E = true;
-            displayRole = 'Channel Owner';
-        }
-
-        // Logic Flags (Comms Partners are standard handoffs unless they chose ChannelE2E)
-        const isE2E = effectivelyChannelOwnerE2E ||
-                      (answers.role !== 'Comms partner / PMM' && (
-                        (answers.channel === 'Paid Ads' && answers.projectType === 'Self-serve') ||
-                        (answers.channel === 'CRM / Email' && answers.crmType === 'CRM - Lifecycle') ||
-                        (answers.channel === 'Website' && answers.websiteType === 'End-to-End')
-                      ));
+        // Logic Flags (Comms Partners are always treated as 'Standard Handoff' now)
+        const isE2E = (answers.role !== 'Comms partner / PMM') && (
+                      (answers.channel === 'Paid Ads' && answers.projectType === 'Self-serve') ||
+                      (answers.channel === 'CRM / Email' && answers.crmType === 'CRM - Lifecycle') ||
+                      (answers.channel === 'Website' && answers.websiteType === 'End-to-End'));
 
         // Base Owners
         let masterOwner = displayRole;
@@ -491,7 +475,6 @@
                 <div className="text-slate-800 font-medium">
                    {answers.projectType} 
                    {answers.websiteType ? ` (${answers.websiteType})` : ''}
-                   {answers.managementType === 'ChannelE2E' ? ' (End-to-End)' : ''}
                 </div>
               </div>
               <div>
@@ -737,8 +720,14 @@
                                   key={i} 
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    setSelectedStep(null); 
-                                    setSelectedTrack(selectedTrack === uc.primaryTrack ? null : uc.primaryTrack); 
+                                    // If we are clicking the 'all' step 1 block, we highlight 'all'
+                                    if (uc.primaryTrack === 'all') {
+                                        setSelectedStep(null);
+                                        setSelectedTrack(selectedTrack === 'all' ? null : 'all');
+                                    } else {
+                                        setSelectedStep(null); 
+                                        setSelectedTrack(selectedTrack === uc.primaryTrack ? null : uc.primaryTrack); 
+                                    }
                                   }}
                                   className={`mb-4 border rounded-xl p-4 transition-all duration-300 cursor-pointer hover:border-violet-300 hover:shadow-md
                                     ${!isTrackActive ? 'opacity-30 grayscale-[50%] bg-slate-50 border-slate-100' : ''}
