@@ -36,7 +36,6 @@
     // --- HELPER: FORMAT LINKS ---
     const formatTextWithLinks = (text, stepId) => {
       if (typeof text !== 'string') return text;
-      // We look for QualityGuard, Red Bin logging, and Tolki variations
       const parts = text.split(/(QualityGuard|Red Bin logging form\/database|Tolki in Dust|Tolki OR Channel-specific Dust bot|Tolki)/g);
       return parts.map((part, i) => {
         if (part === 'QualityGuard') {
@@ -50,7 +49,6 @@
             ? "https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf" 
             : "https://www.notion.so/qonto/Localize-24d31ee4c696812ab5c1ee03e3aeda5e?source=copy_link";
           
-          // If the phrase contains " OR ", only link the "Tolki" part
           if (part === 'Tolki OR Channel-specific Dust bot') {
             return <span key={i}><a href={url} target="_blank" rel="noopener noreferrer" className="text-violet-600 font-bold hover:underline" onClick={e => e.stopPropagation()}>Tolki</a> OR Channel-specific Dust bot</span>;
           }
@@ -64,18 +62,22 @@
       });
     };
 
-    // --- WORKFLOW DATA (SIMPLIFIED STEP 1 & SEQUENCED STEP 3) ---
+    // --- WORKFLOW DATA ---
     const WORKFLOW_STEPS = [
       {
         id: 1, title: 'EN Master Copy', subtitle: 'Create English source content',
         colorCircle: 'from-fuchsia-300 to-fuchsia-400', 
         colorHighlight: 'ring-fuchsia-300 shadow-fuchsia-200',
-        ruleOfThumb: 'Whenever no Creative writer is involved, the Project Owner is in charge of delivering the Master copy.',
+        ruleOfThumb: 'Whenever no professional Creative writer is involved, the Project Owner is in charge of delivering the Master copy.',
         useCases: [
-          // A single frame encompassing everyone for extreme clarity
-          { primaryTrack: 'all', tracks: ['standard', 'crm_e2e', 'web_e2e', 'ads_e2e'], label: 'All Self-Serve Projects', owner: 'Project Owner (Comms Partner, PMM, CRM Manager, Channel Owner...)', tools: ['Tolki in Dust OR Channel-specific Dust bot', 'Qontent (if Website/CRM)', 'QualityGuard in Dust (unless pro EN copywriter)'] }
+          { primaryTrack: 'standard', tracks: ['standard'], label: 'Global projects (incl. CRM - One-shot)', owner: 'Comms partner / PMM', tools: ['Tolki in Dust', 'Qontent (if Website/CRM)', 'QualityGuard in Dust (unless pro EN copywriter)'] },
+          { primaryTrack: 'crm_e2e', tracks: ['crm_e2e'], label: 'CRM - Lifecycle (End-to-End)', owner: 'Project Owner (PMM or CRM Manager)', tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust (unless pro EN copywriter)'] },
+          { primaryTrack: 'web_e2e', tracks: ['web_e2e'], label: 'Website (End-to-End)', owner: 'Project Owner (Website Manager)', tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust (unless pro EN copywriter)'] },
+          { primaryTrack: 'ads_e2e', tracks: ['ads_e2e'], label: 'Paid Ads (End-to-End)', owner: 'Project Owner (Paid Ads Manager)', tools: ['Channel-specific Dust bot', 'QualityGuard in Dust (unless pro EN copywriter)'] },
         ],
-        notes: [],
+        notes: [
+          '💡 ALWAYS use QualityGuard in Dust unless the master copy is delivered by a professional native EN copywriter or content manager. In real terms: use it to check the quality of your copy!'
+        ],
         gaps: []
       },
       {
@@ -171,7 +173,15 @@
       ];
 
       // Logic routing based on Role & Channel
-      if (answers.role !== 'Comms partner / PMM') {
+      if (answers.role === 'Comms partner / PMM') {
+        qs.push({
+          id: 'managementType', title: 'How is this project managed?', type: 'single',
+          options: [
+            { label: 'Global project, led by PMM/Comms Partners', value: 'Global' },
+            { label: 'Project owned by channel owner, end-to-end', value: 'ChannelE2E' }
+          ]
+        });
+      } else {
         // CRM specific path
         if (answers.channel === 'CRM / Email') {
           qs.push({
@@ -202,17 +212,20 @@
         ]
       });
 
-      qs.push({
-        id: 'language', title: 'Which language(s)/market(s) are you targeting? (Select all that apply)', type: 'multiple',
-        options: [
-          { label: '🇫🇷 French', value: 'French' },
-          { label: '🇩🇪 German', value: 'German' },
-          { label: '🇮🇹 Italian', value: 'Italian' },
-          { label: '🇪🇸 Spanish', value: 'Spanish' },
-          { label: '🇵🇹 Portuguese', value: 'Portuguese' },
-          { label: '🇳🇱 Dutch', value: 'Dutch' }
-        ]
-      });
+      // ONLY ask language if it's a self-serve project (otherwise it blocks anyway)
+      if (answers.projectType !== 'Request') {
+        qs.push({
+          id: 'language', title: 'Which language(s)/market(s) are you targeting? (Select all that apply)', type: 'multiple',
+          options: [
+            { label: '🇫🇷 French', value: 'French' },
+            { label: '🇩🇪 German', value: 'German' },
+            { label: '🇮🇹 Italian', value: 'Italian' },
+            { label: '🇪🇸 Spanish', value: 'Spanish' },
+            { label: '🇵🇹 Portuguese', value: 'Portuguese' },
+            { label: '🇳🇱 Dutch', value: 'Dutch' }
+          ]
+        });
+      }
 
       return qs;
     };
@@ -368,11 +381,20 @@
         let displayRole = answers.role;
         if (displayRole === 'Other channel owners (Website, Paid ads, etc.)') displayRole = 'Channel Owner';
 
-        // Logic Flags (Comms Partners are always treated as 'Standard Handoff' now)
-        const isE2E = (answers.role !== 'Comms partner / PMM') && (
-                      (answers.channel === 'Paid Ads' && answers.projectType === 'Self-serve') ||
-                      (answers.channel === 'CRM / Email' && answers.crmType === 'CRM - Lifecycle') ||
-                      (answers.channel === 'Website' && answers.websiteType === 'End-to-End'));
+        // Handling the Comms Partner End-to-End delegation override
+        let effectivelyChannelOwnerE2E = false;
+        if (answers.managementType === 'ChannelE2E') {
+            effectivelyChannelOwnerE2E = true;
+            displayRole = 'Channel Owner';
+        }
+
+        // Logic Flags (Comms Partners are standard handoffs unless they chose ChannelE2E)
+        const isE2E = effectivelyChannelOwnerE2E ||
+                      (answers.role !== 'Comms partner / PMM' && (
+                        (answers.channel === 'Paid Ads' && answers.projectType === 'Self-serve') ||
+                        (answers.channel === 'CRM / Email' && answers.crmType === 'CRM - Lifecycle') ||
+                        (answers.channel === 'Website' && answers.websiteType === 'End-to-End')
+                      ));
 
         // Base Owners
         let masterOwner = displayRole;
@@ -454,7 +476,7 @@
 
         // Using exactly the same color classes as the workflow circles
         const steps = [
-          { num: 1, title: 'EN Master Copy', owner: masterOwner, desc: 'Create EN master with channel bot. Use QualityGuard if not EN-native.', tools: masterTools, colorBg: 'bg-fuchsia-400', ruleOfThumb: 'Whenever no Creative writer is involved, the Project owner is in charge of delivering the Master copy.' },
+          { num: 1, title: 'EN Master Copy', owner: masterOwner, desc: 'Create EN master with channel bot. Use QualityGuard if not EN-native.', tools: masterTools, colorBg: 'bg-fuchsia-400', ruleOfThumb: 'Whenever no professional Creative writer is involved, the Project Owner is in charge of delivering the Master copy.' },
           { num: 2, title: 'First-Pass Translation', owner: locOwner, desc: 'Handle the localization for the selected market(s).', tools: locTools, colorBg: 'bg-purple-500' },
           { num: 3, title: 'Quality Check', owner: qcOwner, desc: isE2E ? 'Follow the sequence below for the native proofread handoff.' : 'Run QualityGuard as a mandatory first step. Request native review if needed.', tools: qcTools, colorBg: 'bg-violet-600' },
           { num: 4, title: 'Content Upload', owner: uploadOwner, desc: uploadDesc, tools: uploadTools, colorBg: 'bg-blue-400' },
@@ -469,6 +491,7 @@
                 <div className="text-slate-800 font-medium">
                    {answers.projectType} 
                    {answers.websiteType ? ` (${answers.websiteType})` : ''}
+                   {answers.managementType === 'ChannelE2E' ? ' (End-to-End)' : ''}
                 </div>
               </div>
               <div>
@@ -612,11 +635,20 @@
               <div className="min-w-max pb-12 cursor-default" onClick={(e) => e.stopPropagation()}>
                 
                 {/* SCOPE BANNER */}
-                <div className="mb-6 p-4 bg-indigo-50 border border-indigo-200 rounded-xl shadow-sm max-w-[1200px]">
-                   <p className="text-sm text-indigo-900 leading-relaxed">
-                     <strong>🎯 Scope of This Workflow: Standard Self-Serve Process.</strong> This flow applies whenever <em>no</em> professional Creative Writer is involved. If a Creative Writer is involved, please follow the Creative Factory Process.<br/>
-                     <span className="mt-2 block">💡 <em>Not sure if your project is self-serve or request-based? Check <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" className="font-bold underline text-indigo-700">Panorama</a> and the <a href="https://www.notion.so/qonto/Comms-Toolbox-2ca31ee4c69680a2afcec1f5ce13e6c1" target="_blank" className="font-bold underline text-indigo-700">Toolbox</a> first.</em></span>
-                   </p>
+                <div className="mb-8">
+                   <div className="p-4 bg-indigo-50 border border-indigo-200 rounded-xl shadow-sm max-w-[1200px] mb-4">
+                     <p className="text-sm text-indigo-900 leading-relaxed">
+                       🎯 <strong>This workflow works for:</strong> standard self-serve projects, when no professional Creative writer is involved. If a Creative writer is involved, please follow the Creative Factory process.
+                     </p>
+                   </div>
+                   
+                   <div className="p-5 bg-amber-50 border border-amber-200 rounded-xl flex gap-4 shadow-sm max-w-[1200px]">
+                     <span className="text-2xl mt-0.5">💡</span>
+                     <p className="text-sm text-amber-900 leading-relaxed">
+                       <strong>Not sure if your project is self-serve or request-based?</strong><br/>
+                       Check <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer" className="text-blue-700 font-bold hover:underline">Panorama</a> and the <a href="https://www.notion.so/qonto/Comms-Toolbox-2ca31ee4c69680a2afcec1f5ce13e6c1" target="_blank" rel="noopener noreferrer" className="text-blue-700 font-bold hover:underline">Toolbox</a> first.
+                     </p>
+                   </div>
                 </div>
 
                 {/* LÉGENDE */}
@@ -705,14 +737,8 @@
                                   key={i} 
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    // If we are clicking the 'all' step 1 block, we highlight 'all'
-                                    if (uc.primaryTrack === 'all') {
-                                        setSelectedStep(null);
-                                        setSelectedTrack(selectedTrack === 'all' ? null : 'all');
-                                    } else {
-                                        setSelectedStep(null); 
-                                        setSelectedTrack(selectedTrack === uc.primaryTrack ? null : uc.primaryTrack); 
-                                    }
+                                    setSelectedStep(null); 
+                                    setSelectedTrack(selectedTrack === uc.primaryTrack ? null : uc.primaryTrack); 
                                   }}
                                   className={`mb-4 border rounded-xl p-4 transition-all duration-300 cursor-pointer hover:border-violet-300 hover:shadow-md
                                     ${!isTrackActive ? 'opacity-30 grayscale-[50%] bg-slate-50 border-slate-100' : ''}
@@ -738,7 +764,7 @@
 
                             {/* NOTES */}
                             {step.notes && step.notes.length > 0 && (
-                              <div className="mt-4 pt-4 border-t border-slate-100">
+                              <div className={step.ruleOfThumb ? "mt-4" : "mt-4 pt-4 border-t border-slate-100"}>
                                 <div className="flex items-center gap-2 mb-2">
                                   <FileText className="w-4 h-4 text-slate-500" />
                                   <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Notes</span>
