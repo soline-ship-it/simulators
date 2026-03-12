@@ -118,4 +118,729 @@
         colorHighlight: 'ring-blue-300 shadow-blue-200',
         useCases: [
           { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'Website (Standard)', owner: 'Local Market POC', tools: ['Qontent (Duplicate page)'] },
-          { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'CRM - One-shot', owner: 'CRM
+          { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'CRM - One-shot', owner: 'CRM Manager', tools: ['Qontent'] },
+          { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'Paid Ads (High-Vis)', owner: 'Paid Ads Manager', tools: ['Directly on platform'] },
+          { primaryTrack: 'e2e', tracks: ['crm_e2e', 'web_e2e', 'ads_e2e', 'all'], label: 'End-to-End Projects (CRM, Web, Ads)', owner: 'Project Owner', tools: ['Upload directly in platform / Qontent'] },
+        ],
+        gaps: ['Website: Page duplication in other languages should be 100% owned by Local Teams at localization stage—NOT Comms Partners.']
+      },
+      {
+        id: 5, title: 'Red Bin Logging', subtitle: 'Track & fix issues',
+        colorCircle: 'from-red-300 to-red-400', 
+        colorHighlight: 'ring-red-300 shadow-red-200',
+        useCases: [
+          { primaryTrack: 'global', tracks: ['standard', 'crm_e2e', 'web_e2e', 'ads_e2e', 'all'], label: 'All Channels', owner: 'Anyone involved in the workflow', tools: ['Red Bin logging form/database'] }
+        ],
+        notes: ['Purpose: Log quality issues discovered after launch OR broken delivery processes.', 'Analyze: Machine/Human/Method failure → implement permanent fix.']
+      }
+    ];
+
+    // --- DYNAMIC QUIZ LOGIC ---
+    const getQuizQuestions = (answers) => {
+      let channelOptions = [];
+      if (answers.role === 'CRM Manager') {
+        channelOptions = [ { label: 'CRM / Email', value: 'CRM / Email' } ];
+      } else if (answers.role === 'Other channel owners (Website, Paid ads, etc.)') {
+        channelOptions = [
+          { label: 'Website', value: 'Website' },
+          { label: 'Paid Ads', value: 'Paid Ads' },
+          { label: 'Video Content', value: 'Video Content' },
+          { label: 'Other', value: 'Other' }
+        ];
+      } else {
+        // Comms partner / PMM
+        channelOptions = [
+          { label: 'Website', value: 'Website' },
+          { label: 'CRM / Email', value: 'CRM / Email' },
+          { label: 'Paid Ads', value: 'Paid Ads' },
+          { label: 'Video Content', value: 'Video Content' },
+          { label: 'Other', value: 'Other' }
+        ];
+      }
+
+      const qs = [
+        {
+          id: 'role', title: 'What is your role?', type: 'single',
+          options: [
+            { label: 'Comms partner / PMM', value: 'Comms partner / PMM' },
+            { label: 'CRM Manager', value: 'CRM Manager' },
+            { label: 'Other channel owners (Website, Paid ads, etc.)', value: 'Other channel owners (Website, Paid ads, etc.)' }
+          ]
+        },
+        { id: 'channel', title: 'Which channel is this content for?', type: 'single', options: channelOptions }
+      ];
+
+      // Logic routing based on Role & Channel
+      if (answers.role !== 'Comms partner / PMM') {
+        // CRM specific path
+        if (answers.channel === 'CRM / Email') {
+          qs.push({
+            id: 'crmType', title: 'What type of CRM project is this?', type: 'single',
+            options: [
+              { label: 'CRM - One-shot (Global project)', value: 'CRM - One-shot' },
+              { label: 'CRM - Lifecycle (Automations, etc.)', value: 'CRM - Lifecycle' }
+            ]
+          });
+        }
+        // Website specific path
+        if (answers.channel === 'Website') {
+          qs.push({
+            id: 'websiteType', title: 'How is this Website project managed?', type: 'single',
+            options: [
+              { label: 'Standard (Handoff to Local POCs for localization)', value: 'Standard' },
+              { label: 'End-to-End (You handle localization via Tolki)', value: 'End-to-End' }
+            ]
+          });
+        }
+      }
+
+      qs.push({
+        id: 'projectType', title: 'What type of project is this?', type: 'single',
+        options: [
+          { label: 'Self-serve', value: 'Self-serve' },
+          { label: 'Request (for high-impact projects like Brand campaigns, major Product launches)', value: 'Request' }
+        ]
+      });
+
+      qs.push({
+        id: 'language', title: 'Which language(s)/market(s) are you targeting? (Select all that apply)', type: 'multiple',
+        options: [
+          { label: '🇫🇷 French', value: 'French' },
+          { label: '🇩🇪 German', value: 'German' },
+          { label: '🇮🇹 Italian', value: 'Italian' },
+          { label: '🇪🇸 Spanish', value: 'Spanish' },
+          { label: '🇵🇹 Portuguese', value: 'Portuguese' },
+          { label: '🇳🇱 Dutch', value: 'Dutch' }
+        ]
+      });
+
+      return qs;
+    };
+
+    // --- COMPONENT: QUIZ WIZARD ---
+    const PathFinder = () => {
+      const [answers, setAnswers] = useState({});
+      const [step, setStep] = useState(0);
+
+      const questions = getQuizQuestions(answers);
+
+      const handleSingleSelect = (id, value) => {
+        setAnswers({ ...answers, [id]: value });
+        setStep(step + 1);
+      };
+
+      const handleToggleMultiple = (id, value) => {
+        const currentList = answers[id] || [];
+        if (currentList.includes(value)) {
+          setAnswers({ ...answers, [id]: currentList.filter(v => v !== value) });
+        } else {
+          setAnswers({ ...answers, [id]: [...currentList, value] });
+        }
+      };
+
+      const getPocNames = (langs) => {
+        if (!langs || langs.length === 0) return 'Local Market POCs';
+        return langs.map(lang => {
+          switch(lang) {
+            case 'French': return '🇫🇷 @Delphine de Roquemaurel';
+            case 'German': return '🇩🇪 @Hannah Lüdicke';
+            case 'Italian': return '🇮🇹 @lollo';
+            case 'Spanish': return '🇪🇸 @cristina.gomez';
+            case 'Portuguese': return '🇵🇹 @Julia Latorre';
+            case 'Dutch': return '🇳🇱 @rosemarijn.disseldorp (non-SEO), @Dimitri Jordens (SEO), @stijn.teves (partnerships)';
+            default: return 'Local Market POCs';
+          }
+        }).join('\n');
+      };
+
+      const renderQuiz = () => {
+        const question = questions[step];
+        const progress = Math.round(((step + 1) / questions.length) * 100);
+        const isMultiple = question.type === 'multiple';
+        const currentMultipleSelections = answers[question.id] || [];
+
+        return (
+          <div className="max-w-4xl mx-auto w-full pt-10 pb-20 px-4">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-slate-900 mb-2">💡 Find Your Path</h2>
+              <p className="text-slate-500">Answer a few questions to get a personalized workflow guide</p>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 min-h-[400px]">
+              <div className="mb-8">
+                <div className="flex justify-between text-sm text-slate-600 mb-3 font-medium">
+                  <span>Question {step + 1} of {questions.length}</span>
+                  <span>{progress}%</span>
+                </div>
+                <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-full bg-violet-600 transition-all duration-300" style={{ width: `${progress}%` }}></div>
+                </div>
+              </div>
+
+              <h3 className="text-xl font-bold text-slate-900 mb-6">{question.title}</h3>
+              
+              <div className="space-y-3">
+                {question.options.map((opt) => {
+                  if (isMultiple) {
+                    const isSelected = currentMultipleSelections.includes(opt.value);
+                    return (
+                      <button
+                        key={opt.value}
+                        onClick={() => handleToggleMultiple(question.id, opt.value)}
+                        className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 flex justify-between items-center group 
+                          ${isSelected ? 'border-violet-500 bg-violet-50 text-violet-900' : 'border-slate-200 hover:border-violet-300 bg-white text-slate-700'}`}
+                      >
+                        <span className="font-semibold">{opt.label}</span>
+                        {isSelected && <CheckCircle2 className="w-6 h-6 text-violet-600" />}
+                      </button>
+                    );
+                  } else {
+                    return (
+                      <button
+                        key={opt.value}
+                        onClick={() => handleSingleSelect(question.id, opt.value)}
+                        className="w-full text-left p-4 rounded-xl border border-slate-200 hover:border-violet-500 hover:bg-slate-50 transition-all duration-200 flex justify-between items-center group bg-white"
+                      >
+                        <span className="font-semibold text-slate-700">{opt.label}</span>
+                        <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-violet-500" />
+                      </button>
+                    );
+                  }
+                })}
+              </div>
+
+              {/* HIGHLY VISIBLE NOTE FOR PROJECT TYPE */}
+              {question.id === 'projectType' && (
+                <div className="mt-8 p-5 bg-amber-50 border border-amber-200 rounded-xl flex gap-4 shadow-sm">
+                  <span className="text-2xl mt-0.5">💡</span>
+                  <p className="text-sm text-amber-900 leading-relaxed">
+                    <strong>Not sure if your project is self-serve or request-based?</strong><br/>
+                    Check <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer" className="text-blue-700 font-bold hover:underline">Panorama</a> and the <a href="https://www.notion.so/qonto/Comms-Toolbox-2ca31ee4c69680a2afcec1f5ce13e6c1" target="_blank" rel="noopener noreferrer" className="text-blue-700 font-bold hover:underline">Toolbox</a> first.
+                  </p>
+                </div>
+              )}
+
+              {isMultiple && (
+                <button 
+                  onClick={() => setStep(step + 1)} 
+                  disabled={currentMultipleSelections.length === 0}
+                  className="mt-6 w-full py-4 bg-violet-600 text-white font-bold rounded-xl hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Generate My Workflow
+                </button>
+              )}
+
+              {step > 0 && (
+                <button 
+                  onClick={() => setStep(step - 1)}
+                  className="mt-8 flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-slate-800 transition-colors w-full justify-center p-3 border border-slate-200 rounded-xl"
+                >
+                  <ArrowLeft className="w-4 h-4" /> Back
+                </button>
+              )}
+            </div>
+          </div>
+        );
+      };
+
+      const renderResults = () => {
+        // High-Vis Request Blocker Screen
+        if (answers.projectType === 'Request') {
+          return (
+            <div className="max-w-4xl mx-auto w-full pt-10 pb-20 px-4">
+              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center mt-10">
+                <AlertTriangle className="w-16 h-16 text-amber-500 mx-auto mb-4" />
+                <h3 className="text-2xl font-bold text-slate-900 mb-4">High-Visibility / Request Project</h3>
+                <p className="text-lg text-slate-600 mb-8">Creative copywriters must be involved for request-based projects.</p>
+                <div className="bg-amber-50 text-amber-800 p-4 rounded-xl font-semibold border border-amber-200 inline-block max-w-xl">
+                  👉 Please route this request through the Creative Factory. Creative writers do not appear in this self-serve flow.
+                </div>
+                <div className="mt-12">
+                   <button onClick={() => {setStep(0); setAnswers({});}} className="text-blue-600 font-semibold hover:underline">Start Over</button>
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        const pocNamesString = getPocNames(answers.language);
+        
+        let displayRole = answers.role;
+        if (displayRole === 'Other channel owners (Website, Paid ads, etc.)') displayRole = 'Channel Owner';
+
+        // Logic Flags (Comms Partners are always treated as 'Standard Handoff' now)
+        const isE2E = (answers.role !== 'Comms partner / PMM') && (
+                      (answers.channel === 'Paid Ads' && answers.projectType === 'Self-serve') ||
+                      (answers.channel === 'CRM / Email' && answers.crmType === 'CRM - Lifecycle') ||
+                      (answers.channel === 'Website' && answers.websiteType === 'End-to-End'));
+
+        // Base Owners
+        let masterOwner = displayRole;
+        let locOwner = isE2E ? displayRole : pocNamesString;
+        let qcOwner = pocNamesString; // Local POC always handles QC directly or via request
+        let uploadOwner = '';
+        let uploadDesc = '';
+
+        // Specific Roles Overrides
+        if (answers.channel === 'CRM / Email') {
+            if (isE2E) {
+               masterOwner = 'Project Owner (PMM or CRM Manager)';
+               locOwner = 'Project Owner (PMM or CRM Manager)';
+               uploadOwner = 'Project Owner (PMM or CRM Manager)';
+               uploadDesc = 'The Project Owner uploads the finalized localized content in Qontent.';
+            } else {
+               masterOwner = answers.role === 'Comms partner / PMM' ? 'Comms partner / PMM' : 'CRM Manager';
+               locOwner = pocNamesString;
+               uploadOwner = 'CRM Manager';
+               uploadDesc = 'The CRM Manager handles the upload of the finalized localized content in Qontent.';
+            }
+        } else if (answers.channel === 'Paid Ads') {
+            masterOwner = 'Paid Ads Manager';
+            locOwner = 'Paid Ads Manager';
+            uploadOwner = 'Paid Ads Manager';
+            uploadDesc = 'The Paid Ads Manager uploads the finalized localized content directly to the platform.';
+        } else if (isE2E) {
+            let specOwner = answers.channel === 'Website' ? 'Website Manager' : 'Channel Owner';
+            masterOwner = specOwner;
+            locOwner = specOwner;
+            uploadOwner = specOwner;
+            uploadDesc = `The ${specOwner} uploads the finalized localized content directly to the platform/CMS.`;
+        } else {
+            if (answers.channel === 'Website') {
+                uploadOwner = 'Local Market POC';
+                uploadDesc = answers.role === 'Comms partner / PMM' 
+                  ? '⚠️ Note: Page duplication in other languages is 100% owned by Local Teams at the localization stage (NOT Comms Partners). The Local Market POC duplicates the page in Qontent.'
+                  : 'The Local Market POC duplicates the page in Qontent for their respective language.';
+            } else {
+                uploadOwner = displayRole;
+                uploadDesc = `Upload the finalized localized content directly to the platform (${answers.channel}).`;
+            }
+        }
+
+        // Adjust master owner naming for better UX
+        if (answers.role === 'CRM Manager' && !isE2E) {
+            masterOwner = 'CRM Manager';
+        }
+
+        // --- TOOLS ASSEMBLY ---
+        const masterTools = [];
+        if (answers.channel === 'CRM / Email' || answers.channel === 'Website') {
+           masterTools.push('Tolki in Dust', 'Qontent');
+        } else {
+           masterTools.push('Tolki OR Channel-specific Dust bot');
+        }
+        masterTools.push('QualityGuard in Dust (unless pro EN copywriter)');
+
+        const locTools = [];
+        if (answers.channel === 'CRM / Email' || answers.channel === 'Website') {
+           locTools.push('Tolki in Dust', 'Qontent');
+        } else {
+           locTools.push('Tolki OR Channel-specific Dust bot');
+        }
+
+        const qcTools = [];
+        if (isE2E) {
+            qcTools.push('1️⃣ Project Owner runs QualityGuard in Dust');
+            qcTools.push('2️⃣ Project Owner requests proofread from Local POCs (e.g. in #proofread-crm)');
+            qcTools.push('3️⃣ Local Market POC takes charge of the review');
+        } else {
+            qcTools.push('QualityGuard in Dust (First step)');
+            qcTools.push('Native review (Optional, but required if translator is not native)');
+        }
+
+        const uploadTools = [];
+        if (answers.channel === 'Website' || answers.channel === 'CRM / Email') uploadTools.push('Qontent');
+        else uploadTools.push(`Upload directly on platform`);
+
+        // Using exactly the same color classes as the workflow circles
+        const steps = [
+          { num: 1, title: 'EN Master Copy', owner: masterOwner, desc: 'Create EN master with channel bot. Use QualityGuard if not EN-native.', tools: masterTools, colorBg: 'bg-fuchsia-400', ruleOfThumb: 'Whenever no Creative writer is involved, the Project owner is in charge of delivering the Master copy.' },
+          { num: 2, title: 'First-Pass Translation', owner: locOwner, desc: 'Handle the localization for the selected market(s).', tools: locTools, colorBg: 'bg-purple-500' },
+          { num: 3, title: 'Quality Check', owner: qcOwner, desc: isE2E ? 'Follow the sequence below for the native proofread handoff.' : 'Run QualityGuard as a mandatory first step. Request native review if needed.', tools: qcTools, colorBg: 'bg-violet-600' },
+          { num: 4, title: 'Content Upload', owner: uploadOwner, desc: uploadDesc, tools: uploadTools, colorBg: 'bg-blue-400' },
+        ];
+
+        return (
+          <div className="max-w-4xl mx-auto w-full pt-10 pb-20 px-4">
+            
+            <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 mb-8 flex gap-12 text-sm flex-wrap">
+              <div>
+                <div className="text-violet-700 font-bold mb-1 uppercase text-xs tracking-wider">Project Type</div>
+                <div className="text-slate-800 font-medium">
+                   {answers.projectType} 
+                   {answers.websiteType ? ` (${answers.websiteType})` : ''}
+                </div>
+              </div>
+              <div>
+                <div className="text-violet-700 font-bold mb-1 uppercase text-xs tracking-wider">Languages</div>
+                <div className="text-slate-800 font-medium flex items-center gap-2">
+                  {answers.language && answers.language.map(lang => {
+                    switch(lang) {
+                      case 'French': return '🇫🇷';
+                      case 'German': return '🇩🇪';
+                      case 'Italian': return '🇮🇹';
+                      case 'Spanish': return '🇪🇸';
+                      case 'Portuguese': return '🇵🇹';
+                      case 'Dutch': return '🇳🇱';
+                      default: return '';
+                    }
+                  }).join(' ')}
+                </div>
+              </div>
+              <div>
+                <div className="text-violet-700 font-bold mb-1 uppercase text-xs tracking-wider">Channel</div>
+                <div className="text-slate-800 font-medium">
+                   {answers.channel} {answers.crmType ? `(${answers.crmType})` : ''}
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              {steps.map((s) => (
+                <div key={s.num} className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex gap-6">
+                  <div className={`w-10 h-10 shrink-0 ${s.colorBg} text-white rounded-full flex items-center justify-center font-bold text-lg shadow-md`}>
+                    {s.num}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-slate-900 mb-2">{s.num}. {s.title}</h3>
+                    <div className="flex items-start gap-2 mb-3">
+                      <UserIcon className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                      <span className="font-bold text-blue-600 whitespace-pre-line leading-relaxed">{s.owner}</span>
+                    </div>
+
+                    {s.ruleOfThumb && (
+                      <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-xl flex gap-3 shadow-sm">
+                        <ThumbsUp className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
+                        <p className="text-sm text-green-900 leading-relaxed">
+                          <strong>Rule of thumb:</strong> {s.ruleOfThumb}
+                        </p>
+                      </div>
+                    )}
+
+                    <p className="text-slate-700 mb-4">{formatTextWithLinks(s.desc, s.num)}</p>
+                    
+                    <div className="bg-[#F8FAFC] rounded-xl p-4 text-sm border border-slate-100">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Wrench className="w-4 h-4 text-slate-500" />
+                        <span className="font-bold text-slate-500 uppercase text-xs">Tools</span>
+                      </div>
+                      <ul className="space-y-1">
+                        {s.tools.map((t, idx) => (
+                          <li key={idx} className="text-slate-700 font-medium">• {formatTextWithLinks(t, s.num)}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {answers.projectType === 'Self-serve' && (
+              <div className="mt-8 bg-blue-50 border border-blue-200 rounded-2xl p-6 text-center shadow-sm">
+                <BookOpen className="w-8 h-8 text-blue-500 mx-auto mb-3" />
+                <h4 className="text-lg font-bold text-blue-900 mb-2">Need more help?</h4>
+                <p className="text-blue-800">
+                  Find more resources for self-serve projects in our <a href="https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?source=copy_link#31931ee4c6968014b900cf7161ec49ab" target="_blank" rel="noopener noreferrer" className="font-bold underline hover:text-blue-600 transition-colors">Self-service Content Hub</a>!
+                </p>
+              </div>
+            )}
+
+            <div className="mt-10 flex justify-center">
+              <button 
+                onClick={() => {setStep(0); setAnswers({});}}
+                className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 shadow-sm rounded-xl font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all"
+              >
+                <ArrowLeft className="w-5 h-5" /> Start Over
+              </button>
+            </div>
+          </div>
+        );
+      };
+
+      return step < questions.length ? renderQuiz() : renderResults();
+    };
+
+    // --- MAIN APP ---
+    function App() {
+      const [view, setView] = useState('workflow');
+      const [selectedStep, setSelectedStep] = useState(null);
+      const [selectedTrack, setSelectedTrack] = useState(null);
+
+      // Handle clicking anywhere on background to clear selection
+      const handleBackgroundClick = () => {
+        setSelectedStep(null);
+        setSelectedTrack(null);
+      };
+
+      return (
+        <div className="flex flex-col min-h-screen bg-[#F8FAFC]">
+          
+          {/* HEADER */}
+          <div className="flex flex-col sm:flex-row items-center justify-between py-4 px-8 bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50 gap-4">
+            <div>
+              <h1 className="text-xl font-bold text-slate-900">Localization Workflow</h1>
+            </div>
+            
+            <div className="flex bg-[#F1F5F9] p-1 rounded-xl border border-slate-200">
+              <button 
+                onClick={() => {setView('workflow'); handleBackgroundClick();}}
+                className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg transition-all ${view === 'workflow' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                <WorkflowIcon className="w-4 h-4" />
+                Full Workflow
+              </button>
+              <button 
+                onClick={() => {setView('path'); handleBackgroundClick();}}
+                className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg transition-all ${view === 'path' ? 'bg-slate-900 shadow-sm text-white' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                <GitBranchIcon className="w-4 h-4" />
+                Find Your Path
+              </button>
+            </div>
+          </div>
+
+          {/* MAIN CONTENT AREA */}
+          {view === 'path' ? (
+            <PathFinder />
+          ) : (
+            // Full background click handler to deselect step
+            <div 
+              className="flex-1 w-full min-h-screen overflow-x-auto p-8 animate-in fade-in duration-500 cursor-pointer"
+              onClick={handleBackgroundClick}
+            >
+              {/* Internal container stops propagation so clicking INSIDE cards doesn't deselect */}
+              <div className="min-w-max pb-12 cursor-default" onClick={(e) => e.stopPropagation()}>
+                
+                {/* SCOPE BANNER */}
+                <div className="mb-6 p-4 bg-indigo-50 border border-indigo-200 rounded-xl shadow-sm max-w-[1200px]">
+                   <p className="text-sm text-indigo-900 leading-relaxed">
+                     <strong>🎯 Scope of This Workflow: Standard Self-Serve Process.</strong> This flow applies whenever <em>no</em> professional Creative Writer is involved. If a Creative Writer is involved, please follow the Creative Factory Process.<br/>
+                     <span className="mt-2 block">💡 <em>Not sure if your project is self-serve or request-based? Check <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" className="font-bold underline text-indigo-700">Panorama</a> and the <a href="https://www.notion.so/qonto/Comms-Toolbox-2ca31ee4c69680a2afcec1f5ce13e6c1" target="_blank" className="font-bold underline text-indigo-700">Toolbox</a> first.</em></span>
+                   </p>
+                </div>
+
+                {/* LÉGENDE */}
+                <div className="flex items-center gap-6 mb-10 px-5 py-3 bg-white rounded-xl border border-slate-200 shadow-sm w-max">
+                  <div className="text-sm font-bold text-slate-400 uppercase tracking-wider mr-2">Legend</div>
+                  <div className="flex items-center gap-2">
+                    <UserIcon className="w-5 h-5 text-blue-600" />
+                    <span className="text-sm text-slate-700 font-medium">Owner (Responsible)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Wrench className="w-5 h-5 text-slate-400" />
+                    <span className="text-sm text-slate-700 font-medium">Tools (Used to deliver task)</span>
+                  </div>
+                  <div className="flex items-center gap-2 ml-4">
+                    <span className="text-sm text-indigo-500 font-bold bg-indigo-50 px-3 py-1.5 rounded-lg border border-indigo-100">💡 Tip: Click inside a box to highlight its entire path across steps!</span>
+                  </div>
+                </div>
+
+                {/* LIGNE 1 : CERCLES */}
+                <div className="flex items-start gap-6 mb-8">
+                  {WORKFLOW_STEPS.map((step, index) => {
+                    const isSelected = selectedStep === step.id;
+                    const isDimmed = selectedStep !== null && !isSelected;
+                    return (
+                      <div key={step.id} className="flex items-start gap-6">
+                        <div className={`flex flex-col items-center gap-4 w-[340px] shrink-0 transition-all duration-500 ${isDimmed ? 'opacity-30 grayscale-[30%]' : 'opacity-100'}`}>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); setSelectedStep(isSelected ? null : step.id); setSelectedTrack(null); }}
+                            className={`
+                              relative flex flex-col items-center justify-center
+                              w-40 h-40 rounded-full cursor-pointer
+                              bg-gradient-to-br ${step.colorCircle} text-white shadow-lg transition-all duration-300 hover:scale-105
+                              ${isSelected ? `ring-4 ${step.colorHighlight} scale-105 shadow-xl` : ''}
+                              ${step.pulse && !isSelected ? 'ring-4 ring-violet-300 animate-pulse' : ''}
+                            `}
+                          >
+                            <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-white text-slate-900 flex items-center justify-center font-bold text-lg shadow-sm border-2 border-slate-200">{step.id}</div>
+                            <div className="text-center px-4">
+                              <div className="font-bold text-sm mb-1">{step.title}</div>
+                              <div className="text-xs opacity-90">{step.subtitle}</div>
+                            </div>
+                          </button>
+                          {(step.id === 2 || step.id === 3) ? <div className="w-0.5 h-16 bg-slate-300" /> : <div className="w-0.5 h-8 bg-gradient-to-b from-slate-200 to-transparent" />}
+                        </div>
+                        {index < WORKFLOW_STEPS.length - 1 && (
+                          <div className={`flex items-center justify-center w-10 shrink-0 transition-opacity duration-500 ${isDimmed ? 'opacity-30' : 'opacity-100'}`} style={{ marginTop: '70px' }}>
+                            <ChevronRight className="w-10 h-10 text-slate-300" />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* LIGNE 2 : CARTES DÉTAILLÉES */}
+                <div className="flex items-start gap-6">
+                  {WORKFLOW_STEPS.map((step, index) => {
+                    const isStepSelected = selectedStep === step.id;
+                    const isStepDimmed = selectedStep !== null && !isStepSelected;
+                    
+                    return (
+                      <div key={`detail-${step.id}`} className="flex items-start gap-6">
+                        <div className={`flex flex-col items-center gap-4 w-[340px] shrink-0 transition-all duration-500 ${isStepDimmed ? 'opacity-30 scale-[0.98]' : 'opacity-100 scale-100'}`}>
+                          <div className={`w-full p-5 bg-white border border-slate-200 shadow-sm rounded-xl transition-all duration-300 ${isStepSelected ? `ring-2 ${step.colorHighlight} shadow-lg bg-slate-50/50` : ''}`}>
+                            
+                            {/* RULE OF THUMB */}
+                            {step.ruleOfThumb && (
+                              <div className="mb-4 pb-4 border-b border-slate-100">
+                                <div className="p-3 bg-green-50 border border-green-200 rounded-lg flex gap-2 shadow-sm">
+                                  <ThumbsUp className="w-4 h-4 text-green-600 shrink-0 mt-0.5" />
+                                  <p className="text-xs text-green-900 leading-relaxed">
+                                    <strong>Rule of thumb:</strong> {step.ruleOfThumb}
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* AFFICHAGE DES USE CASES CLICABLES */}
+                            {step.useCases && step.useCases.map((uc, i) => {
+                              // Logique de surbrillance par track
+                              const isTrackActive = selectedTrack === null || selectedTrack === 'all' || uc.tracks.includes(selectedTrack);
+                              const isSpecificallySelected = selectedTrack !== null && (uc.tracks.includes(selectedTrack) || uc.primaryTrack === 'all');
+
+                              return (
+                                <div 
+                                  key={i} 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    // If we are clicking the 'all' step 1 block, we highlight 'all'
+                                    if (uc.primaryTrack === 'all') {
+                                        setSelectedStep(null);
+                                        setSelectedTrack(selectedTrack === 'all' ? null : 'all');
+                                    } else {
+                                        setSelectedStep(null); 
+                                        setSelectedTrack(selectedTrack === uc.primaryTrack ? null : uc.primaryTrack); 
+                                    }
+                                  }}
+                                  className={`mb-4 border rounded-xl p-4 transition-all duration-300 cursor-pointer hover:border-violet-300 hover:shadow-md
+                                    ${!isTrackActive ? 'opacity-30 grayscale-[50%] bg-slate-50 border-slate-100' : ''}
+                                    ${isSpecificallySelected ? 'border-violet-400 bg-violet-50/50 ring-1 ring-violet-200 shadow-sm' : 'bg-white border-slate-200 shadow-sm'}
+                                  `}
+                                >
+                                  <div className="text-[11px] font-bold text-violet-700 uppercase tracking-wider mb-3">{uc.label}</div>
+                                  
+                                  <div className="flex items-start gap-2 mb-3">
+                                    <UserIcon className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                                    <span className="text-sm font-bold text-slate-800">{uc.owner}</span>
+                                  </div>
+                                  
+                                  <div className="flex items-start gap-2">
+                                    <Wrench className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
+                                    <ul className="text-sm text-slate-600">
+                                      {uc.tools.map((t, j) => <li key={j} className="mb-1">• {formatTextWithLinks(t, step.id)}</li>)}
+                                    </ul>
+                                  </div>
+                                </div>
+                              );
+                            })}
+
+                            {/* NOTES */}
+                            {step.notes && step.notes.length > 0 && (
+                              <div className="mt-4 pt-4 border-t border-slate-100">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <FileText className="w-4 h-4 text-slate-500" />
+                                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Notes</span>
+                                </div>
+                                <ul className="space-y-2 pl-1">
+                                  {step.notes.map((note, idx) => (
+                                    <li key={idx} className="text-xs text-slate-600 leading-relaxed whitespace-pre-line">{formatTextWithLinks(note, step.id)}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+
+                            {/* PROCESS GAPS */}
+                            {step.gaps && step.gaps.length > 0 && (
+                              <div className="mt-4 p-3 bg-red-50 border border-red-100 rounded-lg">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <AlertTriangle className="w-4 h-4 text-red-500" />
+                                  <span className="text-xs font-bold text-red-600 uppercase tracking-wider">Process Gaps</span>
+                                </div>
+                                <ul className="space-y-1.5 pl-1">
+                                  {step.gaps.map((gap, idx) => (
+                                    <li key={idx} className="text-xs text-red-700 leading-relaxed flex gap-2"><span className="text-red-400 mt-0.5">🔺</span> <span>{gap}</span></li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+
+                            {/* QUESTIONS */}
+                            {step.questions && step.questions.length > 0 && (
+                              <div className="mt-4 p-3 bg-amber-50 border border-amber-100 rounded-lg">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <HelpCircle className="w-4 h-4 text-amber-500" />
+                                  <span className="text-xs font-bold text-amber-600 uppercase tracking-wider">Open Questions</span>
+                                </div>
+                                <ul className="space-y-1.5 pl-1">
+                                  {step.questions.map((q, idx) => (
+                                    <li key={idx} className="text-xs text-amber-800 leading-relaxed flex gap-2"><span className="text-amber-400 mt-0.5">•</span> <span>{q}</span></li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        {index < WORKFLOW_STEPS.length - 1 && <div className="w-10 shrink-0" />}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* ZONE PARTAGÉE POCS */}
+                <div className={`transition-all duration-500 ${(selectedStep !== null && selectedStep !== 2 && selectedStep !== 3) ? 'opacity-30 grayscale-[30%]' : 'opacity-100'}`}>
+                  <div className="flex items-start gap-6 mt-8">
+                    <div className="w-[340px] shrink-0"></div><div className="w-10 shrink-0"></div>
+                    <div className="w-[340px] shrink-0 flex flex-col items-center"><div className="w-0.5 h-8 bg-slate-300"></div></div>
+                    <div className="w-10 shrink-0"></div>
+                    <div className="w-[340px] shrink-0 flex flex-col items-center"><div className="w-0.5 h-8 bg-slate-300"></div></div>
+                  </div>
+                  <div className="flex items-start gap-6">
+                    <div className="w-[340px] shrink-0"></div><div className="w-10 shrink-0"></div>
+                    <div className="flex items-center" style={{ width: '720px' }}><div className="h-0.5 w-full bg-slate-300"></div></div>
+                  </div>
+                  <div className="flex items-start gap-6 mt-4 pb-8">
+                    <div className="w-[340px] shrink-0"></div><div className="w-10 shrink-0"></div>
+                    <div className="flex justify-center shrink-0" style={{ width: '720px' }}>
+                      <div className="w-full max-w-xl p-6 bg-white border-slate-200 border shadow-sm rounded-xl">
+                        {/* TITLE HEADER WITH ICON */}
+                        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+                          <UsersIcon className="w-5 h-5 text-violet-600" />
+                          <span className="text-sm font-bold text-slate-800 uppercase tracking-wider">Local POCs & Contacts</span>
+                          <span className="text-xs text-slate-500 ml-auto">(for Steps 2 & 3)</span>
+                        </div>
+                        <div className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">
+                          {'🇫🇷 France: @Delphine de Roquemaurel\n🇩🇪 Germany: @Hannah Lüdicke\n🇮🇹 Italy: @lollo\n🇪🇸 Spain: @cristina.gomez\n🇵🇹 Portugal: @Julia Latorre\n🇳🇱 Netherlands:\n  - Non-SEO/non-partnerships: @rosemarijn.disseldorp\n  - SEO: @Dimitri Jordens\n  - Partnerships: @stijn.teves\n\n💬 Slack help: #new-markets-localization-help (for 🇳🇱 Dutch and 🇵🇹 Portuguese native support only today)'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* NOTE SOCIAL MEDIA EN BAS DU WORKFLOW */}
+                <div className="flex items-start gap-6 mt-2">
+                  <div className="w-[340px] shrink-0"></div><div className="w-10 shrink-0"></div>
+                  <div className="flex justify-center shrink-0" style={{ width: '720px' }}>
+                    <div className="w-full max-w-xl p-5 bg-blue-50 border-blue-200 border shadow-sm rounded-xl flex gap-4 items-center">
+                      <span className="text-3xl mt-1">📱</span>
+                      <span className="text-sm text-blue-900 leading-relaxed">
+                        <strong>For Social Media:</strong> Global & Social media managers are 100% autonomous on copy creation. This channel is completely removed from the standard localization workflow.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    const rootElement = document.getElementById('root');
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(<App />);
+  </script>
+</body>
+</html>
