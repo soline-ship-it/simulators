@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Factory - Workflow Lanes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Smooth hover animations for the cards */
+        .step-node { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .step-node:hover { transform: translateY(-4px); }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 p-8 pb-20 overflow-x-hidden">
+
+    <div class="max-w-6xl mx-auto">
+        
+        <!-- HEADER -->
+        <div class="mb-8 text-center">
+            <h1 class="text-4xl font-bold text-slate-900 tracking-tight">Creative Factory Intake</h1>
+            <p class="text-slate-500 mt-3 font-medium text-lg">Step-by-step triage, platforms, and routing paths</p>
+        </div>
+
+        <!-- HOW IT WORKS & LEGEND CONTAINER (Changed to 50/50 split to prevent overflow) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+            
+            <!-- SLACK INTAKE TRIGGER -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col sm:flex-row items-start gap-5 relative overflow-hidden">
+                <div class="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-indigo-50/50 to-transparent"></div>
+                <div class="w-14 h-14 shrink-0 bg-[#4A154B] rounded-2xl flex items-center justify-center text-white text-2xl shadow-md mt-1 relative z-10">
+                    <i class="fa-brands fa-slack"></i>
+                </div>
+                <div class="relative z-10">
+                    <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-1 block">Triage Mechanism</span>
+                    <h2 class="text-lg font-bold text-slate-800 leading-snug">Dust Bot Threaded Assessment</h2>
+                    <p class="text-slate-600 text-sm mt-2 leading-relaxed">
+                        When a requester posts in <strong>#creative-requests</strong>, the Dust Bot detects the message and responds directly in a <strong>Slack thread</strong>. It asks a dynamic series of questions to assess project size, visibility, and required disciplines before automatically routing the request to one of the 4 paths below.
+                    </p>
+                </div>
+            </div>
+
+            <!-- LEGEND & RULES -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col justify-center">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 block"><i class="fa-solid fa-book text-slate-300 mr-1"></i> Terminology & Rules</span>
+                <div class="space-y-4">
+                    <!-- Modes Grid to save space -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="px-2 py-0.5 bg-purple-100 text-purple-700 rounded text-xs font-bold">MODE A</span>
+                                <span class="text-sm font-bold text-slate-800">Strategic</span>
+                            </div>
+                            <p class="text-xs text-slate-500 leading-relaxed">Multi-disciplinary work planned in Panorama. Requires full CFT (Creative Factory + Brand Design).</p>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs font-bold">MODE B</span>
+                                <span class="text-sm font-bold text-slate-800">Craft / Reactive</span>
+                            </div>
+                            <p class="text-xs text-slate-500 leading-relaxed">High-value, single-discipline requests. Assigned directly to specialists.</p>
+                        </div>
+                    </div>
+                    <!-- Rule of Thumb -->
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <p class="text-sm text-slate-700 leading-relaxed">
+                            <strong>✅ Rule of thumb:</strong> The more the work needs a new hook (or sits on a flagship surface), the more it shifts toward <span class="text-purple-700 font-semibold">Mode A</span>. If it’s mostly execution with a polish pass, it’s <span class="text-blue-700 font-semibold">Mode B</span>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PATHS CONTAINER -->
+        <div class="space-y-6">
+
+            <!-- PATH 1 -->
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 flex flex-col md:flex-row items-stretch hover:shadow-md transition-shadow">
+                <!-- Left Condition -->
+                <div class="w-full md:w-[320px] shrink-0 md:pr-8 md:border-r border-slate-100 flex flex-col justify-center mb-6 md:mb-0">
+                    <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold mb-3 w-fit tracking-wide">PATH 1</span>
+                    <h3 class="text-lg font-bold text-slate-900 leading-tight mb-2">Anticipated Strategic Campaign</h3>
+                    <div class="flex items-start gap-2 text-sm text-slate-500 mt-1">
+                        <i class="fa-solid fa-layer-group mt-1 text-purple-400"></i>
+                        <div>
+                            <p>Project is <strong>L or M</strong> in Panorama</p>
+                            <span class="text-purple-600 font-bold text-xs mt-1 inline-block uppercase tracking-wide">→ Mode A</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Steps -->
+                <div class="flex-1 md:pl-10 relative flex flex-wrap md:flex-nowrap items-start justify-between gap-4 md:gap-0 pt-2">
+                    <div class="hidden md:block absolute left-16 right-16 top-[30px] h-0.5 bg-slate-200 z-0"></div> <!-- Connecting Line -->
+
+                    <div class="flex flex-col items-center w-[45%] md:w-32 relative z-10 step-node cursor-default group">
+                        <div class="w-14 h-14 rounded-2xl bg-white border-2 border-slate-200 group-hover:border-purple-400 flex items-center justify-center mb-3 shadow-sm bg-purple-50">
+                            <i class="fa-solid fa-clipboard-list text-xl text-purple-600"></i>
+                        </div>
+                        <span class="text-sm font-bold text-slate-800 text-center leading-snug">Collect Details</span>
+                        <span class="text-xs text-slate-500 text-center mt-1">Bot gathers Brief, Market & Deadline</span>
+                    </div>
+
+                    <div class="flex flex-col items-center w-[45%] md:w-32 relative z-10 step-node cursor-default group">
+                        <div class="w-14 h-14 rounded-2xl bg-white border-2 border-slate-200 group-hover:border-purple-400 flex items-center justify-center mb-3 shadow-sm">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png" class="w-6 h-6 opacity-80 group-hover:opacity-100 transition-opacity" alt="Notion">
+                        </div>
+                        <span class="text-sm font-bold text-slate-800 text-center leading-snug">CF Portal</span>
+                        <span class="text-xs text-slate-500 text-center mt-1">Logged automatically in Notion DB</span>
+                    </div>
+
+                    <div class="flex flex-col items-center w-[45%] md:w-32 relative z-10 step-node cursor-default group">
+                        <div class="w-14 h-14 rounded-2xl bg-white border-2 border-slate-200 group-hover:border-purple-400 flex items-center justify-center mb-3 shadow-sm">
+                            <i class="fa-solid fa-user-shield text-xl text-slate-600 group-hover:text-purple-600"></i>
+                        </div>
+                        <span class="text-sm font-bold text-slate-800 text-center leading-snug">Clémence's Triage</span>
+                        <span class="text-xs text-slate-500 text-center mt-1">Requires Wednesday approval by Julie</span>
+                    </div>
+
+                    <div class="flex flex-col items-center w-[45%] md:w-32 relative z-10 step-node cursor-default group">
+                        <div class="w-14 h-14 rounded-full bg-purple-600 border-4 border-purple-100 flex items-center justify-center mb-3 shadow-md">
+                            <i class="fa-solid fa-users text-xl text-white"></i>
+                        </div>
+                        <span class="text-sm font-bold text-purple-700 text-center leading-snug">Assigned to CFT</span>
+                        <span class="text-xs text-purple-600/70 text-center mt-1">Comms Partner + Brand Design + Writer</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PATH 2 -->
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 flex flex-col md:flex-row items-stretch hover:shadow-md transition-shadow">
+                <div class="w-full md:w-[320px] shrink-0 md:pr-8 md:border-r border-slate-100 flex flex-col justify-center mb-6 md:mb-0">
+                    <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold mb-3 w-fit tracking-wide">PATH 2</span>
+                    <h3 class="text-lg font-bold text-slate-900 leading-tight mb-2">Self-Serve</h3>
+                    <div class="flex items-start gap-2 text-sm text-slate-500 mt-1">
+                        <i class="fa-solid fa-leaf mt-1 text-emerald-500"></i>
+                        <div>
+                            <p><strong>S</strong> in Panorama OR<br>BAU OR Low Visibility</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-1 md:pl-10 relative flex flex-wrap md:flex-nowrap items-start justify-around gap-4 md:gap-0 pt-2">
+                    <div class="hidden md:block absolute left-[10%] right-[10%] top-[30px] h-0.5 bg-slate-200 z-0"></div>
+
+                    <div class="flex flex-col items-center w-[45%] md:w-40 relative z-10 step-node cursor-default group">
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-50 border-2 border-emerald-200 flex items-center justify-center mb-3 shadow-sm">
+                            <i class="fa-solid fa-magnifying-glass text-xl text-emerald-600"></i>
+                        </div>
+                        <span class="text-sm font-bold text-slate-800 text-center leading-snug">Bot Assesses</span>
+                        <span class="text-xs text-slate-500 text-center mt-1">Identifies simple asks for deflection</span>
+                    </div>
+
+                    <div class="flex flex-col items-center w-[45%] md:w-40 relative z-10 step-node cursor-default group">
+                        <div class="w-14 h-14 rounded-2xl bg-white border-2 border-slate-200 group-hover:border-emerald-400 flex items-center justify-center mb-3 shadow-sm">
+                            <i class="fa-solid fa-book-open text-xl text-slate-600 group-hover:text-emerald-600"></i>
+                        </div>
+                        <span class="text-sm font-bold text-slate-800 text-center leading-snug">Share Resources</span>
+                        <span class="text-xs text-slate-500 text-center mt-1">Bot links Self-Service Hub & Localization</span>
+                    </div>
+
+                    <div class="flex flex-col items-center w-[45%] md:w-40 relative z-10 step-node cursor-default group">
+                        <div class="w-14 h-14 rounded-full bg-emerald-500 border-4 border-emerald-100 flex items-center justify-center mb-3 shadow-md">
+                            <i class="fa-solid fa-check-double text-xl text-white"></i>
+                        </div>
+                        <span class="text-sm font-bold text-emerald-700 text-center leading-snug">Resolved</span>
+                        <span class="text-xs text-emerald-600/70 text-center mt-1">End of flow. No logging required.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PATH 3 -->
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 flex flex-col md:flex-row items-stretch hover:shadow-md transition-shadow">
+                <div class="w-full md:w-[320px] shrink-0 md:pr-8 md:border-r border-slate-100 flex flex-col justify-center mb-6 md:mb-0">
+                    <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold mb-3 w-fit tracking-wide">PATH 3</span>
+                    <h3 class="text-lg font-bold text-slate-900 leading-tight mb-2">Request for Craft</h3>
+                    <div class="flex items-start gap-2 text-sm text-slate-500 mt-1">
+                        <i class="fa-solid fa-hammer mt-1 text-blue-500"></i>
+                        <div>
+                            <p>Not in Panorama BUT worth creative investment<br>(Single discipline)</p>
+                            <span class="text-blue-600 font-bold text-xs mt-1 inline-block uppercase tracking-wide">→ Mode B</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-1 md:pl-10 relative flex flex-wrap md:flex-nowrap items-start justify-between gap-4 md:gap-0 pt-2">
+                    <div class="hidden md:block absolute left-16 right-16 top-[30px] h-0.5 bg-slate-200 z-0"></div>
+
+                    <div class="flex flex-col items-center w-[45%] md:w-32 relative z-10 step-node cursor-default group">
+                        <div class="w-14 h-14 rounded-2xl bg-blue-50 border-2 border-blue-200 flex items-center justify-center mb-3 shadow-sm">
+                            <i class="fa-solid fa-code-branch text-xl text-blue-600"></i>
+                        </div>
+                        <span class="text-sm font-bold text-slate-800 text-center leading-snug">Assess Type</span>
+                        <span class="text-xs text-slate-500 text-center mt-1">Is it Copy, Design, or Video?</span>
+                    </div>
+
+                    <div class="flex flex-col items-center w-[45%] md:w-32 relative z-10 step-node cursor-default group">
+                        <div class="w-14 h-14 rounded-2xl bg-white border-2 border-slate-200 group-hover:border-blue-400 flex items-center justify-center mb-3 shadow-sm">
+                            <i class="fa-solid fa-folder-tree text-xl text-slate-600 group-hover:text-blue-600"></i>
+                        </div>
+                        <span class="text-sm font-bold text-slate-800 text-center leading-snug">Route Ticket</span>
+                        <span class="text-xs text-slate-500 text-center mt-1">To CF Portal or Brand Kanban</span>
+                    </div>
+
+                    <div class="flex flex-col items-center w-[45%] md:w-32 relative z-10 step-node cursor-default group">
+                        <div class="w-14 h-14 rounded-2xl bg-white border-2 border-slate-200 group-hover:border-blue-400 flex items-center justify-center mb-3 shadow-sm">
+                            <i class="fa-solid fa-stopwatch text-xl text-slate-600 group-hover:text-blue-600"></i>
+                        </div>
+                        <span class="text-sm font-bold text-slate-800 text-center leading-snug">2-Day SLA</span>
+                        <span class="text-xs text-slate-500 text-center mt-1">For review & acceptance</span>
+                    </div>
+
+                    <div class="flex flex-col items-center w-[45%] md:w-32 relative z-10 step-node cursor-default group">
+                        <div class="w-14 h-14 rounded-full bg-blue-600 border-4 border-blue-100 flex items-center justify-center mb-3 shadow-md">
+                            <i class="fa-solid fa-user-check text-xl text-white"></i>
+                        </div>
+                        <span class="text-sm font-bold text-blue-700 text-center leading-snug">Assigned</span>
+                        <span class="text-xs text-blue-600/70 text-center mt-1">To Specialist (Kim, Marina, etc.)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PATH 4 -->
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 flex flex-col md:flex-row items-stretch hover:shadow-md transition-shadow">
+                <div class="w-full md:w-[320px] shrink-0 md:pr-8 md:border-r border-slate-100 flex flex-col justify-center mb-6 md:mb-0">
+                    <span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-bold mb-3 w-fit tracking-wide">PATH 4</span>
+                    <h3 class="text-lg font-bold text-slate-900 leading-tight mb-2">Complex Unplanned</h3>
+                    <div class="flex items-start gap-2 text-sm text-slate-500 mt-1">
+                        <i class="fa-solid fa-triangle-exclamation mt-1 text-rose-500"></i>
+                        <div>
+                            <p>Not in Panorama<br>Requires Multiple disciplines</p>
+                            <span class="text-rose-600 font-bold text-xs mt-1 inline-block uppercase tracking-wide">→ Escalation</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-1 md:pl-10 relative flex flex-wrap md:flex-nowrap items-start justify-between gap-4 md:gap-0 pt-2">
+                    <div class="hidden md:block absolute left-16 right-16 top-[30px] h-0.5 bg-slate-200 z-0"></div>
+
+                    <div class="flex flex-col items-center w-[45%] md:w-32 relative z-10 step-node cursor-default group">
+                        <div class="w-14 h-14 rounded-2xl bg-rose-50 border-2 border-rose-200 flex items-center justify-center mb-3 shadow-sm">
+                            <i class="fa-solid fa-flag text-xl text-rose-600"></i>
+                        </div>
+                        <span class="text-sm font-bold text-slate-800 text-center leading-snug">Bot Flags</span>
+                        <span class="text-xs text-slate-500 text-center mt-1">Detects unplanned complexity</span>
+                    </div>
+
+                    <div class="flex flex-col items-center w-[45%] md:w-32 relative z-10 step-node cursor-default group">
+                        <div class="w-14 h-14 rounded-2xl bg-white border-2 border-slate-200 group-hover:border-rose-400 flex items-center justify-center mb-3 shadow-sm">
+                            <i class="fa-solid fa-circle-info text-xl text-slate-600 group-hover:text-rose-600"></i>
+                        </div>
+                        <span class="text-sm font-bold text-slate-800 text-center leading-snug">Get Context</span>
+                        <span class="text-xs text-slate-500 text-center mt-1">Bot extracts Urgency & Impact</span>
+                    </div>
+
+                    <div class="flex flex-col items-center w-[45%] md:w-32 relative z-10 step-node cursor-default group">
+                        <div class="w-14 h-14 rounded-2xl bg-white border-2 border-slate-200 group-hover:border-rose-400 flex items-center justify-center mb-3 shadow-sm">
+                            <i class="fa-brands fa-slack text-xl text-slate-600 group-hover:text-rose-600"></i>
+                        </div>
+                        <span class="text-sm font-bold text-slate-800 text-center leading-snug">Urgent Alert</span>
+                        <span class="text-xs text-slate-500 text-center mt-1">Slack DMs sent to leads</span>
+                    </div>
+
+                    <div class="flex flex-col items-center w-[45%] md:w-32 relative z-10 step-node cursor-default group">
+                        <div class="w-14 h-14 rounded-full bg-rose-600 border-4 border-rose-100 flex items-center justify-center mb-3 shadow-md">
+                            <i class="fa-solid fa-gavel text-xl text-white"></i>
+                        </div>
+                        <span class="text-sm font-bold text-rose-700 text-center leading-snug">Human Triage</span>
+                        <span class="text-xs text-rose-600/70 text-center mt-1">Clémence, Kim, & Marina review</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
