@@ -62,7 +62,7 @@
       });
     };
 
-    // --- WORKFLOW DATA (WITH PAID ADS END-TO-END) ---
+    // --- WORKFLOW DATA ---
     const WORKFLOW_STEPS = [
       {
         id: 1, title: 'EN Master Copy', subtitle: 'Create English source content',
@@ -73,7 +73,7 @@
           { primaryTrack: 'standard', tracks: ['standard'], label: 'Global projects (incl. CRM - One-shot)', owner: 'Comms partner / PMM', tools: ['Tolki in Dust', 'Qontent (if Website/CRM)', 'QualityGuard in Dust (unless pro EN copywriter)'] },
           { primaryTrack: 'crm_e2e', tracks: ['crm_e2e'], label: 'CRM - Lifecycle (End-to-End)', owner: 'Project Owner (PMM or CRM Manager)', tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust (unless pro EN copywriter)'] },
           { primaryTrack: 'web_e2e', tracks: ['web_e2e'], label: 'Website (End-to-End)', owner: 'Project Owner (Website Manager)', tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust (unless pro EN copywriter)'] },
-          { primaryTrack: 'ads_e2e', tracks: ['ads_e2e'], label: 'Paid Ads (End-to-End)', owner: 'Project Owner (Paid Ads Manager)', tools: ['Channel-specific Dust bot', 'QualityGuard in Dust (unless pro EN copywriter)'] }
+          { primaryTrack: 'ads_e2e', tracks: ['ads_e2e'], label: 'Paid Ads (End-to-End)', owner: 'Project Owner (Paid Ads Manager)', tools: ['Channel-specific Dust bot', 'QualityGuard in Dust (unless pro EN copywriter)'] },
         ],
         notes: [
           '💡 ALWAYS use QualityGuard in Dust unless the master copy is delivered by a professional native EN copywriter or content manager. In real terms: use it to check the quality of your copy!'
@@ -88,7 +88,7 @@
           { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'Global projects & Standard Handoffs', owner: 'Local Market POC', tools: ['Tolki OR Channel-specific Dust bot', 'Qontent (for Website/CRM)'] },
           { primaryTrack: 'crm_e2e', tracks: ['crm_e2e', 'all'], label: 'CRM - Lifecycle (End-to-End)', owner: 'Project Owner (PMM or CRM Manager)', tools: ['Tolki in Dust OR Channel-specific Dust bot', 'Qontent'] },
           { primaryTrack: 'web_e2e', tracks: ['web_e2e', 'all'], label: 'Website (End-to-End)', owner: 'Project Owner (Website Manager)', tools: ['Tolki in Dust', 'Qontent'] },
-          { primaryTrack: 'ads_e2e', tracks: ['ads_e2e', 'all'], label: 'Paid Ads (End-to-End)', owner: 'Project Owner (Paid Ads Manager)', tools: ['Tolki OR Channel-specific Dust bot'] }
+          { primaryTrack: 'ads_e2e', tracks: ['ads_e2e', 'all'], label: 'Paid Ads (End-to-End)', owner: 'Project Owner (Paid Ads Manager)', tools: ['Tolki OR Channel-specific Dust bot'] },
         ],
         questions: ['Is the current POC list sustainable (e.g. FR)? Volume will likely be an issue.', 'Should we assign POCs per channel instead?'],
         gaps: [
@@ -121,6 +121,7 @@
         useCases: [
           { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'CRM - One-shot', owner: 'CRM Manager', tools: ['Qontent'] },
           { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'Website (Standard)', owner: 'Local Market POC', tools: ['Qontent (Duplicate page)'] },
+          { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'Paid Ads (High-Vis)', owner: 'Paid Ads Manager', tools: ['Directly on platform'] },
           { primaryTrack: 'e2e', tracks: ['crm_e2e', 'web_e2e', 'ads_e2e', 'all'], label: 'End-to-End Projects (CRM, Web, Ads)', owner: 'Project Owner', tools: ['Upload directly in platform / Qontent'] },
         ],
         gaps: ['Website: Page duplication in other languages should be 100% owned by Local Teams at localization stage—NOT Comms Partners.']
@@ -171,8 +172,7 @@
         { id: 'channel', title: 'Which channel is this content for?', type: 'single', options: channelOptions }
       ];
 
-      // Logic routing based on Role & Channel. 
-      // Comms Partners do NOT see specific routing questions, they always follow standard handoff.
+      // Logic routing based on Role & Channel
       if (answers.role !== 'Comms partner / PMM') {
         // CRM specific path
         if (answers.channel === 'CRM / Email') {
@@ -204,7 +204,7 @@
         ]
       });
 
-      // ONLY ask language if it's a self-serve project (otherwise it blocks anyway)
+      // ONLY ask language if it's a self-serve project
       if (answers.projectType !== 'Request') {
         qs.push({
           id: 'language', title: 'Which language(s)/market(s) are you targeting? (Select all that apply)', type: 'multiple',
@@ -349,7 +349,7 @@
       };
 
       const renderResults = () => {
-        // High-Vis Request Blocker Screen (Applies to all channels, Paid Ads included)
+        // High-Vis Request Blocker Screen
         if (answers.projectType === 'Request') {
           return (
             <div className="max-w-4xl mx-auto w-full pt-10 pb-20 px-4">
@@ -375,10 +375,9 @@
 
         // Logic Flags (Comms Partners are standard handoffs unless they chose ChannelE2E)
         const isE2E = (answers.role !== 'Comms partner / PMM') && (
-                        (answers.channel === 'Paid Ads' && answers.projectType === 'Self-serve') ||
-                        (answers.channel === 'CRM / Email' && answers.crmType === 'CRM - Lifecycle') ||
-                        (answers.channel === 'Website' && answers.websiteType === 'End-to-End')
-                      );
+                      (answers.channel === 'Paid Ads' && answers.projectType === 'Self-serve') ||
+                      (answers.channel === 'CRM / Email' && answers.crmType === 'CRM - Lifecycle') ||
+                      (answers.channel === 'Website' && answers.websiteType === 'End-to-End'));
 
         // Base Owners
         let masterOwner = displayRole;
@@ -518,7 +517,7 @@
                       <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-xl flex gap-3 shadow-sm">
                         <ThumbsUp className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
                         <p className="text-sm text-green-900 leading-relaxed">
-                          <strong>Rule of thumb:</strong> {s.ruleOfThumb}
+                          <strong>Rule of thumb:</strong> {formatTextWithLinks(s.ruleOfThumb, s.num)}
                         </p>
                       </div>
                     )}
@@ -623,9 +622,9 @@
                      <p className="text-sm text-indigo-900 leading-relaxed mb-3">
                        🎯 <strong>This workflow works for:</strong> standard self-serve projects, when no professional Creative writer is involved. If a Creative writer is involved (e.g. for high-visibility campaigns in Panorama, highly creative Paid Ads or Out of Home campaigns), please follow the Creative Factory process. This flow does not show the scenarios where creative writers are included.
                      </p>
-                     <ul className="list-disc pl-5 text-sm text-indigo-900 space-y-1.5">
-                       <li><strong>For Social Media:</strong> Global & Social media managers are 100% autonomous on copy creation. This channel is completely removed from the standard localization workflow.</li>
-                     </ul>
+                     <p className="text-sm text-indigo-900 leading-relaxed">
+                       <strong>For Social Media:</strong> Global & Social media managers are 100% autonomous on copy creation. This channel is completely removed from the standard localization workflow.
+                     </p>
                    </div>
                    
                    <div className="p-5 bg-amber-50 border border-amber-200 rounded-xl flex gap-4 shadow-sm max-w-[1200px]">
@@ -829,7 +828,7 @@
                     </div>
                   </div>
                 </div>
-                
+
               </div>
             </div>
           )}
