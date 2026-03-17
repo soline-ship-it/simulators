@@ -62,7 +62,7 @@
       });
     };
 
-    // --- WORKFLOW DATA (CONSISTENT ORDERING: Global -> CRM -> Website, No Ads) ---
+    // --- WORKFLOW DATA (WITH PAID ADS END-TO-END) ---
     const WORKFLOW_STEPS = [
       {
         id: 1, title: 'EN Master Copy', subtitle: 'Create English source content',
@@ -72,7 +72,8 @@
         useCases: [
           { primaryTrack: 'standard', tracks: ['standard'], label: 'Global projects (incl. CRM - One-shot)', owner: 'Comms partner / PMM', tools: ['Tolki in Dust', 'Qontent (if Website/CRM)', 'QualityGuard in Dust (unless pro EN copywriter)'] },
           { primaryTrack: 'crm_e2e', tracks: ['crm_e2e'], label: 'CRM - Lifecycle (End-to-End)', owner: 'Project Owner (PMM or CRM Manager)', tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust (unless pro EN copywriter)'] },
-          { primaryTrack: 'web_e2e', tracks: ['web_e2e'], label: 'Website (End-to-End)', owner: 'Project Owner (Website Manager)', tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust (unless pro EN copywriter)'] }
+          { primaryTrack: 'web_e2e', tracks: ['web_e2e'], label: 'Website (End-to-End)', owner: 'Project Owner (Website Manager)', tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust (unless pro EN copywriter)'] },
+          { primaryTrack: 'ads_e2e', tracks: ['ads_e2e'], label: 'Paid Ads (End-to-End)', owner: 'Project Owner (Paid Ads Manager)', tools: ['Channel-specific Dust bot', 'QualityGuard in Dust (unless pro EN copywriter)'] }
         ],
         notes: [
           '💡 ALWAYS use QualityGuard in Dust unless the master copy is delivered by a professional native EN copywriter or content manager. In real terms: use it to check the quality of your copy!'
@@ -86,7 +87,8 @@
         useCases: [
           { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'Global projects & Standard Handoffs', owner: 'Local Market POC', tools: ['Tolki OR Channel-specific Dust bot', 'Qontent (for Website/CRM)'] },
           { primaryTrack: 'crm_e2e', tracks: ['crm_e2e', 'all'], label: 'CRM - Lifecycle (End-to-End)', owner: 'Project Owner (PMM or CRM Manager)', tools: ['Tolki in Dust OR Channel-specific Dust bot', 'Qontent'] },
-          { primaryTrack: 'web_e2e', tracks: ['web_e2e', 'all'], label: 'Website (End-to-End)', owner: 'Project Owner (Website Manager)', tools: ['Tolki in Dust', 'Qontent'] }
+          { primaryTrack: 'web_e2e', tracks: ['web_e2e', 'all'], label: 'Website (End-to-End)', owner: 'Project Owner (Website Manager)', tools: ['Tolki in Dust', 'Qontent'] },
+          { primaryTrack: 'ads_e2e', tracks: ['ads_e2e', 'all'], label: 'Paid Ads (End-to-End)', owner: 'Project Owner (Paid Ads Manager)', tools: ['Tolki OR Channel-specific Dust bot'] }
         ],
         questions: ['Is the current POC list sustainable (e.g. FR)? Volume will likely be an issue.', 'Should we assign POCs per channel instead?'],
         gaps: [
@@ -101,7 +103,7 @@
         pulse: true, 
         useCases: [
           { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'Global projects & Standard Handoffs', owner: 'Local Market POC', tools: ['QualityGuard in Dust (First step)', 'Native review (if translator is not native OR if High Impact project)'] },
-          { primaryTrack: 'e2e', tracks: ['crm_e2e', 'web_e2e', 'all'], label: 'End-to-End Projects (CRM, Web)', owner: 'Local Market POC', tools: ['1️⃣ Project Owner runs QualityGuard in Dust', '2️⃣ Project Owner requests proofread from Local POCs (e.g. in #proofread-crm)', '3️⃣ Local Market POC takes charge of the review'] },
+          { primaryTrack: 'e2e', tracks: ['crm_e2e', 'web_e2e', 'ads_e2e', 'all'], label: 'End-to-End Projects (CRM, Web, Ads)', owner: 'Local Market POC', tools: ['1️⃣ Project Owner runs QualityGuard in Dust', '2️⃣ Project Owner requests proofread from Local POCs (e.g. in #proofread-crm)', '3️⃣ Local Market POC takes charge of the review'] },
         ],
         notes: [
           'Focus: Tone of Voice alignment, clarity, and grammar — NOT content accuracy.', 
@@ -119,7 +121,7 @@
         useCases: [
           { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'CRM - One-shot', owner: 'CRM Manager', tools: ['Qontent'] },
           { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'Website (Standard)', owner: 'Local Market POC', tools: ['Qontent (Duplicate page)'] },
-          { primaryTrack: 'e2e', tracks: ['crm_e2e', 'web_e2e', 'all'], label: 'End-to-End Projects (CRM, Web)', owner: 'Project Owner', tools: ['Upload directly in platform / Qontent'] },
+          { primaryTrack: 'e2e', tracks: ['crm_e2e', 'web_e2e', 'ads_e2e', 'all'], label: 'End-to-End Projects (CRM, Web, Ads)', owner: 'Project Owner', tools: ['Upload directly in platform / Qontent'] },
         ],
         gaps: ['Website: Page duplication in other languages should be 100% owned by Local Teams at localization stage—NOT Comms Partners.']
       },
@@ -128,7 +130,7 @@
         colorCircle: 'from-red-300 to-red-400', 
         colorHighlight: 'ring-red-300 shadow-red-200',
         useCases: [
-          { primaryTrack: 'global', tracks: ['standard', 'crm_e2e', 'web_e2e', 'all'], label: 'All Channels', owner: 'Anyone involved in the workflow', tools: ['Red Bin logging form/database'] }
+          { primaryTrack: 'global', tracks: ['standard', 'crm_e2e', 'web_e2e', 'ads_e2e', 'all'], label: 'All Channels', owner: 'Anyone involved in the workflow', tools: ['Red Bin logging form/database'] }
         ],
         notes: ['Purpose: Log quality issues discovered after launch OR broken delivery processes.', 'Analyze: Machine/Human/Method failure → implement permanent fix.']
       }
@@ -139,9 +141,10 @@
       let channelOptions = [];
       if (answers.role === 'CRM Manager') {
         channelOptions = [ { label: 'CRM / Email', value: 'CRM / Email' } ];
-      } else if (answers.role === 'Other channel owners (Website, etc.)') {
+      } else if (answers.role === 'Other channel owners (Website, Paid ads, etc.)') {
         channelOptions = [
           { label: 'Website', value: 'Website' },
+          { label: 'Paid Ads', value: 'Paid Ads' },
           { label: 'Video Content', value: 'Video Content' },
           { label: 'Other', value: 'Other' }
         ];
@@ -150,6 +153,7 @@
         channelOptions = [
           { label: 'CRM / Email', value: 'CRM / Email' },
           { label: 'Website', value: 'Website' },
+          { label: 'Paid Ads', value: 'Paid Ads' },
           { label: 'Video Content', value: 'Video Content' },
           { label: 'Other', value: 'Other' }
         ];
@@ -161,7 +165,7 @@
           options: [
             { label: 'Comms partner / PMM', value: 'Comms partner / PMM' },
             { label: 'CRM Manager', value: 'CRM Manager' },
-            { label: 'Other channel owners (Website, etc.)', value: 'Other channel owners (Website, etc.)' }
+            { label: 'Other channel owners (Website, Paid ads, etc.)', value: 'Other channel owners (Website, Paid ads, etc.)' }
           ]
         },
         { id: 'channel', title: 'Which channel is this content for?', type: 'single', options: channelOptions }
@@ -310,6 +314,17 @@
                 })}
               </div>
 
+              {/* HIGHLY VISIBLE NOTE FOR PROJECT TYPE */}
+              {question.id === 'projectType' && (
+                <div className="mt-8 p-5 bg-amber-50 border border-amber-200 rounded-xl flex gap-4 shadow-sm">
+                  <span className="text-2xl mt-0.5">💡</span>
+                  <p className="text-sm text-amber-900 leading-relaxed">
+                    <strong>Not sure if your project is self-serve or request-based?</strong><br/>
+                    Check <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer" className="text-blue-700 font-bold hover:underline">Panorama</a> and the <a href="https://www.notion.so/qonto/Comms-Toolbox-2ca31ee4c69680a2afcec1f5ce13e6c1" target="_blank" rel="noopener noreferrer" className="text-blue-700 font-bold hover:underline">Toolbox</a> first.
+                  </p>
+                </div>
+              )}
+
               {isMultiple && (
                 <button 
                   onClick={() => setStep(step + 1)} 
@@ -334,7 +349,7 @@
       };
 
       const renderResults = () => {
-        // High-Vis Request Blocker Screen (Now for ALL channels)
+        // High-Vis Request Blocker Screen (Applies to all channels, Paid Ads included)
         if (answers.projectType === 'Request') {
           return (
             <div className="max-w-4xl mx-auto w-full pt-10 pb-20 px-4">
@@ -356,12 +371,14 @@
         const pocNamesString = getPocNames(answers.language);
         
         let displayRole = answers.role;
-        if (displayRole === 'Other channel owners (Website, etc.)') displayRole = 'Channel Owner';
+        if (displayRole === 'Other channel owners (Website, Paid ads, etc.)') displayRole = 'Channel Owner';
 
         // Logic Flags (Comms Partners are standard handoffs unless they chose ChannelE2E)
         const isE2E = (answers.role !== 'Comms partner / PMM') && (
-                      (answers.channel === 'CRM / Email' && answers.crmType === 'CRM - Lifecycle') ||
-                      (answers.channel === 'Website' && answers.websiteType === 'End-to-End'));
+                        (answers.channel === 'Paid Ads' && answers.projectType === 'Self-serve') ||
+                        (answers.channel === 'CRM / Email' && answers.crmType === 'CRM - Lifecycle') ||
+                        (answers.channel === 'Website' && answers.websiteType === 'End-to-End')
+                      );
 
         // Base Owners
         let masterOwner = displayRole;
@@ -383,6 +400,11 @@
                uploadOwner = 'CRM Manager';
                uploadDesc = 'The CRM Manager handles the upload of the finalized localized content in Qontent.';
             }
+        } else if (answers.channel === 'Paid Ads') {
+            masterOwner = 'Paid Ads Manager';
+            locOwner = 'Paid Ads Manager';
+            uploadOwner = 'Paid Ads Manager';
+            uploadDesc = 'The Paid Ads Manager uploads the finalized localized content directly to the platform.';
         } else if (isE2E) {
             let specOwner = answers.channel === 'Website' ? 'Website Manager' : 'Channel Owner';
             masterOwner = specOwner;
@@ -599,10 +621,9 @@
                 <div className="mb-8">
                    <div className="p-5 bg-indigo-50 border border-indigo-200 rounded-xl shadow-sm max-w-[1200px] mb-4">
                      <p className="text-sm text-indigo-900 leading-relaxed mb-3">
-                       🎯 <strong>This workflow works for:</strong> standard self-serve projects, when no professional Creative writer is involved. If a Creative writer is involved, please follow the Creative Factory process.
+                       🎯 <strong>This workflow works for:</strong> standard self-serve projects, when no professional Creative writer is involved. If a Creative writer is involved (e.g. for high-visibility campaigns in Panorama, highly creative Paid Ads or Out of Home campaigns), please follow the Creative Factory process. This flow does not show the scenarios where creative writers are included.
                      </p>
                      <ul className="list-disc pl-5 text-sm text-indigo-900 space-y-1.5">
-                       <li><strong>For Paid Ads or Out of Home campaigns</strong> where highly creative taglines and words make a strong difference, it's never self-serve. ALWAYS involve a creative writer from the start.</li>
                        <li><strong>For Social Media:</strong> Global & Social media managers are 100% autonomous on copy creation. This channel is completely removed from the standard localization workflow.</li>
                      </ul>
                    </div>
@@ -802,7 +823,7 @@
                           <span className="text-xs text-slate-500 ml-auto">(for Steps 2 & 3)</span>
                         </div>
                         <div className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">
-                          {'🇫🇷 France: @Delphine de Roquemaurel\n🇩🇪 Germany: @Hannah Lüdicke\n🇮🇹 Italy: @lollo\n🇪🇸 Spain: @cristina.gomez\n🇵🇹 Portugal: @Julia Latorre\n🇳🇱 Netherlands:\n  - Non-SEO/non-partnerships: @rosemarijn.disseldorp\n  - SEO: @Dimitri Jordens\n  - Partnerships: @stijn.teves\n\n💬 Slack help: #new-markets-localization-help'}
+                          {'🇫🇷 France: @Delphine de Roquemaurel\n🇩🇪 Germany: @Hannah Lüdicke\n🇮🇹 Italy: @lollo\n🇪🇸 Spain: @cristina.gomez\n🇵🇹 Portugal: @Julia Latorre\n🇳🇱 Netherlands:\n  - Non-SEO/non-partnerships: @rosemarijn.disseldorp\n  - SEO: @Dimitri Jordens\n  - Partnerships: @stijn.teves\n\n💬 Slack help: #new-markets-localization-help (for 🇳🇱 Dutch and 🇵🇹 Portuguese native support only today)'}
                         </div>
                       </div>
                     </div>
