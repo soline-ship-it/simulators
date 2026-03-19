@@ -70,13 +70,13 @@
         colorHighlight: 'ring-fuchsia-300 shadow-fuchsia-200',
         ruleOfThumb: 'Whenever no professional Creative writer is involved, the Project Owner is in charge of delivering the Master copy.',
         useCases: [
-          { primaryTrack: 'standard', tracks: ['standard'], label: 'Global projects (incl. CRM - One-shot)', owner: 'Comms partner / PMM', tools: ['Tolki in Dust', 'Qontent (if Website/CRM)', 'QualityGuard in Dust (unless pro EN copywriter)'] },
-          { primaryTrack: 'crm_e2e', tracks: ['crm_e2e'], label: 'CRM - Lifecycle (End-to-End)', owner: 'Project Owner (PMM or CRM Manager)', tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust (unless pro EN copywriter)'] },
-          { primaryTrack: 'web_e2e', tracks: ['web_e2e'], label: 'Website (End-to-End)', owner: 'Project Owner (Website Manager)', tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust (unless pro EN copywriter)'] },
-          { primaryTrack: 'ads_e2e', tracks: ['ads_e2e'], label: 'Paid Ads (End-to-End)', owner: 'Project Owner (Paid Ads Manager)', tools: ['Channel-specific Dust bot', 'QualityGuard in Dust (unless pro EN copywriter)'] },
+          { primaryTrack: 'standard', tracks: ['standard'], label: 'Global projects (incl. CRM - One-shot)', owner: 'Comms partner / PMM', tools: ['Tolki in Dust', 'Qontent (if Website/CRM)', 'QualityGuard in Dust'] },
+          { primaryTrack: 'crm_e2e', tracks: ['crm_e2e'], label: 'CRM - Lifecycle (End-to-End)', owner: 'Project Owner (PMM or CRM Manager)', tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust'] },
+          { primaryTrack: 'web_e2e', tracks: ['web_e2e'], label: 'Website (End-to-End)', owner: 'Project Owner (Website Manager)', tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust'] },
+          { primaryTrack: 'ads_e2e', tracks: ['ads_e2e'], label: 'Paid Ads (End-to-End)', owner: 'Project Owner (Paid Ads Manager)', tools: ['Channel-specific Dust bot', 'QualityGuard in Dust'] },
         ],
         notes: [
-          '💡 ALWAYS use QualityGuard in Dust unless the master copy is delivered by a professional native EN copywriter or content manager. In real terms: use it to check the quality of your copy!'
+          '💡 ALWAYS check your copy with QualityGuard in Dust unless the master copy is delivered by a professional native EN copywriter. Simply put: use it to verify your copy\'s quality!'
         ],
         gaps: []
       },
@@ -85,15 +85,18 @@
         colorCircle: 'from-purple-400 to-purple-500', 
         colorHighlight: 'ring-purple-300 shadow-purple-200',
         useCases: [
-          { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'Global projects & Standard Handoffs', owner: 'Local Market POC', tools: ['Tolki OR Channel-specific Dust bot', 'Qontent (for Website/CRM)'] },
+          { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'Global projects (incl. CRM - One-shot)', owner: 'Local Market POC', tools: ['Tolki OR Channel-specific Dust bot', 'Qontent (for Website/CRM)'] },
           { primaryTrack: 'crm_e2e', tracks: ['crm_e2e', 'all'], label: 'CRM - Lifecycle (End-to-End)', owner: 'Project Owner (PMM or CRM Manager)', tools: ['Tolki in Dust OR Channel-specific Dust bot', 'Qontent'] },
           { primaryTrack: 'web_e2e', tracks: ['web_e2e', 'all'], label: 'Website (End-to-End)', owner: 'Project Owner (Website Manager)', tools: ['Tolki in Dust', 'Qontent'] },
           { primaryTrack: 'ads_e2e', tracks: ['ads_e2e', 'all'], label: 'Paid Ads (End-to-End)', owner: 'Project Owner (Paid Ads Manager)', tools: ['Tolki OR Channel-specific Dust bot'] },
         ],
-        questions: ['Is the current POC list sustainable (e.g. FR)? Volume will likely be an issue.', 'Should we assign POCs per channel instead?'],
+        questions: [
+          'Should we have all markets/regions review their POCs list?', 
+          'Should we come up with a simple, centralized portal/way of requesting localization? (e.g., #new-markets-localization-help). Or at least, like for CRM, one entry point per channel?'
+        ],
         gaps: [
-          'No standardized request path for localization across channels (only #proofread-crm exists).', 
-          'Today (March 2026), in reality, Comms Partners or Project Owners often still perform localization themselves even if not native.'
+          'No standardized request path for localization across channels (only #proofread-crm exists, for CRM).', 
+          'Today (March 2026), Comms Partners or Project Owners often perform localization themselves, even if not native. Reason: Local teams aren\'t fully aware/ready for this workflow. Even when ready, the current POC list isn\'t sustainable. Once this scales, volume will be a major issue.'
         ] 
       },
       {
@@ -102,15 +105,14 @@
         colorHighlight: 'ring-violet-400 shadow-violet-300',
         pulse: true, 
         useCases: [
-          { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'Global projects & Standard Handoffs', owner: 'Local Market POC', tools: ['QualityGuard in Dust (First step)', 'Native review (if translator is not native OR if High Impact project)'] },
+          { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'Global projects (incl. CRM - One-shot)', owner: 'Local Market POC', tools: ['QualityGuard in Dust (First step)', 'Native review (if translator is not native OR if High Impact project)'] },
           { primaryTrack: 'e2e', tracks: ['crm_e2e', 'web_e2e', 'ads_e2e', 'all'], label: 'End-to-End Projects (CRM, Web, Ads)', owner: 'Local Market POC', tools: ['1️⃣ Project Owner runs QualityGuard in Dust', '2️⃣ Project Owner requests proofread from Local POCs (e.g. in #proofread-crm)', '3️⃣ Local Market POC takes charge of the review'] },
         ],
         notes: [
-          'Focus: Tone of Voice alignment, clarity, and grammar — NOT content accuracy.', 
           '⚠️ IMPORTANT: Compliance remains your responsibility.'
         ],
         gaps: [
-          'No standardized request path for localization across channels (only #proofread-crm exists).',
+          'No standardized request path for localization across channels (only #proofread-crm exists, for CRM).',
           'Decision framework for native review not formally documented.'
         ] 
       },
@@ -140,17 +142,14 @@
     // --- DYNAMIC QUIZ LOGIC ---
     const getQuizQuestions = (answers) => {
       let channelOptions = [];
-      if (answers.role === 'CRM Manager') {
-        channelOptions = [ { label: 'CRM / Email', value: 'CRM / Email' } ];
-      } else if (answers.role === 'Other channel owners (Website, Paid ads, etc.)') {
+      if (answers.role === 'Other channel owners (Website, Paid ads, etc.)') {
         channelOptions = [
           { label: 'Website', value: 'Website' },
           { label: 'Paid Ads', value: 'Paid Ads' },
           { label: 'Video Content', value: 'Video Content' },
           { label: 'Other', value: 'Other' }
         ];
-      } else {
-        // Comms partner / PMM
+      } else if (answers.role === 'Comms partner / PMM') {
         channelOptions = [
           { label: 'CRM / Email', value: 'CRM / Email' },
           { label: 'Website', value: 'Website' },
@@ -168,13 +167,16 @@
             { label: 'CRM Manager', value: 'CRM Manager' },
             { label: 'Other channel owners (Website, Paid ads, etc.)', value: 'Other channel owners (Website, Paid ads, etc.)' }
           ]
-        },
-        { id: 'channel', title: 'Which channel is this content for?', type: 'single', options: channelOptions }
+        }
       ];
+
+      // Only ask for channel if the role isn't CRM Manager (auto-assigned to CRM / Email)
+      if (answers.role && answers.role !== 'CRM Manager') {
+        qs.push({ id: 'channel', title: 'Which channel is this content for?', type: 'single', options: channelOptions });
+      }
 
       // Logic routing based on Role & Channel
       if (answers.role !== 'Comms partner / PMM') {
-        // CRM specific path
         if (answers.channel === 'CRM / Email') {
           qs.push({
             id: 'crmType', title: 'What type of CRM project is this?', type: 'single',
@@ -184,7 +186,6 @@
             ]
           });
         }
-        // Website specific path
         if (answers.channel === 'Website') {
           qs.push({
             id: 'websiteType', title: 'How is this Website project managed?', type: 'single',
@@ -200,12 +201,12 @@
         id: 'projectType', title: 'What type of project is this?', type: 'single',
         options: [
           { label: 'Self-serve', value: 'Self-serve' },
-          { label: 'Request (for high-impact projects like Brand campaigns, major Product launches)', value: 'Request' }
+          { label: 'The Creative Factory is involved - it\'s a high-visibility project (e.g. Panorama, Paid Ads, OOH, Homepage)', value: 'Request' }
         ]
       });
 
       // ONLY ask language if it's a self-serve project
-      if (answers.projectType !== 'Request') {
+      if (answers.projectType && answers.projectType !== 'Request') {
         qs.push({
           id: 'language', title: 'Which language(s)/market(s) are you targeting? (Select all that apply)', type: 'multiple',
           options: [
@@ -230,7 +231,14 @@
       const questions = getQuizQuestions(answers);
 
       const handleSingleSelect = (id, value) => {
-        setAnswers({ ...answers, [id]: value });
+        let newAnswers = { ...answers, [id]: value };
+        
+        // Auto-assign CRM Channel if CRM Manager is selected
+        if (id === 'role' && value === 'CRM Manager') {
+            newAnswers.channel = 'CRM / Email';
+        }
+        
+        setAnswers(newAnswers);
         setStep(step + 1);
       };
 
@@ -355,12 +363,13 @@
             <div className="max-w-4xl mx-auto w-full pt-10 pb-20 px-4">
               <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center mt-10">
                 <AlertTriangle className="w-16 h-16 text-amber-500 mx-auto mb-4" />
-                <h3 className="text-2xl font-bold text-slate-900 mb-4">High-Visibility / Request Project</h3>
-                <p className="text-lg text-slate-600 mb-8">Creative copywriters must be involved for request-based projects.</p>
+                <h3 className="text-2xl font-bold text-slate-900 mb-4">Creative Factory Project</h3>
+                <p className="text-lg text-slate-600 mb-8">This is a high-visibility project involving a professional Creative Writer.</p>
                 <div className="bg-amber-50 text-amber-800 p-4 rounded-xl font-semibold border border-amber-200 inline-block max-w-xl">
                   👉 Please route this request through the Creative Factory. Creative writers do not appear in this self-serve flow.
                 </div>
-                <div className="mt-12">
+                <div className="mt-12 flex justify-center gap-6">
+                   <button onClick={() => {setStep(questions.length - 1);}} className="text-slate-500 font-semibold hover:text-slate-800 flex items-center gap-2"><ArrowLeft className="w-4 h-4"/> Back</button>
                    <button onClick={() => {setStep(0); setAnswers({});}} className="text-blue-600 font-semibold hover:underline">Start Over</button>
                 </div>
               </div>
@@ -373,11 +382,20 @@
         let displayRole = answers.role;
         if (displayRole === 'Other channel owners (Website, Paid ads, etc.)') displayRole = 'Channel Owner';
 
+        // Handling the Comms Partner End-to-End delegation override
+        let effectivelyChannelOwnerE2E = false;
+        if (answers.managementType === 'ChannelE2E') {
+            effectivelyChannelOwnerE2E = true;
+            displayRole = 'Channel Owner';
+        }
+
         // Logic Flags (Comms Partners are standard handoffs unless they chose ChannelE2E)
-        const isE2E = (answers.role !== 'Comms partner / PMM') && (
-                      (answers.channel === 'Paid Ads' && answers.projectType === 'Self-serve') ||
-                      (answers.channel === 'CRM / Email' && answers.crmType === 'CRM - Lifecycle') ||
-                      (answers.channel === 'Website' && answers.websiteType === 'End-to-End'));
+        const isE2E = effectivelyChannelOwnerE2E ||
+                      (answers.role !== 'Comms partner / PMM' && (
+                        (answers.channel === 'Paid Ads' && answers.projectType === 'Self-serve') ||
+                        (answers.channel === 'CRM / Email' && answers.crmType === 'CRM - Lifecycle') ||
+                        (answers.channel === 'Website' && answers.websiteType === 'End-to-End')
+                      ));
 
         // Base Owners
         let masterOwner = displayRole;
@@ -434,7 +452,7 @@
         } else {
            masterTools.push('Tolki OR Channel-specific Dust bot');
         }
-        masterTools.push('QualityGuard in Dust (unless pro EN copywriter)');
+        masterTools.push('QualityGuard in Dust');
 
         const locTools = [];
         if (answers.channel === 'CRM / Email' || answers.channel === 'Website') {
@@ -474,6 +492,7 @@
                 <div className="text-slate-800 font-medium">
                    {answers.projectType} 
                    {answers.websiteType ? ` (${answers.websiteType})` : ''}
+                   {answers.managementType === 'ChannelE2E' ? ' (End-to-End)' : ''}
                 </div>
               </div>
               <div>
@@ -540,22 +559,18 @@
               ))}
             </div>
 
-            {answers.projectType === 'Self-serve' && (
-              <div className="mt-8 bg-blue-50 border border-blue-200 rounded-2xl p-6 text-center shadow-sm">
-                <BookOpen className="w-8 h-8 text-blue-500 mx-auto mb-3" />
-                <h4 className="text-lg font-bold text-blue-900 mb-2">Need more help?</h4>
-                <p className="text-blue-800">
-                  Find more resources for self-serve projects in our <a href="https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?source=copy_link#31931ee4c6968014b900cf7161ec49ab" target="_blank" rel="noopener noreferrer" className="font-bold underline hover:text-blue-600 transition-colors">Self-service Content Hub</a>!
-                </p>
-              </div>
-            )}
-
-            <div className="mt-10 flex justify-center">
+            <div className="mt-10 flex justify-center gap-4">
+              <button 
+                onClick={() => setStep(questions.length - 1)}
+                className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 shadow-sm rounded-xl font-semibold text-slate-500 hover:text-slate-800 transition-all"
+              >
+                <ArrowLeft className="w-5 h-5" /> Back
+              </button>
               <button 
                 onClick={() => {setStep(0); setAnswers({});}}
-                className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 shadow-sm rounded-xl font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all"
+                className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 shadow-sm rounded-xl font-semibold text-blue-600 hover:text-blue-800 hover:bg-slate-50 transition-all"
               >
-                <ArrowLeft className="w-5 h-5" /> Start Over
+                Start Over
               </button>
             </div>
           </div>
@@ -620,10 +635,19 @@
                 <div className="mb-8">
                    <div className="p-5 bg-indigo-50 border border-indigo-200 rounded-xl shadow-sm max-w-[1200px] mb-4">
                      <p className="text-sm text-indigo-900 leading-relaxed mb-3">
-                      <strong>This workflow works for:</strong> standard self-serve projects, when no professional Creative writer is involved. If a Creative writer is involved (e.g. for high-visibility campaigns in Panorama, highly creative Paid Ads or Out of Home campaigns), please follow the Creative Factory process.
+                       🎯 <strong>This workflow works for:</strong> standard self-serve projects, when no professional Creative writer is involved. If a Creative writer is involved, please follow the Creative Factory process. This includes:
                      </p>
+                     <ul className="list-disc pl-5 text-sm text-indigo-900 space-y-1.5 mb-3">
+                       <li>High-visibility campaigns in Panorama</li>
+                       <li>Highly creative Paid Ads</li>
+                       <li>Out of Home (OOH) Brand campaigns</li>
+                       <li>Website Homepage</li>
+                     </ul>
                      <p className="text-sm text-indigo-900 leading-relaxed">
-                       <strong>For Social Media:</strong> Global & Social media managers are 100% autonomous on copy creation. This channel is completely removed from the standard localization workflow.
+                       <em>Note: This flow does not show the scenarios where creative writers are included.</em>
+                     </p>
+                     <p className="text-sm text-indigo-900 leading-relaxed mt-3 pt-3 border-t border-indigo-100">
+                       📱 <strong>For Social Media:</strong> Global & Social media managers are 100% autonomous on copy creation. This channel is completely removed from the standard localization workflow.
                      </p>
                    </div>
                    
@@ -705,7 +729,7 @@
                                 <div className="p-3 bg-green-50 border border-green-200 rounded-lg flex gap-2 shadow-sm">
                                   <ThumbsUp className="w-4 h-4 text-green-600 shrink-0 mt-0.5" />
                                   <p className="text-xs text-green-900 leading-relaxed">
-                                    <strong>Rule of thumb:</strong> {step.ruleOfThumb}
+                                    <strong>Rule of thumb:</strong> {formatTextWithLinks(step.ruleOfThumb, step.id)}
                                   </p>
                                 </div>
                               </div>
