@@ -17,7 +17,7 @@
   <script type="text/babel">
     const { useState } = React;
 
-    // --- ICONS (100% SVG, Zero Emojis) ---
+    // --- ICONS (SVG) ---
     const ChevronRight = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="9 18 15 12 9 6"></polyline></svg>;
     const ChevronDown = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="6 9 12 15 18 9"></polyline></svg>;
     const AlertTriangle = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>;
@@ -124,7 +124,7 @@
           { primaryTrack: 'ads_e2e', tracks: ['ads_e2e'], label: 'Paid Ads (End-to-End)', owner: 'Project Owner (Paid Ads Manager)', tools: ['Channel-specific Dust bot', 'QualityGuard in Dust'] },
         ],
         notes: [
-          'ALWAYS run QualityGuard in Dust to verify copy quality—unless drafted by a pro native EN copywriter.'
+          'ALWAYS use QualityGuard in Dust to check copy quality (unless drafted by a pro native EN copywriter).'
         ],
         gaps: []
       },
@@ -143,8 +143,8 @@
           'Should we come up with a simple, centralized portal/way of requesting localization? (e.g., #new-markets-localization-help). Or at least, like for CRM, one entry point per channel?'
         ],
         gaps: [
-          'No standardized localization request path across channels (only #proofread-crm exists).', 
-          'Today (March 2026), Project Owners often localize themselves even if not native. Local teams aren\'t fully ready for this workflow, and the current POC list isn\'t sustainable. Volume will soon be a major issue.'
+          'No standardized localization request path across channels (only #proofread-crm exists, for CRM).', 
+          'Today (March 2026), Comms Partners or Project Owners often perform localization themselves, even if not native. Reason: Local teams aren\'t fully aware/ready for this workflow. Even when ready, the current POC list isn\'t sustainable. Once this scales, volume will be a major issue.'
         ] 
       },
       {
@@ -159,7 +159,7 @@
           'IMPORTANT: Compliance remains your responsibility.'
         ],
         gaps: [
-          'No standardized localization request path across channels (only #proofread-crm exists).',
+          'No standardized localization request path across channels (only #proofread-crm exists, for CRM).',
           'Native review decision framework lacks formal documentation.'
         ] 
       },
@@ -189,17 +189,14 @@
     // --- DYNAMIC QUIZ LOGIC ---
     const getQuizQuestions = (answers) => {
       let channelOptions = [];
-      if (answers.role === 'CRM Manager') {
-        channelOptions = [ { label: 'CRM / Email', value: 'CRM / Email' } ];
-      } else if (answers.role === 'Other channel owners (Website, etc.)') {
+      if (answers.role === 'Other channel owners (Website, etc.)') {
         channelOptions = [
           { label: 'Website', value: 'Website' },
           { label: 'Paid Ads', value: 'Paid Ads' },
           { label: 'Video Content', value: 'Video Content' },
           { label: 'Other', value: 'Other' }
         ];
-      } else {
-        // Comms partner / PMM
+      } else if (answers.role === 'Comms partner / PMM') {
         channelOptions = [
           { label: 'CRM / Email', value: 'CRM / Email' },
           { label: 'Website', value: 'Website' },
@@ -221,13 +218,13 @@
       ];
 
       // Only ask for channel if the role isn't CRM Manager (auto-assigned)
-      if (answers.role && answers.role !== 'CRM Manager') {
+      if (answers.role !== 'CRM Manager') {
         qs.push({ id: 'channel', title: 'Which channel is this content for?', type: 'single', options: channelOptions });
       }
 
       // Logic routing based on Role & Channel
-      if (answers.role && answers.role !== 'Comms partner / PMM') {
-        if (answers.channel === 'CRM / Email') {
+      if (answers.role !== 'Comms partner / PMM') {
+        if (answers.channel === 'CRM / Email' || answers.role === 'CRM Manager') {
           qs.push({
             id: 'crmType', title: 'What type of CRM project is this?', type: 'single',
             options: [
@@ -251,21 +248,21 @@
         id: 'projectType', title: 'What type of project is this?', type: 'single',
         options: [
           { label: 'Self-serve', value: 'Self-serve' },
-          { label: 'The Creative Factory is involved - high-visibility project (e.g. Panorama (L and sometimes M), Paid Ads, OOH, Homepage)', value: 'Request' }
+          { label: 'Creative Factory involved (e.g. High-Vis, Paid Ads, OOH)', value: 'Request' }
         ]
       });
 
       // ONLY ask language if it's a self-serve project
-      if (answers.projectType && answers.projectType !== 'Request') {
+      if (answers.projectType !== 'Request') {
         qs.push({
           id: 'language', title: 'Which language(s)/market(s) are you targeting? (Select all that apply)', type: 'multiple',
           options: [
-            { label: 'FR - French', value: 'French' },
-            { label: 'DE - German', value: 'German' },
-            { label: 'IT - Italian', value: 'Italian' },
-            { label: 'ES - Spanish', value: 'Spanish' },
-            { label: 'PT - Portuguese', value: 'Portuguese' },
-            { label: 'NL - Dutch', value: 'Dutch' }
+            { label: '🇫🇷 French', value: 'French' },
+            { label: '🇩🇪 German', value: 'German' },
+            { label: '🇮🇹 Italian', value: 'Italian' },
+            { label: '🇪🇸 Spanish', value: 'Spanish' },
+            { label: '🇵🇹 Portuguese', value: 'Portuguese' },
+            { label: '🇳🇱 Dutch', value: 'Dutch' }
           ]
         });
       }
@@ -305,12 +302,12 @@
         if (!langs || langs.length === 0) return 'Local Market POCs';
         return langs.map(lang => {
           switch(lang) {
-            case 'French': return 'FR: @Delphine de Roquemaurel';
-            case 'German': return 'DE: @Hannah Lüdicke';
-            case 'Italian': return 'IT: @lollo';
-            case 'Spanish': return 'ES: @cristina.gomez';
-            case 'Portuguese': return 'PT: @Julia Latorre';
-            case 'Dutch': return 'NL: @rosemarijn.disseldorp (non-SEO), @Dimitri Jordens (SEO), @stijn.teves (partnerships)';
+            case 'French': return '🇫🇷 @Delphine de Roquemaurel';
+            case 'German': return '🇩🇪 @Hannah Lüdicke';
+            case 'Italian': return '🇮🇹 @lollo';
+            case 'Spanish': return '🇪🇸 @cristina.gomez';
+            case 'Portuguese': return '🇵🇹 @Julia Latorre';
+            case 'Dutch': return '🇳🇱 @rosemarijn.disseldorp (non-SEO), @Dimitri Jordens (SEO), @stijn.teves (partnerships)';
             default: return 'Local Market POCs';
           }
         }).join('\n');
@@ -415,10 +412,10 @@
               <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center mt-10">
                 <AlertTriangle className="w-16 h-16 text-amber-500 mx-auto mb-4" />
                 <h3 className="text-2xl font-bold text-slate-900 mb-4">Creative Factory Project</h3>
-                <p className="text-lg text-slate-600 mb-8">Creative copywriters handle request-based projects.</p>
+                <p className="text-lg text-slate-600 mb-8">This project requires a professional Creative Writer.</p>
                 <div className="bg-amber-50 text-amber-800 p-4 rounded-xl font-semibold border border-amber-200 inline-flex items-center gap-3 text-left max-w-xl mb-8">
                   <ArrowRight className="w-6 h-6 text-amber-600 shrink-0" />
-                  <span>Route this request through the Creative Factory. This self-serve flow does not apply.</span>
+                  <span>Please route this request through the Creative Factory. This self-serve flow does not apply.</span>
                 </div>
                 <div className="mt-4 flex justify-center gap-6">
                    <button onClick={() => {setStep(questions.length - 1);}} className="text-slate-500 font-semibold hover:text-slate-800 flex items-center gap-2"><ArrowLeft className="w-4 h-4"/> Back</button>
@@ -496,7 +493,7 @@
         } else {
            masterTools.push('Tolki OR Channel-specific Dust bot');
         }
-        masterTools.push('QualityGuard in Dust');
+        masterTools.push('QualityGuard in Dust (to check copy if no EN native is involved)');
 
         const locTools = [];
         if (answers.channel === 'CRM / Email' || answers.channel === 'Website') {
@@ -542,16 +539,17 @@
                 <div className="text-violet-700 font-bold mb-1 uppercase text-xs tracking-wider">Languages</div>
                 <div className="text-slate-800 font-medium flex items-center gap-2">
                   {answers.language && answers.language.map(lang => {
-                    const code = lang.substring(0,2);
-                    let badgeColor = 'bg-slate-100 text-slate-700 border-slate-200';
-                    if (code === 'FR') badgeColor = 'bg-blue-50 text-blue-700 border-blue-200';
-                    if (code === 'DE') badgeColor = 'bg-orange-50 text-orange-700 border-orange-200';
-                    if (code === 'IT') badgeColor = 'bg-green-50 text-green-700 border-green-200';
-                    if (code === 'ES') badgeColor = 'bg-red-50 text-red-700 border-red-200';
-                    if (code === 'PT') badgeColor = 'bg-emerald-50 text-emerald-700 border-emerald-200';
-                    if (code === 'NL') badgeColor = 'bg-cyan-50 text-cyan-700 border-cyan-200';
-                    
-                    return <span key={lang} className={`px-1.5 py-0.5 rounded text-[10px] font-bold border ${badgeColor}`}>{code}</span>;
+                    let flag = '';
+                    switch(lang) {
+                      case 'French': flag = '🇫🇷'; break;
+                      case 'German': flag = '🇩🇪'; break;
+                      case 'Italian': flag = '🇮🇹'; break;
+                      case 'Spanish': flag = '🇪🇸'; break;
+                      case 'Portuguese': flag = '🇵🇹'; break;
+                      case 'Dutch': flag = '🇳🇱'; break;
+                      default: flag = '';
+                    }
+                    return <span key={lang} className="text-lg" title={lang}>{flag}</span>;
                   })}
                 </div>
               </div>
@@ -824,8 +822,14 @@
                                   key={i} 
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    setSelectedStep(null); 
-                                    setSelectedTrack(selectedTrack === uc.primaryTrack ? null : uc.primaryTrack); 
+                                    // If we are clicking the 'all' step 1 block, we highlight 'all'
+                                    if (uc.primaryTrack === 'all') {
+                                        setSelectedStep(null);
+                                        setSelectedTrack(selectedTrack === 'all' ? null : 'all');
+                                    } else {
+                                        setSelectedStep(null); 
+                                        setSelectedTrack(selectedTrack === uc.primaryTrack ? null : uc.primaryTrack); 
+                                    }
                                   }}
                                   className={`mb-4 border rounded-xl p-4 transition-all duration-300 cursor-pointer hover:border-violet-300 hover:shadow-md
                                     ${!isTrackActive ? 'opacity-30 grayscale-[50%] bg-slate-50 border-slate-100' : ''}
@@ -916,7 +920,7 @@
                           <span className="text-xs text-slate-500 ml-auto">(for Steps 2 & 3)</span>
                         </div>
                         <div className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">
-                          {'FR: @Delphine de Roquemaurel\nDE: @Hannah Lüdicke\nIT: @lollo\nES: @cristina.gomez\nPT: @Julia Latorre\nNL: @rosemarijn.disseldorp (non-SEO), @Dimitri Jordens (SEO), @stijn.teves (partnerships)\n\n💬 Slack help: #new-markets-localization-help (for NL Dutch and PT Portuguese native support only today)'}
+                          {'🇫🇷 France: @Delphine de Roquemaurel\n🇩🇪 Germany: @Hannah Lüdicke\n🇮🇹 Italy: @lollo\n🇪🇸 Spain: @cristina.gomez\n🇵🇹 Portugal: @Julia Latorre\n🇳🇱 Netherlands:\n  - Non-SEO/non-partnerships: @rosemarijn.disseldorp\n  - SEO: @Dimitri Jordens\n  - Partnerships: @stijn.teves\n\n💬 Slack help: #new-markets-localization-help (for 🇳🇱 Dutch and 🇵🇹 Portuguese native support only today)'}
                         </div>
                       </div>
                     </div>
