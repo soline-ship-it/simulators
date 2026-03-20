@@ -126,9 +126,7 @@
         notes: [
           'ALWAYS run QualityGuard in Dust to verify copy quality—unless drafted by a pro native EN copywriter.'
         ],
-        gaps: [
-          'The boundary between "self-serve" and "request-based" projects remains ambiguous. Relying solely on Panorama or Toolbox sizing guidelines is currently insufficient and requires clearer definition.'
-        ]
+        gaps: []
       },
       {
         id: 2, title: 'First-Pass Translation', subtitle: 'Generate localized versions',
@@ -145,7 +143,7 @@
           'Should we come up with a simple, centralized portal/way of requesting localization? (e.g., #new-markets-localization-help). Or at least, like for CRM, one entry point per channel?'
         ],
         gaps: [
-          'No standardized localization request path across channels (only #proofread-crm exists, for CRM).', 
+          'No standardized localization request path across channels (only #proofread-crm exists).', 
           'Today (March 2026), Project Owners often localize themselves even if not native. Local teams aren\'t fully ready for this workflow, and the current POC list isn\'t sustainable. Volume will soon be a major issue.'
         ] 
       },
@@ -161,7 +159,7 @@
           'IMPORTANT: Compliance remains your responsibility.'
         ],
         gaps: [
-          'No standardized localization request path across channels (only #proofread-crm exists, for CRM).',
+          'No standardized localization request path across channels (only #proofread-crm exists).',
           'Native review decision framework lacks formal documentation.'
         ] 
       },
@@ -257,12 +255,12 @@
         qs.push({
           id: 'language', title: 'Which language(s)/market(s) are you targeting? (Select all that apply)', type: 'multiple',
           options: [
-            { label: '🇫🇷 French', value: 'French' },
-            { label: '🇩🇪 German', value: 'German' },
-            { label: '🇮🇹 Italian', value: 'Italian' },
-            { label: '🇪🇸 Spanish', value: 'Spanish' },
-            { label: '🇵🇹 Portuguese', value: 'Portuguese' },
-            { label: '🇳🇱 Dutch', value: 'Dutch' }
+            { label: '🇫🇷 FR - French', value: 'French' },
+            { label: '🇩🇪 DE - German', value: 'German' },
+            { label: '🇮🇹 IT - Italian', value: 'Italian' },
+            { label: '🇪🇸 ES - Spanish', value: 'Spanish' },
+            { label: '🇵🇹 PT - Portuguese', value: 'Portuguese' },
+            { label: '🇳🇱 NL - Dutch', value: 'Dutch' }
           ]
         });
       }
@@ -302,12 +300,12 @@
         if (!langs || langs.length === 0) return 'Local Market POCs';
         return langs.map(lang => {
           switch(lang) {
-            case 'French': return '🇫🇷 @Delphine de Roquemaurel';
-            case 'German': return '🇩🇪 @Hannah Lüdicke';
-            case 'Italian': return '🇮🇹 @lollo';
-            case 'Spanish': return '🇪🇸 @cristina.gomez';
-            case 'Portuguese': return '🇵🇹 @Julia Latorre';
-            case 'Dutch': return '🇳🇱 @rosemarijn.disseldorp (non-SEO), @Dimitri Jordens (SEO), @stijn.teves (partnerships)';
+            case 'French': return '🇫🇷 FR: @Delphine de Roquemaurel';
+            case 'German': return '🇩🇪 DE: @Hannah Lüdicke';
+            case 'Italian': return '🇮🇹 IT: @lollo';
+            case 'Spanish': return '🇪🇸 ES: @cristina.gomez';
+            case 'Portuguese': return '🇵🇹 PT: @Julia Latorre';
+            case 'Dutch': return '🇳🇱 NL: @rosemarijn.disseldorp (non-SEO), @Dimitri Jordens (SEO), @stijn.teves (partnerships)';
             default: return 'Local Market POCs';
           }
         }).join('\n');
@@ -699,34 +697,47 @@
                   </div>
                   
                   {showGuidelines && (
-                    <div className="p-6 border-t border-slate-100 bg-slate-50 flex flex-col md:flex-row gap-8 animate-in slide-in-from-top-2 duration-200">
-                      <div className="flex-1">
-                         <div className="flex items-center gap-2 mb-3">
-                            <AlertTriangle className="w-4 h-4 text-amber-500" />
-                            <h4 className="text-xs font-bold text-slate-600 uppercase tracking-wider">Creative Factory Exceptions</h4>
-                         </div>
-                         <p className="text-sm text-slate-600 mb-2">Route these through the Creative Factory (not in this flow):</p>
-                         <ul className="list-disc pl-5 text-sm text-slate-700 space-y-1.5">
-                           <li>High-visibility campaigns in <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer" className="font-bold text-violet-600 hover:underline">Panorama</a> (L and sometimes M)</li>
-                           <li>Highly creative Paid Ads or Out of Home (OOH)</li>
-                           <li>Website Homepage</li>
-                         </ul>
+                    <div className="p-6 border-t border-slate-100 bg-slate-50 flex flex-col animate-in slide-in-from-top-2 duration-200">
+                      <div className="flex flex-col md:flex-row gap-8">
+                        <div className="flex-1">
+                           <div className="flex items-center gap-2 mb-3">
+                              <AlertTriangle className="w-4 h-4 text-amber-500" />
+                              <h4 className="text-xs font-bold text-slate-600 uppercase tracking-wider">Creative Factory Exceptions</h4>
+                           </div>
+                           <p className="text-sm text-slate-600 mb-2">Route these through the Creative Factory (not in this flow):</p>
+                           <ul className="list-disc pl-5 text-sm text-slate-700 space-y-1.5">
+                             <li>High-visibility campaigns in <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer" className="font-bold text-violet-600 hover:underline">Panorama</a> (L and sometimes M)</li>
+                             <li>Highly creative Paid Ads or Out of Home (OOH)</li>
+                             <li>Website Homepage</li>
+                           </ul>
+                        </div>
+                        <div className="flex-1 space-y-5">
+                           <div>
+                             <div className="flex items-center gap-2 mb-2">
+                                <Smartphone className="w-4 h-4 text-indigo-500" />
+                                <h4 className="text-xs font-bold text-slate-600 uppercase tracking-wider">Social Media</h4>
+                             </div>
+                             <p className="text-sm text-slate-700">Global & Social media managers are 100% autonomous. Removed from this flow.</p>
+                           </div>
+                           <div>
+                             <div className="flex items-center gap-2 mb-2">
+                                <HelpCircle className="w-4 h-4 text-blue-500" />
+                                <h4 className="text-xs font-bold text-slate-600 uppercase tracking-wider">Not sure?</h4>
+                             </div>
+                             <p className="text-sm text-slate-700">Check Panorama and the <a href="https://www.notion.so/qonto/Comms-Toolbox-2ca31ee4c69680a2afcec1f5ce13e6c1" target="_blank" rel="noopener noreferrer" className="font-bold text-violet-600 hover:underline">Toolbox</a> to confirm if your project is self-serve.</p>
+                           </div>
+                        </div>
                       </div>
-                      <div className="flex-1 space-y-5">
-                         <div>
-                           <div className="flex items-center gap-2 mb-2">
-                              <Smartphone className="w-4 h-4 text-indigo-500" />
-                              <h4 className="text-xs font-bold text-slate-600 uppercase tracking-wider">Social Media</h4>
-                           </div>
-                           <p className="text-sm text-slate-700">Global & Social media managers are 100% autonomous. Removed from this flow.</p>
-                         </div>
-                         <div>
-                           <div className="flex items-center gap-2 mb-2">
-                              <HelpCircle className="w-4 h-4 text-blue-500" />
-                              <h4 className="text-xs font-bold text-slate-600 uppercase tracking-wider">Not sure?</h4>
-                           </div>
-                           <p className="text-sm text-slate-700">Check Panorama and the <a href="https://www.notion.so/qonto/Comms-Toolbox-2ca31ee4c69680a2afcec1f5ce13e6c1" target="_blank" rel="noopener noreferrer" className="font-bold text-violet-600 hover:underline">Toolbox</a> to confirm if your project is self-serve.</p>
-                         </div>
+                      
+                      <div className="mt-6 p-3 bg-red-50 border border-red-100 rounded-lg">
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <AlertTriangle className="w-4 h-4 text-red-500" />
+                          <span className="text-xs font-bold text-red-600 uppercase tracking-wider">Process Gap</span>
+                        </div>
+                        <p className="text-xs text-red-700 leading-relaxed flex items-start gap-2">
+                           <ChevronRight className="w-3.5 h-3.5 mt-0.5 shrink-0 opacity-60" />
+                           <span>The boundary between "self-serve" and "request-based" projects remains ambiguous. Relying solely on Panorama or Toolbox sizing guidelines is currently insufficient and requires clearer definition.</span>
+                        </p>
                       </div>
                     </div>
                   )}
