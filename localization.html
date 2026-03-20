@@ -124,9 +124,11 @@
           { primaryTrack: 'ads_e2e', tracks: ['ads_e2e'], label: 'Paid Ads (End-to-End)', owner: 'Project Owner (Paid Ads Manager)', tools: ['Channel-specific Dust bot', 'QualityGuard in Dust'] },
         ],
         notes: [
-          'ALWAYS use QualityGuard in Dust to check copy quality (unless drafted by a pro native EN copywriter).'
+          'ALWAYS run QualityGuard in Dust to verify copy quality—unless drafted by a pro native EN copywriter.'
         ],
-        gaps: []
+        gaps: [
+          'The boundary between "self-serve" and "request-based" projects remains ambiguous. Relying solely on Panorama or Toolbox sizing guidelines is currently insufficient and requires clearer definition.'
+        ]
       },
       {
         id: 2, title: 'First-Pass Translation', subtitle: 'Generate localized versions',
@@ -144,7 +146,7 @@
         ],
         gaps: [
           'No standardized localization request path across channels (only #proofread-crm exists, for CRM).', 
-          'Today (March 2026), Comms Partners or Project Owners often perform localization themselves, even if not native. Reason: Local teams aren\'t fully aware/ready for this workflow. Even when ready, the current POC list isn\'t sustainable. Once this scales, volume will be a major issue.'
+          'Today (March 2026), Project Owners often localize themselves even if not native. Local teams aren\'t fully ready for this workflow, and the current POC list isn\'t sustainable. Volume will soon be a major issue.'
         ] 
       },
       {
@@ -193,7 +195,6 @@
         channelOptions = [
           { label: 'Website', value: 'Website' },
           { label: 'Paid Ads', value: 'Paid Ads' },
-          { label: 'Video Content', value: 'Video Content' },
           { label: 'Other', value: 'Other' }
         ];
       } else if (answers.role === 'Comms partner / PMM') {
@@ -201,7 +202,6 @@
           { label: 'CRM / Email', value: 'CRM / Email' },
           { label: 'Website', value: 'Website' },
           { label: 'Paid Ads', value: 'Paid Ads' },
-          { label: 'Video Content', value: 'Video Content' },
           { label: 'Other', value: 'Other' }
         ];
       }
@@ -218,12 +218,12 @@
       ];
 
       // Only ask for channel if the role isn't CRM Manager (auto-assigned)
-      if (answers.role !== 'CRM Manager') {
+      if (answers.role && answers.role !== 'CRM Manager') {
         qs.push({ id: 'channel', title: 'Which channel is this content for?', type: 'single', options: channelOptions });
       }
 
       // Logic routing based on Role & Channel
-      if (answers.role !== 'Comms partner / PMM') {
+      if (answers.role && answers.role !== 'Comms partner / PMM') {
         if (answers.channel === 'CRM / Email' || answers.role === 'CRM Manager') {
           qs.push({
             id: 'crmType', title: 'What type of CRM project is this?', type: 'single',
@@ -253,7 +253,7 @@
       });
 
       // ONLY ask language if it's a self-serve project
-      if (answers.projectType !== 'Request') {
+      if (answers.projectType && answers.projectType !== 'Request') {
         qs.push({
           id: 'language', title: 'Which language(s)/market(s) are you targeting? (Select all that apply)', type: 'multiple',
           options: [
@@ -412,10 +412,10 @@
               <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center mt-10">
                 <AlertTriangle className="w-16 h-16 text-amber-500 mx-auto mb-4" />
                 <h3 className="text-2xl font-bold text-slate-900 mb-4">Creative Factory Project</h3>
-                <p className="text-lg text-slate-600 mb-8">This project requires a professional Creative Writer.</p>
+                <p className="text-lg text-slate-600 mb-8">Creative copywriters handle request-based projects.</p>
                 <div className="bg-amber-50 text-amber-800 p-4 rounded-xl font-semibold border border-amber-200 inline-flex items-center gap-3 text-left max-w-xl mb-8">
                   <ArrowRight className="w-6 h-6 text-amber-600 shrink-0" />
-                  <span>Please route this request through the Creative Factory. This self-serve flow does not apply.</span>
+                  <span>Route this request through the Creative Factory. This self-serve flow does not apply.</span>
                 </div>
                 <div className="mt-4 flex justify-center gap-6">
                    <button onClick={() => {setStep(questions.length - 1);}} className="text-slate-500 font-semibold hover:text-slate-800 flex items-center gap-2"><ArrowLeft className="w-4 h-4"/> Back</button>
@@ -822,14 +822,8 @@
                                   key={i} 
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    // If we are clicking the 'all' step 1 block, we highlight 'all'
-                                    if (uc.primaryTrack === 'all') {
-                                        setSelectedStep(null);
-                                        setSelectedTrack(selectedTrack === 'all' ? null : 'all');
-                                    } else {
-                                        setSelectedStep(null); 
-                                        setSelectedTrack(selectedTrack === uc.primaryTrack ? null : uc.primaryTrack); 
-                                    }
+                                    setSelectedStep(null); 
+                                    setSelectedTrack(selectedTrack === uc.primaryTrack ? null : uc.primaryTrack); 
                                   }}
                                   className={`mb-4 border rounded-xl p-4 transition-all duration-300 cursor-pointer hover:border-violet-300 hover:shadow-md
                                     ${!isTrackActive ? 'opacity-30 grayscale-[50%] bg-slate-50 border-slate-100' : ''}
