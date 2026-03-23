@@ -859,10 +859,13 @@ function PathFinder({onViewWorkflow}){
     }
   };
 
-  // Progress for non-result screens
-  const progressMap={role:25,projectType:50,channel:75,langs:90,result:100};
+  // Progress — account for whether channel step exists
+  const hasChannelStep=!roleImpliesChannel(answers.role);
+  const progressMap=hasChannelStep
+    ? {role:20,projectType:40,channel:65,langs:85,result:100}
+    : {role:25,projectType:50,langs:80,result:100};
   const progress=progressMap[screen]||0;
-  const stepLabels={role:'Role',projectType:'Project type',channel:'Channel',langs:'Languages'};
+  const stepLabels={role:'1 — Your role',projectType:'2 — Project type',channel:'3 — Channel',langs:`${hasChannelStep?'4':'3'} — Languages`};
 
   const OptionBtn=({opt,onClick,selected})=>(
     <button onClick={onClick} style={{
@@ -939,7 +942,7 @@ function PathFinder({onViewWorkflow}){
 
   // ── LANGUAGES ──
   if(screen==='langs') return(
-    <Shell title="Which language(s) are you targeting?">
+    <Shell title="Which language(s) are you targeting?" showBack={false}>
       <div style={{display:'flex',flexDirection:'column',gap:0}}>
         {LANGS.map(l=>{
           const sel=langSel.includes(l.label);
@@ -986,24 +989,17 @@ function PathFinder({onViewWorkflow}){
 
     return(
       <div style={{maxWidth:820,margin:'0 auto',padding:'32px 0'}} className="fade-in">
-        {/* Header */}
-        <div style={{background:accentClr,borderRadius:14,padding:'18px 24px',marginBottom:20,display:'flex',alignItems:'flex-start',justifyContent:'space-between',flexWrap:'wrap',gap:12}}>
-          <div>
-            <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',color:'rgba(255,255,255,0.6)',marginBottom:4}}>Your workflow</div>
-            <div style={{fontSize:17,fontWeight:700,color:'#fff'}}>{trackLabel}</div>
-          </div>
-          {pocList.length>0&&(
-            <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
-              {pocList.map(p=>(
-                <span key={p.label} style={{background:'rgba(255,255,255,0.15)',borderRadius:20,padding:'4px 12px',fontSize:12,color:'#fff',fontWeight:500}}>{p.flag} {p.poc}</span>
-              ))}
-            </div>
-          )}
+        {/* Header — no POCs here anymore */}
+        <div style={{background:accentClr,borderRadius:14,padding:'18px 24px',marginBottom:20}}>
+          <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',color:'rgba(255,255,255,0.6)',marginBottom:4}}>Your workflow</div>
+          <div style={{fontSize:17,fontWeight:700,color:'#fff'}}>{trackLabel}</div>
         </div>
 
         {/* Steps */}
         <div style={{display:'flex',flexDirection:'column',gap:10,marginBottom:20}}>
-          {result.steps.map((s,i)=>(
+          {result.steps.map((s,i)=>{
+            const showPOCs=pocList.length>0&&(s.n===2||s.n===3);
+            return(
             <div key={s.n} style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:12,padding:'16px 20px',display:'flex',gap:16,alignItems:'flex-start'}}>
               <div style={{width:36,height:36,borderRadius:'50%',background:STEP_GRAD_PF[i]||STEP_GRAD_PF[3],color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:800,flexShrink:0}}>{s.n}</div>
               <div style={{flex:1}}>
@@ -1016,7 +1012,7 @@ function PathFinder({onViewWorkflow}){
                   <IUser size={13} style={{color:accentClr}}/>
                   <span style={{fontSize:13,fontWeight:700,color:accentClr}}>{s.owner}</span>
                 </div>
-                <div style={{display:'flex',alignItems:'flex-start',gap:6}}>
+                <div style={{display:'flex',alignItems:'flex-start',gap:6,marginBottom:showPOCs?10:0}}>
                   <IWrench size={13} style={{color:'#8F8F8F',marginTop:2}}/>
                   <div style={{display:'flex',flexWrap:'wrap',gap:'3px 14px'}}>
                     {s.tools.map((t,ti)=>(
@@ -1024,9 +1020,26 @@ function PathFinder({onViewWorkflow}){
                     ))}
                   </div>
                 </div>
+                {showPOCs&&(
+                  <div style={{marginTop:2,padding:'10px 12px',background:'#F9F7FF',border:'1px solid #E9E0FF',borderRadius:8}}>
+                    <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8}}>
+                      <IUsers size={12} style={{color:'#7B4DB8'}}/>
+                      <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#7B4DB8'}}>Your POC{pocList.length>1?'s':''}</span>
+                    </div>
+                    <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
+                      {pocList.map(p=>(
+                        <span key={p.label} style={{display:'inline-flex',alignItems:'center',gap:5,background:'#fff',border:'1px solid #E9E0FF',borderRadius:20,padding:'4px 10px',fontSize:13,color:'#3D3D3D',fontWeight:500}}>
+                          <span>{p.flag}</span>
+                          <span style={{fontWeight:600,color:'#461068'}}>{p.poc}</span>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Red bin */}
