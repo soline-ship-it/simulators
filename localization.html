@@ -25,7 +25,7 @@ a:hover{text-decoration:underline;}
 .track-card{cursor:pointer;transition:transform 0.18s ease,box-shadow 0.18s ease;border-radius:16px;}
 .track-card:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,0.1);}
 .uc-row{cursor:pointer;transition:background 0.16s ease,border-color 0.16s ease;}
-.uc-row:hover{background:#FAF7FF!important;}
+.uc-row:hover{background:#FAF7FF!important;border-color:#BFA6EA!important;}
 .btn-tab{cursor:pointer;transition:all 0.15s ease;font-family:'Manrope',Arial,sans-serif;}
 .btn-tab:hover{background:#F5F0FF!important;border-color:#BFA6EA!important;color:#461068!important;}
 @keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(123,77,184,0.3);}70%{box-shadow:0 0 0 8px rgba(123,77,184,0);}100%{box-shadow:0 0 0 0 rgba(123,77,184,0);}}
@@ -121,15 +121,15 @@ function Accordion({title,items,type,stepId}){
 function NoteFrame({notes,stepId}){
   if(!notes||notes.length===0)return null;
   return(
-    <div style={{marginTop:10,background:'#F9F7FF',border:'1px solid #E9E0FF',borderRadius:10,padding:'11px 14px'}}>
+    <div style={{marginTop:10,background:'#F5F5F5',border:'1px solid #E0E0E0',borderRadius:10,padding:'11px 14px'}}>
       <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:7}}>
-        <INote size={13} style={{color:'#7B4DB8'}}/>
-        <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#7B4DB8'}}>Notes</span>
+        <INote size={13} style={{color:'#616161'}}/>
+        <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#616161'}}>Notes</span>
       </div>
       <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:6}}>
         {notes.map((n,i)=>(
           <li key={i} style={{display:'flex',gap:6,fontSize:14,color:'#3D3D3D',lineHeight:1.55}}>
-            <span style={{width:5,height:5,borderRadius:'50%',background:'#BFA6EA',flexShrink:0,marginTop:8}}/>
+            <span style={{width:5,height:5,borderRadius:'50%',background:'#B8B8B8',flexShrink:0,marginTop:8}}/>
             <span>{fmtLinks(n,stepId)}</span>
           </li>
         ))}
@@ -165,7 +165,7 @@ function LocalPOCsBlock(){
         ))}
       </div>
       <div style={{background:'#F0EAFF',borderRadius:8,padding:'8px 12px',fontSize:13,color:'#461068',fontWeight:500}}>
-        💬 <strong>#new-markets-localization-help</strong> — Dutch 🇳🇱 and Portuguese 🇵🇹 native support only (today)
+        💬 <strong>#new-markets-localization-help</strong> — Dutch 🇳🇱 and Portuguese 🇵🇹 native support only
       </div>
     </div>
   );
@@ -241,8 +241,9 @@ const STEPS_SS=[
 
 /* ── BAU STEPS DATA (all channels, rows) ── */
 const BAU_CHANNELS=['CRM','Website','Paid Ads'];
-const CHANNEL_COLOR={'CRM':'#7B4DB8','Website':'#2F95A0','Paid Ads':'#CE6033'};
-const CHANNEL_BG={'CRM':'#F5F0FF','Website':'#ECFDF5','Paid Ads':'#FFF5F0'};
+const CHANNEL_COLOR={'CRM':'#7B4DB8','Website':'#7B4DB8','Paid Ads':'#7B4DB8'};
+const CHANNEL_BG={'CRM':'#F5F0FF','Website':'#F5F0FF','Paid Ads':'#F5F0FF'};
+const CHANNEL_BORDER={'CRM':'#BFA6EA','Website':'#BFA6EA','Paid Ads':'#BFA6EA'};
 
 const STEPS_BAU=[
   {
@@ -342,16 +343,26 @@ function SSStepCard({step,gradBg,selectedUC,onSelectUC}){
   return(
     <div style={{width:340,flexShrink:0,display:'flex',flexDirection:'column',alignItems:'center'}}>
       {/* circle */}
-      <div style={{width:96,height:96,borderRadius:'50%',background:gradBg,color:'#fff',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',boxShadow:'0 4px 16px rgba(0,0,0,0.14)',position:'relative'}} className={step.mandatory?'pulse':''}>
-        <div style={{position:'absolute',top:-9,right:-9,width:24,height:24,borderRadius:'50%',background:'#fff',border:'2px solid #E0E0E0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:12,fontWeight:800,color:'#3D3D3D'}}>{step.id}</div>
-        <div style={{textAlign:'center',padding:'0 14px'}}>
-          <div style={{fontSize:12,fontWeight:700,lineHeight:1.3,marginBottom:step.mandatory?4:0}}>{step.title}</div>
-          {step.mandatory&&<div style={{fontSize:9,fontWeight:700,background:'rgba(255,255,255,0.25)',borderRadius:20,padding:'2px 7px',display:'inline-block',letterSpacing:'0.04em',textTransform:'uppercase'}}>Mandatory</div>}
+      <div style={{position:'relative',width:96,height:96}}>
+        <div style={{width:96,height:96,borderRadius:'50%',background:gradBg,color:'#fff',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',boxShadow:'0 4px 16px rgba(0,0,0,0.14)'}} className={step.mandatory?'pulse':''}>
+          <div style={{textAlign:'center',padding:'0 14px'}}>
+            <div style={{fontSize:12,fontWeight:700,lineHeight:1.3,marginBottom:step.mandatory?4:0}}>{step.title}</div>
+            {step.mandatory&&<div style={{fontSize:9,fontWeight:700,background:'rgba(255,255,255,0.25)',borderRadius:20,padding:'2px 7px',display:'inline-block',letterSpacing:'0.04em',textTransform:'uppercase'}}>Mandatory</div>}
+          </div>
         </div>
+        <div style={{position:'absolute',top:-2,right:-2,width:22,height:22,borderRadius:'50%',background:'#fff',border:'2px solid #E0E0E0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,color:'#3D3D3D',zIndex:2}}>{step.id}</div>
       </div>
       <div style={{width:1,height:14,background:'#CCCCCC'}}/>
       {/* detail */}
       <div style={{width:'100%',background:'#fff',border:'1px solid #E0E0E0',borderRadius:14,padding:'16px',boxShadow:'0 1px 4px rgba(0,0,0,0.05)'}}>
+        {hasMulti&&(
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}}>
+            <span style={{fontSize:12,color:'#8F8F8F',fontStyle:'italic'}}>Click a row to filter</span>
+            {selectedUC!==null&&(
+              <button onClick={e=>{e.stopPropagation();onSelectUC(null);}} style={{fontSize:11,fontWeight:600,color:'#7B4DB8',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',padding:0}}>Clear ✕</button>
+            )}
+          </div>
+        )}
         {step.useCases.map((uc,i)=>{
           const isActive=!hasMulti||(selectedUC===null||selectedUC===i);
           const isHighlit=hasMulti&&selectedUC===i;
@@ -365,6 +376,7 @@ function SSStepCard({step,gradBg,selectedUC,onSelectUC}){
                 marginBottom:i<step.useCases.length-1?10:0,
                 opacity:!isActive?0.25:1,
                 transition:'all 0.18s ease',
+                cursor:hasMulti?'pointer':'default',
               }}>
               <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#7B4DB8',marginBottom:8}}>{uc.label}</div>
               {uc.ruleOfThumb&&(
@@ -407,14 +419,27 @@ function SSStepCard({step,gradBg,selectedUC,onSelectUC}){
 /* ── BAU STEP CARD (all channels, selectable rows) ── */
 function BAUStepCard({step,gradBg,selectedCh,onSelectCh}){
   const channels=BAU_CHANNELS;
+
+  // Detect if all channels have identical content (same owner + same tools, no channel-specific steps)
+  const allSame=channels.every(ch=>{
+    const uc=step.channels[ch];
+    const ref=step.channels[channels[0]];
+    if(!uc||!ref)return false;
+    return uc.owner===ref.owner &&
+      JSON.stringify(uc.tools)===JSON.stringify(ref.tools) &&
+      JSON.stringify(uc.steps||[])===JSON.stringify(ref.steps||[]);
+  });
+
   return(
     <div style={{width:360,flexShrink:0,display:'flex',flexDirection:'column',alignItems:'center'}}>
-      <div style={{width:96,height:96,borderRadius:'50%',background:gradBg,color:'#fff',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',boxShadow:'0 4px 16px rgba(0,0,0,0.14)',position:'relative'}} className={step.mandatory?'pulse':''}>
-        <div style={{position:'absolute',top:-9,right:-9,width:24,height:24,borderRadius:'50%',background:'#fff',border:'2px solid #E0E0E0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:12,fontWeight:800,color:'#3D3D3D'}}>{step.id}</div>
-        <div style={{textAlign:'center',padding:'0 14px'}}>
-          <div style={{fontSize:12,fontWeight:700,lineHeight:1.3,marginBottom:step.mandatory?4:0}}>{step.title}</div>
-          {step.mandatory&&<div style={{fontSize:9,fontWeight:700,background:'rgba(255,255,255,0.25)',borderRadius:20,padding:'2px 7px',display:'inline-block',letterSpacing:'0.04em',textTransform:'uppercase'}}>Mandatory</div>}
+      <div style={{position:'relative',width:96,height:96}}>
+        <div style={{width:96,height:96,borderRadius:'50%',background:gradBg,color:'#fff',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',boxShadow:'0 4px 16px rgba(0,0,0,0.14)'}} className={step.mandatory?'pulse':''}>
+          <div style={{textAlign:'center',padding:'0 14px'}}>
+            <div style={{fontSize:12,fontWeight:700,lineHeight:1.3,marginBottom:step.mandatory?4:0}}>{step.title}</div>
+            {step.mandatory&&<div style={{fontSize:9,fontWeight:700,background:'rgba(255,255,255,0.25)',borderRadius:20,padding:'2px 7px',display:'inline-block',letterSpacing:'0.04em',textTransform:'uppercase'}}>Mandatory</div>}
+          </div>
         </div>
+        <div style={{position:'absolute',top:-2,right:-2,width:22,height:22,borderRadius:'50%',background:'#fff',border:'2px solid #E0E0E0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,color:'#3D3D3D',zIndex:2}}>{step.id}</div>
       </div>
       <div style={{width:1,height:14,background:'#CCCCCC'}}/>
       <div style={{width:'100%',background:'#fff',border:'1px solid #E0E0E0',borderRadius:14,padding:'16px',boxShadow:'0 1px 4px rgba(0,0,0,0.05)'}}>
@@ -424,20 +449,54 @@ function BAUStepCard({step,gradBg,selectedCh,onSelectCh}){
             <p style={{fontSize:13.5,color:'#14532D',lineHeight:1.55,margin:0}}><strong>Rule of thumb:</strong> {step.ruleOfThumb}</p>
           </div>
         )}
-        {/* Channel rows */}
-        {channels.map((ch,i)=>{
+        {/* If all channels identical: one unified frame, highlighted when any channel selected */}
+        {allSame ? (()=>{
+          const uc=step.channels[channels[0]];
+          const isHighlit=selectedCh!==null;
+          const clr=selectedCh?CHANNEL_COLOR[selectedCh]:'#7B4DB8';
+          const cbg=selectedCh?CHANNEL_BG[selectedCh]:'#fff';
+          const cborder=selectedCh?CHANNEL_BORDER[selectedCh]:'#E0E0E0';
+          return(
+            <div style={{border:`1.5px solid ${cborder}`,borderRadius:10,padding:'12px 13px',background:cbg,transition:'all 0.18s ease'}}>
+              <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F',marginBottom:8}}>All channels</div>
+              {uc.steps&&(
+                <ol style={{paddingLeft:18,marginBottom:10,display:'flex',flexDirection:'column',gap:5}}>
+                  {uc.steps.map((s,si)=><li key={si} style={{fontSize:14,color:'#3D3D3D',lineHeight:1.55}}>{s}</li>)}
+                </ol>
+              )}
+              <div style={{display:'flex',alignItems:'flex-start',gap:7,marginBottom:8,background:'#FAF7FF',borderRadius:8,padding:'7px 10px'}}>
+                <IUser size={14} style={{color:clr,marginTop:1}}/>
+                <span style={{fontSize:14,fontWeight:700,color:clr,lineHeight:1.4}}>{uc.owner}</span>
+              </div>
+              <div style={{display:'flex',alignItems:'flex-start',gap:7}}>
+                <IWrench size={14} style={{color:'#8F8F8F',marginTop:2}}/>
+                <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:4}}>
+                  {uc.tools.map((t,ti)=>(
+                    <li key={ti} style={{display:'flex',gap:6,alignItems:'flex-start',fontSize:14,color:'#616161',lineHeight:1.5}}>
+                      <span style={{width:5,height:5,borderRadius:'50%',background:'#CCCCCC',flexShrink:0,marginTop:8}}/>
+                      <span>{fmtLinks(t,step.id)}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          );
+        })() : (
+        /* Channel rows - different content per channel */
+        channels.map((ch,i)=>{
           const uc=step.channels[ch];
           if(!uc)return null;
           const isActive=selectedCh===null||selectedCh===ch;
           const isHighlit=selectedCh===ch;
           const clr=CHANNEL_COLOR[ch];
           const cbg=CHANNEL_BG[ch];
+          const cborder=CHANNEL_BORDER[ch];
           return(
             <div key={ch}
               className="uc-row"
               onClick={e=>{e.stopPropagation();onSelectCh(selectedCh===ch?null:ch);}}
               style={{
-                border:`1.5px solid ${isHighlit?clr:'#E0E0E0'}`,
+                border:`1.5px solid ${isHighlit?cborder:'#E0E0E0'}`,
                 borderRadius:10,padding:'12px 13px',background:isHighlit?cbg:'#fff',
                 marginBottom:i<channels.length-1?10:0,
                 opacity:!isActive?0.22:1,
@@ -467,7 +526,8 @@ function BAUStepCard({step,gradBg,selectedCh,onSelectCh}){
               </div>
             </div>
           );
-        })}
+        })
+        )}
         <NoteFrame notes={step.notes} stepId={step.id}/>
         <Accordion title="Process gaps" items={step.gaps} type="gaps" stepId={step.id}/>
         <Accordion title="Suggestions" items={step.suggestions} type="suggestions" stepId={step.id}/>
@@ -668,7 +728,7 @@ function CreativePanel(){
 }
 
 /* ── LEGEND ── */
-function Legend(){
+function Legend({activeTrack}){
   return(
     <div style={{display:'flex',alignItems:'center',gap:18,padding:'10px 18px',background:'#fff',border:'1px solid #E0E0E0',borderRadius:10,marginBottom:24,width:'fit-content',flexWrap:'wrap'}}>
       <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#B8B8B8'}}>Legend</span>
@@ -677,8 +737,19 @@ function Legend(){
       <div style={{width:1,height:16,background:'#E0E0E0'}}/>
       <div style={{display:'flex',alignItems:'center',gap:6}}><span style={{width:9,height:9,borderRadius:2,background:'#FEE2E2',border:'1px solid #FECACA',display:'inline-block'}}/><span style={{fontSize:14,color:'#3D3D3D',fontWeight:500}}>Process gap</span></div>
       <div style={{display:'flex',alignItems:'center',gap:6}}><span style={{width:9,height:9,borderRadius:2,background:'#FEF9C3',border:'1px solid #FDE68A',display:'inline-block'}}/><span style={{fontSize:14,color:'#3D3D3D',fontWeight:500}}>Suggestion</span></div>
-      <div style={{width:1,height:16,background:'#E0E0E0'}}/>
-      <span style={{fontSize:13,color:'#8F8F8F',fontStyle:'italic'}}>Click a card or channel to highlight</span>
+      <div style={{display:'flex',alignItems:'center',gap:6}}><INote size={14} style={{color:'#616161'}}/><span style={{fontSize:14,color:'#3D3D3D',fontWeight:500}}>Note</span></div>
+      {activeTrack==='selfserve'&&(
+        <>
+          <div style={{width:1,height:16,background:'#E0E0E0'}}/>
+          <span style={{fontSize:13,color:'#8F8F8F',fontStyle:'italic'}}>On step 4 — click a card to highlight a channel</span>
+        </>
+      )}
+      {activeTrack==='bau'&&(
+        <>
+          <div style={{width:1,height:16,background:'#E0E0E0'}}/>
+          <span style={{fontSize:13,color:'#8F8F8F',fontStyle:'italic'}}>Click a channel pill above to highlight it across all steps</span>
+        </>
+      )}
     </div>
   );
 }
@@ -745,7 +816,7 @@ function App(){
             <CreativePanel/>
           ):(
             <>
-              <Legend/>
+              <Legend activeTrack={activeTrack}/>
               {activeTrack==='selfserve'?<SSWorkflow/>:<BAUWorkflow/>}
             </>
           )}
