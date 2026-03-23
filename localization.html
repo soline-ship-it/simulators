@@ -263,14 +263,6 @@ const STEPS_BAU=[
       'Website':{owner:'Project owner (Website manager)',tools:['Tolki in Dust','Qontent']},
       'Paid Ads':{owner:'Project owner (Paid Ads manager)',tools:['Tolki OR Channel-specific Dust bot']},
     },
-    gaps:[
-      'No standardized localization request path across channels — only #proofread-crm exists today (CRM only).',
-      'As of March 2026, project owners often localize themselves even when not native. The current Local POC list isn\'t sustainable.',
-    ],
-    suggestions:[
-      'Create a dedicated proofread channel for each channel — like #proofread-crm for CRM — to standardize the localization request path (e.g. #proofread-website, #proofread-paid-ads).',
-      'Review and update the POC list across all markets.',
-    ],
     showPOCs:true,
   },
   {
@@ -1063,6 +1055,145 @@ function PathFinder({onViewWorkflow}){
   return null;
 }
 
+/* ── LOCAL POC VIEW ── */
+function LocalPOCView(){
+  const pocs=[
+    {flag:'🇫🇷',market:'France',contact:'@Delphine de Roquemaurel'},
+    {flag:'🇩🇪',market:'Germany',contact:'@Hannah Lüdicke'},
+    {flag:'🇮🇹',market:'Italy',contact:'@Lorenzo Zatini'},
+    {flag:'🇪🇸',market:'Spain',contact:'@Cristina Gomez'},
+    {flag:'🇵🇹',market:'Portugal',contact:'@Julia Latorre'},
+    {flag:'🇳🇱',market:'Netherlands',contact:'@Rosemarijn Disseldorp'},
+  ];
+
+  const blocks=[
+    {
+      flow:'All flows',
+      accent:'#050505',bg:'#F5F5F5',border:'#E0E0E0',
+      rows:[
+        {tag:'Always',text:<>Run <a href="https://www.notion.so/qonto/Check-copy-quality-24d31ee4c6968193bc6bc98d7f613d93" target="_blank" rel="noopener noreferrer">QualityGuard</a> first — every time, on every localized asset, before sign-off.</>},
+        {tag:'Always',text:'Do a native review after QualityGuard. You are the last quality gate before anything goes live.'},
+        {tag:'Always',text:<>Log any issue post-launch in the <a href="https://www.notion.so/qonto/Growth-Efficiency-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658#31931ee4c6968068814de2683bf18120" target="_blank" rel="noopener noreferrer" style={{color:'#CE6033'}}>Red Bin form</a> — quality or process. No exception.</>},
+      ],
+    },
+    {
+      flow:'Global projects — Self-serve',
+      accent:'#7B4DB8',bg:'#F5F0FF',border:'#E9E0FF',
+      rows:[
+        {tag:'When contacted',text:'Designate one local project owner for the whole project — all channels, all translations. One person, not several.'},
+        {tag:'Then',text:<>That local project owner runs the translation using <a href="https://www.notion.so/qonto/Localize-24d31ee4c696812ab5c1ee03e3aeda5e" target="_blank" rel="noopener noreferrer">Tolki</a> or the channel-specific Dust bot, and delivers back to the project owner.</> },
+        {tag:'Website only',text:'Page duplication in other languages is your job — not the Comms partner\'s. Own it in Qontent at the localization stage.'},
+      ],
+    },
+    {
+      flow:'BAU / Channel ad-hoc — Self-serve',
+      accent:'#461068',bg:'#EDE8FF',border:'#D5C8FF',
+      rows:[
+        {tag:'CRM',text:'Project owners request proofread via #proofread-crm. Review the copy natively and return feedback.'},
+        {tag:'Website & Paid Ads',text:'No dedicated channel exists yet — project owners will reach out directly. Same expectation: own the review.'},
+      ],
+    },
+  ];
+
+  const gaps=[
+    'POC list is not sustainable at current volume — no backups, unclear capacity per market.',
+    'No request channel for Website or Paid Ads proofread (only #proofread-crm for CRM).',
+  ];
+
+  const suggestions=[
+    {text:<>Update the POC list: one primary + one backup per market, with defined capacity.</>, key:'s1'},
+    {text:<><strong>BAU / Channel ad-hoc:</strong> Create <strong>#proofread-website</strong> and <strong>#proofread-paid-ads</strong> — same model as <strong>#proofread-crm</strong> for CRM.</>, key:'s2'},
+    {text:<><strong>Global projects — multi-channel:</strong> For each project, create a dedicated Slack channel so project owners have one clear place to request localization support from local POCs.</>, key:'s3'},
+  ];
+
+  const tagColor={'Always':'#050505','When contacted':'#7B4DB8','Then':'#616161','Website only':'#2F95A0','CRM':'#7B4DB8','Website & Paid Ads':'#461068'};
+  const tagBg={'Always':'#E8E8E8','When contacted':'#F5F0FF','Then':'#F5F5F5','Website only':'#ECFDF5','CRM':'#F5F0FF','Website & Paid Ads':'#EDE8FF'};
+
+  return(
+    <div style={{padding:'28px 32px 80px',maxWidth:820}} className="fade-in">
+      <div style={{marginBottom:24}}>
+        <h2 style={{fontSize:20,fontWeight:800,color:'#050505',marginBottom:6}}>Local POCs — How it works</h2>
+        <p style={{fontSize:14,color:'#616161',lineHeight:1.6,margin:0}}>Across self-serve workflows, here is exactly what local market POCs own — and remaining gaps.</p>
+      </div>
+
+      {/* POC list */}
+      <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:14,padding:'16px 20px',marginBottom:20}}>
+        <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:12,paddingBottom:10,borderBottom:'1px solid #F0F0F0'}}>
+          <IUsers size={15} style={{color:'#7B4DB8'}}/>
+          <span style={{fontSize:13,fontWeight:700,color:'#050505'}}>Current POCs</span>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(190px,1fr))',gap:8,marginBottom:10}}>
+          {pocs.map(p=>(
+            <div key={p.market} style={{display:'flex',alignItems:'center',gap:8,padding:'8px 10px',background:'#F9F9F9',border:'1px solid #E8E8E8',borderRadius:8}}>
+              <span style={{fontSize:18}}>{p.flag}</span>
+              <div>
+                <div style={{fontSize:12,fontWeight:700,color:'#050505'}}>{p.market}</div>
+                <div style={{fontSize:12,color:'#3D3D3D'}}>{p.contact}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{background:'#F0EAFF',borderRadius:7,padding:'7px 12px',fontSize:13,color:'#461068',fontWeight:500}}>
+          💬 <strong>#new-markets-localization-help</strong> — Dutch 🇳🇱 and Portuguese 🇵🇹 only
+        </div>
+      </div>
+
+      {/* Responsibilities */}
+      <div style={{display:'flex',flexDirection:'column',gap:10,marginBottom:20}}>
+        {blocks.map(block=>(
+          <div key={block.flow} style={{background:'#fff',border:`1px solid ${block.border}`,borderRadius:12,overflow:'hidden'}}>
+            <div style={{background:block.bg,padding:'9px 18px',borderBottom:`1px solid ${block.border}`}}>
+              <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:block.accent}}>{block.flow}</span>
+            </div>
+            <div style={{padding:'12px 18px',display:'flex',flexDirection:'column',gap:8}}>
+              {block.rows.map((row,i)=>(
+                <div key={i} style={{display:'flex',alignItems:'flex-start',gap:10}}>
+                  <span style={{flexShrink:0,fontSize:11,fontWeight:700,background:tagBg[row.tag]||'#F5F5F5',color:tagColor[row.tag]||'#616161',borderRadius:20,padding:'2px 9px',marginTop:2,whiteSpace:'nowrap'}}>{row.tag}</span>
+                  <span style={{fontSize:14,color:'#3D3D3D',lineHeight:1.6}}>{row.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Gaps */}
+      <div style={{background:'#FFF5F5',border:'1px solid #FECACA',borderRadius:12,overflow:'hidden',marginBottom:10}}>
+        <div style={{padding:'9px 18px',borderBottom:'1px solid #FECACA',display:'flex',alignItems:'center',gap:6}}>
+          <IAlert size={13} style={{color:'#991B1B'}}/>
+          <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#991B1B'}}>Process gaps</span>
+          <span style={{fontSize:10,fontWeight:700,background:'#FEE2E2',color:'#B91C1C',borderRadius:20,padding:'1px 7px'}}>{gaps.length}</span>
+        </div>
+        <div style={{padding:'12px 18px',display:'flex',flexDirection:'column',gap:8}}>
+          {gaps.map((g,i)=>(
+            <div key={i} style={{display:'flex',gap:8,fontSize:14,color:'#7F1D1D',lineHeight:1.6}}>
+              <IChevR size={12} style={{color:'#991B1B',opacity:0.4,marginTop:4,flexShrink:0}}/>
+              <span>{g}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Suggestions */}
+      <div style={{background:'#FFFDF0',border:'1px solid #FDE68A',borderRadius:12,overflow:'hidden'}}>
+        <div style={{padding:'9px 18px',borderBottom:'1px solid #FDE68A',display:'flex',alignItems:'center',gap:6}}>
+          <IBulb size={13} style={{color:'#CA8A04'}}/>
+          <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#854D0E'}}>Suggestions to fix this</span>
+          <span style={{fontSize:10,fontWeight:700,background:'#FEF9C3',color:'#854D0E',borderRadius:20,padding:'1px 7px'}}>{suggestions.length}</span>
+        </div>
+        <div style={{padding:'12px 18px',display:'flex',flexDirection:'column',gap:8}}>
+          {suggestions.map((s)=>(
+            <div key={s.key} style={{display:'flex',gap:8,fontSize:14,color:'#713F12',lineHeight:1.6}}>
+              <IChevR size={12} style={{color:'#CA8A04',opacity:0.5,marginTop:4,flexShrink:0}}/>
+              <span>{s.text}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ── TRACK DEFINITIONS ── */
 const TRACKS=[
   {id:'creative',label:'Global projects — High-visibility / Creativity',sizing:'In Panorama — L & sometimes M',desc:'Comms partners & PMMs are project owners — the Creative Factory handles localization end-to-end.',locked:true,activeBg:'#1A1A1A',activeText:'#fff',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
@@ -1097,7 +1228,6 @@ function App(){
               background:view==='workflow'?'#fff':'transparent',
               color:view==='workflow'?'#050505':'#8F8F8F',
               boxShadow:view==='workflow'?'0 1px 3px rgba(0,0,0,0.08)':'none',transition:'all 0.15s'}}>
-            {/* Map / overview icon */}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
             Full workflow
           </button>
@@ -1106,9 +1236,16 @@ function App(){
               background:view==='path'?'#050505':'transparent',
               color:view==='path'?'#fff':'#8F8F8F',
               boxShadow:view==='path'?'0 1px 3px rgba(0,0,0,0.12)':'none',transition:'all 0.15s'}}>
-            {/* Compass / find icon */}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
             Find your path
+          </button>
+          <button onClick={()=>setView('pocs')}
+            style={{display:'flex',alignItems:'center',gap:6,padding:'7px 14px',borderRadius:8,border:'none',cursor:'pointer',fontSize:13,fontWeight:600,fontFamily:'inherit',
+              background:view==='pocs'?'#7B4DB8':'transparent',
+              color:view==='pocs'?'#fff':'#8F8F8F',
+              boxShadow:view==='pocs'?'0 1px 3px rgba(123,77,184,0.25)':'none',transition:'all 0.15s'}}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Local POCs
           </button>
         </div>
       </header>
@@ -1117,6 +1254,8 @@ function App(){
         <div style={{padding:'0 32px 80px'}}>
           <PathFinder onViewWorkflow={handleViewWorkflow}/>
         </div>
+      ):view==='pocs'?(
+        <LocalPOCView/>
       ):(
         <div style={{padding:'28px 32px 80px'}}>
           <ScopeToggle/>
