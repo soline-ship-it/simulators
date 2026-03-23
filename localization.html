@@ -65,14 +65,12 @@ const INote=({size=16,style})=><Ico size={size} style={style} ch={<><path d="M11
 /* ── LINK FORMATTER ── */
 const fmtLinks=(text,stepId)=>{
   if(typeof text!=='string')return text;
-  const parts=text.split(/(QualityGuard|Red Bin logging form\/database|Tolki in Dust|Tolki OR Channel-specific Dust bot|Tolki)/g);
+  const parts=text.split(/(QualityGuard|Red Bin logging form\/database|Tolki)/g);
   return parts.map((p,i)=>{
     if(p==='QualityGuard')return <a key={i} href="https://www.notion.so/qonto/Check-copy-quality-24d31ee4c6968193bc6bc98d7f613d93" target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}>{p}</a>;
     if(p==='Red Bin logging form/database')return <a key={i} href="https://www.notion.so/qonto/Growth-Efficiency-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658#31931ee4c6968068814de2683bf18120" target="_blank" rel="noopener noreferrer" style={{color:'#CE6033'}} onClick={e=>e.stopPropagation()}>{p}</a>;
-    if(p==='Tolki in Dust'||p==='Tolki OR Channel-specific Dust bot'||p==='Tolki'){
+    if(p==='Tolki'){
       const url=stepId===1?"https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf":"https://www.notion.so/qonto/Localize-24d31ee4c696812ab5c1ee03e3aeda5e";
-      if(p==='Tolki in Dust')return <span key={i}><a href={url} target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}>Tolki</a> in Dust</span>;
-      if(p==='Tolki OR Channel-specific Dust bot')return <span key={i}><a href={url} target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}>Tolki</a> OR Channel-specific Dust bot</span>;
       return <a key={i} href={url} target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}>{p}</a>;
     }
     return p;
@@ -85,31 +83,41 @@ function Accordion({title,items,type,stepId}){
   if(!items||items.length===0)return null;
   const isGap=type==='gaps';
   const isSug=type==='suggestions';
+  const isProc=type==='process';
   let bg,border,titleClr,textClr,badgeBg,icon;
   if(isGap){bg='#FFF5F5';border='#FECACA';titleClr='#991B1B';textClr='#7F1D1D';badgeBg='#FEE2E2';icon=<IAlert size={13} style={{color:'#991B1B'}}/>;}
   else if(isSug){bg='#FFFDF0';border='#FDE68A';titleClr='#854D0E';textClr='#713F12';badgeBg='#FEF9C3';icon=<IBulb size={13} style={{color:'#CA8A04'}}/>;}
+  else if(isProc){bg='#F9F9F9';border='#E8E8E8';titleClr='#3D3D3D';textClr='#3D3D3D';badgeBg='#E8E8E8';icon=<IWorkflow size={13} style={{color:'#8F8F8F'}}/>;}
   else{bg='#FFFDF0';border='#FDE68A';titleClr='#854D0E';textClr='#713F12';badgeBg='#FEF9C3';icon=<IHelp size={13} style={{color:'#CA8A04'}}/>;}
   return(
-    <div style={{marginTop:10,border:`1px solid ${border}`,borderRadius:10,overflow:'hidden'}}>
-      <div onClick={e=>{e.stopPropagation();setOpen(!open);}} style={{padding:'9px 14px',background:bg,display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer',gap:8}}>
+    <div style={{marginTop:isProc?8:10,border:`1px solid ${border}`,borderRadius:10,overflow:'hidden'}}>
+      <div onClick={e=>{e.stopPropagation();setOpen(!open);}} style={{padding:'8px 12px',background:bg,display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer',gap:8}}>
         <div style={{display:'flex',alignItems:'center',gap:6}}>
           {icon}
-          <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:titleClr}}>{title}</span>
-          <span style={{fontSize:11,fontWeight:700,background:badgeBg,color:titleClr,borderRadius:20,padding:'1px 7px'}}>{items.length}</span>
+          <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:titleClr}}>{title}</span>
+          {!isProc&&<span style={{fontSize:11,fontWeight:700,background:badgeBg,color:titleClr,borderRadius:20,padding:'1px 7px'}}>{items.length}</span>}
         </div>
         <IChevD size={13} style={{color:titleClr,transition:'transform 0.25s',transform:open?'rotate(180deg)':'rotate(0deg)'}}/>
       </div>
       <div className={`acc-body ${open?'open':''}`}>
         <div className="acc-inner">
-          <div style={{padding:'12px 14px',background:bg,borderTop:`1px solid ${border}`}}>
-            <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:8}}>
-              {items.map((item,i)=>(
-                <li key={i} style={{display:'flex',gap:6,fontSize:14,color:textClr,lineHeight:1.55}}>
-                  <IChevR size={12} style={{color:titleClr,opacity:0.5,marginTop:3,flexShrink:0}}/>
-                  <span>{fmtLinks(item,stepId)}</span>
-                </li>
-              ))}
-            </ul>
+          <div style={{padding:'10px 12px',background:bg,borderTop:`1px solid ${border}`}}>
+            {isProc?(
+              <ol style={{paddingLeft:16,margin:0,display:'flex',flexDirection:'column',gap:6}}>
+                {items.map((item,i)=>(
+                  <li key={i} style={{fontSize:13,color:textClr,lineHeight:1.55}}>{fmtLinks(item,stepId)}</li>
+                ))}
+              </ol>
+            ):(
+              <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:8}}>
+                {items.map((item,i)=>(
+                  <li key={i} style={{display:'flex',gap:6,fontSize:14,color:textClr,lineHeight:1.55}}>
+                    <IChevR size={12} style={{color:titleClr,opacity:0.5,marginTop:3,flexShrink:0}}/>
+                    <span>{fmtLinks(item,stepId)}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       </div>
@@ -180,7 +188,7 @@ const STEPS_SS=[
       owner:'Comms partner / PMM',
       ruleOfThumb:'When no professional creative writer is involved, the project owner delivers the master copy.',
       tools:[
-        'Tolki in Dust',
+        'Tolki',
         'Qontent (if Website / CRM)',
         'QualityGuard — always run it to make sure the master copy is clean before moving forward',
       ],
@@ -197,7 +205,7 @@ const STEPS_SS=[
         'Local POCs designate a local project owner, in charge of all translations across channels, for the whole project.',
         'Local project owner provides the translations.',
       ],
-      tools:['Tolki OR Channel-specific Dust bot','Qontent (for Website / CRM)'],
+      tools:['Tolki','Qontent (for Website / CRM)'],
     }],
     gaps:[
       'No standardized localization request path across channels.',
@@ -214,7 +222,7 @@ const STEPS_SS=[
     useCases:[{
       label:'Global projects — Self-serve',
       owner:'Local Market POC',
-      tools:['QualityGuard — always run first','Native review (if translator is not native, or if high-impact project)'],
+      tools:['QualityGuard — always run it!','QualityGuard — always run it!'],
     }],
     notes:['Compliance remains your responsibility regardless of tooling.'],
     showPOCs:true,
@@ -250,18 +258,18 @@ const STEPS_BAU=[
     id:1,title:'EN master copy',subtitle:'Create the English source',
     ruleOfThumb:'When no professional creative writer is involved, the project owner delivers the master copy.',
     channels:{
-      'CRM':{owner:'Project owner (PMM or CRM manager)',tools:['Tolki in Dust','Qontent','QualityGuard — always run it to make sure the master copy is clean before moving forward']},
-      'Website':{owner:'Project owner (Website manager)',tools:['Tolki in Dust','Qontent','QualityGuard — always run it to make sure the master copy is clean before moving forward']},
-      'Paid Ads':{owner:'Project owner (Paid Ads manager)',tools:['Channel-specific Dust bot','QualityGuard — always run it to make sure the master copy is clean before moving forward']},
+      'CRM':{owner:'Project owner (PMM or CRM manager)',tools:['Tolki','Qontent','QualityGuard — always run it to make sure the master copy is clean before moving forward']},
+      'Website':{owner:'Project owner (Website manager)',tools:['Tolki','Qontent','QualityGuard — always run it to make sure the master copy is clean before moving forward']},
+      'Paid Ads':{owner:'Project owner (Paid Ads manager)',tools:['Tolki','QualityGuard — always run it to make sure the master copy is clean before moving forward']},
     },
     notes:[],
   },
   {
     id:2,title:'First-pass translation',subtitle:'Generate localized versions',
     channels:{
-      'CRM':{owner:'Project owner (PMM or CRM manager)',tools:['Tolki in Dust OR Channel-specific Dust bot','Qontent']},
-      'Website':{owner:'Project owner (Website manager)',tools:['Tolki in Dust','Qontent']},
-      'Paid Ads':{owner:'Project owner (Paid Ads manager)',tools:['Tolki OR Channel-specific Dust bot']},
+      'CRM':{owner:'Project owner (PMM or CRM manager)',tools:['Tolki','Qontent']},
+      'Website':{owner:'Project owner (Website manager)',tools:['Tolki','Qontent']},
+      'Paid Ads':{owner:'Project owner (Paid Ads manager)',tools:['Tolki']},
     },
     showPOCs:true,
   },
@@ -270,18 +278,18 @@ const STEPS_BAU=[
     channels:{
       'CRM':{
         owner:'Local Market POC',
-        steps:['Project owner runs QualityGuard in Dust.','Project owner requests proofread from local POCs (CRM: use #proofread-crm — no dedicated channel yet for other channels).','Local Market POC takes charge of the review.'],
-        tools:['QualityGuard — always run first','Native review (mandatory)'],
+        steps:['Project owner runs QualityGuard.','Project owner requests proofread from local POCs (CRM: use #proofread-crm — no dedicated channel yet for other channels).','Local Market POC takes charge of the review.'],
+        tools:['QualityGuard — always run it!','QualityGuard — always run it!'],
       },
       'Website':{
         owner:'Local Market POC',
-        steps:['Project owner runs QualityGuard in Dust.','Project owner requests proofread from local POCs (CRM: use #proofread-crm — no dedicated channel yet for other channels).','Local Market POC takes charge of the review.'],
-        tools:['QualityGuard — always run first','Native review (mandatory)'],
+        steps:['Project owner runs QualityGuard.','Project owner requests proofread from local POCs (CRM: use #proofread-crm — no dedicated channel yet for other channels).','Local Market POC takes charge of the review.'],
+        tools:['QualityGuard — always run it!','QualityGuard — always run it!'],
       },
       'Paid Ads':{
         owner:'Local Market POC',
-        steps:['Project owner runs QualityGuard in Dust.','Project owner requests proofread from local POCs (CRM: use #proofread-crm — no dedicated channel yet for other channels).','Local Market POC takes charge of the review.'],
-        tools:['QualityGuard — always run first','Native review (mandatory)'],
+        steps:['Project owner runs QualityGuard.','Project owner requests proofread from local POCs (CRM: use #proofread-crm — no dedicated channel yet for other channels).','Local Market POC takes charge of the review.'],
+        tools:['QualityGuard — always run it!','QualityGuard — always run it!'],
       },
     },
     notes:['Compliance remains your responsibility regardless of tooling.'],
@@ -377,16 +385,15 @@ function SSStepCard({step,gradBg,selectedUC,onSelectUC}){
                   <p style={{fontSize:13.5,color:'#14532D',lineHeight:1.55,margin:0}}><strong>Rule of thumb:</strong> {uc.ruleOfThumb}</p>
                 </div>
               )}
-              {uc.steps&&(
-                <ol style={{paddingLeft:18,marginBottom:10,display:'flex',flexDirection:'column',gap:5}}>
-                  {uc.steps.map((s,si)=><li key={si} style={{fontSize:14,color:'#3D3D3D',lineHeight:1.55}}>{s}</li>)}
-                </ol>
-              )}
+              {/* Owner FIRST */}
               <div style={{display:'flex',alignItems:'flex-start',gap:7,marginBottom:8,background:'#F5F0FF',borderRadius:8,padding:'7px 10px'}}>
                 <IUser size={14} style={{color:'#7B4DB8',marginTop:1}}/>
                 <span style={{fontSize:14,fontWeight:700,color:'#7B4DB8',lineHeight:1.4}}>{uc.owner}</span>
               </div>
-              <div style={{display:'flex',alignItems:'flex-start',gap:7}}>
+              {/* Process steps → accordion */}
+              {uc.steps&&<Accordion title="Process" items={uc.steps} type="process" stepId={step.id}/>}
+              {/* Tools */}
+              <div style={{display:'flex',alignItems:'flex-start',gap:7,marginTop:8}}>
                 <IWrench size={14} style={{color:'#8F8F8F',marginTop:2}}/>
                 <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:4}}>
                   {uc.tools.map((t,ti)=>(
@@ -444,23 +451,20 @@ function BAUStepCard({step,gradBg,selectedCh,onSelectCh}){
         {/* If all channels identical: one unified frame, highlighted when any channel selected */}
         {allSame ? (()=>{
           const uc=step.channels[channels[0]];
-          const isHighlit=selectedCh!==null;
           const clr=selectedCh?CHANNEL_COLOR[selectedCh]:'#7B4DB8';
           const cbg=selectedCh?CHANNEL_BG[selectedCh]:'#fff';
           const cborder=selectedCh?CHANNEL_BORDER[selectedCh]:'#E0E0E0';
           return(
             <div style={{border:`1.5px solid ${cborder}`,borderRadius:10,padding:'12px 13px',background:cbg,transition:'all 0.18s ease'}}>
               <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F',marginBottom:8}}>All channels</div>
-              {uc.steps&&(
-                <ol style={{paddingLeft:18,marginBottom:10,display:'flex',flexDirection:'column',gap:5}}>
-                  {uc.steps.map((s,si)=><li key={si} style={{fontSize:14,color:'#3D3D3D',lineHeight:1.55}}>{s}</li>)}
-                </ol>
-              )}
-              <div style={{display:'flex',alignItems:'flex-start',gap:7,marginBottom:8,background:'#FAF7FF',borderRadius:8,padding:'7px 10px'}}>
+              {/* Owner first */}
+              <div style={{display:'flex',alignItems:'flex-start',gap:7,marginBottom:0,background:'#FAF7FF',borderRadius:8,padding:'7px 10px'}}>
                 <IUser size={14} style={{color:clr,marginTop:1}}/>
                 <span style={{fontSize:14,fontWeight:700,color:clr,lineHeight:1.4}}>{uc.owner}</span>
               </div>
-              <div style={{display:'flex',alignItems:'flex-start',gap:7}}>
+              {/* Process accordion */}
+              {uc.steps&&<Accordion title="Process" items={uc.steps} type="process" stepId={step.id}/>}
+              <div style={{display:'flex',alignItems:'flex-start',gap:7,marginTop:8}}>
                 <IWrench size={14} style={{color:'#8F8F8F',marginTop:2}}/>
                 <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:4}}>
                   {uc.tools.map((t,ti)=>(
@@ -496,16 +500,14 @@ function BAUStepCard({step,gradBg,selectedCh,onSelectCh}){
                 cursor:'pointer',
               }}>
               <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:clr,marginBottom:8}}>{ch}</div>
-              {uc.steps&&(
-                <ol style={{paddingLeft:18,marginBottom:10,display:'flex',flexDirection:'column',gap:5}}>
-                  {uc.steps.map((s,si)=><li key={si} style={{fontSize:14,color:'#3D3D3D',lineHeight:1.55}}>{s}</li>)}
-                </ol>
-              )}
-              <div style={{display:'flex',alignItems:'flex-start',gap:7,marginBottom:8,background:'#FAF7FF',borderRadius:8,padding:'7px 10px'}}>
+              {/* Owner first */}
+              <div style={{display:'flex',alignItems:'flex-start',gap:7,marginBottom:0,background:'#FAF7FF',borderRadius:8,padding:'7px 10px'}}>
                 <IUser size={14} style={{color:clr,marginTop:1}}/>
                 <span style={{fontSize:14,fontWeight:700,color:clr,lineHeight:1.4}}>{uc.owner}</span>
               </div>
-              <div style={{display:'flex',alignItems:'flex-start',gap:7}}>
+              {/* Process accordion */}
+              {uc.steps&&<Accordion title="Process" items={uc.steps} type="process" stepId={step.id}/>}
+              <div style={{display:'flex',alignItems:'flex-start',gap:7,marginTop:8}}>
                 <IWrench size={14} style={{color:'#8F8F8F',marginTop:2}}/>
                 <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:4}}>
                   {uc.tools.map((t,ti)=>(
@@ -718,27 +720,27 @@ function CreativePanel(){
 
 /* ── LEGEND ── */
 function Legend({activeTrack}){
+  const[open,setOpen]=useState(false);
+  const hint=activeTrack==='selfserve'?'On step 4 — click a card to highlight a channel':activeTrack==='bau'?'Click a channel pill above to highlight it across all steps':null;
   return(
-    <div style={{display:'flex',alignItems:'center',gap:18,padding:'10px 18px',background:'#fff',border:'1px solid #E0E0E0',borderRadius:10,marginBottom:24,width:'fit-content',flexWrap:'wrap'}}>
-      <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#B8B8B8'}}>Legend</span>
-      <div style={{display:'flex',alignItems:'center',gap:6}}><IUser size={14} style={{color:'#7B4DB8'}}/><span style={{fontSize:14,color:'#3D3D3D',fontWeight:500}}>Owner</span></div>
-      <div style={{display:'flex',alignItems:'center',gap:6}}><IWrench size={14} style={{color:'#8F8F8F'}}/><span style={{fontSize:14,color:'#3D3D3D',fontWeight:500}}>Tools</span></div>
-      <div style={{width:1,height:16,background:'#E0E0E0'}}/>
-      <div style={{display:'flex',alignItems:'center',gap:6}}><span style={{width:9,height:9,borderRadius:2,background:'#FEE2E2',border:'1px solid #FECACA',display:'inline-block'}}/><span style={{fontSize:14,color:'#3D3D3D',fontWeight:500}}>Process gap</span></div>
-      <div style={{display:'flex',alignItems:'center',gap:6}}><span style={{width:9,height:9,borderRadius:2,background:'#FEF9C3',border:'1px solid #FDE68A',display:'inline-block'}}/><span style={{fontSize:14,color:'#3D3D3D',fontWeight:500}}>Suggestion</span></div>
-      <div style={{display:'flex',alignItems:'center',gap:6}}><INote size={14} style={{color:'#616161'}}/><span style={{fontSize:14,color:'#3D3D3D',fontWeight:500}}>Note</span></div>
-      {activeTrack==='selfserve'&&(
-        <>
-          <div style={{width:1,height:16,background:'#E0E0E0'}}/>
-          <span style={{fontSize:13,color:'#8F8F8F',fontStyle:'italic'}}>On step 4 — click a card to highlight a channel</span>
-        </>
-      )}
-      {activeTrack==='bau'&&(
-        <>
-          <div style={{width:1,height:16,background:'#E0E0E0'}}/>
-          <span style={{fontSize:13,color:'#8F8F8F',fontStyle:'italic'}}>Click a channel pill above to highlight it across all steps</span>
-        </>
-      )}
+    <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:10,marginBottom:24,overflow:'hidden',width:'fit-content',minWidth:220}}>
+      <div onClick={()=>setOpen(!open)} style={{padding:'9px 16px',display:'flex',alignItems:'center',gap:10,cursor:'pointer'}}>
+        <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#B8B8B8'}}>Legend</span>
+        <IChevD size={13} style={{color:'#B8B8B8',marginLeft:'auto',transition:'transform 0.22s',transform:open?'rotate(180deg)':'rotate(0deg)'}}/>
+      </div>
+      <div className={`acc-body ${open?'open':''}`}>
+        <div className="acc-inner">
+          <div style={{padding:'8px 16px 12px',borderTop:'1px solid #F0F0F0',display:'flex',flexWrap:'wrap',gap:12,alignItems:'center'}}>
+            <div style={{display:'flex',alignItems:'center',gap:5}}><IUser size={13} style={{color:'#7B4DB8'}}/><span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Owner</span></div>
+            <div style={{display:'flex',alignItems:'center',gap:5}}><IWrench size={13} style={{color:'#8F8F8F'}}/><span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Tools</span></div>
+            <div style={{display:'flex',alignItems:'center',gap:5}}><INote size={13} style={{color:'#616161'}}/><span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Note</span></div>
+            <div style={{width:'100%',height:1,background:'#F0F0F0'}}/>
+            <div style={{display:'flex',alignItems:'center',gap:5}}><span style={{width:8,height:8,borderRadius:2,background:'#FEE2E2',border:'1px solid #FECACA',display:'inline-block'}}/><span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Process gap</span></div>
+            <div style={{display:'flex',alignItems:'center',gap:5}}><span style={{width:8,height:8,borderRadius:2,background:'#FEF9C3',border:'1px solid #FDE68A',display:'inline-block'}}/><span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Suggestion</span></div>
+            {hint&&<><div style={{width:'100%',height:1,background:'#F0F0F0'}}/><span style={{fontSize:12,color:'#8F8F8F',fontStyle:'italic'}}>{hint}</span></>}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -768,9 +770,9 @@ function getResult(answers){
     return{
       type:'selfserve',track:'selfserve',langs:langs||[],
       steps:[
-        {n:1,title:'EN master copy',owner:'Comms partner / PMM',tools:['Tolki in Dust','Qontent (if Website / CRM)','QualityGuard — always run before moving forward']},
-        {n:2,title:'First-pass translation',owner:'Local Market POC',note:'Request translation from local POCs in your project channel.',tools:['Tolki OR Channel-specific Dust bot','Qontent (for Website / CRM)']},
-        {n:3,title:'Quality check',owner:'Local Market POC',mandatory:true,tools:['QualityGuard — always run first']},
+        {n:1,title:'EN master copy',owner:'Comms partner / PMM',tools:['Tolki','Qontent (if Website / CRM)','QualityGuard — always run before moving forward']},
+        {n:2,title:'First-pass translation',owner:'Local Market POC',note:'Request translation from local POCs in your project channel.',tools:['Tolki','Qontent (for Website / CRM)']},
+        {n:3,title:'Quality check',owner:'Local Market POC',mandatory:true,tools:['QualityGuard — always run it!']},
         {n:4,title:'Upload & publish',owner:channel==='Website'?'Local Market POC':channel==='CRM'?'CRM manager':'Paid Ads manager',tools:[channel==='Paid Ads'?'Directly on platform':'Qontent']},
       ],
     };
@@ -783,11 +785,11 @@ function getResult(answers){
   return{
     type:'bau',track:'bau',channel:ch,langs:langs||[],
     steps:[
-      {n:1,title:'EN master copy',owner,tools:ch==='Paid Ads'?['Channel-specific Dust bot','QualityGuard — always run before moving forward']:['Tolki in Dust','Qontent','QualityGuard — always run before moving forward']},
-      {n:2,title:'First-pass translation',owner,tools:ch==='CRM'?['Tolki in Dust OR Channel-specific Dust bot','Qontent']:ch==='Website'?['Tolki in Dust','Qontent']:['Tolki OR Channel-specific Dust bot']},
+      {n:1,title:'EN master copy',owner,tools:ch==='Paid Ads'?['Tolki','QualityGuard — always run before moving forward']:['Tolki','Qontent','QualityGuard — always run before moving forward']},
+      {n:2,title:'First-pass translation',owner,tools:ch==='CRM'?['Tolki','Qontent']:ch==='Website'?['Tolki','Qontent']:['Tolki']},
       {n:3,title:'Quality check',owner:'Local Market POC',mandatory:true,
         note:ch==='CRM'?'Request proofread in #proofread-crm.':'No dedicated channel yet — request proofread directly to local POC.',
-        tools:['QualityGuard — always run first','Native review (mandatory)']},
+        tools:['QualityGuard — always run it!','QualityGuard — always run it!']},
       {n:4,title:'Upload & publish',owner,tools:ch==='Paid Ads'?['Upload directly on platform']:['Qontent']},
     ],
   };
