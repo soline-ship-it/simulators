@@ -176,7 +176,7 @@ const STEPS_SS=[
   {
     id:1,title:'EN master copy',subtitle:'Create the English source',
     useCases:[{
-      label:'Global projects — self-serve',
+      label:'Global projects — Self-serve',
       owner:'Comms partner / PMM',
       ruleOfThumb:'When no professional creative writer is involved, the project owner delivers the master copy.',
       tools:[
@@ -190,7 +190,7 @@ const STEPS_SS=[
   {
     id:2,title:'First-pass translation',subtitle:'Generate localized versions',
     useCases:[{
-      label:'Global projects — self-serve',
+      label:'Global projects — Self-serve',
       owner:'Local Market POC',
       steps:[
         'Project owner requests translation from local POCs.',
@@ -212,7 +212,7 @@ const STEPS_SS=[
   {
     id:3,title:'Quality check',subtitle:'Mandatory',mandatory:true,
     useCases:[{
-      label:'Global projects — self-serve',
+      label:'Global projects — Self-serve',
       owner:'Local Market POC',
       tools:['QualityGuard — always run first','Native review (if translator is not native, or if high-impact project)'],
     }],
@@ -921,8 +921,8 @@ function PathFinder({onViewWorkflow}){
   if(screen==='projectType') return(
     <Shell title="What type of project is this?">
       {[
-        {value:'creative',label:'Global project — Panorama L or M',sub:'High-visibility / Creative Factory'},
-        {value:'selfserve',label:'Global project — Panorama S or M',sub:'Self-serve localization by local teams'},
+        {value:'creative',label:'Global projects — High-visibility / Creativity',sub:'In Panorama L or M — Creative Factory'},
+        {value:'selfserve',label:'Global projects — Self-serve',sub:'In Panorama S or M — self-serve localization'},
         {value:'bau',label:'BAU / Channel ad-hoc',sub:'Not in Panorama — CRM, Website, Paid Ads'},
       ].map(o=><OptionBtn key={o.value} opt={o} selected={answers.projectType===o.value} onClick={()=>pick('projectType',o.value)}/>)}
     </Shell>
@@ -981,7 +981,7 @@ function PathFinder({onViewWorkflow}){
 
     // Self-serve or BAU result
     const accentClr=result.type==='selfserve'?'#7B4DB8':'#461068';
-    const trackLabel=result.type==='selfserve'?'Global projects — self-serve':'BAU / Channel ad-hoc'+(result.channel?` · ${result.channel}`:'');
+    const trackLabel=result.type==='selfserve'?'Global projects — Self-serve':'BAU / Channel ad-hoc'+(result.channel?` · ${result.channel}`:'');
     const pocList=(result.langs||[]).map(l=>LANGS.find(x=>x.label===l)).filter(Boolean);
 
     return(
@@ -1052,8 +1052,8 @@ function PathFinder({onViewWorkflow}){
 
 /* ── TRACK DEFINITIONS ── */
 const TRACKS=[
-  {id:'creative',label:'High-visibility / Creativity',sizing:'In Panorama — L & sometimes M',desc:'Comms partners & PMMs are project owners — the Creative Factory handles localization end-to-end.',locked:true,activeBg:'#1A1A1A',activeText:'#fff',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
-  {id:'selfserve',label:'Global projects — self-serve',sizing:'In Panorama — S & sometimes M',desc:'Creativity isn\'t business-critical. Self-serve localization by local teams.',locked:false,activeBg:'#7B4DB8',activeText:'#fff',badgeBg:'rgba(255,255,255,0.2)',badgeText:'rgba(255,255,255,0.9)'},
+  {id:'creative',label:'Global projects — High-visibility / Creativity',sizing:'In Panorama — L & sometimes M',desc:'Comms partners & PMMs are project owners — the Creative Factory handles localization end-to-end.',locked:true,activeBg:'#1A1A1A',activeText:'#fff',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
+  {id:'selfserve',label:'Global projects — Self-serve',sizing:'In Panorama — S & sometimes M',desc:'Creativity isn\'t business-critical. Self-serve localization by local teams.',locked:false,activeBg:'#7B4DB8',activeText:'#fff',badgeBg:'rgba(255,255,255,0.2)',badgeText:'rgba(255,255,255,0.9)'},
   {id:'bau',label:'BAU / Channel ad-hoc',sizing:'Not in Panorama',desc:'CRM lifecycle, Paid Ads, Website — recurring channel-owned projects.',locked:false,activeBg:'#461068',activeText:'#fff',badgeBg:'rgba(255,255,255,0.15)',badgeText:'rgba(255,255,255,0.85)'},
 ];
 
