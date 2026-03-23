@@ -751,6 +751,305 @@ function Legend({activeTrack}){
   );
 }
 
+/* ── PATH FINDER ── */
+const ROLES=[
+  {id:'comms', label:'Comms partner / PMM'},
+  {id:'crm',   label:'CRM manager'},
+  {id:'web',   label:'Website manager'},
+  {id:'ads',   label:'Paid Ads manager'},
+  {id:'local', label:'Local Market POC'},
+];
+const LANGS=[
+  {flag:'🇫🇷',label:'French',poc:'@Delphine de Roquemaurel'},
+  {flag:'🇩🇪',label:'German',poc:'@Hannah Lüdicke'},
+  {flag:'🇮🇹',label:'Italian',poc:'@Lorenzo Zatini'},
+  {flag:'🇪🇸',label:'Spanish',poc:'@Cristina Gomez'},
+  {flag:'🇵🇹',label:'Portuguese',poc:'@Julia Latorre'},
+  {flag:'🇳🇱',label:'Dutch',poc:'@Rosemarijn Disseldorp'},
+];
+
+function getResult(answers){
+  const{role,projectType,channel,langs}=answers;
+  if(projectType==='creative') return {type:'creative'};
+
+  if(projectType==='selfserve'){
+    return{
+      type:'selfserve',track:'selfserve',langs:langs||[],
+      steps:[
+        {n:1,title:'EN master copy',owner:'Comms partner / PMM',tools:['Tolki in Dust','Qontent (if Website / CRM)','QualityGuard — always run before moving forward']},
+        {n:2,title:'First-pass translation',owner:'Local Market POC',note:'Request translation from local POCs in your project channel.',tools:['Tolki OR Channel-specific Dust bot','Qontent (for Website / CRM)']},
+        {n:3,title:'Quality check',owner:'Local Market POC',mandatory:true,tools:['QualityGuard — always run first']},
+        {n:4,title:'Upload & publish',owner:channel==='Website'?'Local Market POC':channel==='CRM'?'CRM manager':'Paid Ads manager',tools:[channel==='Paid Ads'?'Directly on platform':'Qontent']},
+      ],
+    };
+  }
+
+  // BAU
+  const ownerMap={crm:'Project owner (PMM or CRM manager)',web:'Project owner (Website manager)',ads:'Project owner (Paid Ads manager)',local:'Local Market POC',comms:'Comms partner / PMM'};
+  const owner=ownerMap[role]||'Project owner';
+  const ch=channel||'CRM';
+  return{
+    type:'bau',track:'bau',channel:ch,langs:langs||[],
+    steps:[
+      {n:1,title:'EN master copy',owner,tools:ch==='Paid Ads'?['Channel-specific Dust bot','QualityGuard — always run before moving forward']:['Tolki in Dust','Qontent','QualityGuard — always run before moving forward']},
+      {n:2,title:'First-pass translation',owner,tools:ch==='CRM'?['Tolki in Dust OR Channel-specific Dust bot','Qontent']:ch==='Website'?['Tolki in Dust','Qontent']:['Tolki OR Channel-specific Dust bot']},
+      {n:3,title:'Quality check',owner:'Local Market POC',mandatory:true,
+        note:ch==='CRM'?'Request proofread in #proofread-crm.':'No dedicated channel yet — request proofread directly to local POC.',
+        tools:['QualityGuard — always run first','Native review (mandatory)']},
+      {n:4,title:'Upload & publish',owner,tools:ch==='Paid Ads'?['Upload directly on platform']:['Qontent']},
+    ],
+  };
+}
+
+const STEP_GRAD_PF=[
+  'linear-gradient(135deg,#BFA6EA,#7B4DB8)',
+  'linear-gradient(135deg,#D5C8FF,#A585DB)',
+  'linear-gradient(135deg,#7B4DB8,#461068)',
+  'linear-gradient(135deg,#9BC5EA,#A585DB)',
+];
+
+// Explicit screen IDs — no derived arrays
+const SCREENS=['role','projectType','channel','langs','result'];
+
+function PathFinder({onViewWorkflow}){
+  const[screen,setScreen]=useState('role');
+  const[answers,setAnswers]=useState({});
+  const[langSel,setLangSel]=useState([]);
+
+  const reset=()=>{setScreen('role');setAnswers({});setLangSel([]);};
+
+  const pick=(key,val)=>{
+    const next={...answers,[key]:val};
+    setAnswers(next);
+    if(key==='role'){
+      // Auto-assign channel from role if unambiguous
+      if(val==='crm')  next.channel='CRM';
+      if(val==='web')  next.channel='Website';
+      if(val==='ads')  next.channel='Paid Ads';
+      setAnswers(next);
+      setScreen('projectType');
+    }
+    else if(key==='projectType'){
+      if(val==='creative') setScreen('result');
+      // If channel already known from role, skip channel screen
+      else if(next.channel) setScreen('langs');
+      else setScreen('channel');
+    }
+    else if(key==='channel') setScreen('langs');
+  };
+
+  const confirmLangs=()=>{
+    setAnswers(a=>({...a,langs:langSel}));
+    setScreen('result');
+  };
+
+  const roleImpliesChannel=(role)=>['crm','web','ads'].includes(role);
+
+  const back=()=>{
+    if(screen==='projectType') setScreen('role');
+    else if(screen==='channel') setScreen('projectType');
+    else if(screen==='langs'){
+      // If channel was auto-assigned from role, skip channel screen
+      if(roleImpliesChannel(answers.role)) setScreen('projectType');
+      else setScreen('channel');
+    }
+    else if(screen==='result'){
+      if(answers.projectType==='creative') setScreen('projectType');
+      else setScreen('langs');
+    }
+  };
+
+  // Progress for non-result screens
+  const progressMap={role:25,projectType:50,channel:75,langs:90,result:100};
+  const progress=progressMap[screen]||0;
+  const stepLabels={role:'Role',projectType:'Project type',channel:'Channel',langs:'Languages'};
+
+  const OptionBtn=({opt,onClick,selected})=>(
+    <button onClick={onClick} style={{
+      width:'100%',textAlign:'left',padding:'13px 16px',borderRadius:10,
+      border:`1.5px solid ${selected?'#7B4DB8':'#E0E0E0'}`,
+      background:selected?'#F5F0FF':'#fff',
+      cursor:'pointer',fontFamily:'inherit',
+      display:'flex',alignItems:'center',justifyContent:'space-between',
+      transition:'all 0.15s ease',marginBottom:8,
+    }}>
+      <div>
+        <div style={{fontSize:14,fontWeight:600,color:selected?'#461068':'#050505'}}>{opt.label}</div>
+        {opt.sub&&<div style={{fontSize:12,color:'#8F8F8F',marginTop:2}}>{opt.sub}</div>}
+      </div>
+      {selected
+        ?<span style={{width:18,height:18,borderRadius:'50%',background:'#7B4DB8',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+            <svg width="10" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4,9 11,1" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </span>
+        :<IChevR size={14} style={{color:'#CCCCCC',flexShrink:0}}/>
+      }
+    </button>
+  );
+
+  const Shell=({title,children,showBack=true})=>(
+    <div style={{maxWidth:520,margin:'0 auto',padding:'32px 0'}}>
+      {screen!=='result'&&(
+        <div style={{marginBottom:24}}>
+          <div style={{display:'flex',justifyContent:'space-between',fontSize:12,color:'#8F8F8F',fontWeight:600,marginBottom:6}}>
+            <span>{stepLabels[screen]}</span><span>{progress}%</span>
+          </div>
+          <div style={{height:4,background:'#E8E8E8',borderRadius:2,overflow:'hidden'}}>
+            <div style={{height:'100%',width:`${progress}%`,background:'#7B4DB8',borderRadius:2,transition:'width 0.3s ease'}}/>
+          </div>
+        </div>
+      )}
+      <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:16,padding:'28px'}}>
+        <h3 style={{fontSize:18,fontWeight:700,color:'#050505',marginBottom:20,lineHeight:1.3}}>{title}</h3>
+        {children}
+        {showBack&&screen!=='role'&&(
+          <button onClick={back} style={{marginTop:16,fontSize:13,fontWeight:600,color:'#8F8F8F',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',display:'flex',alignItems:'center',gap:4}}>
+            ← Back
+          </button>
+        )}
+      </div>
+    </div>
+  );
+
+  // ── ROLE ──
+  if(screen==='role') return(
+    <Shell title="What is your role?" showBack={false}>
+      {ROLES.map(r=><OptionBtn key={r.id} opt={{value:r.id,label:r.label}} selected={answers.role===r.id} onClick={()=>pick('role',r.id)}/>)}
+    </Shell>
+  );
+
+  // ── PROJECT TYPE ──
+  if(screen==='projectType') return(
+    <Shell title="What type of project is this?">
+      {[
+        {value:'creative',label:'Global project — Panorama L or M',sub:'High-visibility / Creative Factory'},
+        {value:'selfserve',label:'Global project — Panorama S or M',sub:'Self-serve localization by local teams'},
+        {value:'bau',label:'BAU / Channel ad-hoc',sub:'Not in Panorama — CRM, Website, Paid Ads'},
+      ].map(o=><OptionBtn key={o.value} opt={o} selected={answers.projectType===o.value} onClick={()=>pick('projectType',o.value)}/>)}
+    </Shell>
+  );
+
+  // ── CHANNEL ──
+  if(screen==='channel') return(
+    <Shell title="Which channel?">
+      {['CRM / Email','Website','Paid Ads','Other'].map(ch=>(
+        <OptionBtn key={ch} opt={{value:ch==='CRM / Email'?'CRM':ch,label:ch}} selected={answers.channel===(ch==='CRM / Email'?'CRM':ch)} onClick={()=>pick('channel',ch==='CRM / Email'?'CRM':ch)}/>
+      ))}
+    </Shell>
+  );
+
+  // ── LANGUAGES ──
+  if(screen==='langs') return(
+    <Shell title="Which language(s) are you targeting?">
+      <div style={{display:'flex',flexDirection:'column',gap:0}}>
+        {LANGS.map(l=>{
+          const sel=langSel.includes(l.label);
+          return(
+            <button key={l.label} onClick={()=>setLangSel(p=>sel?p.filter(x=>x!==l.label):[...p,l.label])}
+              style={{width:'100%',textAlign:'left',padding:'11px 14px',borderRadius:10,border:`1.5px solid ${sel?'#7B4DB8':'#E0E0E0'}`,background:sel?'#F5F0FF':'#fff',cursor:'pointer',fontFamily:'inherit',display:'flex',alignItems:'center',justifyContent:'space-between',transition:'all 0.15s ease',marginBottom:8}}>
+              <span style={{fontSize:14,fontWeight:600,color:sel?'#461068':'#050505'}}>{l.flag} {l.label}</span>
+              {sel&&<span style={{width:18,height:18,borderRadius:'50%',background:'#7B4DB8',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><svg width="10" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4,9 11,1" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg></span>}
+            </button>
+          );
+        })}
+      </div>
+      <button onClick={confirmLangs} disabled={langSel.length===0}
+        style={{marginTop:4,width:'100%',padding:'12px',borderRadius:10,border:'none',background:langSel.length>0?'#050505':'#E0E0E0',color:langSel.length>0?'#fff':'#8F8F8F',fontSize:14,fontWeight:700,cursor:langSel.length>0?'pointer':'not-allowed',fontFamily:'inherit',transition:'all 0.15s ease'}}>
+        See my workflow →
+      </button>
+      <button onClick={back} style={{marginTop:12,fontSize:13,fontWeight:600,color:'#8F8F8F',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',display:'flex',alignItems:'center',gap:4}}>← Back</button>
+    </Shell>
+  );
+
+  // ── RESULT ──
+  if(screen==='result'){
+    const result=getResult({...answers,langs:langSel});
+
+    // Creative Factory
+    if(result.type==='creative') return(
+      <div style={{maxWidth:520,margin:'0 auto',padding:'32px 0'}} className="fade-in">
+        <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:16,padding:'36px',textAlign:'center'}}>
+          <div style={{width:52,height:52,borderRadius:'50%',background:'#F5F5F5',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 16px'}}><ILock size={22} style={{color:'#8F8F8F'}}/></div>
+          <h3 style={{fontSize:18,fontWeight:700,margin:'0 0 10px'}}>Creative Factory project</h3>
+          <p style={{fontSize:14,color:'#616161',lineHeight:1.7,margin:'0 0 24px'}}>For high-visibility and creatively critical campaigns, the Creative Factory manages localization end-to-end. This self-serve workflow does not apply.</p>
+          <div style={{display:'flex',gap:10,justifyContent:'center',flexWrap:'wrap'}}>
+            <button onClick={()=>onViewWorkflow('creative')} style={{padding:'9px 18px',borderRadius:10,border:'2px solid #050505',background:'#050505',color:'#fff',fontSize:13,fontWeight:700,cursor:'pointer',fontFamily:'inherit'}}>View Creative Factory info →</button>
+            <button onClick={reset} style={{padding:'9px 18px',borderRadius:10,border:'1px solid #E0E0E0',background:'#fff',color:'#616161',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'inherit'}}>← Start over</button>
+          </div>
+        </div>
+      </div>
+    );
+
+    // Self-serve or BAU result
+    const accentClr=result.type==='selfserve'?'#7B4DB8':'#461068';
+    const trackLabel=result.type==='selfserve'?'Global projects — self-serve':'BAU / Channel ad-hoc'+(result.channel?` · ${result.channel}`:'');
+    const pocList=(result.langs||[]).map(l=>LANGS.find(x=>x.label===l)).filter(Boolean);
+
+    return(
+      <div style={{maxWidth:820,margin:'0 auto',padding:'32px 0'}} className="fade-in">
+        {/* Header */}
+        <div style={{background:accentClr,borderRadius:14,padding:'18px 24px',marginBottom:20,display:'flex',alignItems:'flex-start',justifyContent:'space-between',flexWrap:'wrap',gap:12}}>
+          <div>
+            <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',color:'rgba(255,255,255,0.6)',marginBottom:4}}>Your workflow</div>
+            <div style={{fontSize:17,fontWeight:700,color:'#fff'}}>{trackLabel}</div>
+          </div>
+          {pocList.length>0&&(
+            <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
+              {pocList.map(p=>(
+                <span key={p.label} style={{background:'rgba(255,255,255,0.15)',borderRadius:20,padding:'4px 12px',fontSize:12,color:'#fff',fontWeight:500}}>{p.flag} {p.poc}</span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Steps */}
+        <div style={{display:'flex',flexDirection:'column',gap:10,marginBottom:20}}>
+          {result.steps.map((s,i)=>(
+            <div key={s.n} style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:12,padding:'16px 20px',display:'flex',gap:16,alignItems:'flex-start'}}>
+              <div style={{width:36,height:36,borderRadius:'50%',background:STEP_GRAD_PF[i]||STEP_GRAD_PF[3],color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:800,flexShrink:0}}>{s.n}</div>
+              <div style={{flex:1}}>
+                <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6,flexWrap:'wrap'}}>
+                  <span style={{fontSize:15,fontWeight:700,color:'#050505'}}>{s.title}</span>
+                  {s.mandatory&&<span style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.04em',background:'#F5F0FF',color:'#7B4DB8',borderRadius:20,padding:'2px 8px'}}>Mandatory</span>}
+                </div>
+                {s.note&&<p style={{fontSize:13,color:'#616161',margin:'0 0 8px',lineHeight:1.55,fontStyle:'italic'}}>{s.note}</p>}
+                <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8,background:'#F5F0FF',borderRadius:8,padding:'6px 10px',width:'fit-content'}}>
+                  <IUser size={13} style={{color:accentClr}}/>
+                  <span style={{fontSize:13,fontWeight:700,color:accentClr}}>{s.owner}</span>
+                </div>
+                <div style={{display:'flex',alignItems:'flex-start',gap:6}}>
+                  <IWrench size={13} style={{color:'#8F8F8F',marginTop:2}}/>
+                  <div style={{display:'flex',flexWrap:'wrap',gap:'3px 14px'}}>
+                    {s.tools.map((t,ti)=>(
+                      <span key={ti} style={{fontSize:13,color:'#616161',lineHeight:1.6}}>{fmtLinks(t,s.n)}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Red bin */}
+        <div style={{background:'#FFF5F0',border:'1px solid #FFD5C0',borderRadius:10,padding:'11px 16px',fontSize:13,color:'#7A250C',marginBottom:20,display:'flex',gap:8,alignItems:'flex-start'}}>
+          <IAlert size={14} style={{color:'#CE6033',flexShrink:0,marginTop:1}}/>
+          <span>After launch, log any quality issue in the <a href="https://www.notion.so/qonto/Growth-Efficiency-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658#31931ee4c6968068814de2683bf18120" target="_blank" rel="noopener noreferrer" style={{color:'#CE6033'}}>Red Bin logging form</a>.</span>
+        </div>
+
+        <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+          <button onClick={()=>onViewWorkflow(result.track)} style={{padding:'10px 20px',borderRadius:10,border:'2px solid #050505',background:'#050505',color:'#fff',fontSize:13,fontWeight:700,cursor:'pointer',fontFamily:'inherit'}}>
+            View full workflow →
+          </button>
+          <button onClick={reset} style={{padding:'10px 20px',borderRadius:10,border:'1px solid #E0E0E0',background:'#fff',color:'#616161',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'inherit'}}>
+            ← Start over
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
+
 /* ── TRACK DEFINITIONS ── */
 const TRACKS=[
   {id:'creative',label:'High-visibility / Creativity',sizing:'In Panorama — L & sometimes M',desc:'Comms partners & PMMs are project owners — the Creative Factory handles localization end-to-end.',locked:true,activeBg:'#1A1A1A',activeText:'#fff',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
@@ -760,9 +1059,14 @@ const TRACKS=[
 
 /* ── APP ── */
 function App(){
+  const[view,setView]=useState('workflow');
   const[activeTrack,setActiveTrack]=useState('selfserve');
   const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
-  const trackData=TRACKS.find(t=>t.id===activeTrack);
+
+  const handleViewWorkflow=(track)=>{
+    setActiveTrack(track);
+    setView('workflow');
+  };
 
   return(
     <div style={{minHeight:'100vh',background:'#F5F5F5'}}>
@@ -773,52 +1077,68 @@ function App(){
           <div style={{width:1,height:20,background:'#E0E0E0'}}/>
           <div style={{fontSize:13,color:'#8F8F8F',fontWeight:500}}>{today}</div>
         </div>
+        {/* View toggle */}
+        <div style={{display:'flex',background:'#F5F5F5',border:'1px solid #E0E0E0',borderRadius:10,padding:3,gap:2}}>
+          <button onClick={()=>setView('workflow')}
+            style={{display:'flex',alignItems:'center',gap:6,padding:'7px 14px',borderRadius:8,border:'none',cursor:'pointer',fontSize:13,fontWeight:600,fontFamily:'inherit',
+              background:view==='workflow'?'#fff':'transparent',
+              color:view==='workflow'?'#050505':'#8F8F8F',
+              boxShadow:view==='workflow'?'0 1px 3px rgba(0,0,0,0.08)':'none',transition:'all 0.15s'}}>
+            {/* Map / overview icon */}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+            Full workflow
+          </button>
+          <button onClick={()=>setView('path')}
+            style={{display:'flex',alignItems:'center',gap:6,padding:'7px 14px',borderRadius:8,border:'none',cursor:'pointer',fontSize:13,fontWeight:600,fontFamily:'inherit',
+              background:view==='path'?'#050505':'transparent',
+              color:view==='path'?'#fff':'#8F8F8F',
+              boxShadow:view==='path'?'0 1px 3px rgba(0,0,0,0.12)':'none',transition:'all 0.15s'}}>
+            {/* Compass / find icon */}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+            Find your path
+          </button>
+        </div>
       </header>
 
-      <div style={{padding:'28px 32px 80px'}}>
-        <ScopeToggle/>
-        <HighLevelBar/>
-
-        {/* TRACK SELECTOR */}
-        <div style={{marginBottom:28}}>
-          <div style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',color:'#8F8F8F',marginBottom:12}}>Select a workflow type</div>
-          <div style={{display:'flex',gap:14,flexWrap:'wrap'}}>
-            {TRACKS.map(track=>{
-              const isActive=activeTrack===track.id;
-              return(
-                <div key={track.id} className="track-card"
-                  onClick={()=>setActiveTrack(track.id)}
-                  style={{
-                    flex:'1 1 240px',maxWidth:380,minWidth:220,
-                    border:`2px solid ${isActive?track.activeBg:'#E0E0E0'}`,
-                    background:isActive?track.activeBg:'#fff',
-                    padding:'18px 20px',position:'relative',
-                  }}>
-                  {/* Sizing badge — most prominent element */}
-                  <div style={{display:'inline-block',background:isActive?track.badgeBg:'#F5F5F5',color:isActive?track.badgeText:'#616161',border:`1px solid ${isActive?'rgba(255,255,255,0.15)':'#E0E0E0'}`,fontSize:12,fontWeight:700,borderRadius:20,padding:'4px 12px',marginBottom:10,letterSpacing:'0.02em'}}>
-                    {track.sizing}
+      {view==='path'?(
+        <div style={{padding:'0 32px 80px'}}>
+          <PathFinder onViewWorkflow={handleViewWorkflow}/>
+        </div>
+      ):(
+        <div style={{padding:'28px 32px 80px'}}>
+          <ScopeToggle/>
+          <HighLevelBar/>
+          {/* TRACK SELECTOR */}
+          <div style={{marginBottom:28}}>
+            <div style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',color:'#8F8F8F',marginBottom:12}}>Select a workflow type</div>
+            <div style={{display:'flex',gap:14,flexWrap:'wrap'}}>
+              {TRACKS.map(track=>{
+                const isActive=activeTrack===track.id;
+                return(
+                  <div key={track.id} className="track-card"
+                    onClick={()=>setActiveTrack(track.id)}
+                    style={{flex:'1 1 240px',maxWidth:380,minWidth:220,border:`2px solid ${isActive?track.activeBg:'#E0E0E0'}`,background:isActive?track.activeBg:'#fff',padding:'18px 20px',position:'relative'}}>
+                    <div style={{display:'inline-block',background:isActive?track.badgeBg:'#F5F5F5',color:isActive?track.badgeText:'#616161',border:`1px solid ${isActive?'rgba(255,255,255,0.15)':'#E0E0E0'}`,fontSize:12,fontWeight:700,borderRadius:20,padding:'4px 12px',marginBottom:10,letterSpacing:'0.02em'}}>{track.sizing}</div>
+                    {track.locked&&<ILock size={13} style={{position:'absolute',top:14,right:14,color:isActive?'rgba(255,255,255,0.5)':'#B8B8B8'}}/>}
+                    <div style={{fontSize:16,fontWeight:700,color:isActive?'#fff':'#050505',lineHeight:1.3,marginBottom:6}}>{track.label}</div>
+                    <p style={{fontSize:13.5,color:isActive?'rgba(255,255,255,0.75)':'#616161',margin:0,lineHeight:1.6}}>{track.desc}</p>
                   </div>
-                  {track.locked&&<ILock size={13} style={{position:'absolute',top:14,right:14,color:isActive?'rgba(255,255,255,0.5)':'#B8B8B8'}}/>}
-                  <div style={{fontSize:16,fontWeight:700,color:isActive?'#fff':'#050505',lineHeight:1.3,marginBottom:6}}>{track.label}</div>
-                  <p style={{fontSize:13.5,color:isActive?'rgba(255,255,255,0.75)':'#616161',margin:0,lineHeight:1.6}}>{track.desc}</p>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
+          </div>
+          <div key={activeTrack} className="fade-in">
+            {activeTrack==='creative'?(
+              <CreativePanel/>
+            ):(
+              <>
+                <Legend activeTrack={activeTrack}/>
+                {activeTrack==='selfserve'?<SSWorkflow/>:<BAUWorkflow/>}
+              </>
+            )}
           </div>
         </div>
-
-        {/* CONTENT */}
-        <div key={activeTrack} className="fade-in">
-          {activeTrack==='creative'?(
-            <CreativePanel/>
-          ):(
-            <>
-              <Legend activeTrack={activeTrack}/>
-              {activeTrack==='selfserve'?<SSWorkflow/>:<BAUWorkflow/>}
-            </>
-          )}
-        </div>
-      </div>
+      )}
     </div>
   );
 }
