@@ -222,7 +222,7 @@ const STEPS_SS=[
     useCases:[{
       label:'Global projects — Self-serve',
       owner:'Local Market POC',
-      tools:['QualityGuard — always run it!','QualityGuard — always run it!'],
+      tools:['QualityGuard — always run it!'],
     }],
     notes:['Compliance remains your responsibility regardless of tooling.'],
     showPOCs:true,
@@ -279,17 +279,17 @@ const STEPS_BAU=[
       'CRM':{
         owner:'Local Market POC',
         steps:['Project owner runs QualityGuard.','Project owner requests proofread from local POCs (CRM: use #proofread-crm — no dedicated channel yet for other channels).','Local Market POC takes charge of the review.'],
-        tools:['QualityGuard — always run it!','QualityGuard — always run it!'],
+        tools:['QualityGuard — always run it!'],
       },
       'Website':{
         owner:'Local Market POC',
         steps:['Project owner runs QualityGuard.','Project owner requests proofread from local POCs (CRM: use #proofread-crm — no dedicated channel yet for other channels).','Local Market POC takes charge of the review.'],
-        tools:['QualityGuard — always run it!','QualityGuard — always run it!'],
+        tools:['QualityGuard — always run it!'],
       },
       'Paid Ads':{
         owner:'Local Market POC',
         steps:['Project owner runs QualityGuard.','Project owner requests proofread from local POCs (CRM: use #proofread-crm — no dedicated channel yet for other channels).','Local Market POC takes charge of the review.'],
-        tools:['QualityGuard — always run it!','QualityGuard — always run it!'],
+        tools:['QualityGuard — always run it!'],
       },
     },
     notes:['Compliance remains your responsibility regardless of tooling.'],
@@ -734,6 +734,10 @@ function Legend({activeTrack}){
             <div style={{display:'flex',alignItems:'center',gap:5}}><IUser size={13} style={{color:'#7B4DB8'}}/><span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Owner</span></div>
             <div style={{display:'flex',alignItems:'center',gap:5}}><IWrench size={13} style={{color:'#8F8F8F'}}/><span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Tools</span></div>
             <div style={{display:'flex',alignItems:'center',gap:5}}><INote size={13} style={{color:'#616161'}}/><span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Note</span></div>
+            <div style={{display:'flex',alignItems:'center',gap:5}}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8F8F8F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              <span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Process steps (expandable)</span>
+            </div>
             <div style={{width:'100%',height:1,background:'#F0F0F0'}}/>
             <div style={{display:'flex',alignItems:'center',gap:5}}><span style={{width:8,height:8,borderRadius:2,background:'#FEE2E2',border:'1px solid #FECACA',display:'inline-block'}}/><span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Process gap</span></div>
             <div style={{display:'flex',alignItems:'center',gap:5}}><span style={{width:8,height:8,borderRadius:2,background:'#FEF9C3',border:'1px solid #FDE68A',display:'inline-block'}}/><span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Suggestion</span></div>
@@ -789,7 +793,7 @@ function getResult(answers){
       {n:2,title:'First-pass translation',owner,tools:ch==='CRM'?['Tolki','Qontent']:ch==='Website'?['Tolki','Qontent']:['Tolki']},
       {n:3,title:'Quality check',owner:'Local Market POC',mandatory:true,
         note:ch==='CRM'?'Request proofread in #proofread-crm.':'No dedicated channel yet — request proofread directly to local POC.',
-        tools:['QualityGuard — always run it!','QualityGuard — always run it!']},
+        tools:['QualityGuard — always run it!']},
       {n:4,title:'Upload & publish',owner,tools:ch==='Paid Ads'?['Upload directly on platform']:['Qontent']},
     ],
   };
@@ -1067,126 +1071,125 @@ function LocalPOCView(){
     {flag:'🇵🇹',market:'Portugal',contact:'@Julia Latorre'},
     {flag:'🇳🇱',market:'Netherlands',contact:'@Rosemarijn Disseldorp'},
   ];
-
-  const cards=[
+  const sections=[
     {
-      flow:'All flows',
-      accent:'#050505',bg:'#fff',border:'#E0E0E0',headerBg:'#050505',headerText:'#fff',
-      rows:[
-        {tag:'Always',tagClr:'#050505',tagBg:'#E8E8E8',text:<>You own the native review. Use <a href="https://www.notion.so/qonto/Check-copy-quality-24d31ee4c6968193bc6bc98d7f613d93" target="_blank" rel="noopener noreferrer">QualityGuard</a> as your first check — then review natively. You are the last quality gate before anything goes live.</>},
-        {tag:'Always',tagClr:'#050505',tagBg:'#E8E8E8',text:<>Log any issue post-launch in the <a href="https://www.notion.so/qonto/Growth-Efficiency-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658#31931ee4c6968068814de2683bf18120" target="_blank" rel="noopener noreferrer" style={{color:'#CE6033'}}>Red Bin form</a>. No exception.</>},
+      label:'All flows',accent:'#050505',labelBg:'#050505',labelText:'#fff',
+      items:[
+        {text:<>You own the native review. Run <a href="https://www.notion.so/qonto/Check-copy-quality-24d31ee4c6968193bc6bc98d7f613d93" target="_blank" rel="noopener noreferrer">QualityGuard</a> first — then review natively. You are the last quality gate.</>},
+        {text:<>Log every post-launch issue in the <a href="https://www.notion.so/qonto/Growth-Efficiency-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658#31931ee4c6968068814de2683bf18120" target="_blank" rel="noopener noreferrer" style={{color:'#CE6033'}}>Red Bin form</a>. No exception.</>},
       ],
     },
     {
-      flow:'Global projects — Self-serve',
-      accent:'#7B4DB8',bg:'#fff',border:'#E9E0FF',headerBg:'#7B4DB8',headerText:'#fff',
-      rows:[
-        {tag:'When contacted',tagClr:'#7B4DB8',tagBg:'#F5F0FF',text:'Designate one local project owner for the whole project — across all channels.'},
-        {tag:'Then',tagClr:'#616161',tagBg:'#F5F5F5',text:<>That owner runs the translation via <a href="https://www.notion.so/qonto/Localize-24d31ee4c696812ab5c1ee03e3aeda5e" target="_blank" rel="noopener noreferrer">Tolki</a> and delivers back to the project owner.</>},
-        {tag:'Website only',tagClr:'#2F95A0',tagBg:'#ECFDF5',text:'Page duplication is yours — not the Comms partner\'s. Own it in Qontent.'},
+      label:'Global projects — Self-serve',accent:'#7B4DB8',labelBg:'#7B4DB8',labelText:'#fff',
+      items:[
+        {tag:'When contacted',text:'Designate one local project owner for the whole project — across all channels.'},
+        {tag:'Then',text:<>That owner runs the translation via <a href="https://www.notion.so/qonto/Localize-24d31ee4c696812ab5c1ee03e3aeda5e" target="_blank" rel="noopener noreferrer">Tolki</a> and delivers back.</>},
+        {tag:'Website only',text:"Page duplication is yours — not the Comms partner's. Own it in Qontent."},
       ],
     },
     {
-      flow:'BAU / Channel ad-hoc',
-      accent:'#461068',bg:'#fff',border:'#D5C8FF',headerBg:'#461068',headerText:'#fff',
-      rows:[
-        {tag:'CRM',tagClr:'#7B4DB8',tagBg:'#F5F0FF',text:'Project owners request proofread via #proofread-crm. Review natively and return feedback.'},
-        {tag:'Website & Paid Ads',tagClr:'#461068',tagBg:'#EDE8FF',text:'No dedicated channel yet — project owners reach out directly. Same expectation: own the review.'},
+      label:'BAU / Channel ad-hoc',accent:'#461068',labelBg:'#461068',labelText:'#fff',
+      items:[
+        {tag:'CRM',text:'Project owners request proofread via #proofread-crm. Review natively and return feedback.'},
+        {tag:'Website & Paid Ads',text:'No dedicated channel yet — project owners reach out directly. Same expectation: own the review.'},
       ],
     },
   ];
-
   const gaps=[
     'POC list not sustainable — no backups, unclear capacity per market.',
     'No proofread channel for Website or Paid Ads (only #proofread-crm exists for CRM).',
   ];
-
   const suggestions=[
     {key:'s1',text:<>Update the POC list: one primary + one backup per market, with defined capacity.</>},
     {key:'s2',text:<><strong>BAU:</strong> Create <strong>#proofread-website</strong> and <strong>#proofread-paid-ads</strong> — same model as #proofread-crm.</>},
-    {key:'s3',text:<><strong>Global projects:</strong> Create a dedicated Slack channel per project so POCs have one clear place to receive localization requests.</>},
+    {key:'s3',text:<><strong>Global projects:</strong> Create a dedicated Slack channel per project so POCs have one clear entry point for localization requests.</>},
   ];
-
+  const tagStyles={
+    'When contacted':{clr:'#7B4DB8',bg:'#F5F0FF'},
+    'Then':{clr:'#616161',bg:'#F5F5F5'},
+    'Website only':{clr:'#2F95A0',bg:'#E6F7F7'},
+    'CRM':{clr:'#7B4DB8',bg:'#F5F0FF'},
+    'Website & Paid Ads':{clr:'#461068',bg:'#EDE8FF'},
+  };
   return(
-    <div style={{padding:'24px 20px 60px',maxWidth:640,margin:'0 auto'}} className="fade-in">
-
-      {/* Header */}
-      <div style={{marginBottom:20}}>
-        <h2 style={{fontSize:18,fontWeight:800,color:'#050505',marginBottom:4}}>Local POCs — How it works</h2>
-        <p style={{fontSize:14,color:'#616161',lineHeight:1.6,margin:0}}>Across self-serve workflows, here is exactly what local market POCs own — and remaining gaps.</p>
+    <div style={{padding:'24px 20px 60px',maxWidth:580,margin:'0 auto'}} className="fade-in">
+      <div style={{marginBottom:18}}>
+        <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'#050505',color:'#fff',borderRadius:6,padding:'3px 10px',fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:10}}>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          Pocket guide
+        </div>
+        <h2 style={{fontSize:18,fontWeight:800,color:'#050505',marginBottom:4,lineHeight:1.2}}>Local POCs — How it works</h2>
+        <p style={{fontSize:13,color:'#616161',lineHeight:1.55,margin:0}}>Across self-serve workflows — what you own, and what needs to change.</p>
       </div>
-
-      {/* POC list */}
-      <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:14,overflow:'hidden',marginBottom:16}}>
-        <div style={{background:'#7B4DB8',padding:'10px 16px',display:'flex',alignItems:'center',gap:6}}>
-          <IUsers size={13} style={{color:'rgba(255,255,255,0.8)'}}/>
+      <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:12,overflow:'hidden',marginBottom:14}}>
+        <div style={{background:'#7B4DB8',padding:'7px 14px',display:'flex',alignItems:'center',gap:5}}>
+          <IUsers size={12} style={{color:'rgba(255,255,255,0.8)'}}/>
           <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'rgba(255,255,255,0.9)'}}>Current POCs</span>
         </div>
-        <div style={{padding:'10px 12px',display:'flex',flexDirection:'column',gap:4}}>
+        <div style={{padding:'6px 10px',display:'flex',flexDirection:'column',gap:1}}>
           {pocs.map(p=>(
-            <div key={p.market} style={{display:'flex',alignItems:'center',gap:10,padding:'7px 10px',borderRadius:8,transition:'background 0.15s'}}>
-              <span style={{fontSize:17,flexShrink:0,width:28,textAlign:'center'}}>{p.flag}</span>
-              <span style={{fontSize:13,fontWeight:700,color:'#050505',minWidth:100,flexShrink:0}}>{p.market}</span>
+            <div key={p.market} style={{display:'flex',alignItems:'center',gap:10,padding:'5px 8px',borderRadius:6}}>
+              <span style={{fontSize:16,flexShrink:0,width:24}}>{p.flag}</span>
+              <span style={{fontSize:13,fontWeight:700,color:'#050505',minWidth:96,flexShrink:0}}>{p.market}</span>
               <span style={{fontSize:13,color:'#616161'}}>{p.contact}</span>
             </div>
           ))}
         </div>
-        <div style={{margin:'0 12px 12px',background:'#F0EAFF',borderRadius:8,padding:'7px 12px',fontSize:12,color:'#461068',fontWeight:600}}>
+        <div style={{margin:'0 10px 10px',background:'#F0EAFF',borderRadius:7,padding:'5px 10px',fontSize:12,color:'#461068',fontWeight:600}}>
           💬 <strong>#new-markets-localization-help</strong> — Dutch 🇳🇱 and Portuguese 🇵🇹 only
         </div>
       </div>
-
-      {/* Responsibility cards */}
-      {cards.map(card=>(
-        <div key={card.flow} style={{background:'#fff',border:`1.5px solid ${card.border}`,borderRadius:14,overflow:'hidden',marginBottom:10}}>
-          <div style={{background:card.headerBg,padding:'10px 16px'}}>
-            <span style={{fontSize:12,fontWeight:700,color:card.headerText,letterSpacing:'0.01em'}}>{card.flow}</span>
+      <div style={{background:'#fff',border:'1.5px solid #E0E0E0',borderRadius:12,overflow:'hidden',marginBottom:14}}>
+        {sections.map((sec,si)=>(
+          <div key={sec.label} style={{borderBottom:si<sections.length-1?'1px solid #F0F0F0':'none'}}>
+            <div style={{background:sec.labelBg,padding:'6px 14px'}}>
+              <span style={{fontSize:11,fontWeight:700,color:sec.labelText,letterSpacing:'0.02em'}}>{sec.label}</span>
+            </div>
+            <div style={{padding:'9px 14px',display:'flex',flexDirection:'column',gap:7}}>
+              {sec.items.map((item,i)=>(
+                <div key={i} style={{display:'flex',alignItems:'flex-start',gap:8}}>
+                  {item.tag?(
+                    <span style={{flexShrink:0,fontSize:10,fontWeight:700,background:tagStyles[item.tag]?.bg||'#F5F5F5',color:tagStyles[item.tag]?.clr||'#616161',borderRadius:20,padding:'2px 7px',marginTop:2,whiteSpace:'nowrap'}}>{item.tag}</span>
+                  ):(
+                    <span style={{flexShrink:0,width:6,height:6,borderRadius:'50%',background:sec.accent,marginTop:7,display:'inline-block'}}/>
+                  )}
+                  <span style={{fontSize:13.5,color:'#3D3D3D',lineHeight:1.6}}>{item.text}</span>
+                </div>
+              ))}
+            </div>
           </div>
-          <div style={{padding:'14px 16px',display:'flex',flexDirection:'column',gap:12}}>
-            {card.rows.map((row,i)=>(
-              <div key={i} style={{display:'flex',alignItems:'flex-start',gap:10}}>
-                <span style={{flexShrink:0,fontSize:10,fontWeight:700,background:row.tagBg,color:row.tagClr,borderRadius:20,padding:'3px 9px',marginTop:2,whiteSpace:'nowrap',border:`1px solid ${row.tagBg}`}}>{row.tag}</span>
-                <span style={{fontSize:13.5,color:'#3D3D3D',lineHeight:1.65}}>{row.text}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
-
-      {/* Gaps */}
-      <div style={{background:'#FFF5F5',border:'1.5px solid #FECACA',borderRadius:14,overflow:'hidden',marginTop:16,marginBottom:10}}>
-        <div style={{padding:'10px 16px',borderBottom:'1px solid #FECACA',display:'flex',alignItems:'center',gap:6}}>
-          <IAlert size={13} style={{color:'#991B1B'}}/>
+        ))}
+      </div>
+      <div style={{background:'#FFF5F5',border:'1.5px solid #FECACA',borderRadius:12,overflow:'hidden',marginBottom:10}}>
+        <div style={{padding:'7px 14px',borderBottom:'1px solid #FECACA',display:'flex',alignItems:'center',gap:6}}>
+          <IAlert size={12} style={{color:'#991B1B'}}/>
           <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#991B1B'}}>Process gaps</span>
           <span style={{fontSize:10,fontWeight:700,background:'#FEE2E2',color:'#B91C1C',borderRadius:20,padding:'1px 6px',marginLeft:'auto'}}>{gaps.length}</span>
         </div>
-        <div style={{padding:'12px 16px',display:'flex',flexDirection:'column',gap:8}}>
+        <div style={{padding:'9px 14px',display:'flex',flexDirection:'column',gap:6}}>
           {gaps.map((g,i)=>(
-            <div key={i} style={{display:'flex',gap:8,fontSize:13.5,color:'#7F1D1D',lineHeight:1.6}}>
+            <div key={i} style={{display:'flex',gap:7,fontSize:13.5,color:'#7F1D1D',lineHeight:1.6}}>
               <IChevR size={11} style={{color:'#991B1B',opacity:0.4,marginTop:4,flexShrink:0}}/>
               <span>{g}</span>
             </div>
           ))}
         </div>
       </div>
-
-      {/* Suggestions */}
-      <div style={{background:'#FFFDF0',border:'1.5px solid #FDE68A',borderRadius:14,overflow:'hidden'}}>
-        <div style={{padding:'10px 16px',borderBottom:'1px solid #FDE68A',display:'flex',alignItems:'center',gap:6}}>
-          <IBulb size={13} style={{color:'#CA8A04'}}/>
+      <div style={{background:'#FFFDF0',border:'1.5px solid #FDE68A',borderRadius:12,overflow:'hidden'}}>
+        <div style={{padding:'7px 14px',borderBottom:'1px solid #FDE68A',display:'flex',alignItems:'center',gap:6}}>
+          <IBulb size={12} style={{color:'#CA8A04'}}/>
           <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#854D0E'}}>Suggestions</span>
           <span style={{fontSize:10,fontWeight:700,background:'#FEF9C3',color:'#854D0E',borderRadius:20,padding:'1px 6px',marginLeft:'auto'}}>{suggestions.length}</span>
         </div>
-        <div style={{padding:'12px 16px',display:'flex',flexDirection:'column',gap:10}}>
+        <div style={{padding:'9px 14px',display:'flex',flexDirection:'column',gap:6}}>
           {suggestions.map(s=>(
-            <div key={s.key} style={{display:'flex',gap:8,fontSize:13.5,color:'#713F12',lineHeight:1.6}}>
+            <div key={s.key} style={{display:'flex',gap:7,fontSize:13.5,color:'#713F12',lineHeight:1.6}}>
               <IChevR size={11} style={{color:'#CA8A04',opacity:0.5,marginTop:4,flexShrink:0}}/>
               <span>{s.text}</span>
             </div>
           ))}
         </div>
       </div>
-
     </div>
   );
 }
