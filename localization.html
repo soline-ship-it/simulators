@@ -278,23 +278,23 @@ const STEPS_BAU=[
     channels:{
       'CRM':{
         owner:'Local Market POC',
-        steps:['Project owner runs QualityGuard in Dust.','Project owner requests proofread from local POCs in #proofread-crm.','Local Market POC takes charge of the review.'],
+        steps:['Project owner runs QualityGuard in Dust.','Project owner requests proofread from local POCs (CRM: use #proofread-crm — no dedicated channel yet for other channels).','Local Market POC takes charge of the review.'],
         tools:['QualityGuard — always run first','Native review (mandatory)'],
       },
       'Website':{
         owner:'Local Market POC',
-        steps:['Project owner runs QualityGuard in Dust.','Project owner requests proofread from local POCs (no dedicated channel yet — see suggestions).','Local Market POC takes charge of the review.'],
+        steps:['Project owner runs QualityGuard in Dust.','Project owner requests proofread from local POCs (CRM: use #proofread-crm — no dedicated channel yet for other channels).','Local Market POC takes charge of the review.'],
         tools:['QualityGuard — always run first','Native review (mandatory)'],
       },
       'Paid Ads':{
         owner:'Local Market POC',
-        steps:['Project owner runs QualityGuard in Dust.','Project owner requests proofread from local POCs (no dedicated channel yet — see suggestions).','Local Market POC takes charge of the review.'],
+        steps:['Project owner runs QualityGuard in Dust.','Project owner requests proofread from local POCs (CRM: use #proofread-crm — no dedicated channel yet for other channels).','Local Market POC takes charge of the review.'],
         tools:['QualityGuard — always run first','Native review (mandatory)'],
       },
     },
     notes:['Compliance remains your responsibility regardless of tooling.'],
     gaps:[
-      'No dedicated proofread channel for Website or Paid Ads (only #proofread-crm for CRM).',
+      'No dedicated proofread channel for Website or Paid Ads (only #proofread-crm exists for CRM).',
     ],
     suggestions:[
       'Create #proofread-website and #proofread-paid-ads, mirroring the CRM model, to standardize the review process across all channels.',
@@ -670,16 +670,20 @@ function ScopeToggle(){
         <div className="acc-inner">
           <div style={{padding:'0 20px 20px',borderTop:'1px solid #F0F0F0'}}>
             <div style={{paddingTop:16,display:'flex',gap:32,flexWrap:'wrap'}}>
-              <div style={{flex:1,minWidth:200}}>
+              <div style={{flex:2,minWidth:260}}>
                 <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8}}>
                   <IAlert size={14} style={{color:'#B45309'}}/>
                   <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Route to Creative Factory instead</span>
                 </div>
-                <ul style={{paddingLeft:18,fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:0,display:'flex',flexDirection:'column',gap:2}}>
+                <ul style={{paddingLeft:18,fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:'0 0 8px 0',display:'flex',flexDirection:'column',gap:2}}>
                   <li>High-visibility campaigns in <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> (L and sometimes M)</li>
                   <li>Highly creative Paid Ads or OOH</li>
                   <li>Website homepage</li>
                 </ul>
+                <div style={{display:'flex',alignItems:'center',gap:6,fontSize:14,color:'#616161'}}>
+                  <IBulb size={13} style={{color:'#7B4DB8',flexShrink:0}}/>
+                  <span>Not sure? Check <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> and the <a href="https://www.notion.so/qonto/Comms-Toolbox-2ca31ee4c69680a2afcec1f5ce13e6c1" target="_blank" rel="noopener noreferrer">Toolbox</a>.</span>
+                </div>
               </div>
               <div style={{flex:1,minWidth:200}}>
                 <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8}}>
@@ -687,13 +691,6 @@ function ScopeToggle(){
                   <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Autonomous — out of scope</span>
                 </div>
                 <p style={{fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:0}}><strong>Social media</strong> and <strong>SEO</strong> are autonomous. Not part of this workflow.</p>
-              </div>
-              <div style={{flex:1,minWidth:200}}>
-                <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8}}>
-                  <IBulb size={14} style={{color:'#7B4DB8'}}/>
-                  <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Not sure?</span>
-                </div>
-                <p style={{fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:0}}>Check <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> and the <a href="https://www.notion.so/qonto/Comms-Toolbox-2ca31ee4c69680a2afcec1f5ce13e6c1" target="_blank" rel="noopener noreferrer">Toolbox</a>.</p>
               </div>
             </div>
           </div>
