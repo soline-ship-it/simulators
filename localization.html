@@ -4,965 +4,938 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Localization Workflow</title>
-  
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.20/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Manrope', Arial, sans-serif;
+      background: #F5F5F5;
+      color: #050505;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    a { color: #7B4DB8; font-weight: 600; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { height: 5px; width: 5px; }
+    ::-webkit-scrollbar-track { background: #E8E8E8; }
+    ::-webkit-scrollbar-thumb { background: #B8B8B8; border-radius: 3px; }
+
+    /* Animations */
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeSlideIn 0.3s ease forwards; }
+
+    /* Accordion */
+    .acc-body {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transition: grid-template-rows 0.28s ease, opacity 0.28s ease;
+    }
+    .acc-body.open {
+      grid-template-rows: 1fr;
+      opacity: 1;
+    }
+    .acc-inner { overflow: hidden; }
+
+    /* Track card hover */
+    .track-card {
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      border-radius: 16px;
+    }
+    .track-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+
+    /* Use case card hover */
+    .uc-card {
+      cursor: pointer;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, opacity 0.25s ease;
+    }
+    .uc-card:hover { border-color: #A585DB !important; box-shadow: 0 2px 8px rgba(123,77,184,0.12); }
+    .uc-card.dimmed { opacity: 0.25; pointer-events: none; }
+    .uc-card.highlighted { border-color: #7B4DB8 !important; box-shadow: 0 3px 12px rgba(123,77,184,0.18) !important; }
+
+    /* Step card */
+    .step-col { transition: opacity 0.25s ease; }
+    .step-col.dimmed { opacity: 0.25; pointer-events: none; }
+
+    /* Toggle hint */
+    .toggle-hint { color: #7B4DB8; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+    .toggle-hint:hover { text-decoration: underline; }
+
+    /* Scope toggle */
+    .scope-toggle {
+      background: white;
+      border: 1px solid #E0E0E0;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: box-shadow 0.18s ease;
+    }
+    .scope-toggle:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+    /* Pulse for mandatory */
+    @keyframes pulse-ring {
+      0%   { box-shadow: 0 0 0 0 rgba(123,77,184,0.35); }
+      70%  { box-shadow: 0 0 0 7px rgba(123,77,184,0); }
+      100% { box-shadow: 0 0 0 0 rgba(123,77,184,0); }
+    }
+    .pulse { animation: pulse-ring 2.5s ease infinite; }
+  </style>
 </head>
-<body class="bg-[#F8FAFC] text-slate-900 font-sans">
-  
-  <div id="root"></div>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useCallback } = React;
 
-  <script type="text/babel">
-    const { useState, useEffect } = React;
+/* ─── ICONS ─────────────────────────────────────────────────────── */
+const Ico = ({ children, size = 16, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+    style={{ flexShrink: 0, ...style }}>
+    {children}
+  </svg>
+);
+const IcoChevDown  = ({size,style}) => <Ico size={size} style={style}><polyline points="6 9 12 15 18 9"/></Ico>;
+const IcoChevRight = ({size,style}) => <Ico size={size} style={style}><polyline points="9 18 15 12 9 6"/></Ico>;
+const IcoUser      = ({size,style}) => <Ico size={size} style={style}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></Ico>;
+const IcoWrench    = ({size,style}) => <Ico size={size} style={style}><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></Ico>;
+const IcoAlert     = ({size,style}) => <Ico size={size} style={style}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></Ico>;
+const IcoHelp      = ({size,style}) => <Ico size={size} style={style}><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></Ico>;
+const IcoLock      = ({size,style}) => <Ico size={size} style={style}><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></Ico>;
+const IcoUsers     = ({size,style}) => <Ico size={size} style={style}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></Ico>;
+const IcoThumb     = ({size,style}) => <Ico size={size} style={style}><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></Ico>;
+const IcoTarget    = ({size,style}) => <Ico size={size} style={style}><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></Ico>;
+const IcoFile      = ({size,style}) => <Ico size={size} style={style}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></Ico>;
+const IcoArrow     = ({size,style}) => <Ico size={size} style={style}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></Ico>;
+const IcoPhone     = ({size,style}) => <Ico size={size} style={style}><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></Ico>;
+const IcoWorkflow  = ({size,style}) => <Ico size={size} style={style}><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="15" width="6" height="6" rx="1"/><path d="M9 6h4a2 2 0 0 1 2 2v10"/></Ico>;
+const IcoGit       = ({size,style}) => <Ico size={size} style={style}><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></Ico>;
+const IcoArrowLeft = ({size,style}) => <Ico size={size} style={style}><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></Ico>;
+const IcoArrowRight2=({size,style}) => <Ico size={size} style={style}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></Ico>;
+const IcoBulb      = ({size,style}) => <Ico size={size} style={style}><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1.3.5 2.6 1.5 3.5.8.8 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></Ico>;
+const IcoCheck     = ({size,style}) => <Ico size={size} style={style}><polyline points="20 6 9 12 4 9"/></Ico>;
 
-    // --- ICONS (SVG) ---
-    const ChevronRight = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="9 18 15 12 9 6"></polyline></svg>;
-    const ChevronDown = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="6 9 12 15 18 9"></polyline></svg>;
-    const AlertTriangle = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>;
-    const UserIcon = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>;
-    const Lightbulb = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1.3.5 2.6 1.5 3.5.8.8 1.3 1.5 1.5 2.5"></path><path d="M9 18h6"></path><path d="M10 22h4"></path></svg>;
-    const WorkflowIcon = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="3" y="3" width="6" height="6" rx="1"></rect><rect x="15" y="15" width="6" height="6" rx="1"></rect><path d="M9 6h4a2 2 0 0 1 2 2v10"></path></svg>;
-    const GitBranchIcon = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="6" y1="3" x2="6" y2="15"></line><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><path d="M18 9a9 9 0 0 1-9 9"></path></svg>;
-    const ArrowLeft = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>;
-    const ArrowRight = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>;
-    const HelpCircle = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>;
-    const Wrench = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>;
-    const UsersIcon = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>;
-    const CheckCircle2 = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>;
-    const BookOpen = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>;
-    const FileText = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>;
-    const ThumbsUp = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>;
-    const Target = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>;
-    const Smartphone = ({ className }) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>;
+/* ─── LINK FORMATTER ─────────────────────────────────────────────── */
+const fmtLinks = (text, stepId) => {
+  if (typeof text !== 'string') return text;
+  const parts = text.split(/(QualityGuard|Red Bin logging form\/database|Tolki in Dust|Tolki OR Channel-specific Dust bot|Tolki)/g);
+  return parts.map((p, i) => {
+    if (p === 'QualityGuard')
+      return <a key={i} href="https://www.notion.so/qonto/Check-copy-quality-24d31ee4c6968193bc6bc98d7f613d93" target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}>{p}</a>;
+    if (p === 'Red Bin logging form/database')
+      return <a key={i} href="https://www.notion.so/qonto/Growth-Efficiency-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658#31931ee4c6968068814de2683bf18120" target="_blank" rel="noopener noreferrer" style={{color:'#CE6033'}} onClick={e=>e.stopPropagation()}>{p}</a>;
+    if (p === 'Tolki in Dust' || p === 'Tolki OR Channel-specific Dust bot' || p === 'Tolki') {
+      const url = stepId === 1
+        ? "https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf"
+        : "https://www.notion.so/qonto/Localize-24d31ee4c696812ab5c1ee03e3aeda5e";
+      if (p === 'Tolki in Dust') return <span key={i}><a href={url} target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}>Tolki</a> in Dust</span>;
+      if (p === 'Tolki OR Channel-specific Dust bot') return <span key={i}><a href={url} target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}>Tolki</a> OR Channel-specific Dust bot</span>;
+      return <a key={i} href={url} target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}>{p}</a>;
+    }
+    return p;
+  });
+};
 
-    // --- HELPER: FORMAT LINKS ---
-    const formatTextWithLinks = (text, stepId) => {
-      if (typeof text !== 'string') return text;
-      const parts = text.split(/(QualityGuard|Red Bin logging form\/database|Tolki in Dust|Tolki OR Channel-specific Dust bot|Tolki)/g);
-      return parts.map((part, i) => {
-        if (part === 'QualityGuard') {
-          return <a key={i} href="https://www.notion.so/qonto/Check-copy-quality-24d31ee4c6968193bc6bc98d7f613d93?source=copy_link" target="_blank" rel="noopener noreferrer" className="text-violet-600 font-bold hover:underline" onClick={e => e.stopPropagation()}>QualityGuard</a>;
-        }
-        if (part === 'Red Bin logging form/database') {
-          return <a key={i} href="https://www.notion.so/qonto/Growth-Efficiency-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658?source=copy_link#31931ee4c6968068814de2683bf18120" target="_blank" rel="noopener noreferrer" className="text-red-500 font-bold hover:underline" onClick={e => e.stopPropagation()}>Red Bin logging form/database</a>;
-        }
-        if (part === 'Tolki in Dust' || part === 'Tolki OR Channel-specific Dust bot' || part === 'Tolki') {
-          const url = stepId === 1 
-            ? "https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf" 
-            : "https://www.notion.so/qonto/Localize-24d31ee4c696812ab5c1ee03e3aeda5e?source=copy_link";
-          
-          if (part === 'Tolki OR Channel-specific Dust bot') {
-            return <span key={i}><a href={url} target="_blank" rel="noopener noreferrer" className="text-violet-600 font-bold hover:underline" onClick={e => e.stopPropagation()}>Tolki</a> OR Channel-specific Dust bot</span>;
-          }
-          if (part === 'Tolki in Dust') {
-             return <span key={i}><a href={url} target="_blank" rel="noopener noreferrer" className="text-violet-600 font-bold hover:underline" onClick={e => e.stopPropagation()}>Tolki</a> in Dust</span>;
-          }
-          
-          return <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="text-violet-600 font-bold hover:underline" onClick={e => e.stopPropagation()}>{part}</a>;
-        }
-        return part;
-      });
-    };
-
-    // --- COMPONENT: COLLAPSIBLE ACCORDION FOR GAPS/QUESTIONS ---
-    const CollapsibleList = ({ title, icon, items, type, stepId }) => {
-      const [isOpen, setIsOpen] = useState(false);
-      
-      if (!items || items.length === 0) return null;
-
-      const colors = type === 'gaps' 
-        ? { bg: 'bg-red-50', border: 'border-red-100', text: 'text-red-800', headerText: 'text-red-700', icon: 'text-red-600', badge: 'bg-red-100', hover: 'hover:bg-red-100/60' }
-        : { bg: 'bg-amber-50', border: 'border-amber-100', text: 'text-amber-900', headerText: 'text-amber-700', icon: 'text-amber-600', badge: 'bg-amber-100', hover: 'hover:bg-amber-100/60' };
-
-      return (
-        <div className={`mt-4 border ${colors.border} rounded-xl overflow-hidden shadow-sm transition-all duration-300`}>
-          <div 
-            className={`p-3 flex items-center justify-between cursor-pointer ${colors.bg} ${colors.hover} transition-colors`}
-            onClick={(e) => { e.stopPropagation(); setIsOpen(!isOpen); }}
-          >
-            <div className="flex items-center gap-2">
-              <div className={colors.icon}>{icon}</div>
-              <span className={`text-xs font-bold uppercase tracking-wider ${colors.headerText}`}>{title}</span>
-              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${colors.badge} ${colors.headerText}`}>{items.length}</span>
-            </div>
-            <ChevronDown className={`w-4 h-4 ${colors.icon} transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
-          </div>
-          
-          <div className={`grid transition-all duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
-            <div className="overflow-hidden">
-              <div className={`p-4 pt-2 ${colors.bg} border-t ${colors.border}`}>
-                <ul className="space-y-3">
-                  {items.map((item, idx) => (
-                    <li key={idx} className={`text-xs ${colors.text} leading-relaxed flex items-start gap-2`}>
-                      <div className="mt-0.5 shrink-0 opacity-60">
-                         <ChevronRight className="w-3.5 h-3.5" />
-                      </div>
-                      <span>{formatTextWithLinks(item, stepId)}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+/* ─── ACCORDION ──────────────────────────────────────────────────── */
+function Accordion({ title, items, type, stepId }) {
+  const [open, setOpen] = useState(false);
+  if (!items || items.length === 0) return null;
+  const isGap = type === 'gaps';
+  const cfg = isGap
+    ? { bg: '#FFF5F5', border: '#FECACA', titleColor: '#991B1B', textColor: '#7F1D1D', badgeBg: '#FEE2E2', icon: <IcoAlert size={13} style={{color:'#991B1B'}}/> }
+    : { bg: '#FFFDF0', border: '#FDE68A', titleColor: '#92400E', textColor: '#78350F', badgeBg: '#FEF9C3', icon: <IcoHelp size={13} style={{color:'#B45309'}}/> };
+  return (
+    <div style={{ marginTop: 10, border: `1px solid ${cfg.border}`, borderRadius: 10, overflow: 'hidden' }}>
+      <div onClick={e => { e.stopPropagation(); setOpen(!open); }}
+        style={{ padding: '9px 14px', background: cfg.bg, display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', gap: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          {cfg.icon}
+          <span style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: cfg.titleColor }}>{title}</span>
+          <span style={{ fontSize: 10, fontWeight: 700, background: cfg.badgeBg, color: cfg.titleColor, borderRadius: 20, padding: '1px 7px' }}>{items.length}</span>
+        </div>
+        <IcoChevDown size={13} style={{ color: cfg.titleColor, transition: 'transform 0.25s', transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+      </div>
+      <div className={`acc-body ${open ? 'open' : ''}`}>
+        <div className="acc-inner">
+          <div style={{ padding: '12px 14px', background: cfg.bg, borderTop: `1px solid ${cfg.border}` }}>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {items.map((item, i) => (
+                <li key={i} style={{ display: 'flex', gap: 6, fontSize: 13, color: cfg.textColor, lineHeight: 1.55 }}>
+                  <IcoChevRight size={12} style={{ color: cfg.titleColor, opacity: 0.5, marginTop: 2, flexShrink: 0 }} />
+                  <span>{fmtLinks(item, stepId)}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
-      );
-    };
+      </div>
+    </div>
+  );
+}
 
-    // --- WORKFLOW DATA ---
-    const WORKFLOW_STEPS = [
-      {
-        id: 1, title: 'EN Master Copy', subtitle: 'Create English source content',
-        colorCircle: 'from-fuchsia-300 to-fuchsia-400', 
-        colorHighlight: 'ring-fuchsia-300 shadow-fuchsia-200',
-        ruleOfThumb: 'Whenever no professional Creative writer is involved, the Project Owner is in charge of delivering the Master copy.',
-        useCases: [
-          { primaryTrack: 'standard', tracks: ['standard'], label: 'Global projects (incl. CRM - One-shot)', owner: 'Comms partner / PMM', tools: ['Tolki in Dust', 'Qontent (if Website/CRM)', 'QualityGuard in Dust'] },
-          { primaryTrack: 'crm_e2e', tracks: ['crm_e2e'], label: 'CRM - Lifecycle (End-to-End)', owner: 'Project Owner (PMM or CRM Manager)', tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust'] },
-          { primaryTrack: 'web_e2e', tracks: ['web_e2e'], label: 'Website (End-to-End)', owner: 'Project Owner (Website Manager)', tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust'] },
-          { primaryTrack: 'ads_e2e', tracks: ['ads_e2e'], label: 'Paid Ads (End-to-End)', owner: 'Project Owner (Paid Ads Manager)', tools: ['Channel-specific Dust bot', 'QualityGuard in Dust'] },
+/* ─── DATA ───────────────────────────────────────────────────────── */
+const TRACKS = [
+  {
+    id: 'creative',
+    label: 'High-visibility / Creative',
+    sizing: 'In Panorama — L & sometimes M',
+    desc: 'Comms partners & PMMs are project owners — the Creative Factory handles the localization end-to-end.',
+    locked: true,
+    accentBg: '#1A1A1A',
+    accentText: '#fff',
+    badgeBg: 'rgba(255,255,255,0.12)',
+    badgeText: '#fff',
+  },
+  {
+    id: 'selfserve',
+    label: 'Global projects — self-serve',
+    sizing: 'In Panorama — S & sometimes M',
+    desc: 'Creativity isn\'t business-critical. Self-serve localization by local teams.',
+    locked: false,
+    accentBg: '#7B4DB8',
+    accentText: '#fff',
+    badgeBg: 'rgba(255,255,255,0.18)',
+    badgeText: '#fff',
+  },
+  {
+    id: 'bau',
+    label: 'BAU / Channel ad-hoc',
+    sizing: 'Not in Panorama',
+    desc: 'CRM lifecycle, Paid Ads, Website — recurring channel-owned projects.',
+    locked: false,
+    accentBg: '#3275C4',
+    accentText: '#fff',
+    badgeBg: 'rgba(255,255,255,0.18)',
+    badgeText: '#fff',
+  },
+];
+
+/* BAU channels for interactivity */
+const BAU_CHANNELS = ['CRM', 'Website', 'Paid Ads'];
+
+/* Step circles gradient per track */
+const STEP_GRADIENTS = {
+  selfserve: [
+    'linear-gradient(135deg,#BFA6EA,#7B4DB8)',
+    'linear-gradient(135deg,#D5C8FF,#A585DB)',
+    'linear-gradient(135deg,#7B4DB8,#461068)',
+    'linear-gradient(135deg,#9BC5EA,#3275C4)',
+    'linear-gradient(135deg,#FFB590,#CE6033)',
+  ],
+  bau: [
+    'linear-gradient(135deg,#9BC5EA,#3275C4)',
+    'linear-gradient(135deg,#C6E6FB,#71A5E0)',
+    'linear-gradient(135deg,#3275C4,#093B75)',
+    'linear-gradient(135deg,#9BC5EA,#3275C4)',
+    'linear-gradient(135deg,#FFB590,#CE6033)',
+  ],
+};
+
+/* ─── STEP DEFINITIONS ───────────────────────────────────────────── */
+const STEPS_SELFSERVE = [
+  {
+    id: 1, title: 'EN master copy', subtitle: 'Create the English source',
+    useCases: [{
+      label: 'Global projects — self-serve',
+      owner: 'Comms partner / PMM',
+      ruleOfThumb: 'When no professional creative writer is involved, the project owner delivers the master copy.',
+      tools: ['Tolki in Dust', 'Qontent (if Website / CRM)', 'QualityGuard in Dust'],
+    }],
+    notes: ['Always run QualityGuard in Dust — unless drafted by a native EN copywriter.'],
+    gaps: [],
+  },
+  {
+    id: 2, title: 'First-pass translation', subtitle: 'Generate localized versions',
+    useCases: [{
+      label: 'Global projects — self-serve',
+      owner: 'Local Market POC',
+      steps: [
+        'Project owner requests translation from local POCs in the project channel.',
+        'Local Market POCs designate a local project owner, in charge of all translations across channels.',
+        'Local project owner provides the translations.',
+      ],
+      tools: ['Tolki OR Channel-specific Dust bot', 'Qontent (for Website / CRM)'],
+    }],
+    gaps: [
+      'No standardized localization request path across channels — only #proofread-crm exists today (CRM only).',
+      'As of March 2026, project owners often localize themselves even when not native. Local teams aren\'t fully ready, and the current POC list isn\'t sustainable. Volume will soon be a major issue.',
+    ],
+    questions: [
+      'Should we review and update the POC list across all markets?',
+      'Should we create a centralized localization request channel — like #proofread-crm — for all channels?',
+    ],
+  },
+  {
+    id: 3, title: 'Quality check', subtitle: 'Mandatory', mandatory: true,
+    useCases: [{
+      label: 'Global projects — self-serve',
+      owner: 'Local Market POC',
+      tools: ['QualityGuard in Dust'],
+    }],
+    notes: ['Compliance remains your responsibility regardless of tooling.'],
+    gaps: [],
+  },
+  {
+    id: 4, title: 'Upload & publish', subtitle: 'Deploy localized content',
+    useCases: [
+      { label: 'CRM — one-shot', owner: 'CRM manager', tools: ['Qontent'] },
+      { label: 'Website', owner: 'Local Market POC', tools: ['Qontent (duplicate page)'] },
+      { label: 'Paid Ads', owner: 'Paid Ads manager', tools: ['Directly on platform'] },
+    ],
+    gaps: ['Website: page duplication in other languages should be 100% owned by local teams at the localization stage — not Comms partners.'],
+  },
+  {
+    id: 5, title: 'Red bin logging', subtitle: 'Track & fix issues',
+    useCases: [{
+      label: 'All channels',
+      owner: 'Anyone involved in the workflow',
+      tools: ['Red Bin logging form/database'],
+    }],
+    notes: [
+      'Purpose: log quality issues discovered post-launch, or broken delivery processes.',
+      'Analyse: machine / human / method failure → implement a permanent fix.',
+    ],
+  },
+];
+
+/* BAU steps per channel */
+const STEPS_BAU = {
+  CRM: [
+    {
+      id: 1, title: 'EN master copy', subtitle: 'Create the English source',
+      useCases: [{
+        label: 'CRM — lifecycle',
+        owner: 'Project owner (PMM or CRM manager)',
+        ruleOfThumb: 'When no professional creative writer is involved, the project owner delivers the master copy.',
+        tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust'],
+      }],
+      notes: ['Always run QualityGuard in Dust — unless drafted by a native EN copywriter.'],
+      gaps: [],
+    },
+    {
+      id: 2, title: 'First-pass translation', subtitle: 'Generate localized versions',
+      useCases: [{
+        label: 'CRM — lifecycle',
+        owner: 'Project owner (PMM or CRM manager)',
+        tools: ['Tolki in Dust OR Channel-specific Dust bot', 'Qontent'],
+      }],
+      gaps: [
+        'No standardized localization request path for CRM lifecycle — a dedicated channel (e.g. #proofread-crm-lifecycle) should exist like for one-shot CRM.',
+        'Project owners often localize themselves even when not native. A clear handoff process to local teams is needed.',
+      ],
+      questions: [
+        'Should CRM lifecycle follow the same dedicated channel model as one-shot CRM (#proofread-crm)?',
+        'Should we align the CRM lifecycle process with other channels under one unified request path?',
+      ],
+    },
+    {
+      id: 3, title: 'Quality check', subtitle: 'Mandatory', mandatory: true,
+      useCases: [{
+        label: 'CRM — lifecycle',
+        owner: 'Local Market POC',
+        steps: [
+          'Project owner runs QualityGuard in Dust.',
+          'Project owner requests proofread from local POCs in #proofread-crm.',
+          'Local Market POC takes charge of the review.',
         ],
-        notes: [
-          'ALWAYS run QualityGuard in Dust to verify copy quality—unless drafted by a pro native EN copywriter.'
+        tools: ['QualityGuard in Dust', 'Native review (mandatory)'],
+      }],
+      notes: ['Compliance remains your responsibility regardless of tooling.'],
+      gaps: [],
+    },
+    {
+      id: 4, title: 'Upload & publish', subtitle: 'Deploy localized content',
+      useCases: [{ label: 'CRM — lifecycle', owner: 'Project owner (PMM or CRM manager)', tools: ['Qontent'] }],
+      gaps: [],
+    },
+    {
+      id: 5, title: 'Red bin logging', subtitle: 'Track & fix issues',
+      useCases: [{ label: 'All channels', owner: 'Anyone involved in the workflow', tools: ['Red Bin logging form/database'] }],
+      notes: ['Purpose: log quality issues post-launch or broken delivery processes.', 'Analyse: machine / human / method failure → implement a permanent fix.'],
+    },
+  ],
+  Website: [
+    {
+      id: 1, title: 'EN master copy', subtitle: 'Create the English source',
+      useCases: [{
+        label: 'Website — end-to-end',
+        owner: 'Project owner (Website manager)',
+        ruleOfThumb: 'When no professional creative writer is involved, the project owner delivers the master copy.',
+        tools: ['Tolki in Dust', 'Qontent', 'QualityGuard in Dust'],
+      }],
+      notes: ['Always run QualityGuard in Dust — unless drafted by a native EN copywriter.'],
+      gaps: [],
+    },
+    {
+      id: 2, title: 'First-pass translation', subtitle: 'Generate localized versions',
+      useCases: [{
+        label: 'Website — end-to-end',
+        owner: 'Project owner (Website manager)',
+        tools: ['Tolki in Dust', 'Qontent'],
+      }],
+      gaps: [
+        'No dedicated localization request channel for Website — a channel equivalent to #proofread-crm should be created (e.g. #proofread-website).',
+        'Page duplication in other languages is currently done by Comms partners instead of local teams.',
+      ],
+      questions: [
+        'Should Website adopt the same dedicated channel model as CRM (#proofread-crm) for proofread requests?',
+      ],
+    },
+    {
+      id: 3, title: 'Quality check', subtitle: 'Mandatory', mandatory: true,
+      useCases: [{
+        label: 'Website — end-to-end',
+        owner: 'Local Market POC',
+        steps: [
+          'Project owner runs QualityGuard in Dust.',
+          'Project owner requests proofread from local POCs (no dedicated channel yet — needs fixing).',
+          'Local Market POC takes charge of the review.',
         ],
-        gaps: []
-      },
-      {
-        id: 2, title: 'First-Pass Translation', subtitle: 'Generate localized versions',
-        colorCircle: 'from-purple-400 to-purple-500', 
-        colorHighlight: 'ring-purple-300 shadow-purple-200',
-        useCases: [
-          { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'Global projects (incl. CRM - One-shot)', owner: 'Local Market POC', tools: ['Tolki OR Channel-specific Dust bot', 'Qontent (for Website/CRM)'] },
-          { primaryTrack: 'crm_e2e', tracks: ['crm_e2e', 'all'], label: 'CRM - Lifecycle (End-to-End)', owner: 'Project Owner (PMM or CRM Manager)', tools: ['Tolki in Dust OR Channel-specific Dust bot', 'Qontent'] },
-          { primaryTrack: 'web_e2e', tracks: ['web_e2e', 'all'], label: 'Website (End-to-End)', owner: 'Project Owner (Website Manager)', tools: ['Tolki in Dust', 'Qontent'] },
-          { primaryTrack: 'ads_e2e', tracks: ['ads_e2e', 'all'], label: 'Paid Ads (End-to-End)', owner: 'Project Owner (Paid Ads Manager)', tools: ['Tolki OR Channel-specific Dust bot'] },
+        tools: ['QualityGuard in Dust', 'Native review (mandatory)'],
+      }],
+      notes: ['Compliance remains your responsibility regardless of tooling.'],
+      gaps: ['No dedicated proofread request channel for Website (unlike #proofread-crm for CRM). This must be created to standardize the process across all channels.'],
+    },
+    {
+      id: 4, title: 'Upload & publish', subtitle: 'Deploy localized content',
+      useCases: [{ label: 'Website — end-to-end', owner: 'Project owner (Website manager)', tools: ['Qontent (duplicate page)'] }],
+      gaps: ['Page duplication in other languages should be 100% owned by local teams at the localization stage — not Comms partners.'],
+    },
+    {
+      id: 5, title: 'Red bin logging', subtitle: 'Track & fix issues',
+      useCases: [{ label: 'All channels', owner: 'Anyone involved in the workflow', tools: ['Red Bin logging form/database'] }],
+      notes: ['Purpose: log quality issues post-launch or broken delivery processes.', 'Analyse: machine / human / method failure → implement a permanent fix.'],
+    },
+  ],
+  'Paid Ads': [
+    {
+      id: 1, title: 'EN master copy', subtitle: 'Create the English source',
+      useCases: [{
+        label: 'Paid Ads — end-to-end',
+        owner: 'Project owner (Paid Ads manager)',
+        ruleOfThumb: 'When no professional creative writer is involved, the project owner delivers the master copy.',
+        tools: ['Channel-specific Dust bot', 'QualityGuard in Dust'],
+      }],
+      notes: ['Always run QualityGuard in Dust — unless drafted by a native EN copywriter.'],
+      gaps: [],
+    },
+    {
+      id: 2, title: 'First-pass translation', subtitle: 'Generate localized versions',
+      useCases: [{
+        label: 'Paid Ads — end-to-end',
+        owner: 'Project owner (Paid Ads manager)',
+        tools: ['Tolki OR Channel-specific Dust bot'],
+      }],
+      gaps: [
+        'No dedicated localization request channel for Paid Ads — a channel equivalent to #proofread-crm should be created (e.g. #proofread-paid-ads).',
+        'Project owners often localize themselves even when not native. A clear handoff process to local teams is needed.',
+      ],
+      questions: [
+        'Should Paid Ads adopt the same dedicated channel model as CRM (#proofread-crm) for proofread requests?',
+      ],
+    },
+    {
+      id: 3, title: 'Quality check', subtitle: 'Mandatory', mandatory: true,
+      useCases: [{
+        label: 'Paid Ads — end-to-end',
+        owner: 'Local Market POC',
+        steps: [
+          'Project owner runs QualityGuard in Dust.',
+          'Project owner requests proofread from local POCs (no dedicated channel yet — needs fixing).',
+          'Local Market POC takes charge of the review.',
         ],
-        questions: [
-          'Should we have all markets/regions review their POCs list?', 
-          'Should we come up with a simple, centralized portal/way of requesting localization? (e.g., #new-markets-localization-help). Or at least, like for CRM, one entry point per channel?'
-        ],
-        gaps: [
-          'No standardized localization request path across channels (only #proofread-crm exists, for CRM).', 
-          'Today (March 2026), Project Owners often localize themselves even if not native. Local teams aren\'t fully ready for this workflow, and the current POC list isn\'t sustainable. Volume will soon be a major issue.'
-        ] 
-      },
-      {
-        id: 3, title: 'Quality Check', subtitle: 'MANDATORY step', pulse: true,
-        colorCircle: 'from-violet-600 to-violet-700', 
-        colorHighlight: 'ring-violet-400 shadow-violet-300',
-        useCases: [
-          { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'Global projects (incl. CRM - One-shot)', owner: 'Local Market POC', tools: ['QualityGuard in Dust (First step)', 'Native review (if translator is not native OR if High Impact project)'] },
-          { primaryTrack: 'e2e', tracks: ['crm_e2e', 'web_e2e', 'ads_e2e', 'all'], label: 'End-to-End Projects (CRM, Web, Ads)', owner: 'Local Market POC', tools: ['1. Project Owner runs QualityGuard in Dust', '2. Project Owner requests proofread from Local POCs (e.g. in #proofread-crm)', '3. Local Market POC takes charge of the review'] },
-        ],
-        notes: [
-          'IMPORTANT: Compliance remains your responsibility.'
-        ],
-        gaps: [
-          'No standardized localization request path across channels (only #proofread-crm exists, for CRM).',
-          'Native review decision framework lacks formal documentation.'
-        ] 
-      },
-      {
-        id: 4, title: 'Content Upload & Publishing', subtitle: 'Deploy localized content',
-        colorCircle: 'from-blue-400 to-blue-500', 
-        colorHighlight: 'ring-blue-300 shadow-blue-200',
-        useCases: [
-          { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'CRM - One-shot', owner: 'CRM Manager', tools: ['Qontent'] },
-          { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'Website (Standard)', owner: 'Local Market POC', tools: ['Qontent (Duplicate page)'] },
-          { primaryTrack: 'standard', tracks: ['standard', 'all'], label: 'Paid Ads (High-Vis)', owner: 'Paid Ads Manager', tools: ['Directly on platform'] },
-          { primaryTrack: 'e2e', tracks: ['crm_e2e', 'web_e2e', 'ads_e2e', 'all'], label: 'End-to-End Projects (CRM, Web, Ads)', owner: 'Project Owner', tools: ['Upload directly in platform / Qontent'] },
-        ],
-        gaps: ['Website: Page duplication in other languages should be 100% owned by Local Teams at localization stage—NOT Comms Partners.']
-      },
-      {
-        id: 5, title: 'Red Bin Logging', subtitle: 'Track & fix issues',
-        colorCircle: 'from-red-300 to-red-400', 
-        colorHighlight: 'ring-red-300 shadow-red-200',
-        useCases: [
-          { primaryTrack: 'global', tracks: ['standard', 'crm_e2e', 'web_e2e', 'ads_e2e', 'all'], label: 'All Channels', owner: 'Anyone involved in the workflow', tools: ['Red Bin logging form/database'] }
-        ],
-        notes: ['Purpose: Log quality issues discovered after launch OR broken delivery processes.', 'Analyze: Machine/Human/Method failure → implement permanent fix.']
-      }
-    ];
+        tools: ['QualityGuard in Dust', 'Native review (mandatory)'],
+      }],
+      notes: ['Compliance remains your responsibility regardless of tooling.'],
+      gaps: ['No dedicated proofread channel for Paid Ads. A #proofread-paid-ads channel — like #proofread-crm for CRM — must be created to standardize the process.'],
+    },
+    {
+      id: 4, title: 'Upload & publish', subtitle: 'Deploy localized content',
+      useCases: [{ label: 'Paid Ads — end-to-end', owner: 'Project owner (Paid Ads manager)', tools: ['Upload directly on platform'] }],
+      gaps: [],
+    },
+    {
+      id: 5, title: 'Red bin logging', subtitle: 'Track & fix issues',
+      useCases: [{ label: 'All channels', owner: 'Anyone involved in the workflow', tools: ['Red Bin logging form/database'] }],
+      notes: ['Purpose: log quality issues post-launch or broken delivery processes.', 'Analyse: machine / human / method failure → implement a permanent fix.'],
+    },
+  ],
+};
 
-    // --- DYNAMIC QUIZ LOGIC ---
-    const getQuizQuestions = (answers) => {
-      let channelOptions = [];
-      if (answers.role === 'Other channel owners (Website, Paid ads, etc.)') {
-        channelOptions = [
-          { label: 'Website', value: 'Website' },
-          { label: 'Paid Ads', value: 'Paid Ads' },
-          { label: 'Other', value: 'Other' }
-        ];
-      } else if (answers.role === 'Comms partner / PMM') {
-        channelOptions = [
-          { label: 'CRM / Email', value: 'CRM / Email' },
-          { label: 'Website', value: 'Website' },
-          { label: 'Paid Ads', value: 'Paid Ads' },
-          { label: 'Other', value: 'Other' }
-        ];
-      }
+/* ─── USE CASE CARD ──────────────────────────────────────────────── */
+function UCCard({ uc, accentColor, stepId, isHighlighted, isDimmed, onClick }) {
+  const ownerBg = accentColor === '#7B4DB8' ? '#F5F0FF' : '#EFF6FF';
+  return (
+    <div
+      className={`uc-card ${isDimmed ? 'dimmed' : ''} ${isHighlighted ? 'highlighted' : ''}`}
+      onClick={onClick}
+      style={{
+        border: `1.5px solid #E0E0E0`,
+        borderRadius: 10,
+        padding: '14px 14px',
+        background: '#fff',
+        marginBottom: 10,
+        position: 'relative',
+      }}
+    >
+      <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: accentColor, marginBottom: 10 }}>{uc.label}</div>
+      {uc.ruleOfThumb && (
+        <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 8, padding: '9px 12px', marginBottom: 10, display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+          <IcoThumb size={13} style={{ color: '#166534', marginTop: 1 }} />
+          <p style={{ fontSize: 12.5, color: '#14532D', lineHeight: 1.55, margin: 0 }}>
+            <strong>Rule of thumb:</strong> {uc.ruleOfThumb}
+          </p>
+        </div>
+      )}
+      {uc.steps && (
+        <ol style={{ paddingLeft: 18, marginBottom: 10, display: 'flex', flexDirection: 'column', gap: 5 }}>
+          {uc.steps.map((s, i) => (
+            <li key={i} style={{ fontSize: 13, color: '#3D3D3D', lineHeight: 1.55 }}>{s}</li>
+          ))}
+        </ol>
+      )}
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 7, marginBottom: 8, background: ownerBg, borderRadius: 8, padding: '7px 10px' }}>
+        <IcoUser size={14} style={{ color: accentColor, marginTop: 1 }} />
+        <span style={{ fontSize: 13, fontWeight: 700, color: accentColor, lineHeight: 1.4 }}>{uc.owner}</span>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 7 }}>
+        <IcoWrench size={14} style={{ color: '#8F8F8F', marginTop: 2 }} />
+        <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 4 }}>
+          {uc.tools.map((t, i) => (
+            <li key={i} style={{ display: 'flex', gap: 6, alignItems: 'flex-start', fontSize: 13, color: '#616161', lineHeight: 1.5 }}>
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#CCCCCC', flexShrink: 0, marginTop: 7 }} />
+              <span>{fmtLinks(t, stepId)}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
 
-      const qs = [
-        {
-          id: 'role', title: 'What is your role?', type: 'single',
-          options: [
-            { label: 'Comms partner / PMM', value: 'Comms partner / PMM' },
-            { label: 'CRM Manager', value: 'CRM Manager' },
-            { label: 'Other channel owners (Website, Paid ads, etc.)', value: 'Other channel owners (Website, Paid ads, etc.)' }
-          ]
-        }
-      ];
-
-      // Only ask for channel if the role isn't CRM Manager (auto-assigned)
-      if (answers.role && answers.role !== 'CRM Manager') {
-        qs.push({ id: 'channel', title: 'Which channel is this content for?', type: 'single', options: channelOptions });
-      }
-
-      // Logic routing based on Role & Channel
-      if (answers.role && answers.role !== 'Comms partner / PMM') {
-        if (answers.channel === 'CRM / Email' || answers.role === 'CRM Manager') {
-          qs.push({
-            id: 'crmType', title: 'What type of CRM project is this?', type: 'single',
-            options: [
-              { label: 'CRM - One-shot (Global project)', value: 'CRM - One-shot' },
-              { label: 'CRM - Lifecycle (Automations, etc.)', value: 'CRM - Lifecycle' }
-            ]
-          });
-        }
-        if (answers.channel === 'Website') {
-          qs.push({
-            id: 'websiteType', title: 'How is this Website project managed?', type: 'single',
-            options: [
-              { label: 'Standard (Handoff to Local POCs for localization)', value: 'Standard' },
-              { label: 'End-to-End (You handle localization via Tolki)', value: 'End-to-End' }
-            ]
-          });
-        }
-      }
-
-      qs.push({
-        id: 'projectType', title: 'What type of project is this?', type: 'single',
-        options: [
-          { label: 'Self-serve', value: 'Self-serve' },
-          { label: 'Creative Factory involved (e.g. High-Vis, Paid Ads, OOH)', value: 'Request' }
-        ]
-      });
-
-      // ONLY ask language if it's a self-serve project
-      if (answers.projectType && answers.projectType !== 'Request') {
-        qs.push({
-          id: 'language', title: 'Which language(s)/market(s) are you targeting? (Select all that apply)', type: 'multiple',
-          options: [
-            { label: '🇫🇷 FR - French', value: 'French' },
-            { label: '🇩🇪 DE - German', value: 'German' },
-            { label: '🇮🇹 IT - Italian', value: 'Italian' },
-            { label: '🇪🇸 ES - Spanish', value: 'Spanish' },
-            { label: '🇵🇹 PT - Portuguese', value: 'Portuguese' },
-            { label: '🇳🇱 NL - Dutch', value: 'Dutch' }
-          ]
-        });
-      }
-
-      return qs;
-    };
-
-    // --- COMPONENT: QUIZ WIZARD ---
-    const PathFinder = () => {
-      const [answers, setAnswers] = useState({});
-      const [step, setStep] = useState(0);
-
-      const questions = getQuizQuestions(answers);
-
-      const handleSingleSelect = (id, value) => {
-        let newAnswers = { ...answers, [id]: value };
-        
-        // Auto-assign CRM Channel if CRM Manager is selected
-        if (id === 'role' && value === 'CRM Manager') {
-            newAnswers.channel = 'CRM / Email';
-        }
-        
-        setAnswers(newAnswers);
-        setStep(step + 1);
-      };
-
-      const handleToggleMultiple = (id, value) => {
-        const currentList = answers[id] || [];
-        if (currentList.includes(value)) {
-          setAnswers({ ...answers, [id]: currentList.filter(v => v !== value) });
-        } else {
-          setAnswers({ ...answers, [id]: [...currentList, value] });
-        }
-      };
-
-      const getPocNames = (langs) => {
-        if (!langs || langs.length === 0) return 'Local Market POCs';
-        return langs.map(lang => {
-          switch(lang) {
-            case 'French': return '🇫🇷 FR: @Delphine de Roquemaurel';
-            case 'German': return '🇩🇪 DE: @Hannah Lüdicke';
-            case 'Italian': return '🇮🇹 IT: @lollo';
-            case 'Spanish': return '🇪🇸 ES: @cristina.gomez';
-            case 'Portuguese': return '🇵🇹 PT: @Julia Latorre';
-            case 'Dutch': return '🇳🇱 NL: @rosemarijn.disseldorp (non-SEO), @Dimitri Jordens (SEO), @stijn.teves (partnerships)';
-            default: return 'Local Market POCs';
-          }
-        }).join('\n');
-      };
-
-      const renderQuiz = () => {
-        const question = questions[step];
-        const progress = Math.round(((step + 1) / questions.length) * 100);
-        const isMultiple = question.type === 'multiple';
-        const currentMultipleSelections = answers[question.id] || [];
-
-        return (
-          <div className="max-w-4xl mx-auto w-full pt-10 pb-20 px-4">
-            <div className="text-center mb-8">
-              <Lightbulb className="w-8 h-8 text-amber-500 mx-auto mb-3" />
-              <h2 className="text-3xl font-bold text-slate-900 mb-2">Find Your Path</h2>
-              <p className="text-slate-500">Answer a few questions to get a personalized workflow guide</p>
-            </div>
-
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 min-h-[400px]">
-              <div className="mb-8">
-                <div className="flex justify-between text-sm text-slate-600 mb-3 font-medium">
-                  <span>Question {step + 1} of {questions.length}</span>
-                  <span>{progress}%</span>
-                </div>
-                <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-violet-600 transition-all duration-300" style={{ width: `${progress}%` }}></div>
-                </div>
-              </div>
-
-              <h3 className="text-xl font-bold text-slate-900 mb-6">{question.title}</h3>
-              
-              <div className="space-y-3">
-                {question.options.map((opt) => {
-                  if (isMultiple) {
-                    const isSelected = currentMultipleSelections.includes(opt.value);
-                    return (
-                      <button
-                        key={opt.value}
-                        onClick={() => handleToggleMultiple(question.id, opt.value)}
-                        className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 flex justify-between items-center group 
-                          ${isSelected ? 'border-violet-500 bg-violet-50 text-violet-900' : 'border-slate-200 hover:border-violet-300 bg-white text-slate-700'}`}
-                      >
-                        <span className="font-semibold">{opt.label}</span>
-                        {isSelected && <CheckCircle2 className="w-6 h-6 text-violet-600" />}
-                      </button>
-                    );
-                  } else {
-                    return (
-                      <button
-                        key={opt.value}
-                        onClick={() => handleSingleSelect(question.id, opt.value)}
-                        className="w-full text-left p-4 rounded-xl border border-slate-200 hover:border-violet-500 hover:bg-slate-50 transition-all duration-200 flex justify-between items-center group bg-white"
-                      >
-                        <span className="font-semibold text-slate-700">{opt.label}</span>
-                        <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-violet-500" />
-                      </button>
-                    );
-                  }
-                })}
-              </div>
-
-              {/* HIGHLY VISIBLE NOTE FOR PROJECT TYPE */}
-              {question.id === 'projectType' && (
-                <div className="mt-8 p-5 bg-amber-50 border border-amber-200 rounded-xl flex gap-4 shadow-sm">
-                  <Lightbulb className="w-6 h-6 text-amber-500 shrink-0" />
-                  <p className="text-sm text-amber-900 leading-relaxed">
-                    <strong>Not sure if your project is self-serve or request-based?</strong><br/>
-                    Check <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer" className="text-blue-700 font-bold hover:underline">Panorama</a> and the <a href="https://www.notion.so/qonto/Comms-Toolbox-2ca31ee4c69680a2afcec1f5ce13e6c1" target="_blank" rel="noopener noreferrer" className="text-blue-700 font-bold hover:underline">Toolbox</a> first.
-                  </p>
-                </div>
-              )}
-
-              {isMultiple && (
-                <button 
-                  onClick={() => setStep(step + 1)} 
-                  disabled={currentMultipleSelections.length === 0}
-                  className="mt-6 w-full py-4 bg-violet-600 text-white font-bold rounded-xl hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  Generate My Workflow
-                </button>
-              )}
-
-              {step > 0 && (
-                <button 
-                  onClick={() => setStep(step - 1)}
-                  className="mt-8 flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-slate-800 transition-colors w-full justify-center p-3 border border-slate-200 rounded-xl"
-                >
-                  <ArrowLeft className="w-4 h-4" /> Back
-                </button>
-              )}
-            </div>
-          </div>
-        );
-      };
-
-      const renderResults = () => {
-        // High-Vis Request Blocker Screen
-        if (answers.projectType === 'Request') {
-          return (
-            <div className="max-w-4xl mx-auto w-full pt-10 pb-20 px-4">
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center mt-10">
-                <AlertTriangle className="w-16 h-16 text-amber-500 mx-auto mb-4" />
-                <h3 className="text-2xl font-bold text-slate-900 mb-4">Creative Factory Project</h3>
-                <p className="text-lg text-slate-600 mb-8">Creative copywriters handle request-based projects.</p>
-                <div className="bg-amber-50 text-amber-800 p-4 rounded-xl font-semibold border border-amber-200 inline-flex items-center gap-3 text-left max-w-xl mb-8">
-                  <ArrowRight className="w-6 h-6 text-amber-600 shrink-0" />
-                  <span>Route this request through the Creative Factory. This self-serve flow does not apply.</span>
-                </div>
-                <div className="mt-4 flex justify-center gap-6">
-                   <button onClick={() => {setStep(questions.length - 1);}} className="text-slate-500 font-semibold hover:text-slate-800 flex items-center gap-2"><ArrowLeft className="w-4 h-4"/> Back</button>
-                   <button onClick={() => {setStep(0); setAnswers({});}} className="text-blue-600 font-semibold hover:underline">Start Over</button>
-                </div>
-              </div>
-            </div>
-          );
-        }
-
-        const pocNamesString = getPocNames(answers.language);
-        
-        let displayRole = answers.role;
-        if (displayRole === 'Other channel owners (Website, Paid ads, etc.)') displayRole = 'Channel Owner';
-
-        // Logic Flags (Comms Partners are standard handoffs)
-        const isE2E = (answers.role !== 'Comms partner / PMM') && (
-                      (answers.channel === 'Paid Ads' && answers.projectType === 'Self-serve') ||
-                      (answers.channel === 'CRM / Email' && answers.crmType === 'CRM - Lifecycle') ||
-                      (answers.channel === 'Website' && answers.websiteType === 'End-to-End')
-                    );
-
-        // Base Owners
-        let masterOwner = displayRole;
-        let locOwner = isE2E ? displayRole : pocNamesString;
-        let qcOwner = pocNamesString; // Local POC always handles QC directly or via request
-        let uploadOwner = '';
-        let uploadDesc = '';
-
-        // Specific Roles Overrides
-        if (answers.channel === 'CRM / Email') {
-            if (isE2E) {
-               masterOwner = 'Project Owner (PMM or CRM Manager)';
-               locOwner = 'Project Owner (PMM or CRM Manager)';
-               uploadOwner = 'Project Owner (PMM or CRM Manager)';
-               uploadDesc = 'The Project Owner uploads the finalized localized content in Qontent.';
-            } else {
-               masterOwner = answers.role === 'Comms partner / PMM' ? 'Comms partner / PMM' : 'CRM Manager';
-               locOwner = pocNamesString;
-               uploadOwner = 'CRM Manager';
-               uploadDesc = 'The CRM Manager handles the upload of the finalized localized content in Qontent.';
-            }
-        } else if (answers.channel === 'Paid Ads') {
-            masterOwner = 'Paid Ads Manager';
-            locOwner = 'Paid Ads Manager';
-            uploadOwner = 'Paid Ads Manager';
-            uploadDesc = 'The Paid Ads Manager uploads the finalized localized content directly to the platform.';
-        } else if (isE2E) {
-            let specOwner = answers.channel === 'Website' ? 'Website Manager' : 'Channel Owner';
-            masterOwner = specOwner;
-            locOwner = specOwner;
-            uploadOwner = specOwner;
-            uploadDesc = `The ${specOwner} uploads the finalized localized content directly to the platform/CMS.`;
-        } else {
-            if (answers.channel === 'Website') {
-                uploadOwner = 'Local Market POC';
-                uploadDesc = answers.role === 'Comms partner / PMM' 
-                  ? 'Note: Page duplication in other languages is 100% owned by Local Teams at the localization stage (NOT Comms Partners). The Local Market POC duplicates the page in Qontent.'
-                  : 'The Local Market POC duplicates the page in Qontent for their respective language.';
-            } else {
-                uploadOwner = displayRole;
-                uploadDesc = `Upload the finalized localized content directly to the platform (${answers.channel}).`;
-            }
-        }
-
-        // Adjust master owner naming for better UX
-        if (answers.role === 'CRM Manager' && !isE2E) {
-            masterOwner = 'CRM Manager';
-        }
-
-        // --- TOOLS ASSEMBLY ---
-        const masterTools = [];
-        if (answers.channel === 'CRM / Email' || answers.channel === 'Website') {
-           masterTools.push('Tolki in Dust', 'Qontent');
-        } else {
-           masterTools.push('Tolki OR Channel-specific Dust bot');
-        }
-        masterTools.push('QualityGuard in Dust (to check copy if no EN native is involved)');
-
-        const locTools = [];
-        if (answers.channel === 'CRM / Email' || answers.channel === 'Website') {
-           locTools.push('Tolki in Dust', 'Qontent');
-        } else {
-           locTools.push('Tolki OR Channel-specific Dust bot');
-        }
-
-        const qcTools = [];
-        if (isE2E) {
-            qcTools.push('1. Project Owner runs QualityGuard in Dust');
-            qcTools.push('2. Project Owner requests proofread from Local POCs (e.g. in #proofread-crm)');
-            qcTools.push('3. Local Market POC takes charge of the review');
-        } else {
-            qcTools.push('QualityGuard in Dust (First step)');
-            qcTools.push('Native review (Optional, but required if translator is not native)');
-        }
-
-        const uploadTools = [];
-        if (answers.channel === 'Website' || answers.channel === 'CRM / Email') uploadTools.push('Qontent');
-        else uploadTools.push(`Upload directly on platform`);
-
-        // Using exactly the same color classes as the workflow circles
-        const steps = [
-          { num: 1, title: 'EN Master Copy', owner: masterOwner, desc: 'Create EN master with channel bot.', tools: masterTools, colorBg: 'bg-fuchsia-400', ruleOfThumb: 'Whenever no professional Creative writer is involved, the Project Owner is in charge of delivering the Master copy.' },
-          { num: 2, title: 'First-Pass Translation', owner: locOwner, desc: 'Handle the localization for the selected market(s).', tools: locTools, colorBg: 'bg-purple-500' },
-          { num: 3, title: 'Quality Check', owner: qcOwner, desc: isE2E ? 'Follow the sequence below for the native proofread handoff.' : 'Run QualityGuard as a mandatory first step. Request native review if needed.', tools: qcTools, colorBg: 'bg-violet-600' },
-          { num: 4, title: 'Content Upload', owner: uploadOwner, desc: uploadDesc, tools: uploadTools, colorBg: 'bg-blue-400' },
-        ];
-
-        return (
-          <div className="max-w-4xl mx-auto w-full pt-10 pb-20 px-4">
-            
-            <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 mb-8 flex gap-12 text-sm flex-wrap">
-              <div>
-                <div className="text-violet-700 font-bold mb-1 uppercase text-xs tracking-wider">Project Type</div>
-                <div className="text-slate-800 font-medium">
-                   {answers.projectType} 
-                   {answers.websiteType ? ` (${answers.websiteType})` : ''}
-                </div>
-              </div>
-              <div>
-                <div className="text-violet-700 font-bold mb-1 uppercase text-xs tracking-wider">Languages</div>
-                <div className="text-slate-800 font-medium flex items-center gap-2">
-                  {answers.language && answers.language.map(lang => {
-                    let flag = '';
-                    switch(lang) {
-                      case 'French': flag = '🇫🇷'; break;
-                      case 'German': flag = '🇩🇪'; break;
-                      case 'Italian': flag = '🇮🇹'; break;
-                      case 'Spanish': flag = '🇪🇸'; break;
-                      case 'Portuguese': flag = '🇵🇹'; break;
-                      case 'Dutch': flag = '🇳🇱'; break;
-                      default: flag = '';
-                    }
-                    return <span key={lang} className="text-lg" title={lang}>{flag}</span>;
-                  })}
-                </div>
-              </div>
-              <div>
-                <div className="text-violet-700 font-bold mb-1 uppercase text-xs tracking-wider">Channel</div>
-                <div className="text-slate-800 font-medium">
-                   {answers.channel} {answers.crmType ? `(${answers.crmType})` : ''}
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              {steps.map((s) => (
-                <div key={s.num} className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex gap-6">
-                  <div className={`w-10 h-10 shrink-0 ${s.colorBg} text-white rounded-full flex items-center justify-center font-bold text-lg shadow-md`}>
-                    {s.num}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-slate-900 mb-2 flex items-center gap-2">
-                      {s.num}. {s.title}
-                      {s.num === 3 && <span className="flex items-center text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded"><AlertTriangle className="w-3 h-3 mr-1"/> MANDATORY</span>}
-                    </h3>
-                    <div className="flex items-start gap-2 mb-3">
-                      <UserIcon className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-                      <span className="font-bold text-blue-600 whitespace-pre-line leading-relaxed">{s.owner}</span>
-                    </div>
-
-                    {s.ruleOfThumb && (
-                      <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-xl flex gap-3 shadow-sm">
-                        <ThumbsUp className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
-                        <p className="text-sm text-green-900 leading-relaxed">
-                          <strong>Rule of thumb:</strong> {formatTextWithLinks(s.ruleOfThumb, s.num)}
-                        </p>
-                      </div>
-                    )}
-
-                    <p className="text-slate-700 mb-4">{formatTextWithLinks(s.desc, s.num)}</p>
-                    
-                    <div className="bg-[#F8FAFC] rounded-xl p-4 text-sm border border-slate-100">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Wrench className="w-4 h-4 text-slate-500" />
-                        <span className="font-bold text-slate-500 uppercase text-xs">Tools</span>
-                      </div>
-                      <ul className="space-y-2">
-                        {s.tools.map((t, idx) => (
-                          <li key={idx} className="text-slate-700 font-medium flex items-start gap-2">
-                             <div className="w-1 h-1 rounded-full bg-slate-400 mt-2 shrink-0"></div>
-                             <span>{formatTextWithLinks(t, s.num)}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-10 flex justify-center gap-4">
-              <button 
-                onClick={() => setStep(questions.length - 1)}
-                className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 shadow-sm rounded-xl font-semibold text-slate-500 hover:text-slate-800 transition-all"
-              >
-                <ArrowLeft className="w-5 h-5" /> Back
-              </button>
-              <button 
-                onClick={() => {setStep(0); setAnswers({});}}
-                className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 shadow-sm rounded-xl font-semibold text-blue-600 hover:text-blue-800 hover:bg-slate-50 transition-all"
-              >
-                Start Over
-              </button>
-            </div>
-          </div>
-        );
-      };
-
-      return step < questions.length ? renderQuiz() : renderResults();
-    };
-
-    // --- MAIN APP ---
-    function App() {
-      const [view, setView] = useState('workflow');
-      const [selectedStep, setSelectedStep] = useState(null);
-      const [selectedTrack, setSelectedTrack] = useState(null);
-      const [showGuidelines, setShowGuidelines] = useState(false);
-
-      const today = new Date().toLocaleDateString('en-US', { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-      });
-
-      // Handle clicking anywhere on background to clear selection
-      const handleBackgroundClick = () => {
-        setSelectedStep(null);
-        setSelectedTrack(null);
-      };
-
-      return (
-        <div className="flex flex-col min-h-screen bg-[#F8FAFC]">
-          
-          {/* HEADER */}
-          <div className="flex flex-col sm:flex-row items-center justify-between py-4 px-8 bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50 gap-4">
-            <div className="flex items-center gap-4 flex-wrap justify-center sm:justify-start">
-              {/* Qonto Logo (Typographic approximation) */}
-              <div className="flex items-center">
-                <span className="text-[26px] font-black tracking-[-0.08em] text-slate-900 leading-none">qonto</span>
-              </div>
-              
-              {/* Divider */}
-              <div className="w-px h-6 bg-slate-300 hidden sm:block"></div>
-              
-              {/* Title & Date */}
-              <div className="flex items-center gap-3 flex-wrap justify-center">
-                <h1 className="text-xl font-bold text-slate-900">Localization Workflow</h1>
-                <span className="text-xs font-semibold text-slate-500 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-md shadow-sm">
-                  {today}
-                </span>
-              </div>
-            </div>
-            
-            <div className="flex bg-[#F1F5F9] p-1 rounded-xl border border-slate-200">
-              <button 
-                onClick={() => {setView('workflow'); handleBackgroundClick();}}
-                className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg transition-all ${view === 'workflow' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
-              >
-                <WorkflowIcon className="w-4 h-4" />
-                Full Workflow
-              </button>
-              <button 
-                onClick={() => {setView('path'); handleBackgroundClick();}}
-                className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg transition-all ${view === 'path' ? 'bg-slate-900 shadow-sm text-white' : 'text-slate-500 hover:text-slate-700'}`}
-              >
-                <GitBranchIcon className="w-4 h-4" />
-                Find Your Path
-              </button>
-            </div>
-          </div>
-
-          {/* MAIN CONTENT AREA */}
-          {view === 'path' ? (
-            <PathFinder />
-          ) : (
-            // Full background click handler to deselect step
-            <div 
-              className="flex-1 w-full min-h-screen overflow-x-auto p-8 animate-in fade-in duration-500 cursor-pointer"
-              onClick={handleBackgroundClick}
-            >
-              {/* Internal container stops propagation so clicking INSIDE cards doesn't deselect */}
-              <div className="min-w-max pb-12 cursor-default" onClick={(e) => e.stopPropagation()}>
-                
-                {/* SCOPE & GUIDELINES (COLLAPSIBLE) */}
-                <div className="mb-6 bg-white border border-slate-200 rounded-2xl shadow-sm max-w-[1200px] overflow-hidden">
-                  <div 
-                    className="p-5 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition-colors"
-                    onClick={() => setShowGuidelines(!showGuidelines)}
-                  >
-                    <div className="flex items-center gap-3">
-                      <Target className="w-5 h-5 text-indigo-600 shrink-0" />
-                      <p className="text-sm text-slate-800 font-medium">
-                        <strong>Scope:</strong> Standard self-serve projects (no pro Creative writer involved).
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2 text-violet-600 font-semibold text-sm">
-                      {showGuidelines ? 'Hide rules' : 'See exceptions & rules'}
-                      <ChevronDown className={`w-5 h-5 transition-transform duration-200 ${showGuidelines ? 'rotate-180' : ''}`} />
-                    </div>
-                  </div>
-                  
-                  {showGuidelines && (
-                    <div className="p-6 border-t border-slate-100 bg-slate-50 flex flex-col animate-in slide-in-from-top-2 duration-200">
-                      <div className="flex flex-col md:flex-row gap-8">
-                        <div className="flex-1">
-                           <div className="flex items-center gap-2 mb-3">
-                              <AlertTriangle className="w-4 h-4 text-amber-500" />
-                              <h4 className="text-xs font-bold text-slate-600 uppercase tracking-wider">Creative Factory Exceptions</h4>
-                           </div>
-                           <p className="text-sm text-slate-600 mb-2">Route these through the Creative Factory (not in this flow):</p>
-                           <ul className="list-disc pl-5 text-sm text-slate-700 space-y-1.5">
-                             <li>High-visibility campaigns in <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer" className="font-bold text-violet-600 hover:underline">Panorama</a> (L and sometimes M)</li>
-                             <li>Highly creative Paid Ads or Out of Home (OOH)</li>
-                             <li>Website Homepage</li>
-                           </ul>
-                        </div>
-                        <div className="flex-1 space-y-5">
-                           <div>
-                             <div className="flex items-center gap-2 mb-2">
-                                <Smartphone className="w-4 h-4 text-indigo-500" />
-                                <h4 className="text-xs font-bold text-slate-600 uppercase tracking-wider">Social Media</h4>
-                             </div>
-                             <p className="text-sm text-slate-700">Global & Social media managers are 100% autonomous. Removed from this flow.</p>
-                           </div>
-                           <div>
-                             <div className="flex items-center gap-2 mb-2">
-                                <HelpCircle className="w-4 h-4 text-blue-500" />
-                                <h4 className="text-xs font-bold text-slate-600 uppercase tracking-wider">Not sure?</h4>
-                             </div>
-                             <p className="text-sm text-slate-700">Check Panorama and the <a href="https://www.notion.so/qonto/Comms-Toolbox-2ca31ee4c69680a2afcec1f5ce13e6c1" target="_blank" rel="noopener noreferrer" className="font-bold text-violet-600 hover:underline">Toolbox</a> to confirm if your project is self-serve.</p>
-                           </div>
-                        </div>
-                      </div>
-                      
-                      <div className="mt-6 p-3 bg-red-50 border border-red-100 rounded-lg">
-                        <div className="flex items-center gap-2 mb-1.5">
-                          <AlertTriangle className="w-4 h-4 text-red-500" />
-                          <span className="text-xs font-bold text-red-600 uppercase tracking-wider">Process Gap</span>
-                        </div>
-                        <p className="text-xs text-red-700 leading-relaxed flex items-start gap-2">
-                           <ChevronRight className="w-3.5 h-3.5 mt-0.5 shrink-0 opacity-60" />
-                           <span>The boundary between "self-serve" and "request-based" projects remains ambiguous. Relying solely on Panorama or Toolbox sizing guidelines is currently insufficient and requires clearer definition.</span>
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* LÉGENDE */}
-                <div className="flex items-center gap-6 mb-10 px-5 py-3 bg-white rounded-xl border border-slate-200 shadow-sm w-max">
-                  <div className="text-sm font-bold text-slate-400 uppercase tracking-wider mr-2">Legend</div>
-                  <div className="flex items-center gap-2">
-                    <UserIcon className="w-5 h-5 text-blue-600" />
-                    <span className="text-sm text-slate-700 font-medium">Owner (Responsible)</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Wrench className="w-5 h-5 text-slate-400" />
-                    <span className="text-sm text-slate-700 font-medium">Tools (Used to deliver task)</span>
-                  </div>
-                  <div className="flex items-center gap-2 ml-4 border-l border-slate-200 pl-4">
-                    <Lightbulb className="w-4 h-4 text-indigo-500 inline-block mr-1" />
-                    <span className="text-sm text-indigo-500 font-medium">Click inside a box to highlight its path</span>
-                  </div>
-                </div>
-
-                {/* LIGNE 1 : CERCLES */}
-                <div className="flex items-start gap-6 mb-8">
-                  {WORKFLOW_STEPS.map((step, index) => {
-                    const isSelected = selectedStep === step.id;
-                    const isDimmed = selectedStep !== null && !isSelected;
-                    return (
-                      <div key={step.id} className="flex items-start gap-6">
-                        <div className={`flex flex-col items-center gap-4 w-[340px] shrink-0 transition-all duration-500 ${isDimmed ? 'opacity-30 grayscale-[30%]' : 'opacity-100'}`}>
-                          <button
-                            onClick={(e) => { e.stopPropagation(); setSelectedStep(isSelected ? null : step.id); setSelectedTrack(null); }}
-                            className={`
-                              relative flex flex-col items-center justify-center
-                              w-40 h-40 rounded-full cursor-pointer
-                              bg-gradient-to-br ${step.colorCircle} text-white shadow-lg transition-all duration-300 hover:scale-105
-                              ${isSelected ? `ring-4 ${step.colorHighlight} scale-105 shadow-xl` : ''}
-                              ${step.pulse && !isSelected ? 'ring-4 ring-violet-300 animate-pulse' : ''}
-                            `}
-                          >
-                            <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-white text-slate-900 flex items-center justify-center font-bold text-lg shadow-sm border-2 border-slate-200">{step.id}</div>
-                            <div className="text-center px-4">
-                              <div className="font-bold text-sm mb-1">{step.title}</div>
-                              <div className="text-xs opacity-90 font-semibold flex items-center justify-center gap-1">
-                                {step.pulse && <AlertTriangle className="w-3 h-3 text-amber-300" />}
-                                {step.subtitle}
-                              </div>
-                            </div>
-                          </button>
-                          {(step.id === 2 || step.id === 3) ? <div className="w-0.5 h-16 bg-slate-300" /> : <div className="w-0.5 h-8 bg-gradient-to-b from-slate-200 to-transparent" />}
-                        </div>
-                        {index < WORKFLOW_STEPS.length - 1 && (
-                          <div className={`flex items-center justify-center w-10 shrink-0 transition-opacity duration-500 ${isDimmed ? 'opacity-30' : 'opacity-100'}`} style={{ marginTop: '70px' }}>
-                            <ChevronRight className="w-10 h-10 text-slate-300" />
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* LIGNE 2 : CARTES DÉTAILLÉES (INTERACTIVES PAR CHEMIN) */}
-                <div className="flex items-start gap-6">
-                  {WORKFLOW_STEPS.map((step, index) => {
-                    const isStepSelected = selectedStep === step.id;
-                    const isStepDimmed = selectedStep !== null && !isStepSelected;
-                    
-                    return (
-                      <div key={`detail-${step.id}`} className="flex items-start gap-6">
-                        <div className={`flex flex-col items-center gap-4 w-[340px] shrink-0 transition-all duration-500 ${isStepDimmed ? 'opacity-30 scale-[0.98]' : 'opacity-100 scale-100'}`}>
-                          <div className={`w-full p-5 bg-white border border-slate-200 shadow-sm rounded-xl transition-all duration-300 ${isStepSelected ? `ring-2 ${step.colorHighlight} shadow-lg bg-slate-50/50` : ''}`}>
-                            
-                            {/* RULE OF THUMB */}
-                            {step.ruleOfThumb && (
-                              <div className="mb-4 pb-4 border-b border-slate-100">
-                                <div className="p-3 bg-green-50 border border-green-200 rounded-lg flex gap-2 shadow-sm">
-                                  <ThumbsUp className="w-4 h-4 text-green-600 shrink-0 mt-0.5" />
-                                  <p className="text-xs text-green-900 leading-relaxed">
-                                    <strong>Rule of thumb:</strong> {formatTextWithLinks(step.ruleOfThumb, step.id)}
-                                  </p>
-                                </div>
-                              </div>
-                            )}
-
-                            {/* AFFICHAGE DES USE CASES CLICABLES */}
-                            {step.useCases && step.useCases.map((uc, i) => {
-                              // Logique de surbrillance par track
-                              const isTrackActive = selectedTrack === null || selectedTrack === 'all' || uc.tracks.includes(selectedTrack);
-                              const isSpecificallySelected = selectedTrack !== null && (uc.tracks.includes(selectedTrack) || uc.primaryTrack === 'all');
-
-                              return (
-                                <div 
-                                  key={i} 
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setSelectedStep(null); 
-                                    setSelectedTrack(selectedTrack === uc.primaryTrack ? null : uc.primaryTrack); 
-                                  }}
-                                  className={`mb-4 border rounded-xl p-4 transition-all duration-300 cursor-pointer hover:border-violet-300 hover:shadow-md
-                                    ${!isTrackActive ? 'opacity-30 grayscale-[50%] bg-slate-50 border-slate-100' : ''}
-                                    ${isSpecificallySelected ? 'border-violet-400 bg-violet-50/50 ring-1 ring-violet-200 shadow-sm' : 'bg-white border-slate-200 shadow-sm'}
-                                  `}
-                                >
-                                  <div className="text-[11px] font-bold text-violet-700 uppercase tracking-wider mb-3">{uc.label}</div>
-                                  
-                                  <div className="flex items-start gap-2 mb-3">
-                                    <UserIcon className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-                                    <span className="text-sm font-bold text-slate-800">{uc.owner}</span>
-                                  </div>
-                                  
-                                  <div className="flex items-start gap-2">
-                                    <Wrench className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
-                                    <ul className="text-sm text-slate-600">
-                                      {uc.tools.map((t, j) => <li key={j} className="mb-1 flex items-start gap-1"><div className="w-1 h-1 rounded-full bg-slate-400 mt-2 shrink-0"></div><span>{formatTextWithLinks(t, step.id)}</span></li>)}
-                                    </ul>
-                                  </div>
-                                </div>
-                              );
-                            })}
-
-                            {/* NOTES */}
-                            {step.notes && step.notes.length > 0 && (
-                              <div className={step.ruleOfThumb ? "mt-4" : "mt-4 pt-4 border-t border-slate-100"}>
-                                <div className="flex items-center gap-2 mb-2">
-                                  <FileText className="w-4 h-4 text-slate-500" />
-                                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Notes</span>
-                                </div>
-                                <ul className="space-y-2 pl-1">
-                                  {step.notes.map((note, idx) => (
-                                    <li key={idx} className="text-xs text-slate-600 leading-relaxed flex items-start gap-2">
-                                       <div className="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1 shrink-0"></div>
-                                       <span>{formatTextWithLinks(note, step.id)}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            )}
-
-                            {/* PROCESS GAPS (COLLAPSIBLE) */}
-                            <CollapsibleList 
-                                title="Process Gaps" 
-                                icon={<AlertTriangle className="w-4 h-4" />} 
-                                items={step.gaps} 
-                                type="gaps" 
-                                stepId={step.id} 
-                            />
-
-                            {/* QUESTIONS (COLLAPSIBLE) */}
-                            <CollapsibleList 
-                                title="Open Questions" 
-                                icon={<HelpCircle className="w-4 h-4" />} 
-                                items={step.questions} 
-                                type="questions" 
-                                stepId={step.id} 
-                            />
-                            
-                          </div>
-                        </div>
-                        {index < WORKFLOW_STEPS.length - 1 && <div className="w-10 shrink-0" />}
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* ZONE PARTAGÉE POCS */}
-                <div className={`transition-all duration-500 ${(selectedStep !== null && selectedStep !== 2 && selectedStep !== 3) ? 'opacity-30 grayscale-[30%]' : 'opacity-100'}`}>
-                  <div className="flex items-start gap-6 mt-8">
-                    <div className="w-[340px] shrink-0"></div><div className="w-10 shrink-0"></div>
-                    <div className="w-[340px] shrink-0 flex flex-col items-center"><div className="w-0.5 h-8 bg-slate-300"></div></div>
-                    <div className="w-10 shrink-0"></div>
-                    <div className="w-[340px] shrink-0 flex flex-col items-center"><div className="w-0.5 h-8 bg-slate-300"></div></div>
-                  </div>
-                  <div className="flex items-start gap-6">
-                    <div className="w-[340px] shrink-0"></div><div className="w-10 shrink-0"></div>
-                    <div className="flex items-center" style={{ width: '720px' }}><div className="h-0.5 w-full bg-slate-300"></div></div>
-                  </div>
-                  <div className="flex items-start gap-6 mt-4 pb-8">
-                    <div className="w-[340px] shrink-0"></div><div className="w-10 shrink-0"></div>
-                    <div className="flex justify-center shrink-0" style={{ width: '720px' }}>
-                      <div className="w-full max-w-xl p-6 bg-white border-slate-200 border shadow-sm rounded-xl">
-                        {/* TITLE HEADER WITH ICON */}
-                        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
-                          <UsersIcon className="w-5 h-5 text-violet-600" />
-                          <span className="text-sm font-bold text-slate-800 uppercase tracking-wider">Local POCs & Contacts</span>
-                          <span className="text-xs text-slate-500 ml-auto">(for Steps 2 & 3)</span>
-                        </div>
-                        <div className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">
-                          {'🇫🇷 France: @Delphine de Roquemaurel\n🇩🇪 Germany: @Hannah Lüdicke\n🇮🇹 Italy: @lollo\n🇪🇸 Spain: @cristina.gomez\n🇵🇹 Portugal: @Julia Latorre\n🇳🇱 Netherlands:\n  - Non-SEO/non-partnerships: @rosemarijn.disseldorp\n  - SEO: @Dimitri Jordens\n  - Partnerships: @stijn.teves\n\n💬 Slack help: #new-markets-localization-help (for 🇳🇱 Dutch and 🇵🇹 Portuguese native support only today)'}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
+/* ─── STEP COLUMN ────────────────────────────────────────────────── */
+function StepCol({ step, accentColor, gradientBg, trackId, selectedUC, onSelectUC, dimmed }) {
+  const hasMultipleUC = step.useCases.length > 1;
+  return (
+    <div className={`step-col ${dimmed ? 'dimmed' : ''}`} style={{ width: 340, flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      {/* Circle */}
+      <div
+        style={{
+          width: 96, height: 96, borderRadius: '50%',
+          background: gradientBg,
+          color: '#fff',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.14)',
+          position: 'relative',
+        }}
+        className={step.mandatory ? 'pulse' : ''}
+      >
+        <div style={{
+          position: 'absolute', top: -9, right: -9,
+          width: 24, height: 24, borderRadius: '50%',
+          background: '#fff', border: '2px solid #E0E0E0',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 12, fontWeight: 800, color: '#3D3D3D',
+        }}>{step.id}</div>
+        <div style={{ textAlign: 'center', padding: '0 14px' }}>
+          <div style={{ fontSize: 12, fontWeight: 700, lineHeight: 1.3, marginBottom: step.mandatory ? 4 : 0 }}>{step.title}</div>
+          {step.mandatory && (
+            <div style={{ fontSize: 9, fontWeight: 700, background: 'rgba(255,255,255,0.25)', borderRadius: 20, padding: '2px 7px', display: 'inline-block', letterSpacing: '0.04em', textTransform: 'uppercase' }}>Mandatory</div>
           )}
         </div>
-      );
-    }
+      </div>
 
-    const rootElement = document.getElementById('root');
-    const root = ReactDOM.createRoot(rootElement);
-    root.render(<App />);
-  </script>
+      {/* Connector */}
+      <div style={{ width: 1, height: 14, background: '#CCCCCC' }} />
+
+      {/* Detail card */}
+      <div style={{
+        width: '100%', background: '#fff',
+        border: '1px solid #E0E0E0', borderRadius: 14,
+        padding: '16px', boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
+      }}>
+        {step.useCases.map((uc, i) => (
+          <UCCard
+            key={i}
+            uc={uc}
+            accentColor={accentColor}
+            stepId={step.id}
+            isHighlighted={hasMultipleUC && selectedUC === i}
+            isDimmed={hasMultipleUC && selectedUC !== null && selectedUC !== i}
+            onClick={hasMultipleUC ? (e) => { e.stopPropagation(); onSelectUC(selectedUC === i ? null : i); } : undefined}
+          />
+        ))}
+        {step.notes && step.notes.length > 0 && (
+          <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid #F0F0F0' }}>
+            {step.notes.map((n, i) => (
+              <div key={i} style={{ display: 'flex', gap: 6, fontSize: 12.5, color: '#616161', lineHeight: 1.55, marginBottom: 4 }}>
+                <IcoFile size={13} style={{ color: '#8F8F8F', marginTop: 1, flexShrink: 0 }} />
+                <span>{fmtLinks(n, step.id)}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        <Accordion title="Process gaps" items={step.gaps} type="gaps" stepId={step.id} />
+        <Accordion title="Open questions" items={step.questions} type="questions" stepId={step.id} />
+      </div>
+    </div>
+  );
+}
+
+/* ─── WORKFLOW ROW ───────────────────────────────────────────────── */
+function WorkflowRow({ steps, accentColor, gradients }) {
+  const [selectedUCs, setSelectedUCs] = useState({});
+  const setUC = (stepId, val) => setSelectedUCs(prev => ({ ...prev, [stepId]: val }));
+  return (
+    <div style={{ overflowX: 'auto', paddingBottom: 12 }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', minWidth: 'max-content', gap: 0 }}>
+        {steps.map((step, idx) => (
+          <React.Fragment key={step.id}>
+            <StepCol
+              step={step}
+              accentColor={accentColor}
+              gradientBg={gradients[idx]}
+              selectedUC={selectedUCs[step.id] ?? null}
+              onSelectUC={(v) => setUC(step.id, v)}
+              dimmed={false}
+            />
+            {idx < steps.length - 1 && (
+              <div style={{ display: 'flex', alignItems: 'center', paddingTop: 48, paddingLeft: 8, paddingRight: 8, flexShrink: 0 }}>
+                <svg width="36" height="16" viewBox="0 0 36 16" fill="none">
+                  <line x1="1" y1="8" x2="28" y2="8" stroke="#CCCCCC" strokeWidth="1.5" strokeDasharray="4 3"/>
+                  <polyline points="24,3 30,8 24,13" fill="none" stroke="#CCCCCC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+            )}
+          </React.Fragment>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─── HIGH-LEVEL STEPS BAR ───────────────────────────────────────── */
+function HighLevelBar() {
+  const steps = [
+    { icon: <IcoFile size={18} style={{color:'#7B4DB8'}}/>, label: 'EN master copy' },
+    { icon: <IcoGit size={18} style={{color:'#7B4DB8'}}/>, label: 'Localization' },
+    { icon: <IcoCheck size={18} style={{color:'#7B4DB8'}}/>, label: 'Quality check' },
+    { icon: <IcoArrow size={18} style={{color:'#7B4DB8'}}/>, label: 'Upload & publish' },
+    { icon: <IcoAlert size={18} style={{color:'#CE6033'}}/>, label: 'Red bin logging' },
+  ];
+  return (
+    <div style={{ background: '#fff', border: '1px solid #E0E0E0', borderRadius: 14, padding: '16px 24px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 0, overflowX: 'auto' }}>
+      <span style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8F8F8F', marginRight: 20, flexShrink: 0 }}>Steps</span>
+      {steps.map((s, i) => (
+        <React.Fragment key={s.label}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+            {s.icon}
+            <span style={{ fontSize: 13, fontWeight: 600, color: '#050505', whiteSpace: 'nowrap' }}>{s.label}</span>
+          </div>
+          {i < steps.length - 1 && (
+            <svg width="32" height="12" viewBox="0 0 32 12" style={{ margin: '0 8px', flexShrink: 0 }}>
+              <line x1="1" y1="6" x2="24" y2="6" stroke="#CCCCCC" strokeWidth="1.5" strokeDasharray="3 2"/>
+              <polyline points="20,2 26,6 20,10" fill="none" stroke="#CCCCCC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          )}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
+/* ─── SCOPE TOGGLE ───────────────────────────────────────────────── */
+function ScopeToggle() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="scope-toggle" style={{ marginBottom: 24 }}>
+      <div onClick={() => setOpen(!open)}
+        style={{ padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <IcoTarget size={17} style={{ color: '#7B4DB8' }} />
+          <span style={{ fontSize: 14, fontWeight: 600, color: '#050505' }}>
+            Scope: <span style={{ fontWeight: 500, color: '#616161' }}>Standard self-serve projects — no professional creative writer involved.</span>
+          </span>
+        </div>
+        <div className="toggle-hint">
+          {open ? 'Hide' : 'See exceptions & rules'}
+          <IcoChevDown size={14} style={{ transition: 'transform 0.25s', transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+        </div>
+      </div>
+      <div className={`acc-body ${open ? 'open' : ''}`}>
+        <div className="acc-inner">
+          <div style={{ padding: '0 20px 20px', borderTop: '1px solid #F0F0F0' }}>
+            <div style={{ paddingTop: 16, display: 'flex', gap: 32, flexWrap: 'wrap' }}>
+              <div style={{ flex: 1, minWidth: 200 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                  <IcoAlert size={14} style={{ color: '#B45309' }} />
+                  <span style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#8F8F8F' }}>Route to Creative Factory instead</span>
+                </div>
+                <ul style={{ paddingLeft: 18, fontSize: 13.5, color: '#3D3D3D', lineHeight: 1.7, margin: 0 }}>
+                  <li>High-visibility campaigns in <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> (L and sometimes M)</li>
+                  <li>Highly creative Paid Ads or OOH</li>
+                  <li>Website homepage</li>
+                </ul>
+              </div>
+              <div style={{ flex: 1, minWidth: 200 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                  <IcoPhone size={14} style={{ color: '#3275C4' }} />
+                  <span style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#8F8F8F' }}>Out of scope</span>
+                </div>
+                <p style={{ fontSize: 13.5, color: '#3D3D3D', lineHeight: 1.7, margin: 0 }}>Social media: global & social media managers are 100% autonomous — removed from this flow.</p>
+              </div>
+              <div style={{ flex: 1, minWidth: 200 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                  <IcoBulb size={14} style={{ color: '#7B4DB8' }} />
+                  <span style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#8F8F8F' }}>Not sure?</span>
+                </div>
+                <p style={{ fontSize: 13.5, color: '#3D3D3D', lineHeight: 1.7, margin: 0 }}>Check <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> and the <a href="https://www.notion.so/qonto/Comms-Toolbox-2ca31ee4c69680a2afcec1f5ce13e6c1" target="_blank" rel="noopener noreferrer">Toolbox</a> to confirm your project type.</p>
+              </div>
+            </div>
+            <div style={{ marginTop: 14, background: '#FFF5F5', border: '1px solid #FECACA', borderRadius: 8, padding: '10px 14px', display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+              <IcoAlert size={13} style={{ color: '#991B1B', marginTop: 1 }} />
+              <span style={{ fontSize: 12.5, color: '#7F1D1D', lineHeight: 1.55 }}>The boundary between "self-serve" and "request-based" projects remains ambiguous. Relying solely on Panorama or Toolbox sizing is insufficient — clearer definitions are needed.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── CREATIVE FACTORY LOCKED ────────────────────────────────────── */
+function CreativeFactoryPanel() {
+  return (
+    <div className="fade-in" style={{ background: '#fff', border: '1px solid #E0E0E0', borderRadius: 16, padding: '40px 36px', maxWidth: 660 }}>
+      <div style={{ width: 56, height: 56, borderRadius: '50%', background: '#F5F5F5', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 18px' }}>
+        <IcoLock size={24} style={{ color: '#8F8F8F' }} />
+      </div>
+      <h3 style={{ fontSize: 20, fontWeight: 700, color: '#050505', margin: '0 0 10px', textAlign: 'center' }}>Handled by the Creative Factory</h3>
+      <p style={{ fontSize: 14, color: '#616161', textAlign: 'center', lineHeight: 1.7, maxWidth: 480, margin: '0 auto 24px' }}>
+        For high-visibility and creatively critical campaigns (Panorama L & sometimes M), Comms partners and PMMs act as project owners — but the Creative Factory manages the localization end-to-end.
+      </p>
+      <div style={{ background: '#F9F9F9', border: '1px solid #E8E8E8', borderRadius: 10, padding: '14px 18px', display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#8F8F8F' }}>What's handled by the Creative Factory</div>
+        {[
+          'High-visibility campaigns in Panorama (L & sometimes M)',
+          'Highly creative Paid Ads or OOH',
+          'Website homepage',
+        ].map((item, i) => (
+          <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', fontSize: 13.5, color: '#3D3D3D' }}>
+            <IcoChevRight size={13} style={{ color: '#8F8F8F', marginTop: 2 }} />
+            <span>{item}</span>
+          </div>
+        ))}
+      </div>
+      <div style={{ background: '#FFF9EC', border: '1px solid #FDE68A', borderRadius: 10, padding: '12px 16px', display: 'flex', gap: 8 }}>
+        <IcoAlert size={14} style={{ color: '#B45309', marginTop: 1, flexShrink: 0 }} />
+        <span style={{ fontSize: 13, color: '#78350F', lineHeight: 1.6 }}>This self-serve workflow does not apply. Route your project through the Creative Factory.</span>
+      </div>
+    </div>
+  );
+}
+
+/* ─── LOCAL POCS ─────────────────────────────────────────────────── */
+function LocalPOCs() {
+  const pocs = [
+    { flag: '🇫🇷', market: 'France', contact: '@Delphine de Roquemaurel' },
+    { flag: '🇩🇪', market: 'Germany', contact: '@Hannah Lüdicke' },
+    { flag: '🇮🇹', market: 'Italy', contact: '@lollo' },
+    { flag: '🇪🇸', market: 'Spain', contact: '@cristina.gomez' },
+    { flag: '🇵🇹', market: 'Portugal', contact: '@Julia Latorre' },
+    { flag: '🇳🇱', market: 'Netherlands', contact: '@rosemarijn.disseldorp' },
+  ];
+  return (
+    <div style={{ marginTop: 36, background: '#fff', border: '1px solid #E0E0E0', borderRadius: 14, padding: '20px 24px', maxWidth: 760 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, paddingBottom: 12, borderBottom: '1px solid #F0F0F0' }}>
+        <IcoUsers size={17} style={{ color: '#7B4DB8' }} />
+        <span style={{ fontSize: 14, fontWeight: 700, color: '#050505' }}>Local POCs & contacts</span>
+        <span style={{ fontSize: 11, color: '#8F8F8F', marginLeft: 'auto', fontWeight: 500 }}>Steps 2 & 3</span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))', gap: 10, marginBottom: 14 }}>
+        {pocs.map(poc => (
+          <div key={poc.market} style={{ background: '#F9F9F9', border: '1px solid #E8E8E8', borderRadius: 10, padding: '12px 14px' }}>
+            <div style={{ fontSize: 22, marginBottom: 6 }}>{poc.flag}</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#050505', marginBottom: 3 }}>{poc.market}</div>
+            <div style={{ fontSize: 13, color: '#3D3D3D', fontWeight: 500 }}>{poc.contact}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: 8, padding: '10px 14px', fontSize: 13, color: '#1E40AF', fontWeight: 500 }}>
+        💬 <strong>#new-markets-localization-help</strong> — Dutch 🇳🇱 and Portuguese 🇵🇹 native support only (today)
+      </div>
+    </div>
+  );
+}
+
+/* ─── LEGEND ─────────────────────────────────────────────────────── */
+function Legend() {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '10px 18px', background: '#fff', border: '1px solid #E0E0E0', borderRadius: 10, marginBottom: 24, width: 'fit-content', flexWrap: 'wrap' }}>
+      <span style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#B8B8B8' }}>Legend</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><IcoUser size={14} style={{ color: '#7B4DB8' }} /><span style={{ fontSize: 13, color: '#3D3D3D', fontWeight: 500 }}>Owner</span></div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><IcoWrench size={14} style={{ color: '#8F8F8F' }} /><span style={{ fontSize: 13, color: '#3D3D3D', fontWeight: 500 }}>Tools</span></div>
+      <div style={{ width: 1, height: 16, background: '#E0E0E0' }} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 8, height: 8, borderRadius: 2, background: '#FEE2E2', border: '1px solid #FECACA', display: 'inline-block' }} /><span style={{ fontSize: 13, color: '#3D3D3D', fontWeight: 500 }}>Process gap</span></div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 8, height: 8, borderRadius: 2, background: '#FEF9C3', border: '1px solid #FDE68A', display: 'inline-block' }} /><span style={{ fontSize: 13, color: '#3D3D3D', fontWeight: 500 }}>Open question</span></div>
+      <div style={{ width: 1, height: 16, background: '#E0E0E0' }} />
+      <div style={{ fontSize: 12, color: '#8F8F8F', fontStyle: 'italic' }}>Click a use-case card to highlight its path</div>
+    </div>
+  );
+}
+
+/* ─── APP ────────────────────────────────────────────────────────── */
+function App() {
+  const [activeTrack, setActiveTrack] = useState('selfserve');
+  const [activeBauChannel, setActiveBauChannel] = useState('CRM');
+  const [view, setView] = useState('workflow');
+
+  const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  const trackData = TRACKS.find(t => t.id === activeTrack);
+  const isBau = activeTrack === 'bau';
+  const isCreative = activeTrack === 'creative';
+  const isSelfServe = activeTrack === 'selfserve';
+
+  const currentSteps = isBau ? STEPS_BAU[activeBauChannel] : STEPS_SELFSERVE;
+  const currentGradients = STEP_GRADIENTS[isBau ? 'bau' : 'selfserve'];
+  const currentAccent = isBau ? '#3275C4' : '#7B4DB8';
+
+  return (
+    <div style={{ minHeight: '100vh', background: '#F5F5F5' }}>
+      {/* ── HEADER ── */}
+      <header style={{
+        background: '#fff', borderBottom: '1px solid #E0E0E0',
+        padding: '14px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        position: 'sticky', top: 0, zIndex: 50, boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: '-0.04em', color: '#050505', lineHeight: 1 }}>Localization workflow</div>
+          <div style={{ width: 1, height: 18, background: '#E0E0E0' }} />
+          <div style={{ fontSize: 12, color: '#8F8F8F', fontWeight: 500 }}>{today}</div>
+        </div>
+        {/* View toggle */}
+        <div style={{ display: 'flex', background: '#F5F5F5', border: '1px solid #E0E0E0', borderRadius: 10, padding: 3, gap: 2 }}>
+          <button onClick={() => setView('workflow')}
+            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600, fontFamily: 'inherit',
+              background: view === 'workflow' ? '#fff' : 'transparent',
+              color: view === 'workflow' ? '#050505' : '#8F8F8F',
+              boxShadow: view === 'workflow' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+            }}>
+            <IcoWorkflow size={14} /> Full workflow
+          </button>
+          <button onClick={() => setView('path')}
+            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600, fontFamily: 'inherit',
+              background: view === 'path' ? '#050505' : 'transparent',
+              color: view === 'path' ? '#fff' : '#8F8F8F',
+              boxShadow: view === 'path' ? '0 1px 3px rgba(0,0,0,0.12)' : 'none',
+            }}>
+            <IcoGit size={14} /> Find your path
+          </button>
+        </div>
+      </header>
+
+      {view === 'path' ? (
+        /* ── PATH FINDER placeholder ── */
+        <div style={{ padding: '60px 32px', textAlign: 'center' }}>
+          <IcoBulb size={40} style={{ color: '#7B4DB8', margin: '0 auto 16px' }} />
+          <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>Find your path</h2>
+          <p style={{ color: '#616161', fontSize: 14 }}>Coming soon — use the Full Workflow tab for now.</p>
+        </div>
+      ) : (
+        <div style={{ padding: '28px 32px 80px' }}>
+
+          <ScopeToggle />
+          <HighLevelBar />
+
+          {/* ── TRACK SELECTOR ── */}
+          <div style={{ marginBottom: 28 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8F8F8F', marginBottom: 12 }}>Select a workflow type</div>
+            <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+              {TRACKS.map(track => {
+                const isActive = activeTrack === track.id;
+                return (
+                  <div key={track.id} className="track-card"
+                    onClick={() => setActiveTrack(track.id)}
+                    style={{
+                      flex: '1 1 240px', maxWidth: 360, minWidth: 220,
+                      border: `2px solid ${isActive ? track.accentBg : '#E0E0E0'}`,
+                      background: isActive ? track.accentBg : '#fff',
+                      padding: '18px 20px',
+                      position: 'relative',
+                    }}>
+                    {/* Sizing badge — prominent */}
+                    <div style={{
+                      display: 'inline-block',
+                      background: isActive ? track.badgeBg : '#F5F5F5',
+                      color: isActive ? track.badgeText : '#616161',
+                      border: `1px solid ${isActive ? 'rgba(255,255,255,0.2)' : '#E0E0E0'}`,
+                      fontSize: 11, fontWeight: 700, borderRadius: 20, padding: '3px 10px',
+                      marginBottom: 10, letterSpacing: '0.03em',
+                    }}>{track.sizing}</div>
+                    {track.locked && (
+                      <IcoLock size={13} style={{ position: 'absolute', top: 14, right: 14, color: isActive ? 'rgba(255,255,255,0.5)' : '#B8B8B8' }} />
+                    )}
+                    <div style={{ fontSize: 15, fontWeight: 700, color: isActive ? '#fff' : '#050505', lineHeight: 1.3, marginBottom: 6 }}>{track.label}</div>
+                    <p style={{ fontSize: 13, color: isActive ? 'rgba(255,255,255,0.78)' : '#616161', margin: 0, lineHeight: 1.6 }}>{track.desc}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ── CONTENT PER TRACK ── */}
+          <div key={activeTrack} className="fade-in">
+            {isCreative ? (
+              <CreativeFactoryPanel />
+            ) : (
+              <>
+                {/* BAU channel tabs */}
+                {isBau && (
+                  <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+                    {BAU_CHANNELS.map(ch => (
+                      <button key={ch} onClick={() => setActiveBauChannel(ch)}
+                        style={{
+                          padding: '8px 20px', borderRadius: 8, border: `1.5px solid ${activeBauChannel === ch ? '#3275C4' : '#E0E0E0'}`,
+                          background: activeBauChannel === ch ? '#EFF6FF' : '#fff',
+                          color: activeBauChannel === ch ? '#1E40AF' : '#616161',
+                          fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit',
+                          transition: 'all 0.15s ease',
+                        }}
+                      >{ch}</button>
+                    ))}
+                  </div>
+                )}
+
+                <Legend />
+
+                <div key={isBau ? activeBauChannel : 'self'} className="fade-in">
+                  <WorkflowRow
+                    steps={currentSteps}
+                    accentColor={currentAccent}
+                    gradients={currentGradients}
+                  />
+                </div>
+
+                <LocalPOCs />
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
 </body>
 </html>
