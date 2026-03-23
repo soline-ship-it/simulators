@@ -926,7 +926,7 @@ function PathFinder({onViewWorkflow}){
       {[
         {value:'creative',label:'Global projects — High-visibility / Creativity',sub:'In Panorama L or M — Creative Factory'},
         {value:'selfserve',label:'Global projects — Self-serve',sub:'In Panorama S or M — self-serve localization'},
-        {value:'bau',label:'BAU / Channel ad-hoc',sub:'Not in Panorama — CRM, Website, Paid Ads'},
+        {value:'bau',label:'BAU / Channel ad-hoc — Self-serve',sub:'Not in Panorama — CRM, Website, Paid Ads'},
       ].map(o=><OptionBtn key={o.value} opt={o} selected={answers.projectType===o.value} onClick={()=>pick('projectType',o.value)}/>)}
     </Shell>
   );
@@ -984,7 +984,7 @@ function PathFinder({onViewWorkflow}){
 
     // Self-serve or BAU result
     const accentClr=result.type==='selfserve'?'#7B4DB8':'#461068';
-    const trackLabel=result.type==='selfserve'?'Global projects — Self-serve':'BAU / Channel ad-hoc'+(result.channel?` · ${result.channel}`:'');
+    const trackLabel=result.type==='selfserve'?'Global projects — Self-serve':'BAU / Channel ad-hoc — Self-serve'+(result.channel?` · ${result.channel}`:'');
     const pocList=(result.langs||[]).map(l=>LANGS.find(x=>x.label===l)).filter(Boolean);
 
     return(
@@ -1067,7 +1067,7 @@ function PathFinder({onViewWorkflow}){
 const TRACKS=[
   {id:'creative',label:'Global projects — High-visibility / Creativity',sizing:'In Panorama — L & sometimes M',desc:'Comms partners & PMMs are project owners — the Creative Factory handles localization end-to-end.',locked:true,activeBg:'#1A1A1A',activeText:'#fff',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
   {id:'selfserve',label:'Global projects — Self-serve',sizing:'In Panorama — S & sometimes M',desc:'Creativity isn\'t business-critical. Self-serve localization by local teams.',locked:false,activeBg:'#7B4DB8',activeText:'#fff',badgeBg:'rgba(255,255,255,0.2)',badgeText:'rgba(255,255,255,0.9)'},
-  {id:'bau',label:'BAU / Channel ad-hoc',sizing:'Not in Panorama',desc:'CRM lifecycle, Paid Ads, Website — recurring channel-owned projects.',locked:false,activeBg:'#461068',activeText:'#fff',badgeBg:'rgba(255,255,255,0.15)',badgeText:'rgba(255,255,255,0.85)'},
+  {id:'bau',label:'BAU / Channel ad-hoc — Self-serve',sizing:'Not in Panorama',desc:'CRM lifecycle, Paid Ads, Website — recurring channel-owned projects.',locked:false,activeBg:'#461068',activeText:'#fff',badgeBg:'rgba(255,255,255,0.15)',badgeText:'rgba(255,255,255,0.85)'},
 ];
 
 /* ── APP ── */
