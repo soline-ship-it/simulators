@@ -1,11 +1,9 @@
---- START OF FILE Paste March 25, 2026 - 10:15AM ---
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Localization Workflow (With Comments)</title>
+<title>Localization Workflow</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
@@ -13,7 +11,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.20/babel.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Manrope',Arial,sans-serif;background:#F5F5F5;color:#050505;font-size:15px;line-height:1.55; overflow-x: hidden;}
+body{font-family:'Manrope',Arial,sans-serif;background:#F5F5F5;color:#050505;font-size:15px;line-height:1.55;}
 a{color:#7B4DB8;font-weight:600;text-decoration:none;}
 a:hover{text-decoration:underline;}
 ::-webkit-scrollbar{height:5px;width:5px;}
@@ -32,57 +30,12 @@ a:hover{text-decoration:underline;}
 .btn-tab:hover{background:#F5F0FF!important;border-color:#BFA6EA!important;color:#461068!important;}
 @keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(123,77,184,0.3);}70%{box-shadow:0 0 0 8px rgba(123,77,184,0);}100%{box-shadow:0 0 0 0 rgba(123,77,184,0);}}
 .pulse{animation:pulse-ring 2.5s ease infinite;}
-
-/* Comment System Styles */
-.comment-mode-active { cursor: crosshair !important; }
-.comment-mode-active a, .comment-mode-active button { pointer-events: none; }
-.comment-pin {
-    position: absolute;
-    width: 24px;
-    height: 24px;
-    background: #7B4DB8;
-    color: white;
-    border-radius: 50% 50% 50% 0;
-    transform: rotate(-45deg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    z-index: 1000;
-    transition: scale 0.2s ease;
-}
-.comment-pin:hover { transform: rotate(-45deg) scale(1.1); }
-.comment-pin span { transform: rotate(45deg); }
-.comment-popover {
-    position: absolute;
-    background: white;
-    border: 1px solid #E0E0E0;
-    border-radius: 12px;
-    padding: 12px;
-    width: 220px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-    z-index: 1001;
-    transform: translateY(10px);
-}
-.comment-input {
-    width: 100%;
-    border: 1px solid #E0E0E0;
-    border-radius: 6px;
-    padding: 8px;
-    font-family: inherit;
-    font-size: 13px;
-    margin-bottom: 8px;
-    resize: none;
-}
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const {useState, useCallback, useEffect, useRef}=React;
+const {useState,useCallback}=React;
 
 /* ── ICONS ── */
 const Ico=({ch,size=16,style={}})=>(
@@ -108,91 +61,6 @@ const IGit=({size=16,style})=><Ico size={size} style={style} ch={<><line x1="6" 
 const IBulb=({size=16,style})=><Ico size={size} style={style} ch={<><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1.3.5 2.6 1.5 3.5.8.8 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></>}/>;
 const IStar=({size=16,style})=><Ico size={size} style={style} ch={<><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></>}/>;
 const INote=({size=16,style})=><Ico size={size} style={style} ch={<><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></>}/>;
-const IMessage=({size=16,style})=><Ico size={size} style={style} ch={<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>}/>;
-
-/* ── COMMENT SYSTEM COMPONENTS ── */
-function CommentLayer({ active, comments, onAddComment, onDeleteComment }) {
-  const [draft, setDraft] = useState(null);
-  const [activePin, setActivePin] = useState(null);
-
-  const handleClick = (e) => {
-    if (!active) return;
-    if (e.target.closest('.comment-popover') || e.target.closest('.comment-pin')) return;
-    
-    setDraft({
-      x: e.pageX,
-      y: e.pageY,
-      text: ''
-    });
-  };
-
-  useEffect(() => {
-    if (active) {
-      window.addEventListener('click', handleClick);
-    } else {
-      setDraft(null);
-      setActivePin(null);
-      window.removeEventListener('click', handleClick);
-    }
-    return () => window.removeEventListener('click', handleClick);
-  }, [active]);
-
-  return (
-    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: active ? 'auto' : 'none', zIndex: 999 }}>
-      {comments.map((c, i) => (
-        <div key={i}>
-          <div 
-            className="comment-pin" 
-            style={{ left: c.x - 12, top: c.y - 24, pointerEvents: 'auto' }}
-            onClick={(e) => { e.stopPropagation(); setActivePin(activePin === i ? null : i); }}
-          >
-            <span>{i + 1}</span>
-          </div>
-          {activePin === i && (
-            <div className="comment-popover" style={{ left: c.x + 15, top: c.y - 20, pointerEvents: 'auto' }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: '#7B4DB8', marginBottom: 4 }}>COMMENT #{i+1}</div>
-              <div style={{ fontSize: 13, color: '#333', marginBottom: 8 }}>{c.text}</div>
-              <button 
-                onClick={() => { onDeleteComment(i); setActivePin(null); }}
-                style={{ background: 'none', border: 'none', color: '#FF4D4D', fontSize: 11, fontWeight: 600, cursor: 'pointer', padding: 0 }}
-              >
-                Delete
-              </button>
-            </div>
-          )}
-        </div>
-      ))}
-
-      {draft && (
-        <div className="comment-popover" style={{ left: draft.x + 15, top: draft.y - 20, pointerEvents: 'auto' }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: '#7B4DB8', marginBottom: 8 }}>LEAVE A COMMENT</div>
-          <textarea 
-            autoFocus
-            className="comment-input"
-            placeholder="Type your feedback..."
-            value={draft.text}
-            onChange={(e) => setDraft({ ...draft, text: e.target.value })}
-          />
-          <div style={{ display: 'flex', gap: 8 }}>
-            <button 
-              onClick={() => { onAddComment(draft); setDraft(null); }}
-              style={{ background: '#7B4DB8', color: 'white', border: 'none', borderRadius: 6, padding: '5px 10px', fontSize: 12, fontWeight: 700, cursor: 'pointer' }}
-            >
-              Save
-            </button>
-            <button 
-              onClick={() => setDraft(null)}
-              style={{ background: '#EEE', color: '#666', border: 'none', borderRadius: 6, padding: '5px 10px', fontSize: 12, fontWeight: 700, cursor: 'pointer' }}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
 
 /* ── LINK FORMATTER ── */
 const fmtLinks=(text,stepId)=>{
@@ -278,7 +146,7 @@ function NoteFrame({notes,stepId}){
   );
 }
 
-/* ── LOCAL POCS BLOCK ── */
+/* ── LOCAL POCS BLOCK (single, flat, under steps 2-3) ── */
 function LocalPOCsBlock(){
   const pocs=[
     {flag:'🇫🇷',market:'France',contact:'@Delphine de Roquemaurel'},
@@ -311,12 +179,7 @@ function LocalPOCsBlock(){
   );
 }
 
-/* ── DATA ── */
-const BAU_CHANNELS=['CRM','Website','Paid Ads'];
-const CHANNEL_COLOR={'CRM':'#7B4DB8','Website':'#7B4DB8','Paid Ads':'#7B4DB8'};
-const CHANNEL_BG={'CRM':'#F5F0FF','Website':'#F5F0FF','Paid Ads':'#F5F0FF'};
-const CHANNEL_BORDER={'CRM':'#BFA6EA','Website':'#BFA6EA','Paid Ads':'#BFA6EA'};
-
+/* ── SELF-SERVE STEPS DATA ── */
 const STEPS_SS=[
   {
     id:1,title:'EN master copy',subtitle:'Create the English source',
@@ -324,7 +187,11 @@ const STEPS_SS=[
       label:'Global projects — Self-serve',
       owner:'Comms partner / PMM',
       ruleOfThumb:'When no professional creative writer is involved, the project owner delivers the master copy.',
-      tools:['Tolki','Qontent (if Website / CRM)','QualityGuard — always run it'],
+      tools:[
+        'Tolki',
+        'Qontent (if Website / CRM)',
+        'QualityGuard — always run it to make sure the master copy is clean before moving forward',
+      ],
     }],
     notes:[],
   },
@@ -335,11 +202,19 @@ const STEPS_SS=[
       owner:'Local Market POC',
       steps:[
         'Project owner requests translation from local POCs.',
-        'Local POCs designate a local project owner.',
+        'Local POCs designate a local project owner, in charge of all translations across channels, for the whole project.',
         'Local project owner provides the translations.',
       ],
       tools:['Tolki','Qontent (for Website / CRM)'],
     }],
+    gaps:[
+      'No standardized localization request path across channels.',
+      'As of March 2026, project owners often localize themselves even when not native. The current Local POC list isn\'t sustainable.',
+    ],
+    suggestions:[
+      'Review and update the POC list across all markets — make it sustainable.',
+      'For each global project, create a dedicated Slack channel so project owners can request localization support from there.',
+    ],
     showPOCs:true,
   },
   {
@@ -359,6 +234,7 @@ const STEPS_SS=[
       {label:'Website',owner:'Local Market POC',tools:['Qontent (duplicate page)']},
       {label:'Paid Ads',owner:'Paid Ads manager',tools:['Directly on platform']},
     ],
+    gaps:['Website: page duplication in other languages should be 100% owned by local teams at the localization stage — not Comms partners.'],
   },
   {
     id:5,title:'Red bin logging',subtitle:'Track & fix issues',
@@ -367,81 +243,474 @@ const STEPS_SS=[
       owner:'Anyone involved in the workflow',
       tools:['Red Bin logging form/database'],
     }],
+    notes:['Purpose: log quality issues discovered post-launch, or broken delivery processes.'],
   },
 ];
+
+/* ── BAU STEPS DATA (all channels, rows) ── */
+const BAU_CHANNELS=['CRM','Website','Paid Ads'];
+const CHANNEL_COLOR={'CRM':'#7B4DB8','Website':'#7B4DB8','Paid Ads':'#7B4DB8'};
+const CHANNEL_BG={'CRM':'#F5F0FF','Website':'#F5F0FF','Paid Ads':'#F5F0FF'};
+const CHANNEL_BORDER={'CRM':'#BFA6EA','Website':'#BFA6EA','Paid Ads':'#BFA6EA'};
 
 const STEPS_BAU=[
   {
     id:1,title:'EN master copy',subtitle:'Create the English source',
+    ruleOfThumb:'When no professional creative writer is involved, the project owner delivers the master copy.',
     channels:{
-      'CRM':{owner:'Project owner',tools:['Tolki','Qontent','QualityGuard']},
-      'Website':{owner:'Project owner',tools:['Tolki','Qontent','QualityGuard']},
-      'Paid Ads':{owner:'Project owner',tools:['Tolki','QualityGuard']},
+      'CRM':{owner:'Project owner (PMM or CRM manager)',tools:['Tolki','Qontent','QualityGuard — always run it to make sure the master copy is clean before moving forward']},
+      'Website':{owner:'Project owner (Website manager)',tools:['Tolki','Qontent','QualityGuard — always run it to make sure the master copy is clean before moving forward']},
+      'Paid Ads':{owner:'Project owner (Paid Ads manager)',tools:['Tolki','QualityGuard — always run it to make sure the master copy is clean before moving forward']},
     },
+    notes:[],
   },
   {
     id:2,title:'First-pass translation',subtitle:'Generate localized versions',
     channels:{
-      'CRM':{owner:'Project owner',tools:['Tolki','Qontent']},
-      'Website':{owner:'Project owner',tools:['Tolki','Qontent']},
-      'Paid Ads':{owner:'Project owner',tools:['Tolki']},
+      'CRM':{owner:'Project owner (PMM or CRM manager)',tools:['Tolki','Qontent']},
+      'Website':{owner:'Project owner (Website manager)',tools:['Tolki','Qontent']},
+      'Paid Ads':{owner:'Project owner (Paid Ads manager)',tools:['Tolki']},
     },
+    showPOCs:true,
   },
   {
     id:3,title:'Quality check',subtitle:'Mandatory',mandatory:true,
     channels:{
-      'CRM':{owner:'Local Market POC',tools:['QualityGuard']},
-      'Website':{owner:'Local Market POC',tools:['QualityGuard']},
-      'Paid Ads':{owner:'Local Market POC',tools:['QualityGuard']},
+      'CRM':{
+        owner:'Local Market POC',
+        steps:['Project owner runs QualityGuard.','Project owner requests proofread from local POCs (CRM: use #proofread-crm — no dedicated channel yet for other channels).','Local Market POC takes charge of the review.'],
+        tools:['QualityGuard — always run it!'],
+      },
+      'Website':{
+        owner:'Local Market POC',
+        steps:['Project owner runs QualityGuard.','Project owner requests proofread from local POCs (CRM: use #proofread-crm — no dedicated channel yet for other channels).','Local Market POC takes charge of the review.'],
+        tools:['QualityGuard — always run it!'],
+      },
+      'Paid Ads':{
+        owner:'Local Market POC',
+        steps:['Project owner runs QualityGuard.','Project owner requests proofread from local POCs (CRM: use #proofread-crm — no dedicated channel yet for other channels).','Local Market POC takes charge of the review.'],
+        tools:['QualityGuard — always run it!'],
+      },
     },
+    notes:['Compliance remains your responsibility regardless of tooling.'],
+    gaps:[
+      'No dedicated proofread channel for Website or Paid Ads (only #proofread-crm exists for CRM).',
+    ],
+    suggestions:[
+      'Create #proofread-website and #proofread-paid-ads, mirroring the CRM model, to standardize the review process across all channels.',
+    ],
+    showPOCs:true,
   },
   {
     id:4,title:'Upload & publish',subtitle:'Deploy localized content',
     channels:{
-      'CRM':{owner:'Project owner',tools:['Qontent']},
-      'Website':{owner:'Project owner',tools:['Qontent']},
-      'Paid Ads':{owner:'Project owner',tools:['Platform']},
+      'CRM':{owner:'Project owner (PMM or CRM manager)',tools:['Qontent']},
+      'Website':{owner:'Project owner (Website manager)',tools:['Qontent (duplicate page)']},
+      'Paid Ads':{owner:'Project owner (Paid Ads manager)',tools:['Upload directly on platform']},
     },
+    gaps:['Website: page duplication in other languages should be 100% owned by local teams at the localization stage — not Comms partners.'],
   },
   {
     id:5,title:'Red bin logging',subtitle:'Track & fix issues',
     channels:{
-      'CRM':{owner:'Anyone',tools:['Red Bin']},
-      'Website':{owner:'Anyone',tools:['Red Bin']},
-      'Paid Ads':{owner:'Anyone',tools:['Red Bin']},
+      'CRM':{owner:'Anyone involved',tools:['Red Bin logging form/database']},
+      'Website':{owner:'Anyone involved',tools:['Red Bin logging form/database']},
+      'Paid Ads':{owner:'Anyone involved',tools:['Red Bin logging form/database']},
     },
+    notes:['Purpose: log quality issues discovered post-launch, or broken delivery processes.'],
   },
 ];
 
-const GRAD_SS=['linear-gradient(135deg,#BFA6EA,#7B4DB8)','linear-gradient(135deg,#D5C8FF,#A585DB)','linear-gradient(135deg,#7B4DB8,#461068)','linear-gradient(135deg,#9BC5EA,#A585DB)','linear-gradient(135deg,#FFB590,#CE6033)'];
+/* ── STEP GRADIENTS ── */
+const GRAD_SS=[
+  'linear-gradient(135deg,#BFA6EA,#7B4DB8)',
+  'linear-gradient(135deg,#D5C8FF,#A585DB)',
+  'linear-gradient(135deg,#7B4DB8,#461068)',
+  'linear-gradient(135deg,#9BC5EA,#A585DB)',
+  'linear-gradient(135deg,#FFB590,#CE6033)',
+];
+const GRAD_BAU=[
+  'linear-gradient(135deg,#BFA6EA,#7B4DB8)',
+  'linear-gradient(135deg,#D5C8FF,#A585DB)',
+  'linear-gradient(135deg,#7B4DB8,#461068)',
+  'linear-gradient(135deg,#9BC5EA,#A585DB)',
+  'linear-gradient(135deg,#FFB590,#CE6033)',
+];
 
-/* ── RENDER COMPONENTS ── */
+/* ── SS STEP CARD ── */
 function SSStepCard({step,gradBg,selectedUC,onSelectUC}){
   const hasMulti=step.useCases.length>1;
   return(
     <div style={{width:340,flexShrink:0,display:'flex',flexDirection:'column',alignItems:'center'}}>
+      {/* circle */}
       <div style={{position:'relative',width:96,height:96}}>
         <div style={{width:96,height:96,borderRadius:'50%',background:gradBg,color:'#fff',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',boxShadow:'0 4px 16px rgba(0,0,0,0.14)'}} className={step.mandatory?'pulse':''}>
           <div style={{textAlign:'center',padding:'0 14px'}}>
-            <div style={{fontSize:12,fontWeight:700,lineHeight:1.3}}>{step.title}</div>
+            <div style={{fontSize:12,fontWeight:700,lineHeight:1.3,marginBottom:step.mandatory?4:0}}>{step.title}</div>
+            {step.mandatory&&<div style={{fontSize:9,fontWeight:700,background:'rgba(255,255,255,0.25)',borderRadius:20,padding:'2px 7px',display:'inline-block',letterSpacing:'0.04em',textTransform:'uppercase'}}>Mandatory</div>}
           </div>
         </div>
-        <div style={{position:'absolute',top:-2,right:-2,width:22,height:22,borderRadius:'50%',background:'#fff',border:'2px solid #E0E0E0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,color:'#3D3D3D'}}>{step.id}</div>
+        <div style={{position:'absolute',top:-2,right:-2,width:22,height:22,borderRadius:'50%',background:'#fff',border:'2px solid #E0E0E0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,color:'#3D3D3D',zIndex:2}}>{step.id}</div>
+      </div>
+      <div style={{width:1,height:14,background:'#CCCCCC'}}/>
+      {/* detail */}
+      <div style={{width:'100%',background:'#fff',border:'1px solid #E0E0E0',borderRadius:14,padding:'16px',boxShadow:'0 1px 4px rgba(0,0,0,0.05)'}}>
+        {hasMulti&&(
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}}>
+            <span style={{fontSize:12,color:'#8F8F8F',fontStyle:'italic'}}>Click a row to filter</span>
+            {selectedUC!==null&&(
+              <button onClick={e=>{e.stopPropagation();onSelectUC(null);}} style={{fontSize:11,fontWeight:600,color:'#7B4DB8',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',padding:0}}>Clear ✕</button>
+            )}
+          </div>
+        )}
+        {step.useCases.map((uc,i)=>{
+          const isActive=!hasMulti||(selectedUC===null||selectedUC===i);
+          const isHighlit=hasMulti&&selectedUC===i;
+          return(
+            <div key={i}
+              className={hasMulti?'uc-row':''}
+              onClick={hasMulti?(e)=>{e.stopPropagation();onSelectUC(selectedUC===i?null:i);}:undefined}
+              style={{
+                border:`1.5px solid ${isHighlit?'#7B4DB8':'#E0E0E0'}`,
+                borderRadius:10,padding:'13px 13px',background:isHighlit?'#FAF7FF':'#fff',
+                marginBottom:i<step.useCases.length-1?10:0,
+                opacity:!isActive?0.25:1,
+                transition:'all 0.18s ease',
+                cursor:hasMulti?'pointer':'default',
+              }}>
+              <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#7B4DB8',marginBottom:8}}>{uc.label}</div>
+              {uc.ruleOfThumb&&(
+                <div style={{background:'#F0FDF4',border:'1px solid #BBF7D0',borderRadius:8,padding:'9px 12px',marginBottom:10,display:'flex',gap:8,alignItems:'flex-start'}}>
+                  <IThumb size={13} style={{color:'#166534',marginTop:1}}/>
+                  <p style={{fontSize:13.5,color:'#14532D',lineHeight:1.55,margin:0}}><strong>Rule of thumb:</strong> {uc.ruleOfThumb}</p>
+                </div>
+              )}
+              {/* Owner FIRST */}
+              <div style={{display:'flex',alignItems:'flex-start',gap:7,marginBottom:8,background:'#F5F0FF',borderRadius:8,padding:'7px 10px'}}>
+                <IUser size={14} style={{color:'#7B4DB8',marginTop:1}}/>
+                <span style={{fontSize:14,fontWeight:700,color:'#7B4DB8',lineHeight:1.4}}>{uc.owner}</span>
+              </div>
+              {/* Process steps → accordion */}
+              {uc.steps&&<Accordion title="Process" items={uc.steps} type="process" stepId={step.id}/>}
+              {/* Tools */}
+              <div style={{display:'flex',alignItems:'flex-start',gap:7,marginTop:8}}>
+                <IWrench size={14} style={{color:'#8F8F8F',marginTop:2}}/>
+                <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:4}}>
+                  {uc.tools.map((t,ti)=>(
+                    <li key={ti} style={{display:'flex',gap:6,alignItems:'flex-start',fontSize:14,color:'#616161',lineHeight:1.5}}>
+                      <span style={{width:5,height:5,borderRadius:'50%',background:'#CCCCCC',flexShrink:0,marginTop:8}}/>
+                      <span>{fmtLinks(t,step.id)}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          );
+        })}
+        <NoteFrame notes={step.notes} stepId={step.id}/>
+        <Accordion title="Process gaps" items={step.gaps} type="gaps" stepId={step.id}/>
+        <Accordion title="Suggestions" items={step.suggestions} type="suggestions" stepId={step.id}/>
+      </div>
+    </div>
+  );
+}
+
+/* ── BAU STEP CARD (all channels, selectable rows) ── */
+function BAUStepCard({step,gradBg,selectedCh,onSelectCh}){
+  const channels=BAU_CHANNELS;
+
+  // Detect if all channels have identical content (same owner + same tools, no channel-specific steps)
+  const allSame=channels.every(ch=>{
+    const uc=step.channels[ch];
+    const ref=step.channels[channels[0]];
+    if(!uc||!ref)return false;
+    return uc.owner===ref.owner &&
+      JSON.stringify(uc.tools)===JSON.stringify(ref.tools) &&
+      JSON.stringify(uc.steps||[])===JSON.stringify(ref.steps||[]);
+  });
+
+  return(
+    <div style={{width:360,flexShrink:0,display:'flex',flexDirection:'column',alignItems:'center'}}>
+      <div style={{position:'relative',width:96,height:96}}>
+        <div style={{width:96,height:96,borderRadius:'50%',background:gradBg,color:'#fff',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',boxShadow:'0 4px 16px rgba(0,0,0,0.14)'}} className={step.mandatory?'pulse':''}>
+          <div style={{textAlign:'center',padding:'0 14px'}}>
+            <div style={{fontSize:12,fontWeight:700,lineHeight:1.3,marginBottom:step.mandatory?4:0}}>{step.title}</div>
+            {step.mandatory&&<div style={{fontSize:9,fontWeight:700,background:'rgba(255,255,255,0.25)',borderRadius:20,padding:'2px 7px',display:'inline-block',letterSpacing:'0.04em',textTransform:'uppercase'}}>Mandatory</div>}
+          </div>
+        </div>
+        <div style={{position:'absolute',top:-2,right:-2,width:22,height:22,borderRadius:'50%',background:'#fff',border:'2px solid #E0E0E0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,color:'#3D3D3D',zIndex:2}}>{step.id}</div>
       </div>
       <div style={{width:1,height:14,background:'#CCCCCC'}}/>
       <div style={{width:'100%',background:'#fff',border:'1px solid #E0E0E0',borderRadius:14,padding:'16px',boxShadow:'0 1px 4px rgba(0,0,0,0.05)'}}>
-        {step.useCases.map((uc,i)=>(
-          <div key={i} style={{border:'1.5px solid #E0E0E0',borderRadius:10,padding:'13px 13px',marginBottom:i<step.useCases.length-1?10:0}}>
-            <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',color:'#7B4DB8',marginBottom:8}}>{uc.label}</div>
-            <div style={{display:'flex',alignItems:'flex-start',gap:7,background:'#F5F0FF',borderRadius:8,padding:'7px 10px',marginBottom:8}}>
-              <IUser size={14} style={{color:'#7B4DB8',marginTop:1}}/>
-              <span style={{fontSize:14,fontWeight:700,color:'#7B4DB8'}}>{uc.owner}</span>
+        {step.ruleOfThumb&&(
+          <div style={{background:'#F0FDF4',border:'1px solid #BBF7D0',borderRadius:8,padding:'9px 12px',marginBottom:12,display:'flex',gap:8,alignItems:'flex-start'}}>
+            <IThumb size={13} style={{color:'#166534',marginTop:1}}/>
+            <p style={{fontSize:13.5,color:'#14532D',lineHeight:1.55,margin:0}}><strong>Rule of thumb:</strong> {step.ruleOfThumb}</p>
+          </div>
+        )}
+        {/* If all channels identical: one unified frame, highlighted when any channel selected */}
+        {allSame ? (()=>{
+          const uc=step.channels[channels[0]];
+          const clr=selectedCh?CHANNEL_COLOR[selectedCh]:'#7B4DB8';
+          const cbg=selectedCh?CHANNEL_BG[selectedCh]:'#fff';
+          const cborder=selectedCh?CHANNEL_BORDER[selectedCh]:'#E0E0E0';
+          return(
+            <div style={{border:`1.5px solid ${cborder}`,borderRadius:10,padding:'12px 13px',background:cbg,transition:'all 0.18s ease'}}>
+              <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F',marginBottom:8}}>All channels</div>
+              {/* Owner first */}
+              <div style={{display:'flex',alignItems:'flex-start',gap:7,marginBottom:0,background:'#FAF7FF',borderRadius:8,padding:'7px 10px'}}>
+                <IUser size={14} style={{color:clr,marginTop:1}}/>
+                <span style={{fontSize:14,fontWeight:700,color:clr,lineHeight:1.4}}>{uc.owner}</span>
+              </div>
+              {/* Process accordion */}
+              {uc.steps&&<Accordion title="Process" items={uc.steps} type="process" stepId={step.id}/>}
+              <div style={{display:'flex',alignItems:'flex-start',gap:7,marginTop:8}}>
+                <IWrench size={14} style={{color:'#8F8F8F',marginTop:2}}/>
+                <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:4}}>
+                  {uc.tools.map((t,ti)=>(
+                    <li key={ti} style={{display:'flex',gap:6,alignItems:'flex-start',fontSize:14,color:'#616161',lineHeight:1.5}}>
+                      <span style={{width:5,height:5,borderRadius:'50%',background:'#CCCCCC',flexShrink:0,marginTop:8}}/>
+                      <span>{fmtLinks(t,step.id)}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-            {uc.steps && <Accordion title="Process" items={uc.steps} type="process" stepId={step.id}/>}
-            <div style={{display:'flex',alignItems:'flex-start',gap:7,marginTop:8}}>
-              <IWrench size={14} style={{color:'#8F8F8F'}}/>
-              <div style={{fontSize:13,color:'#616161'}}>{uc.tools.join(', ')}</div>
+          );
+        })() : (
+        /* Channel rows - different content per channel */
+        channels.map((ch,i)=>{
+          const uc=step.channels[ch];
+          if(!uc)return null;
+          const isActive=selectedCh===null||selectedCh===ch;
+          const isHighlit=selectedCh===ch;
+          const clr=CHANNEL_COLOR[ch];
+          const cbg=CHANNEL_BG[ch];
+          const cborder=CHANNEL_BORDER[ch];
+          return(
+            <div key={ch}
+              className="uc-row"
+              onClick={e=>{e.stopPropagation();onSelectCh(selectedCh===ch?null:ch);}}
+              style={{
+                border:`1.5px solid ${isHighlit?cborder:'#E0E0E0'}`,
+                borderRadius:10,padding:'12px 13px',background:isHighlit?cbg:'#fff',
+                marginBottom:i<channels.length-1?10:0,
+                opacity:!isActive?0.22:1,
+                transition:'all 0.18s ease',
+                cursor:'pointer',
+              }}>
+              <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:clr,marginBottom:8}}>{ch}</div>
+              {/* Owner first */}
+              <div style={{display:'flex',alignItems:'flex-start',gap:7,marginBottom:0,background:'#FAF7FF',borderRadius:8,padding:'7px 10px'}}>
+                <IUser size={14} style={{color:clr,marginTop:1}}/>
+                <span style={{fontSize:14,fontWeight:700,color:clr,lineHeight:1.4}}>{uc.owner}</span>
+              </div>
+              {/* Process accordion */}
+              {uc.steps&&<Accordion title="Process" items={uc.steps} type="process" stepId={step.id}/>}
+              <div style={{display:'flex',alignItems:'flex-start',gap:7,marginTop:8}}>
+                <IWrench size={14} style={{color:'#8F8F8F',marginTop:2}}/>
+                <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:4}}>
+                  {uc.tools.map((t,ti)=>(
+                    <li key={ti} style={{display:'flex',gap:6,alignItems:'flex-start',fontSize:14,color:'#616161',lineHeight:1.5}}>
+                      <span style={{width:5,height:5,borderRadius:'50%',background:'#CCCCCC',flexShrink:0,marginTop:8}}/>
+                      <span>{fmtLinks(t,step.id)}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
+          );
+        })
+        )}
+        <NoteFrame notes={step.notes} stepId={step.id}/>
+        <Accordion title="Process gaps" items={step.gaps} type="gaps" stepId={step.id}/>
+        <Accordion title="Suggestions" items={step.suggestions} type="suggestions" stepId={step.id}/>
+      </div>
+    </div>
+  );
+}
+
+/* ── SS WORKFLOW ── */
+function SSWorkflow(){
+  const[selUCs,setSelUCs]=useState({});
+  // step width=340, connector width=36+16=52
+  // offset: step1(340) + connector(52) = 392px to start under step 2
+  const STEP_W=340, CONN_W=52;
+  const pocOffset=STEP_W+CONN_W; // left offset = width of step1 + its connector
+  const pocWidth=(STEP_W*2)+(CONN_W); // spans steps 2 and 3
+  return(
+    <div>
+      <div style={{overflowX:'auto',paddingBottom:4}}>
+        <div style={{display:'flex',alignItems:'flex-start',minWidth:'max-content',gap:0}}>
+          {STEPS_SS.map((step,idx)=>(
+            <React.Fragment key={step.id}>
+              <SSStepCard step={step} gradBg={GRAD_SS[idx]} selectedUC={selUCs[step.id]??null} onSelectUC={v=>setSelUCs(p=>({...p,[step.id]:v}))}/>
+              {idx<STEPS_SS.length-1&&(
+                <div style={{display:'flex',alignItems:'center',paddingTop:48,paddingLeft:8,paddingRight:8,flexShrink:0}}>
+                  <svg width="36" height="16" viewBox="0 0 36 16" fill="none">
+                    <line x1="1" y1="8" x2="28" y2="8" stroke="#CCCCCC" strokeWidth="1.5" strokeDasharray="4 3"/>
+                    <polyline points="24,3 30,8 24,13" fill="none" stroke="#CCCCCC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+      {/* POCs block — visually under steps 2 & 3 */}
+      <div style={{overflowX:'auto'}}>
+        <div style={{minWidth:'max-content'}}>
+          <div style={{marginLeft:pocOffset,width:pocWidth,marginTop:16}}>
+            <LocalPOCsBlock/>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── BAU WORKFLOW ── */
+function BAUWorkflow(){
+  const[selCh,setSelCh]=useState(null);
+  const STEP_W=360, CONN_W=52;
+  const pocOffset=STEP_W+CONN_W;
+  const pocWidth=(STEP_W*2)+(CONN_W);
+  return(
+    <div>
+      <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:16,flexWrap:'wrap'}}>
+        <span style={{fontSize:12,color:'#8F8F8F',fontWeight:600}}>Click a channel row to highlight across all steps:</span>
+        {BAU_CHANNELS.map(ch=>(
+          <button key={ch} onClick={()=>setSelCh(selCh===ch?null:ch)}
+            style={{padding:'5px 14px',borderRadius:20,border:`2px solid ${selCh===ch?CHANNEL_COLOR[ch]:'#E0E0E0'}`,background:selCh===ch?CHANNEL_BG[ch]:'#fff',color:selCh===ch?CHANNEL_COLOR[ch]:'#616161',fontSize:13,fontWeight:700,cursor:'pointer',fontFamily:'inherit',transition:'all 0.15s ease'}}>
+            {ch}
+          </button>
+        ))}
+        {selCh&&<button onClick={()=>setSelCh(null)} style={{padding:'5px 12px',borderRadius:20,border:'1px solid #E0E0E0',background:'#fff',color:'#8F8F8F',fontSize:12,fontWeight:600,cursor:'pointer',fontFamily:'inherit'}}>Clear ✕</button>}
+      </div>
+      <div style={{overflowX:'auto',paddingBottom:4}}>
+        <div style={{display:'flex',alignItems:'flex-start',minWidth:'max-content',gap:0}}>
+          {STEPS_BAU.map((step,idx)=>(
+            <React.Fragment key={step.id}>
+              <BAUStepCard step={step} gradBg={GRAD_BAU[idx]} selectedCh={selCh} onSelectCh={setSelCh}/>
+              {idx<STEPS_BAU.length-1&&(
+                <div style={{display:'flex',alignItems:'center',paddingTop:48,paddingLeft:8,paddingRight:8,flexShrink:0}}>
+                  <svg width="36" height="16" viewBox="0 0 36 16" fill="none">
+                    <line x1="1" y1="8" x2="28" y2="8" stroke="#CCCCCC" strokeWidth="1.5" strokeDasharray="4 3"/>
+                    <polyline points="24,3 30,8 24,13" fill="none" stroke="#CCCCCC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+      {/* POCs block — visually under steps 2 & 3 */}
+      <div style={{overflowX:'auto'}}>
+        <div style={{minWidth:'max-content'}}>
+          <div style={{marginLeft:pocOffset,width:pocWidth,marginTop:16}}>
+            <LocalPOCsBlock/>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── HIGH-LEVEL BAR ── */
+function HighLevelBar(){
+  const steps=[
+    {icon:<IFile size={17} style={{color:'#7B4DB8'}}/>,label:'EN master copy'},
+    {icon:<IGit size={17} style={{color:'#7B4DB8'}}/>,label:'Localization'},
+    {icon:<IStar size={17} style={{color:'#7B4DB8'}}/>,label:'Quality check'},
+    {icon:<IArrow size={17} style={{color:'#7B4DB8'}}/>,label:'Upload & publish'},
+  ];
+  return(
+    <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:14,padding:'14px 24px',marginBottom:24,display:'flex',alignItems:'center',gap:0,overflowX:'auto',flexWrap:'wrap'}}>
+      <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',color:'#8F8F8F',marginRight:20,flexShrink:0}}>Standard steps</span>
+      {steps.map((s,i)=>(
+        <React.Fragment key={s.label}>
+          <div style={{display:'flex',alignItems:'center',gap:8,flexShrink:0}}>
+            {s.icon}
+            <span style={{fontSize:14,fontWeight:600,color:'#050505',whiteSpace:'nowrap'}}>{s.label}</span>
+          </div>
+          {i<steps.length-1&&(
+            <svg width="36" height="14" viewBox="0 0 36 14" style={{margin:'0 6px',flexShrink:0}}>
+              <line x1="1" y1="7" x2="27" y2="7" stroke="#CCCCCC" strokeWidth="1.5" strokeDasharray="3 2"/>
+              <polyline points="23,3 29,7 23,11" fill="none" stroke="#CCCCCC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          )}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
+/* ── SCOPE TOGGLE ── */
+function ScopeToggle(){
+  const[open,setOpen]=useState(false);
+  return(
+    <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:12,marginBottom:24,overflow:'hidden',boxShadow:'0 1px 3px rgba(0,0,0,0.04)'}}>
+      <div onClick={()=>setOpen(!open)} style={{padding:'14px 20px',display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer'}}>
+        <div style={{display:'flex',alignItems:'center',gap:10}}>
+          <ITarget size={17} style={{color:'#7B4DB8'}}/>
+          <span style={{fontSize:15,fontWeight:600,color:'#050505'}}>Scope: <span style={{fontWeight:500,color:'#616161'}}>Standard self-serve projects — no professional creative writer involved.</span></span>
+        </div>
+        <div style={{display:'flex',alignItems:'center',gap:5,fontSize:13,fontWeight:600,color:'#7B4DB8',flexShrink:0}}>
+          {open?'Hide':'See exceptions & rules'}
+          <IChevD size={14} style={{color:'#7B4DB8',transition:'transform 0.25s',transform:open?'rotate(180deg)':'rotate(0deg)'}}/>
+        </div>
+      </div>
+      <div className={`acc-body ${open?'open':''}`}>
+        <div className="acc-inner">
+          <div style={{padding:'0 20px 20px',borderTop:'1px solid #F0F0F0'}}>
+            <div style={{paddingTop:16,display:'flex',gap:32,flexWrap:'wrap'}}>
+              <div style={{flex:2,minWidth:260}}>
+                <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8}}>
+                  <IAlert size={14} style={{color:'#B45309'}}/>
+                  <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Route to Creative Factory instead</span>
+                </div>
+                <ul style={{paddingLeft:18,fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:'0 0 8px 0',display:'flex',flexDirection:'column',gap:2}}>
+                  <li>High-visibility campaigns in <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> (L and sometimes M)</li>
+                  <li>Highly creative Paid Ads or OOH</li>
+                  <li>Website homepage</li>
+                </ul>
+                <div style={{display:'flex',alignItems:'center',gap:6,fontSize:14,color:'#616161'}}>
+                  <IBulb size={13} style={{color:'#7B4DB8',flexShrink:0}}/>
+                  <span>Not sure? Check <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> and the <a href="https://www.notion.so/qonto/Comms-Toolbox-2ca31ee4c69680a2afcec1f5ce13e6c1" target="_blank" rel="noopener noreferrer">Toolbox</a>.</span>
+                </div>
+              </div>
+              <div style={{flex:1,minWidth:200}}>
+                <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8}}>
+                  <IPhone size={14} style={{color:'#7B4DB8'}}/>
+                  <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Autonomous — out of scope</span>
+                </div>
+                <p style={{fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:0}}><strong>Social media</strong> and <strong>SEO</strong> are autonomous. Not part of this workflow.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── CREATIVE FACTORY PANEL ── */
+function CreativePanel(){
+  return(
+    <div className="fade-in" style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:16,padding:'40px 36px',maxWidth:640}}>
+      <div style={{width:56,height:56,borderRadius:'50%',background:'#F5F5F5',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 18px'}}>
+        <ILock size={24} style={{color:'#8F8F8F'}}/>
+      </div>
+      <h3 style={{fontSize:20,fontWeight:700,color:'#050505',margin:'0 0 10px',textAlign:'center'}}>Handled by the Creative Factory</h3>
+      <p style={{fontSize:15,color:'#616161',textAlign:'center',lineHeight:1.7,maxWidth:480,margin:'0 auto 24px'}}>
+        For high-visibility and creatively critical campaigns, the Creative Factory manages the localization end-to-end.
+      </p>
+      <div style={{background:'#F9F9F9',border:'1px solid #E8E8E8',borderRadius:10,padding:'14px 18px',display:'flex',flexDirection:'column',gap:10,marginBottom:16}}>
+        <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F',marginBottom:2}}>What falls under the Creative Factory</div>
+        {['High-visibility campaigns in Panorama (L & sometimes M)','Highly creative Paid Ads or OOH','Website homepage'].map((item,i)=>(
+          <div key={i} style={{display:'flex',gap:8,alignItems:'flex-start',fontSize:14,color:'#3D3D3D'}}>
+            <IChevR size={13} style={{color:'#8F8F8F',marginTop:2}}/>
+            <span>{item}</span>
           </div>
         ))}
       </div>
@@ -449,20 +718,475 @@ function SSStepCard({step,gradBg,selectedUC,onSelectUC}){
   );
 }
 
-function SSWorkflow(){
+/* ── LEGEND ── */
+function Legend({activeTrack}){
+  const[open,setOpen]=useState(false);
+  const hint=activeTrack==='selfserve'?'On step 4 — click a card to highlight a channel':activeTrack==='bau'?'Click a channel pill above to highlight it across all steps':null;
   return(
-    <div>
-      <div style={{overflowX:'auto',paddingBottom:4}}>
-        <div style={{display:'flex',alignItems:'flex-start',minWidth:'max-content',gap:0}}>
-          {STEPS_SS.map((step,idx)=>(
-            <React.Fragment key={step.id}>
-              <SSStepCard step={step} gradBg={GRAD_SS[idx]} />
-              {idx<STEPS_SS.length-1&&(
-                <div style={{display:'flex',alignItems:'center',paddingTop:48,paddingLeft:8,paddingRight:8}}>
-                   <svg width="36" height="16" viewBox="0 0 36 16"><line x1="1" y1="8" x2="28" y2="8" stroke="#CCCCCC" strokeWidth="1.5" strokeDasharray="4 3"/><polyline points="24,3 30,8 24,13" fill="none" stroke="#CCCCCC" strokeWidth="1.5"/></svg>
+    <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:10,marginBottom:24,overflow:'hidden',width:'fit-content',minWidth:220}}>
+      <div onClick={()=>setOpen(!open)} style={{padding:'9px 16px',display:'flex',alignItems:'center',gap:10,cursor:'pointer'}}>
+        <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#B8B8B8'}}>Legend</span>
+        <IChevD size={13} style={{color:'#B8B8B8',marginLeft:'auto',transition:'transform 0.22s',transform:open?'rotate(180deg)':'rotate(0deg)'}}/>
+      </div>
+      <div className={`acc-body ${open?'open':''}`}>
+        <div className="acc-inner">
+          <div style={{padding:'8px 16px 12px',borderTop:'1px solid #F0F0F0',display:'flex',flexWrap:'wrap',gap:12,alignItems:'center'}}>
+            <div style={{display:'flex',alignItems:'center',gap:5}}><IUser size={13} style={{color:'#7B4DB8'}}/><span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Owner</span></div>
+            <div style={{display:'flex',alignItems:'center',gap:5}}><IWrench size={13} style={{color:'#8F8F8F'}}/><span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Tools</span></div>
+            <div style={{display:'flex',alignItems:'center',gap:5}}><INote size={13} style={{color:'#616161'}}/><span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Note</span></div>
+            <div style={{display:'flex',alignItems:'center',gap:5}}>
+              <IWorkflow size={13} style={{color:'#8F8F8F'}}/>
+              <span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Process steps (expandable)</span>
+            </div>
+            <div style={{width:'100%',height:1,background:'#F0F0F0'}}/>
+            <div style={{display:'flex',alignItems:'center',gap:5}}><span style={{width:8,height:8,borderRadius:2,background:'#FEE2E2',border:'1px solid #FECACA',display:'inline-block'}}/><span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Process gap</span></div>
+            <div style={{display:'flex',alignItems:'center',gap:5}}><span style={{width:8,height:8,borderRadius:2,background:'#FEF9C3',border:'1px solid #FDE68A',display:'inline-block'}}/><span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Suggestion</span></div>
+            {hint&&<><div style={{width:'100%',height:1,background:'#F0F0F0'}}/><span style={{fontSize:12,color:'#8F8F8F',fontStyle:'italic'}}>{hint}</span></>}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── PATH FINDER ── */
+const ROLES=[
+  {id:'comms', label:'Comms partner / PMM'},
+  {id:'crm',   label:'CRM manager'},
+  {id:'web',   label:'Website manager'},
+  {id:'ads',   label:'Paid Ads manager'},
+  {id:'local', label:'Local Market POC'},
+];
+const LANGS=[
+  {flag:'🇫🇷',label:'French',poc:'@Delphine de Roquemaurel'},
+  {flag:'🇩🇪',label:'German',poc:'@Hannah Lüdicke'},
+  {flag:'🇮🇹',label:'Italian',poc:'@Lorenzo Zatini'},
+  {flag:'🇪🇸',label:'Spanish',poc:'@Cristina Gomez'},
+  {flag:'🇵🇹',label:'Portuguese',poc:'@Julia Latorre'},
+  {flag:'🇳🇱',label:'Dutch',poc:'@Rosemarijn Disseldorp'},
+];
+
+function getResult(answers){
+  const{role,projectType,channel,langs}=answers;
+  if(projectType==='creative') return {type:'creative'};
+
+  if(projectType==='selfserve'){
+    return{
+      type:'selfserve',track:'selfserve',langs:langs||[],
+      steps:[
+        {n:1,title:'EN master copy',owner:'Comms partner / PMM',tools:['Tolki','Qontent (if Website / CRM)','QualityGuard — always run before moving forward']},
+        {n:2,title:'First-pass translation',owner:'Local Market POC',note:'Request translation from local POCs in your project channel.',tools:['Tolki','Qontent (for Website / CRM)']},
+        {n:3,title:'Quality check',owner:'Local Market POC',mandatory:true,tools:['QualityGuard — always run it!']},
+        {n:4,title:'Upload & publish',owner:channel==='Website'?'Local Market POC':channel==='CRM'?'CRM manager':'Paid Ads manager',tools:[channel==='Paid Ads'?'Directly on platform':'Qontent']},
+      ],
+    };
+  }
+
+  // BAU
+  const ownerMap={crm:'Project owner (PMM or CRM manager)',web:'Project owner (Website manager)',ads:'Project owner (Paid Ads manager)',local:'Local Market POC',comms:'Comms partner / PMM'};
+  const owner=ownerMap[role]||'Project owner';
+  const ch=channel||'CRM';
+  return{
+    type:'bau',track:'bau',channel:ch,langs:langs||[],
+    steps:[
+      {n:1,title:'EN master copy',owner,tools:ch==='Paid Ads'?['Tolki','QualityGuard — always run before moving forward']:['Tolki','Qontent','QualityGuard — always run before moving forward']},
+      {n:2,title:'First-pass translation',owner,tools:ch==='CRM'?['Tolki','Qontent']:ch==='Website'?['Tolki','Qontent']:['Tolki']},
+      {n:3,title:'Quality check',owner:'Local Market POC',mandatory:true,
+        note:ch==='CRM'?'Request proofread in #proofread-crm.':'No dedicated channel yet — request proofread directly to local POC.',
+        tools:['QualityGuard — always run it!']},
+      {n:4,title:'Upload & publish',owner,tools:ch==='Paid Ads'?['Upload directly on platform']:['Qontent']},
+    ],
+  };
+}
+
+const STEP_GRAD_PF=[
+  'linear-gradient(135deg,#BFA6EA,#7B4DB8)',
+  'linear-gradient(135deg,#D5C8FF,#A585DB)',
+  'linear-gradient(135deg,#7B4DB8,#461068)',
+  'linear-gradient(135deg,#9BC5EA,#A585DB)',
+];
+
+// Explicit screen IDs — no derived arrays
+const SCREENS=['role','projectType','channel','langs','result'];
+
+function PathFinder({onViewWorkflow}){
+  const[screen,setScreen]=useState('role');
+  const[answers,setAnswers]=useState({});
+  const[langSel,setLangSel]=useState([]);
+
+  const reset=()=>{setScreen('role');setAnswers({});setLangSel([]);};
+
+  const pick=(key,val)=>{
+    const next={...answers,[key]:val};
+    setAnswers(next);
+    if(key==='role'){
+      // Auto-assign channel from role if unambiguous
+      if(val==='crm')  next.channel='CRM';
+      if(val==='web')  next.channel='Website';
+      if(val==='ads')  next.channel='Paid Ads';
+      setAnswers(next);
+      setScreen('projectType');
+    }
+    else if(key==='projectType'){
+      if(val==='creative') setScreen('result');
+      // If channel already known from role, skip channel screen
+      else if(next.channel) setScreen('langs');
+      else setScreen('channel');
+    }
+    else if(key==='channel') setScreen('langs');
+  };
+
+  const confirmLangs=()=>{
+    setAnswers(a=>({...a,langs:langSel}));
+    setScreen('result');
+  };
+
+  const roleImpliesChannel=(role)=>['crm','web','ads'].includes(role);
+
+  const back=()=>{
+    if(screen==='projectType') setScreen('role');
+    else if(screen==='channel') setScreen('projectType');
+    else if(screen==='langs'){
+      // If channel was auto-assigned from role, skip channel screen
+      if(roleImpliesChannel(answers.role)) setScreen('projectType');
+      else setScreen('channel');
+    }
+    else if(screen==='result'){
+      if(answers.projectType==='creative') setScreen('projectType');
+      else setScreen('langs');
+    }
+  };
+
+  // Progress — account for whether channel step exists
+  const hasChannelStep=!roleImpliesChannel(answers.role);
+  const progressMap=hasChannelStep
+    ? {role:20,projectType:40,channel:65,langs:85,result:100}
+    : {role:25,projectType:50,langs:80,result:100};
+  const progress=progressMap[screen]||0;
+  const stepLabels={role:'1 — Your role',projectType:'2 — Project type',channel:'3 — Channel',langs:`${hasChannelStep?'4':'3'} — Languages`};
+
+  const OptionBtn=({opt,onClick,selected})=>(
+    <button onClick={onClick} style={{
+      width:'100%',textAlign:'left',padding:'13px 16px',borderRadius:10,
+      border:`1.5px solid ${selected?'#7B4DB8':'#E0E0E0'}`,
+      background:selected?'#F5F0FF':'#fff',
+      cursor:'pointer',fontFamily:'inherit',
+      display:'flex',alignItems:'center',justifyContent:'space-between',
+      transition:'all 0.15s ease',marginBottom:8,
+    }}>
+      <div>
+        <div style={{fontSize:14,fontWeight:600,color:selected?'#461068':'#050505'}}>{opt.label}</div>
+        {opt.sub&&<div style={{fontSize:12,color:'#8F8F8F',marginTop:2}}>{opt.sub}</div>}
+      </div>
+      {selected
+        ?<span style={{width:18,height:18,borderRadius:'50%',background:'#7B4DB8',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+            <svg width="10" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4,9 11,1" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </span>
+        :<IChevR size={14} style={{color:'#CCCCCC',flexShrink:0}}/>
+      }
+    </button>
+  );
+
+  const Shell=({title,children,showBack=true})=>(
+    <div style={{maxWidth:520,margin:'0 auto',padding:'32px 0'}}>
+      {screen!=='result'&&(
+        <div style={{marginBottom:24}}>
+          <div style={{display:'flex',justifyContent:'space-between',fontSize:12,color:'#8F8F8F',fontWeight:600,marginBottom:6}}>
+            <span>{stepLabels[screen]}</span><span>{progress}%</span>
+          </div>
+          <div style={{height:4,background:'#E8E8E8',borderRadius:2,overflow:'hidden'}}>
+            <div style={{height:'100%',width:`${progress}%`,background:'#7B4DB8',borderRadius:2,transition:'width 0.3s ease'}}/>
+          </div>
+        </div>
+      )}
+      <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:16,padding:'28px'}}>
+        <h3 style={{fontSize:18,fontWeight:700,color:'#050505',marginBottom:20,lineHeight:1.3}}>{title}</h3>
+        {children}
+        {showBack&&screen!=='role'&&(
+          <button onClick={back} style={{marginTop:16,fontSize:13,fontWeight:600,color:'#8F8F8F',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',display:'flex',alignItems:'center',gap:4}}>
+            ← Back
+          </button>
+        )}
+      </div>
+    </div>
+  );
+
+  // ── ROLE ──
+  if(screen==='role') return(
+    <Shell title="What is your role?" showBack={false}>
+      {ROLES.map(r=><OptionBtn key={r.id} opt={{value:r.id,label:r.label}} selected={answers.role===r.id} onClick={()=>pick('role',r.id)}/>)}
+    </Shell>
+  );
+
+  // ── PROJECT TYPE ──
+  if(screen==='projectType') return(
+    <Shell title="What type of project is this?">
+      {[
+        {value:'creative',label:'Global projects — High-visibility / Creativity',sub:'In Panorama L or M — Creative Factory'},
+        {value:'selfserve',label:'Global projects — Self-serve',sub:'In Panorama S or M — self-serve localization'},
+        {value:'bau',label:'BAU / Channel ad-hoc — Self-serve',sub:'Not in Panorama — CRM, Website, Paid Ads'},
+      ].map(o=><OptionBtn key={o.value} opt={o} selected={answers.projectType===o.value} onClick={()=>pick('projectType',o.value)}/>)}
+    </Shell>
+  );
+
+  // ── CHANNEL ──
+  if(screen==='channel') return(
+    <Shell title="Which channel?">
+      {['CRM / Email','Website','Paid Ads','Other'].map(ch=>(
+        <OptionBtn key={ch} opt={{value:ch==='CRM / Email'?'CRM':ch,label:ch}} selected={answers.channel===(ch==='CRM / Email'?'CRM':ch)} onClick={()=>pick('channel',ch==='CRM / Email'?'CRM':ch)}/>
+      ))}
+    </Shell>
+  );
+
+  // ── LANGUAGES ──
+  if(screen==='langs') return(
+    <Shell title="Which language(s) are you targeting?" showBack={false}>
+      <div style={{display:'flex',flexDirection:'column',gap:0}}>
+        {LANGS.map(l=>{
+          const sel=langSel.includes(l.label);
+          return(
+            <button key={l.label} onClick={()=>setLangSel(p=>sel?p.filter(x=>x!==l.label):[...p,l.label])}
+              style={{width:'100%',textAlign:'left',padding:'11px 14px',borderRadius:10,border:`1.5px solid ${sel?'#7B4DB8':'#E0E0E0'}`,background:sel?'#F5F0FF':'#fff',cursor:'pointer',fontFamily:'inherit',display:'flex',alignItems:'center',justifyContent:'space-between',transition:'all 0.15s ease',marginBottom:8}}>
+              <span style={{fontSize:14,fontWeight:600,color:sel?'#461068':'#050505'}}>{l.flag} {l.label}</span>
+              {sel&&<span style={{width:18,height:18,borderRadius:'50%',background:'#7B4DB8',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><svg width="10" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4,9 11,1" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg></span>}
+            </button>
+          );
+        })}
+      </div>
+      <button onClick={confirmLangs} disabled={langSel.length===0}
+        style={{marginTop:4,width:'100%',padding:'12px',borderRadius:10,border:'none',background:langSel.length>0?'#050505':'#E0E0E0',color:langSel.length>0?'#fff':'#8F8F8F',fontSize:14,fontWeight:700,cursor:langSel.length>0?'pointer':'not-allowed',fontFamily:'inherit',transition:'all 0.15s ease'}}>
+        See my workflow →
+      </button>
+      <button onClick={back} style={{marginTop:12,fontSize:13,fontWeight:600,color:'#8F8F8F',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',display:'flex',alignItems:'center',gap:4}}>← Back</button>
+    </Shell>
+  );
+
+  // ── RESULT ──
+  if(screen==='result'){
+    const result=getResult({...answers,langs:langSel});
+
+    // Creative Factory
+    if(result.type==='creative') return(
+      <div style={{maxWidth:520,margin:'0 auto',padding:'32px 0'}} className="fade-in">
+        <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:16,padding:'36px',textAlign:'center'}}>
+          <div style={{width:52,height:52,borderRadius:'50%',background:'#F5F5F5',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 16px'}}><ILock size={22} style={{color:'#8F8F8F'}}/></div>
+          <h3 style={{fontSize:18,fontWeight:700,margin:'0 0 10px'}}>Creative Factory project</h3>
+          <p style={{fontSize:14,color:'#616161',lineHeight:1.7,margin:'0 0 24px'}}>For high-visibility and creatively critical campaigns, the Creative Factory manages localization end-to-end. This self-serve workflow does not apply.</p>
+          <div style={{display:'flex',gap:10,justifyContent:'center',flexWrap:'wrap'}}>
+            <button onClick={()=>onViewWorkflow('creative')} style={{padding:'9px 18px',borderRadius:10,border:'2px solid #050505',background:'#050505',color:'#fff',fontSize:13,fontWeight:700,cursor:'pointer',fontFamily:'inherit'}}>View Creative Factory info →</button>
+            <button onClick={reset} style={{padding:'9px 18px',borderRadius:10,border:'1px solid #E0E0E0',background:'#fff',color:'#616161',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'inherit'}}>← Start over</button>
+          </div>
+        </div>
+      </div>
+    );
+
+    // Self-serve or BAU result
+    const accentClr=result.type==='selfserve'?'#7B4DB8':'#461068';
+    const trackLabel=result.type==='selfserve'?'Global projects — Self-serve':'BAU / Channel ad-hoc — Self-serve'+(result.channel?` · ${result.channel}`:'');
+    const pocList=(result.langs||[]).map(l=>LANGS.find(x=>x.label===l)).filter(Boolean);
+
+    return(
+      <div style={{maxWidth:820,margin:'0 auto',padding:'32px 0'}} className="fade-in">
+        {/* Header — no POCs here anymore */}
+        <div style={{background:accentClr,borderRadius:14,padding:'18px 24px',marginBottom:20}}>
+          <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',color:'rgba(255,255,255,0.6)',marginBottom:4}}>Your workflow</div>
+          <div style={{fontSize:17,fontWeight:700,color:'#fff'}}>{trackLabel}</div>
+        </div>
+
+        {/* Steps */}
+        <div style={{display:'flex',flexDirection:'column',gap:10,marginBottom:20}}>
+          {result.steps.map((s,i)=>{
+            const showPOCs=pocList.length>0&&(s.n===2||s.n===3);
+            return(
+            <div key={s.n} style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:12,padding:'16px 20px',display:'flex',gap:16,alignItems:'flex-start'}}>
+              <div style={{width:36,height:36,borderRadius:'50%',background:STEP_GRAD_PF[i]||STEP_GRAD_PF[3],color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:800,flexShrink:0}}>{s.n}</div>
+              <div style={{flex:1}}>
+                <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6,flexWrap:'wrap'}}>
+                  <span style={{fontSize:15,fontWeight:700,color:'#050505'}}>{s.title}</span>
+                  {s.mandatory&&<span style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.04em',background:'#F5F0FF',color:'#7B4DB8',borderRadius:20,padding:'2px 8px'}}>Mandatory</span>}
                 </div>
-              )}
-            </React.Fragment>
+                {s.note&&<p style={{fontSize:13,color:'#616161',margin:'0 0 8px',lineHeight:1.55,fontStyle:'italic'}}>{s.note}</p>}
+                <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8,background:'#F5F0FF',borderRadius:8,padding:'6px 10px',width:'fit-content'}}>
+                  <IUser size={13} style={{color:accentClr}}/>
+                  <span style={{fontSize:13,fontWeight:700,color:accentClr}}>{s.owner}</span>
+                </div>
+                <div style={{display:'flex',alignItems:'flex-start',gap:6,marginBottom:showPOCs?10:0}}>
+                  <IWrench size={13} style={{color:'#8F8F8F',marginTop:2}}/>
+                  <div style={{display:'flex',flexWrap:'wrap',gap:'3px 14px'}}>
+                    {s.tools.map((t,ti)=>(
+                      <span key={ti} style={{fontSize:13,color:'#616161',lineHeight:1.6}}>{fmtLinks(t,s.n)}</span>
+                    ))}
+                  </div>
+                </div>
+                {showPOCs&&(
+                  <div style={{marginTop:2,padding:'10px 12px',background:'#F9F7FF',border:'1px solid #E9E0FF',borderRadius:8}}>
+                    <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8}}>
+                      <IUsers size={12} style={{color:'#7B4DB8'}}/>
+                      <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#7B4DB8'}}>Your POC{pocList.length>1?'s':''}</span>
+                    </div>
+                    <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
+                      {pocList.map(p=>(
+                        <span key={p.label} style={{display:'inline-flex',alignItems:'center',gap:5,background:'#fff',border:'1px solid #E9E0FF',borderRadius:20,padding:'4px 10px',fontSize:13,color:'#3D3D3D',fontWeight:500}}>
+                          <span>{p.flag}</span>
+                          <span style={{fontWeight:600,color:'#461068'}}>{p.poc}</span>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            );
+          })}
+        </div>
+
+        {/* Red bin */}
+        <div style={{background:'#FFF5F0',border:'1px solid #FFD5C0',borderRadius:10,padding:'11px 16px',fontSize:13,color:'#7A250C',marginBottom:20,display:'flex',gap:8,alignItems:'flex-start'}}>
+          <IAlert size={14} style={{color:'#CE6033',flexShrink:0,marginTop:1}}/>
+          <span>After launch, log any quality issue in the <a href="https://www.notion.so/qonto/Growth-Efficiency-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658#31931ee4c6968068814de2683bf18120" target="_blank" rel="noopener noreferrer" style={{color:'#CE6033'}}>Red Bin logging form</a>.</span>
+        </div>
+
+        <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+          <button onClick={()=>onViewWorkflow(result.track)} style={{padding:'10px 20px',borderRadius:10,border:'2px solid #050505',background:'#050505',color:'#fff',fontSize:13,fontWeight:700,cursor:'pointer',fontFamily:'inherit'}}>
+            View full workflow →
+          </button>
+          <button onClick={reset} style={{padding:'10px 20px',borderRadius:10,border:'1px solid #E0E0E0',background:'#fff',color:'#616161',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'inherit'}}>
+            ← Start over
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
+
+/* ── LOCAL POC VIEW ── */
+function LocalPOCView(){
+  const pocs=[
+    {flag:'🇫🇷',market:'France',contact:'@Delphine de Roquemaurel'},
+    {flag:'🇩🇪',market:'Germany',contact:'@Hannah Lüdicke'},
+    {flag:'🇮🇹',market:'Italy',contact:'@Lorenzo Zatini'},
+    {flag:'🇪🇸',market:'Spain',contact:'@Cristina Gomez'},
+    {flag:'🇵🇹',market:'Portugal',contact:'@Julia Latorre'},
+    {flag:'🇳🇱',market:'Netherlands',contact:'@Rosemarijn Disseldorp'},
+  ];
+  const sections=[
+    {
+      label:'All flows',accent:'#050505',labelBg:'#050505',labelText:'#fff',
+      items:[
+        {text:<>You own the native review. Run <a href="https://www.notion.so/qonto/Check-copy-quality-24d31ee4c6968193bc6bc98d7f613d93" target="_blank" rel="noopener noreferrer">QualityGuard</a> first — then review natively. You are the last quality gate.</>},
+        {text:<>Log every post-launch issue in the <a href="https://www.notion.so/qonto/Growth-Efficiency-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658#31931ee4c6968068814de2683bf18120" target="_blank" rel="noopener noreferrer" style={{color:'#CE6033'}}>Red Bin form</a>. No exception.</>},
+      ],
+    },
+    {
+      label:'Global projects — Self-serve',accent:'#7B4DB8',labelBg:'#7B4DB8',labelText:'#fff',
+      items:[
+        {tag:'When contacted',text:'Designate one local project owner for the whole project — across all channels.'},
+        {tag:'Then',text:<>That owner runs the translation via <a href="https://www.notion.so/qonto/Localize-24d31ee4c696812ab5c1ee03e3aeda5e" target="_blank" rel="noopener noreferrer">Tolki</a> and delivers back.</>},
+        {tag:'Website only',text:"Page duplication is yours — not the Comms partner's. Own it in Qontent."},
+      ],
+    },
+    {
+      label:'BAU / Channel ad-hoc',accent:'#461068',labelBg:'#461068',labelText:'#fff',
+      items:[
+        {tag:'CRM',text:'Project owners request proofread via #proofread-crm. Review natively and return feedback.'},
+        {tag:'Website & Paid Ads',text:'No dedicated channel yet — project owners reach out directly. Same expectation: own the review.'},
+      ],
+    },
+  ];
+  const gaps=[
+    'POC list not sustainable — no backups, unclear capacity per market.',
+    'No proofread channel for Website or Paid Ads (only #proofread-crm exists for CRM).',
+  ];
+  const suggestions=[
+    {key:'s1',text:<>Update the POC list: one primary + one backup per market, with defined capacity.</>},
+    {key:'s2',text:<><strong>BAU:</strong> Create <strong>#proofread-website</strong> and <strong>#proofread-paid-ads</strong> — same model as #proofread-crm.</>},
+    {key:'s3',text:<><strong>Global projects:</strong> Create a dedicated Slack channel per project so POCs have one clear entry point for localization requests.</>},
+  ];
+  const tagStyles={
+    'When contacted':{clr:'#7B4DB8',bg:'#F5F0FF'},
+    'Then':{clr:'#616161',bg:'#F5F5F5'},
+    'Website only':{clr:'#2F95A0',bg:'#E6F7F7'},
+    'CRM':{clr:'#7B4DB8',bg:'#F5F0FF'},
+    'Website & Paid Ads':{clr:'#461068',bg:'#EDE8FF'},
+  };
+  return(
+    <div style={{padding:'24px 20px 60px',maxWidth:580,margin:'0 auto'}} className="fade-in">
+      <div style={{marginBottom:18}}>
+        <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'#050505',color:'#fff',borderRadius:6,padding:'3px 10px',fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:10}}>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          Pocket guide
+        </div>
+        <h2 style={{fontSize:18,fontWeight:800,color:'#050505',marginBottom:4,lineHeight:1.2}}>Local POCs — How it works</h2>
+        <p style={{fontSize:13,color:'#616161',lineHeight:1.55,margin:0}}>Across self-serve workflows — what you own, and what needs to change.</p>
+      </div>
+      <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:12,overflow:'hidden',marginBottom:14}}>
+        <div style={{background:'#7B4DB8',padding:'7px 14px',display:'flex',alignItems:'center',gap:5}}>
+          <IUsers size={12} style={{color:'rgba(255,255,255,0.8)'}}/>
+          <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'rgba(255,255,255,0.9)'}}>Current POCs</span>
+        </div>
+        <div style={{padding:'6px 10px',display:'flex',flexDirection:'column',gap:1}}>
+          {pocs.map(p=>(
+            <div key={p.market} style={{display:'flex',alignItems:'center',gap:10,padding:'5px 8px',borderRadius:6}}>
+              <span style={{fontSize:16,flexShrink:0,width:24}}>{p.flag}</span>
+              <span style={{fontSize:13,fontWeight:700,color:'#050505',minWidth:96,flexShrink:0}}>{p.market}</span>
+              <span style={{fontSize:13,color:'#616161'}}>{p.contact}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{margin:'0 10px 10px',background:'#F0EAFF',borderRadius:7,padding:'5px 10px',fontSize:12,color:'#461068',fontWeight:600}}>
+          💬 <strong>#new-markets-localization-help</strong> — Dutch 🇳🇱 and Portuguese 🇵🇹 only
+        </div>
+      </div>
+      <div style={{background:'#fff',border:'1.5px solid #E0E0E0',borderRadius:12,overflow:'hidden',marginBottom:14}}>
+        {sections.map((sec,si)=>(
+          <div key={sec.label} style={{borderBottom:si<sections.length-1?'1px solid #F0F0F0':'none'}}>
+            <div style={{background:sec.labelBg,padding:'6px 14px'}}>
+              <span style={{fontSize:11,fontWeight:700,color:sec.labelText,letterSpacing:'0.02em'}}>{sec.label}</span>
+            </div>
+            <div style={{padding:'9px 14px',display:'flex',flexDirection:'column',gap:7}}>
+              {sec.items.map((item,i)=>(
+                <div key={i} style={{display:'flex',alignItems:'flex-start',gap:8}}>
+                  {item.tag?(
+                    <span style={{flexShrink:0,fontSize:10,fontWeight:700,background:tagStyles[item.tag]?.bg||'#F5F5F5',color:tagStyles[item.tag]?.clr||'#616161',borderRadius:20,padding:'2px 7px',marginTop:2,whiteSpace:'nowrap'}}>{item.tag}</span>
+                  ):(
+                    <span style={{flexShrink:0,width:6,height:6,borderRadius:'50%',background:sec.accent,marginTop:7,display:'inline-block'}}/>
+                  )}
+                  <span style={{fontSize:13.5,color:'#3D3D3D',lineHeight:1.6}}>{item.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style={{background:'#FFF5F5',border:'1.5px solid #FECACA',borderRadius:12,overflow:'hidden',marginBottom:10}}>
+        <div style={{padding:'7px 14px',borderBottom:'1px solid #FECACA',display:'flex',alignItems:'center',gap:6}}>
+          <IAlert size={12} style={{color:'#991B1B'}}/>
+          <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#991B1B'}}>Process gaps</span>
+          <span style={{fontSize:10,fontWeight:700,background:'#FEE2E2',color:'#B91C1C',borderRadius:20,padding:'1px 6px',marginLeft:'auto'}}>{gaps.length}</span>
+        </div>
+        <div style={{padding:'9px 14px',display:'flex',flexDirection:'column',gap:6}}>
+          {gaps.map((g,i)=>(
+            <div key={i} style={{display:'flex',gap:7,fontSize:13.5,color:'#7F1D1D',lineHeight:1.6}}>
+              <IChevR size={11} style={{color:'#991B1B',opacity:0.4,marginTop:4,flexShrink:0}}/>
+              <span>{g}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div style={{background:'#FFFDF0',border:'1.5px solid #FDE68A',borderRadius:12,overflow:'hidden'}}>
+        <div style={{padding:'7px 14px',borderBottom:'1px solid #FDE68A',display:'flex',alignItems:'center',gap:6}}>
+          <IBulb size={12} style={{color:'#CA8A04'}}/>
+          <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#854D0E'}}>Suggestions</span>
+          <span style={{fontSize:10,fontWeight:700,background:'#FEF9C3',color:'#854D0E',borderRadius:20,padding:'1px 6px',marginLeft:'auto'}}>{suggestions.length}</span>
+        </div>
+        <div style={{padding:'9px 14px',display:'flex',flexDirection:'column',gap:6}}>
+          {suggestions.map(s=>(
+            <div key={s.key} style={{display:'flex',gap:7,fontSize:13.5,color:'#713F12',lineHeight:1.6}}>
+              <IChevR size={11} style={{color:'#CA8A04',opacity:0.5,marginTop:4,flexShrink:0}}/>
+              <span>{s.text}</span>
+            </div>
           ))}
         </div>
       </div>
@@ -470,63 +1194,101 @@ function SSWorkflow(){
   );
 }
 
-/* ── MAIN APP ── */
+/* ── TRACK DEFINITIONS ── */
+const TRACKS=[
+  {id:'creative',label:'Global projects — High-visibility / Creativity',sizing:'In Panorama — L & sometimes M',desc:'Comms partners & PMMs are project owners — the Creative Factory handles localization end-to-end.',locked:true,activeBg:'#1A1A1A',activeText:'#fff',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
+  {id:'selfserve',label:'Global projects — Self-serve',sizing:'In Panorama — S & sometimes M',desc:'Creativity isn\'t business-critical. Self-serve localization by local teams.',locked:false,activeBg:'#7B4DB8',activeText:'#fff',badgeBg:'rgba(255,255,255,0.2)',badgeText:'rgba(255,255,255,0.9)'},
+  {id:'bau',label:'BAU / Channel ad-hoc — Self-serve',sizing:'Not in Panorama',desc:'CRM lifecycle, Paid Ads, Website — recurring channel-owned projects.',locked:false,activeBg:'#461068',activeText:'#fff',badgeBg:'rgba(255,255,255,0.15)',badgeText:'rgba(255,255,255,0.85)'},
+];
+
+/* ── APP ── */
 function App(){
-  const [isCommentMode, setIsCommentMode] = useState(false);
-  const [comments, setComments] = useState(() => {
-    const saved = localStorage.getItem('local-flow-comments');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const[view,setView]=useState('workflow');
+  const[activeTrack,setActiveTrack]=useState('selfserve');
+  const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
 
-  useEffect(() => {
-    localStorage.setItem('local-flow-comments', JSON.stringify(comments));
-  }, [comments]);
-
-  const addComment = (c) => setComments([...comments, c]);
-  const deleteComment = (idx) => setComments(comments.filter((_, i) => i !== idx));
+  const handleViewWorkflow=(track)=>{
+    setActiveTrack(track);
+    setView('workflow');
+  };
 
   return(
-    <div className={isCommentMode ? 'comment-mode-active' : ''} style={{ position: 'relative', minHeight: '100vh' }}>
-      <header style={{background:'#fff',borderBottom:'1px solid #E0E0E0',padding:'14px 32px',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:50}}>
-        <div style={{fontSize:22,fontWeight:800,color:'#050505'}}>Localization workflow</div>
-        <div style={{ display: 'flex', gap: 12 }}>
-            <button 
-                onClick={() => setIsCommentMode(!isCommentMode)}
-                style={{
-                    display: 'flex', alignItems: 'center', gap: 8, padding: '8px 16px', borderRadius: 10,
-                    border: 'none', cursor: 'pointer', fontWeight: 700, fontFamily: 'inherit',
-                    background: isCommentMode ? '#050505' : '#7B4DB8', color: '#fff'
-                }}
-            >
-                <IMessage size={16} />
-                {isCommentMode ? 'Exit Comment Mode' : 'Add Comments'}
-            </button>
+    <div style={{minHeight:'100vh',background:'#F5F5F5'}}>
+      {/* HEADER */}
+      <header style={{background:'#fff',borderBottom:'1px solid #E0E0E0',padding:'14px 32px',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:50,boxShadow:'0 1px 3px rgba(0,0,0,0.05)'}}>
+        <div style={{display:'flex',alignItems:'center',gap:16}}>
+          <div style={{fontSize:22,fontWeight:800,letterSpacing:'-0.04em',color:'#050505',lineHeight:1}}>Localization workflow</div>
+          <div style={{width:1,height:20,background:'#E0E0E0'}}/>
+          <div style={{fontSize:13,color:'#8F8F8F',fontWeight:500}}>{today}</div>
+        </div>
+        {/* View toggle */}
+        <div style={{display:'flex',background:'#F5F5F5',border:'1px solid #E0E0E0',borderRadius:10,padding:3,gap:2}}>
+          <button onClick={()=>setView('workflow')}
+            style={{display:'flex',alignItems:'center',gap:6,padding:'7px 14px',borderRadius:8,border:'none',cursor:'pointer',fontSize:13,fontWeight:600,fontFamily:'inherit',
+              background:view==='workflow'?'#fff':'transparent',
+              color:view==='workflow'?'#050505':'#8F8F8F',
+              boxShadow:view==='workflow'?'0 1px 3px rgba(0,0,0,0.08)':'none',transition:'all 0.15s'}}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+            Full workflow
+          </button>
+          <button onClick={()=>setView('path')}
+            style={{display:'flex',alignItems:'center',gap:6,padding:'7px 14px',borderRadius:8,border:'none',cursor:'pointer',fontSize:13,fontWeight:600,fontFamily:'inherit',
+              background:view==='path'?'#050505':'transparent',
+              color:view==='path'?'#fff':'#8F8F8F',
+              boxShadow:view==='path'?'0 1px 3px rgba(0,0,0,0.12)':'none',transition:'all 0.15s'}}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+            Find your path
+          </button>
+          <button onClick={()=>setView('pocs')}
+            style={{display:'flex',alignItems:'center',gap:6,padding:'7px 14px',borderRadius:8,border:'none',cursor:'pointer',fontSize:13,fontWeight:600,fontFamily:'inherit',
+              background:view==='pocs'?'#7B4DB8':'transparent',
+              color:view==='pocs'?'#fff':'#8F8F8F',
+              boxShadow:view==='pocs'?'0 1px 3px rgba(123,77,184,0.25)':'none',transition:'all 0.15s'}}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Local POCs
+          </button>
         </div>
       </header>
 
-      <div style={{padding:'28px 32px 80px'}}>
-        <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:12,padding:'14px 20px',marginBottom:24}}>
-            <ITarget size={17} style={{color:'#7B4DB8', marginRight: 8}}/>
-            <strong>Scope:</strong> Standard self-serve projects. Click <strong>"Add Comments"</strong> to leave feedback anywhere.
+      {view==='path'?(
+        <div style={{padding:'0 32px 80px'}}>
+          <PathFinder onViewWorkflow={handleViewWorkflow}/>
         </div>
-        
-        <SSWorkflow />
-        
-        <div style={{marginTop: 40}}>
-            <LocalPOCsBlock />
-        </div>
-      </div>
-
-      <CommentLayer 
-        active={isCommentMode} 
-        comments={comments} 
-        onAddComment={addComment} 
-        onDeleteComment={deleteComment}
-      />
-
-      {isCommentMode && (
-        <div style={{ position: 'fixed', bottom: 20, left: '50%', transform: 'translateX(-50%)', background: '#050505', color: '#fff', padding: '8px 20px', borderRadius: 50, fontSize: 13, fontWeight: 600, zIndex: 10000, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
-            📍 Click anywhere on the page to drop a comment pin
+      ):view==='pocs'?(
+        <LocalPOCView/>
+      ):(
+        <div style={{padding:'28px 32px 80px'}}>
+          <ScopeToggle/>
+          <HighLevelBar/>
+          {/* TRACK SELECTOR */}
+          <div style={{marginBottom:28}}>
+            <div style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',color:'#8F8F8F',marginBottom:12}}>Select a workflow type</div>
+            <div style={{display:'flex',gap:14,flexWrap:'wrap'}}>
+              {TRACKS.map(track=>{
+                const isActive=activeTrack===track.id;
+                return(
+                  <div key={track.id} className="track-card"
+                    onClick={()=>setActiveTrack(track.id)}
+                    style={{flex:'1 1 240px',maxWidth:380,minWidth:220,border:`2px solid ${isActive?track.activeBg:'#E0E0E0'}`,background:isActive?track.activeBg:'#fff',padding:'18px 20px',position:'relative'}}>
+                    <div style={{display:'inline-block',background:isActive?track.badgeBg:'#F5F5F5',color:isActive?track.badgeText:'#616161',border:`1px solid ${isActive?'rgba(255,255,255,0.15)':'#E0E0E0'}`,fontSize:12,fontWeight:700,borderRadius:20,padding:'4px 12px',marginBottom:10,letterSpacing:'0.02em'}}>{track.sizing}</div>
+                    {track.locked&&<ILock size={13} style={{position:'absolute',top:14,right:14,color:isActive?'rgba(255,255,255,0.5)':'#B8B8B8'}}/>}
+                    <div style={{fontSize:16,fontWeight:700,color:isActive?'#fff':'#050505',lineHeight:1.3,marginBottom:6}}>{track.label}</div>
+                    <p style={{fontSize:13.5,color:isActive?'rgba(255,255,255,0.75)':'#616161',margin:0,lineHeight:1.6}}>{track.desc}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <div key={activeTrack} className="fade-in">
+            {activeTrack==='creative'?(
+              <CreativePanel/>
+            ):(
+              <>
+                <Legend activeTrack={activeTrack}/>
+                {activeTrack==='selfserve'?<SSWorkflow/>:<BAUWorkflow/>}
+              </>
+            )}
+          </div>
         </div>
       )}
     </div>
