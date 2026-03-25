@@ -125,7 +125,104 @@ function Accordion({title,items,type,stepId}){
   );
 }
 
-/* ── NOTE FRAME ── */
+/* ── COMMENT SYSTEM ── */
+function CommentThread({threadId}){
+  const[comments,setComments]=useState([]);
+  const[name,setName]=useState('');
+  const[text,setText]=useState('');
+  const[open,setOpen]=useState(false);
+  const[inputOpen,setInputOpen]=useState(false);
+
+  // Persist in localStorage keyed by threadId
+  React.useEffect(()=>{
+    try{const saved=localStorage.getItem('comments_'+threadId);if(saved)setComments(JSON.parse(saved));}catch(e){}
+  },[threadId]);
+  const save=(list)=>{
+    try{localStorage.setItem('comments_'+threadId,JSON.stringify(list));}catch(e){}
+    setComments(list);
+  };
+  const submit=(e)=>{
+    e.stopPropagation();
+    if(!name.trim()||!text.trim())return;
+    const newList=[...comments,{id:Date.now(),name:name.trim(),text:text.trim(),date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short'})}];
+    save(newList);
+    setText('');
+    setInputOpen(false);
+    setOpen(true);
+  };
+  const remove=(id,e)=>{
+    e.stopPropagation();
+    save(comments.filter(c=>c.id!==id));
+  };
+
+  const initials=(n)=>n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  const avatarColor=(n)=>{const colors=['#7B4DB8','#461068','#3275C4','#2F95A0','#CE6033','#C24B89'];let h=0;for(let i=0;i<n.length;i++)h=(h+n.charCodeAt(i))%colors.length;return colors[h];};
+
+  return(
+    <div style={{marginTop:10}} onClick={e=>e.stopPropagation()}>
+      {/* Toggle bar */}
+      <div onClick={()=>setOpen(!open)}
+        style={{display:'flex',alignItems:'center',gap:6,padding:'7px 12px',background:'#F5F0FF',border:'1px solid #E9E0FF',borderRadius:open&&comments.length>0?'10px 10px 0 0':10,cursor:'pointer',transition:'all 0.15s'}}>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#7B4DB8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#7B4DB8',flex:1}}>
+          Comments {comments.length>0&&<span style={{background:'#7B4DB8',color:'#fff',borderRadius:20,padding:'0 6px',fontSize:10,marginLeft:4}}>{comments.length}</span>}
+        </span>
+        <span onClick={e=>{e.stopPropagation();setInputOpen(!inputOpen);setOpen(true);}}
+          style={{fontSize:11,fontWeight:700,color:'#7B4DB8',background:'#fff',border:'1px solid #E9E0FF',borderRadius:6,padding:'2px 8px',cursor:'pointer'}}>+ Add</span>
+        <IChevD size={12} style={{color:'#7B4DB8',transition:'transform 0.22s',transform:open?'rotate(180deg)':'rotate(0deg)'}}/>
+      </div>
+
+      {/* Body */}
+      <div className={`acc-body ${open?'open':''}`}>
+        <div className="acc-inner">
+          <div style={{background:'#FAF7FF',border:'1px solid #E9E0FF',borderTop:'none',borderRadius:'0 0 10px 10px',padding:'10px 12px',display:'flex',flexDirection:'column',gap:8}}>
+
+            {/* Input form */}
+            {inputOpen&&(
+              <div style={{background:'#fff',border:'1px solid #E9E0FF',borderRadius:8,padding:'10px 12px',display:'flex',flexDirection:'column',gap:7}}>
+                <input
+                  value={name} onChange={e=>setName(e.target.value)}
+                  placeholder="Your name"
+                  style={{fontSize:13,padding:'6px 10px',border:'1px solid #E0E0E0',borderRadius:7,fontFamily:'inherit',outline:'none',width:'100%'}}
+                  onClick={e=>e.stopPropagation()}
+                />
+                <textarea
+                  value={text} onChange={e=>setText(e.target.value)}
+                  placeholder="Leave a comment…"
+                  rows={2}
+                  style={{fontSize:13,padding:'6px 10px',border:'1px solid #E0E0E0',borderRadius:7,fontFamily:'inherit',resize:'vertical',outline:'none',width:'100%'}}
+                  onClick={e=>e.stopPropagation()}
+                />
+                <div style={{display:'flex',gap:6,justifyContent:'flex-end'}}>
+                  <button onClick={e=>{e.stopPropagation();setInputOpen(false);}} style={{fontSize:12,fontWeight:600,padding:'5px 12px',borderRadius:7,border:'1px solid #E0E0E0',background:'#fff',cursor:'pointer',fontFamily:'inherit',color:'#616161'}}>Cancel</button>
+                  <button onClick={submit} disabled={!name.trim()||!text.trim()} style={{fontSize:12,fontWeight:700,padding:'5px 12px',borderRadius:7,border:'none',background:name.trim()&&text.trim()?'#7B4DB8':'#E0E0E0',color:name.trim()&&text.trim()?'#fff':'#8F8F8F',cursor:name.trim()&&text.trim()?'pointer':'not-allowed',fontFamily:'inherit'}}>Post</button>
+                </div>
+              </div>
+            )}
+
+            {/* Comments list */}
+            {comments.length===0&&!inputOpen&&(
+              <p style={{fontSize:13,color:'#B8B8B8',margin:0,textAlign:'center',padding:'4px 0'}}>No comments yet.</p>
+            )}
+            {comments.map(c=>(
+              <div key={c.id} style={{display:'flex',gap:8,alignItems:'flex-start'}}>
+                <div style={{width:28,height:28,borderRadius:'50%',background:avatarColor(c.name),color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:10,fontWeight:800,flexShrink:0}}>{initials(c.name)}</div>
+                <div style={{flex:1,background:'#fff',border:'1px solid #E9E0FF',borderRadius:8,padding:'7px 10px'}}>
+                  <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:3}}>
+                    <span style={{fontSize:12,fontWeight:700,color:'#050505'}}>{c.name}</span>
+                    <span style={{fontSize:11,color:'#B8B8B8'}}>{c.date}</span>
+                    <button onClick={e=>remove(c.id,e)} style={{marginLeft:'auto',fontSize:11,color:'#CCCCCC',background:'none',border:'none',cursor:'pointer',padding:0,fontFamily:'inherit',lineHeight:1}} title="Delete">✕</button>
+                  </div>
+                  <p style={{fontSize:13,color:'#3D3D3D',margin:0,lineHeight:1.55}}>{c.text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 function NoteFrame({notes,stepId}){
   if(!notes||notes.length===0)return null;
   return(
@@ -210,6 +307,7 @@ const STEPS_SS=[
     gaps:[
       'No standardized localization request path across channels.',
       'As of March 2026, project owners often localize themselves even when not native. The current Local POC list isn\'t sustainable.',
+      '🗣 Discussed March 24 — to rediscuss: local teams (FR) suggest mirroring the BAU model instead: project owner handles master copy + localization using tools, markets only do a quality check (or skip entirely, treating edge cases as learning). Project owner also owns upload/publish, with channel owners. Pre-condition: markets get involved earlier in GTM to brief on local specificities before content production starts. (Philippine & Delphine, FR)',
     ],
     suggestions:[
       'Review and update the POC list across all markets — make it sustainable.',
@@ -410,6 +508,7 @@ function SSStepCard({step,gradBg,selectedUC,onSelectUC}){
         <NoteFrame notes={step.notes} stepId={step.id}/>
         <Accordion title="Process gaps" items={step.gaps} type="gaps" stepId={step.id}/>
         <Accordion title="Suggestions" items={step.suggestions} type="suggestions" stepId={step.id}/>
+        <CommentThread threadId={`ss-step-${step.id}`}/>
       </div>
     </div>
   );
@@ -525,6 +624,7 @@ function BAUStepCard({step,gradBg,selectedCh,onSelectCh}){
         <NoteFrame notes={step.notes} stepId={step.id}/>
         <Accordion title="Process gaps" items={step.gaps} type="gaps" stepId={step.id}/>
         <Accordion title="Suggestions" items={step.suggestions} type="suggestions" stepId={step.id}/>
+        <CommentThread threadId={`bau-step-${step.id}`}/>
       </div>
     </div>
   );
