@@ -162,24 +162,24 @@ function CommentThread({threadId}){
     <div style={{marginTop:10}} onClick={e=>e.stopPropagation()}>
       {/* Toggle bar */}
       <div onClick={()=>setOpen(!open)}
-        style={{display:'flex',alignItems:'center',gap:6,padding:'7px 12px',background:'#F5F0FF',border:'1px solid #E9E0FF',borderRadius:open&&comments.length>0?'10px 10px 0 0':10,cursor:'pointer',transition:'all 0.15s'}}>
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#7B4DB8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#7B4DB8',flex:1}}>
-          Comments {comments.length>0&&<span style={{background:'#7B4DB8',color:'#fff',borderRadius:20,padding:'0 6px',fontSize:10,marginLeft:4}}>{comments.length}</span>}
+        style={{display:'flex',alignItems:'center',gap:6,padding:'7px 12px',background:'#fff',border:'1px solid #E0E0E0',borderRadius:open&&(comments.length>0||inputOpen)?'10px 10px 0 0':10,cursor:'pointer',transition:'all 0.15s'}}>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8F8F8F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F',flex:1}}>
+          Comments {comments.length>0&&<span style={{background:'#616161',color:'#fff',borderRadius:20,padding:'0 6px',fontSize:10,marginLeft:4}}>{comments.length}</span>}
         </span>
         <span onClick={e=>{e.stopPropagation();setInputOpen(!inputOpen);setOpen(true);}}
-          style={{fontSize:11,fontWeight:700,color:'#7B4DB8',background:'#fff',border:'1px solid #E9E0FF',borderRadius:6,padding:'2px 8px',cursor:'pointer'}}>+ Add</span>
-        <IChevD size={12} style={{color:'#7B4DB8',transition:'transform 0.22s',transform:open?'rotate(180deg)':'rotate(0deg)'}}/>
+          style={{fontSize:11,fontWeight:700,color:'#616161',background:'#F5F5F5',border:'1px solid #E0E0E0',borderRadius:6,padding:'2px 8px',cursor:'pointer'}}>+ Add</span>
+        <IChevD size={12} style={{color:'#8F8F8F',transition:'transform 0.22s',transform:open?'rotate(180deg)':'rotate(0deg)'}}/>
       </div>
 
       {/* Body */}
       <div className={`acc-body ${open?'open':''}`}>
         <div className="acc-inner">
-          <div style={{background:'#FAF7FF',border:'1px solid #E9E0FF',borderTop:'none',borderRadius:'0 0 10px 10px',padding:'10px 12px',display:'flex',flexDirection:'column',gap:8}}>
+          <div style={{background:'#FAFAFA',border:'1px solid #E0E0E0',borderTop:'none',borderRadius:'0 0 10px 10px',padding:'10px 12px',display:'flex',flexDirection:'column',gap:8}}>
 
             {/* Input form */}
             {inputOpen&&(
-              <div style={{background:'#fff',border:'1px solid #E9E0FF',borderRadius:8,padding:'10px 12px',display:'flex',flexDirection:'column',gap:7}}>
+              <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:8,padding:'10px 12px',display:'flex',flexDirection:'column',gap:7}}>
                 <input
                   value={name} onChange={e=>setName(e.target.value)}
                   placeholder="Your name"
@@ -195,7 +195,7 @@ function CommentThread({threadId}){
                 />
                 <div style={{display:'flex',gap:6,justifyContent:'flex-end'}}>
                   <button onClick={e=>{e.stopPropagation();setInputOpen(false);}} style={{fontSize:12,fontWeight:600,padding:'5px 12px',borderRadius:7,border:'1px solid #E0E0E0',background:'#fff',cursor:'pointer',fontFamily:'inherit',color:'#616161'}}>Cancel</button>
-                  <button onClick={submit} disabled={!name.trim()||!text.trim()} style={{fontSize:12,fontWeight:700,padding:'5px 12px',borderRadius:7,border:'none',background:name.trim()&&text.trim()?'#7B4DB8':'#E0E0E0',color:name.trim()&&text.trim()?'#fff':'#8F8F8F',cursor:name.trim()&&text.trim()?'pointer':'not-allowed',fontFamily:'inherit'}}>Post</button>
+                  <button onClick={submit} disabled={!name.trim()||!text.trim()} style={{fontSize:12,fontWeight:700,padding:'5px 12px',borderRadius:7,border:'none',background:name.trim()&&text.trim()?'#050505':'#E0E0E0',color:name.trim()&&text.trim()?'#fff':'#8F8F8F',cursor:name.trim()&&text.trim()?'pointer':'not-allowed',fontFamily:'inherit'}}>Post</button>
                 </div>
               </div>
             )}
@@ -207,7 +207,7 @@ function CommentThread({threadId}){
             {comments.map(c=>(
               <div key={c.id} style={{display:'flex',gap:8,alignItems:'flex-start'}}>
                 <div style={{width:28,height:28,borderRadius:'50%',background:avatarColor(c.name),color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:10,fontWeight:800,flexShrink:0}}>{initials(c.name)}</div>
-                <div style={{flex:1,background:'#fff',border:'1px solid #E9E0FF',borderRadius:8,padding:'7px 10px'}}>
+                <div style={{flex:1,background:'#fff',border:'1px solid #E0E0E0',borderRadius:8,padding:'7px 10px'}}>
                   <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:3}}>
                     <span style={{fontSize:12,fontWeight:700,color:'#050505'}}>{c.name}</span>
                     <span style={{fontSize:11,color:'#B8B8B8'}}>{c.date}</span>
@@ -837,6 +837,10 @@ function Legend({activeTrack}){
             <div style={{display:'flex',alignItems:'center',gap:5}}>
               <IWorkflow size={13} style={{color:'#8F8F8F'}}/>
               <span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Process steps (expandable)</span>
+            </div>
+            <div style={{display:'flex',alignItems:'center',gap:5}}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8F8F8F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Comments</span>
             </div>
             <div style={{width:'100%',height:1,background:'#F0F0F0'}}/>
             <div style={{display:'flex',alignItems:'center',gap:5}}><span style={{width:8,height:8,borderRadius:2,background:'#FEE2E2',border:'1px solid #FECACA',display:'inline-block'}}/><span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Process gap</span></div>
