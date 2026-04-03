@@ -160,8 +160,8 @@
     display: flex; align-items: center; justify-content: center;
     margin: 0 auto 5px;
   }
-  .candidate-pill .name { font-size: 11px; font-weight: 700; color: var(--dark); line-height: 1.3; }
-  .candidate-pill .team { font-size: 9.5px; color: var(--gray-mid); margin-top: 2px; }
+  .candidate-pill .name, .suppleant-pill .name { font-size: 11px; font-weight: 700; color: var(--dark); line-height: 1.3; }
+  .candidate-pill .team, .suppleant-pill .team { font-size: 9.5px; color: var(--gray-mid); margin-top: 2px; }
 
   /* ══ PRIORITÉS ══ */
   .priorities-grid {
@@ -240,25 +240,22 @@
   /* ══ SUPPLÉANTS ══ */
   .suppleants-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }
   @media (min-width: 480px) {
+    .suppleants-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (min-width: 640px) {
     .suppleants-grid { grid-template-columns: repeat(5, 1fr); }
   }
   .suppleant-pill {
     background: white; border: 1px solid var(--border);
     border-radius: 8px; padding: 10px 6px; text-align: center;
   }
-  .suppleant-pill .initials {
-    width: 28px; height: 28px; border-radius: 50%;
-    background: var(--gray-mid); color: white;
-    font-size: 10px; font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 5px;
-  }
-  .suppleant-pill .name { font-size: 11px; font-weight: 700; color: var(--dark); line-height: 1.3; }
-  .suppleant-pill .team { font-size: 9.5px; color: var(--gray-mid); margin-top: 2px; }
+  
+  
+  
 
   /* ══ FOOTER ══ */
   .footer {
@@ -395,21 +392,21 @@
   <div class="section">
     <div class="section-label">Vos 15 titulaires</div>
     <div class="candidates-grid">
-      <div class="candidate-pill"><div class="initials">JE</div><div class="name">Jean</div><div class="team">Tech Backend</div></div>
-      <div class="candidate-pill"><div class="initials">SO</div><div class="name">Soline</div><div class="team">Growth/Brand</div></div>
-      <div class="candidate-pill"><div class="initials">CE</div><div class="name">Cedrick</div><div class="team">Strat</div></div>
-      <div class="candidate-pill"><div class="initials">CL</div><div class="name">Claire</div><div class="team">Growth</div></div>
-      <div class="candidate-pill"><div class="initials">HE</div><div class="name">Henry</div><div class="team">CSM</div></div>
-      <div class="candidate-pill"><div class="initials">JU</div><div class="name">Juline</div><div class="team">Anti Financial Crime</div></div>
-      <div class="candidate-pill"><div class="initials">MA</div><div class="name">Maximilien</div><div class="team">Tech Mobile</div></div>
-      <div class="candidate-pill"><div class="initials">MA</div><div class="name">Marie</div><div class="team">Growth/Brand</div></div>
-      <div class="candidate-pill"><div class="initials">MA</div><div class="name">Maxime</div><div class="team">Tech Backend</div></div>
-      <div class="candidate-pill"><div class="initials">SA</div><div class="name">Sahar</div><div class="team">Ops</div></div>
-      <div class="candidate-pill"><div class="initials">MI</div><div class="name">Minh-Hai</div><div class="team">Ops</div></div>
-      <div class="candidate-pill"><div class="initials">MA</div><div class="name">Maelle</div><div class="team">Legal</div></div>
-      <div class="candidate-pill"><div class="initials">TH</div><div class="name">Thaddée</div><div class="team">Tech Backend</div></div>
-      <div class="candidate-pill"><div class="initials">EL</div><div class="name">Élodie</div><div class="team">Ops Banking</div></div>
-      <div class="candidate-pill"><div class="initials">GI</div><div class="name">Gino</div><div class="team">Ops CC</div></div>
+      <div class="candidate-pill"><div class="initials" style="background:#2E1A5E">JE</div><div class="name">Jean Gagnaire</div><div class="team">Tech Backend</div></div>
+      <div class="candidate-pill"><div class="initials" style="background:#2E1A5E">SO</div><div class="name">Soline Avrillas</div><div class="team">Growth/Brand</div></div>
+      <div class="candidate-pill"><div class="initials" style="background:#2E1A5E">CE</div><div class="name">Cedrick Lefebvre</div><div class="team">Strat</div></div>
+      <div class="candidate-pill"><div class="initials" style="background:#2E1A5E">CL</div><div class="name">Claire Gautier</div><div class="team">Growth</div></div>
+      <div class="candidate-pill"><div class="initials" style="background:#2E1A5E">HE</div><div class="name">Henry Nana</div><div class="team">CSM</div></div>
+      <div class="candidate-pill"><div class="initials" style="background:#2E1A5E">JU</div><div class="name">Juline Teixeira</div><div class="team">Anti Financial Crime</div></div>
+      <div class="candidate-pill"><div class="initials" style="background:#2E1A5E">MA</div><div class="name">Maximilien Oteifeh</div><div class="team">Tech Mobile</div></div>
+      <div class="candidate-pill"><div class="initials" style="background:#2E1A5E">MA</div><div class="name">Marie Mathieu</div><div class="team">Growth/Brand</div></div>
+      <div class="candidate-pill"><div class="initials" style="background:#2E1A5E">MA</div><div class="name">Maxime Raverdy</div><div class="team">Tech Backend</div></div>
+      <div class="candidate-pill"><div class="initials" style="background:#2E1A5E">SA</div><div class="name">Sahar Kouka</div><div class="team">Ops</div></div>
+      <div class="candidate-pill"><div class="initials" style="background:#2E1A5E">MI</div><div class="name">Minh-Hai Le</div><div class="team">Ops</div></div>
+      <div class="candidate-pill"><div class="initials" style="background:#2E1A5E">MA</div><div class="name">Maelle Hilary</div><div class="team">Legal</div></div>
+      <div class="candidate-pill"><div class="initials" style="background:#2E1A5E">TH</div><div class="name">Thaddée Tyl</div><div class="team">Tech Backend</div></div>
+      <div class="candidate-pill"><div class="initials" style="background:#2E1A5E">EL</div><div class="name">Élodie David-Martin</div><div class="team">Ops Banking</div></div>
+      <div class="candidate-pill"><div class="initials" style="background:#2E1A5E">GI</div><div class="name">Gino Rotondo</div><div class="team">Ops CC</div></div>
     </div>
   </div>
 
@@ -525,11 +522,16 @@
   <div class="section">
     <div class="section-label">Vos suppléant·es</div>
     <div class="suppleants-grid">
-      <div class="suppleant-pill"><div class="initials">CC</div><div class="name">Chung-Cai</div><div class="team">Product</div></div>
-      <div class="suppleant-pill"><div class="initials">OL</div><div class="name">Oleksandra</div><div class="team">Growth/Brand</div></div>
-      <div class="suppleant-pill"><div class="initials">GH</div><div class="name">Ghislain</div><div class="team">Legal</div></div>
-      <div class="suppleant-pill"><div class="initials">CY</div><div class="name">Cyril</div><div class="team">Tech SRE</div></div>
-      <div class="suppleant-pill"><div class="initials">MA</div><div class="name">Mathilde</div><div class="team">Strat/Finance</div></div>
+      <div class="suppleant-pill"><div class="name">Chung-Cai Chao</div><div class="team">Ops</div></div>
+      <div class="suppleant-pill"><div class="name">Oleksandra Kuzminska</div><div class="team">Growth/Brand</div></div>
+      <div class="suppleant-pill"><div class="name">Ghislain Houssel</div><div class="team">Legal</div></div>
+      <div class="suppleant-pill"><div class="name">Mathilde Salomon</div><div class="team">Finance</div></div>
+      <div class="suppleant-pill"><div class="name">Cyril Mougel</div><div class="team">Tech SRE</div></div>
+      <div class="suppleant-pill"><div class="name">Juliette de Bisschop</div><div class="team">Strat</div></div>
+      <div class="suppleant-pill"><div class="name">Baptiste Dret</div><div class="team">Product/Design</div></div>
+      <div class="suppleant-pill"><div class="name">Clémence Lesvenan</div><div class="team">Product/Design</div></div>
+      <div class="suppleant-pill"><div class="name">À venir</div></div>
+      <div class="suppleant-pill"><div class="name">Léonore Musitelli</div><div class="team">Growth/Brand</div></div>
     </div>
   </div>
 
