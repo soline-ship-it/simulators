@@ -12,8 +12,8 @@
   .page{max-width:860px;margin:0 auto;background:var(--white);}
   .header{background:var(--violet-dark);padding:32px 40px 30px;position:relative;overflow:hidden;}
   .header-accent{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--yellow) 0%,rgba(245,166,35,0.2) 100%);}
-  .header-deco{position:absolute;top:18px;right:24px;width:250px;pointer-events:none;z-index:3;display:flex;flex-direction:column;align-items:stretch;gap:4px;overflow:visible;}
-  @media(max-width:600px){.header-deco{width:160px;top:14px;right:12px;}}
+  .header-deco{position:absolute;top:50%;right:40px;transform:translateY(-50%);width:220px;pointer-events:none;z-index:3;display:flex;flex-direction:column;align-items:stretch;gap:6px;overflow:visible;}
+  @media(max-width:600px){.header-deco{width:130px;right:12px;}}
   .wordart-wrap{width:100%;overflow:visible;}
   .wordart{display:block;font-family:'Arial Black',Impact,sans-serif;font-weight:900;font-size:15px;text-align:center;letter-spacing:2px;line-height:1.15;white-space:nowrap;width:100%;color:#FFB300;text-shadow:1px 0 0 #CC5500,2px 1px 0 #AA3300,3px 2px 0 #882200,4px 3px 0 #661100,0 0 10px rgba(255,160,0,0.5);transform:skewY(-8deg) skewX(-4deg) scaleX(0.92) scaleY(1.15);transform-origin:center center;animation:pulse-wa 2s ease-in-out infinite alternate;}
   @media(min-width:600px){.wordart{font-size:20px;letter-spacing:3px;}}
@@ -32,18 +32,18 @@
   .section{padding:36px 40px;border-bottom:1px solid var(--border);}
   @media(max-width:600px){.section{padding:28px 20px;}}
   .section-label{font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--violet);margin-bottom:20px;display:block;}
-  .why-box{border-left:3px solid var(--violet);padding-left:20px;}
-  .why-box p{color:var(--text);font-size:14px;line-height:1.8;}
-  .why-box strong{color:var(--violet);font-weight:700;}
-  .why-box .hi{color:var(--violet-light);font-weight:600;}
+  .liseré-box{border-left:3px solid var(--violet);padding-left:20px;}
+  .liseré-box p{color:var(--text);font-size:14px;line-height:1.8;}
+  .liseré-box strong{color:var(--violet);font-weight:700;}
+  .liseré-box .hi{color:var(--violet-light);font-weight:600;}
   .candidates-sub-label{font-size:9px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--gray);margin-bottom:12px;display:block;}
   .candidates-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
   @media(min-width:480px){.candidates-grid{grid-template-columns:repeat(4,1fr);}}
   @media(min-width:640px){.candidates-grid{grid-template-columns:repeat(5,1fr);}}
   .candidate-pill{padding:10px 6px;text-align:center;border-radius:8px;background:var(--off);border:1px solid var(--border);}
   .candidate-pill .initials{width:30px;height:30px;border-radius:50%;background:var(--violet);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;}
-  .candidate-pill .name, .candidate-pill .team{font-size:11px;font-weight:700;color:var(--dark);line-height:1.3;}
-  .candidate-pill .team{font-size:9.5px;color:var(--gray);margin-top:1px;font-weight:400;}
+  .candidate-pill .name{font-size:11px;font-weight:700;color:var(--dark);line-height:1.3;}
+  .candidate-pill .team{font-size:9.5px;color:var(--gray);margin-top:1px;}
   .priorities-grid{display:grid;grid-template-columns:1fr;gap:0;}
   @media(min-width:560px){.priorities-grid{grid-template-columns:1fr 1fr;gap:0 40px;}}
   .priority-card{padding:22px 0;border-bottom:1px solid var(--border);display:flex;gap:16px;align-items:flex-start;}
@@ -57,8 +57,8 @@
   .priority-card strong{color:var(--dark);font-weight:700;}
   .tags-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px;padding-top:20px;border-top:1px solid var(--border);}
   .tag{font-size:11.5px;color:var(--gray);font-weight:500;padding:4px 12px;border-radius:20px;border:1px solid var(--mid);background:var(--off);}
-  .engagements{display:grid;grid-template-columns:1fr;gap:20px;}
-  @media(min-width:560px){.engagements{grid-template-columns:1fr 1fr 1fr;gap:24px;}}
+  .engagements{display:grid;grid-template-columns:1fr;gap:14px;}
+  @media(min-width:560px){.engagements{grid-template-columns:1fr 1fr 1fr;gap:18px;}}
   .engagement-card{display:flex;flex-direction:column;gap:10px;background:var(--off);border:1px solid var(--border);border-radius:12px;padding:20px;}
   @media(max-width:559px){.engagement-card{flex-direction:row;align-items:flex-start;gap:14px;padding:16px;}}
   .eng-picto{width:40px;height:40px;flex-shrink:0;border-radius:10px;background:var(--violet-pale);display:flex;align-items:center;justify-content:center;}
@@ -66,14 +66,8 @@
   .engagement-card h4{font-size:14px;font-weight:800;color:var(--dark);line-height:1.3;}
   .engagement-card p{font-size:13px;color:var(--text);line-height:1.6;}
   .engagement-text{display:flex;flex-direction:column;gap:4px;}
-  .cfecgc-strip{background:var(--off);border-top:1px solid var(--border);padding:28px 40px;display:flex;flex-direction:column;gap:16px;}
-  @media(min-width:600px){.cfecgc-strip{flex-direction:row;gap:40px;align-items:flex-start;}.cfecgc-strip-left{flex:1;}.cfecgc-strip-right{flex-shrink:0;width:200px;}}
-  @media(max-width:600px){.cfecgc-strip{padding:24px 20px;}}
-  .cfecgc-strip-label{font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--violet);margin-bottom:8px;display:block;}
-  .cfecgc-strip-left p{font-size:13px;color:var(--text);line-height:1.7;}
-  .cfecgc-strip-left strong{color:var(--violet);font-weight:700;}
-  .cfecgc-co-label{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:8px;display:block;}
-  .cfecgc-co-list{font-size:12px;color:var(--text);line-height:1.9;}
+  .cfecgc-section{padding:36px 40px;background:var(--white);border-top:1px solid var(--border);}
+  @media(max-width:600px){.cfecgc-section{padding:28px 20px;}}
   .footer{background:var(--violet-dark);padding:28px 40px;display:flex;align-items:center;justify-content:space-between;gap:24px;position:relative;}
   .footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--yellow),rgba(245,166,35,0.2));}
   @media(max-width:560px){.footer{flex-direction:column;padding:24px 20px;align-items:flex-start;gap:14px;}}
@@ -84,6 +78,7 @@
 </head>
 <body>
 <div class="page">
+
   <div class="header">
     <div class="header-accent"></div>
     <div class="header-deco">
@@ -100,13 +95,15 @@
     <div class="header-sub">Vos collègues, investi·es pour votre carrière et vos intérêts chez Qonto</div>
   </div>
 
+  <!-- POURQUOI SYNDIQUÉ -->
   <div class="section">
     <span class="section-label">Pourquoi une liste syndiquée&nbsp;?</span>
-    <div class="why-box">
+    <div class="liseré-box">
       <p>Ce n'est pas un choix politique — c'est un choix <span class="hi">pratique</span>. En droit français, seul un syndicat peut désigner un·e <strong>délégué·e syndical·e</strong> (parmi l'un d'entre nous), habilité·e à négocier et signer des accords d'entreprise contraignants (salaires, télétravail, égalité professionnelle…). Sans syndicat, un CSE est consulté. Avec un syndicat, il <span class="hi">obtient des engagements</span>. La CFE-CGC nous apporte également une expertise juridique et des formations sérieuses en droit social.<br><br>En résumé, nous voulons nous investir sincèrement pour un dialogue social qui fonctionne vraiment chez Qonto, tenir nos mandats avec rigueur, et rendre l'information accessible pour tou·tes. Pas de postures idéologiques — des résultats concrets pour les salarié·es.</p>
     </div>
   </div>
 
+  <!-- ÉQUIPE -->
   <div class="section">
     <span class="section-label">Notre équipe</span>
     <span class="candidates-sub-label">Titulaires</span>
@@ -116,7 +113,7 @@
       <div class="candidate-pill"><div class="initials" style="background:#2E1A5E">CE</div><div class="name">Cedrick Lefebvre</div><div class="team">Strat</div></div>
       <div class="candidate-pill"><div class="initials" style="background:#2E1A5E">CL</div><div class="name">Claire Gautier</div><div class="team">Growth</div></div>
       <div class="candidate-pill"><div class="initials" style="background:#2E1A5E">HE</div><div class="name">Henry Nana</div><div class="team">CSM</div></div>
-      <div class="candidate-pill" style="opacity:0.45"><div class="initials" style="background:#2E1A5E">FE</div><div class="name">Femme (à venir)</div><div class="team">—</div></div>
+      <div class="candidate-pill" style="opacity:0.4"><div class="initials" style="background:#2E1A5E">FE</div><div class="name">Femme (à venir)</div><div class="team">—</div></div>
       <div class="candidate-pill"><div class="initials" style="background:#2E1A5E">MA</div><div class="name">Maximilien Oteifeh</div><div class="team">Tech Mobile</div></div>
       <div class="candidate-pill"><div class="initials" style="background:#2E1A5E">MA</div><div class="name">Marie Mathieu</div><div class="team">Growth/Brand</div></div>
       <div class="candidate-pill"><div class="initials" style="background:#2E1A5E">MA</div><div class="name">Maxime Raverdy</div><div class="team">Tech Backend</div></div>
@@ -137,26 +134,48 @@
       <div class="candidate-pill"><div class="initials" style="background:#7C5CBF">JU</div><div class="name">Juliette de Bisschop</div><div class="team">Strat</div></div>
       <div class="candidate-pill"><div class="initials" style="background:#7C5CBF">BA</div><div class="name">Baptiste Dret</div><div class="team">Product/Design</div></div>
       <div class="candidate-pill"><div class="initials" style="background:#7C5CBF">CL</div><div class="name">Clémence Lesvenan</div><div class="team">Product/Design</div></div>
-      <div class="candidate-pill" style="opacity:0.45"><div class="initials" style="background:#7C5CBF">H</div><div class="name">Homme (à venir)</div></div>
+      <div class="candidate-pill" style="opacity:0.4"><div class="initials" style="background:#7C5CBF">H</div><div class="name">Homme (à venir)</div></div>
       <div class="candidate-pill"><div class="initials" style="background:#7C5CBF">LÉ</div><div class="name">Léonore Musitelli</div><div class="team">Growth/Brand</div></div>
-      <div class="candidate-pill" style="opacity:0.45"><div class="initials" style="background:#7C5CBF">H</div><div class="name">Homme (à venir)</div></div>
+      <div class="candidate-pill" style="opacity:0.4"><div class="initials" style="background:#7C5CBF">H</div><div class="name">Homme (à venir)</div></div>
       <div class="candidate-pill"><div class="initials" style="background:#7C5CBF">TA</div><div class="name">Thu-An Duong</div></div>
-      <div class="candidate-pill" style="opacity:0.45"><div class="initials" style="background:#7C5CBF">H</div><div class="name">Homme (à venir)</div></div>
-      <div class="candidate-pill" style="opacity:0.45"><div class="initials" style="background:#7C5CBF">F</div><div class="name">Femme (à venir)</div></div>
-      <div class="candidate-pill" style="opacity:0.45"><div class="initials" style="background:#7C5CBF">H</div><div class="name">Homme (à venir)</div></div>
+      <div class="candidate-pill" style="opacity:0.4"><div class="initials" style="background:#7C5CBF">H</div><div class="name">Homme (à venir)</div></div>
+      <div class="candidate-pill" style="opacity:0.4"><div class="initials" style="background:#7C5CBF">F</div><div class="name">Femme (à venir)</div></div>
+      <div class="candidate-pill" style="opacity:0.4"><div class="initials" style="background:#7C5CBF">H</div><div class="name">Homme (à venir)</div></div>
     </div>
   </div>
 
+  <!-- PRIORITÉS -->
   <div class="section">
     <span class="section-label">Nos priorités</span>
     <div class="priorities-grid">
-      <div class="priority-card"><div class="priority-picto"><svg viewBox="0 0 24 24" fill="none" stroke="#1A1333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><div class="priority-body"><h3>Changement de convention collective</h3><p>Parce que Qonto est en train de devenir une banque, nous appliquerons la <strong>Convention Collective Nationale de la Banque</strong> — plus protectrice que notre convention actuelle (Syntec), notamment sur le <strong>maintien de salaire pendant les congés maladie et maternité</strong> et les garanties à l'ancienneté. Mais attention&nbsp;: ce changement n'est pas automatique pour tout. Certaines dispositions — classification, primes, 13e mois — doivent être <strong>négociées et formalisées</strong> en accord d'entreprise pour s'appliquer vraiment. C'est exactement là que le CSE joue son rôle&nbsp;: s'assurer que personne ne passe entre les mailles.</p></div></div>
-      <div class="priority-card"><div class="priority-picto"><svg viewBox="0 0 24 24" fill="none" stroke="#1A1333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><div class="priority-body"><h3>Télétravail&nbsp;: clarté et stabilité pour tou·tes</h3><p>Que vous travailliez en full remote ou depuis Paris, les règles du jeu doivent être claires et stables pour tou·tes. Aujourd'hui elles peuvent changer sans préavis. Nous voulons un <strong>accord d'entreprise écrit</strong> qui fixe le nombre de jours garanti, des règles équitables quel que soit votre lieu de vie — et une <strong>protection durable</strong>&nbsp;: ce que l'employeur s'engage par accord, il ne peut pas le défaire unilatéralement.</p></div></div>
-      <div class="priority-card"><div class="priority-picto"><svg viewBox="0 0 24 24" fill="none" stroke="#1A1333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="priority-body"><h3>Qualité de vie &amp; santé mentale</h3><p>Prévenir plutôt que subir. Les <strong>risques psychosociaux</strong> — surcharge, isolement, burnout — sont des signaux que le management ne peut pas ignorer. Nous voulons mettre en place des <strong>outils de détection précoce</strong>, garantir des pratiques managériales saines, et s'assurer qu'un retour après un arrêt long soit accompagné d'un plan personnalisé. Nous porterons également une attention particulière à la <strong>prévention du harcèlement</strong>, en veillant à ce que chaque salarié·e dispose d'un recours clair, confidentiel et effectif. Le bien-être au travail n'est pas un luxe — c'est une condition de performance durable pour tou·tes.</p></div></div>
-      <div class="priority-card"><div class="priority-picto"><svg viewBox="0 0 24 24" fill="none" stroke="#1A1333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="priority-body"><h3>Accompagnement lors des transitions</h3><p>Réorganisation, mobilité, départ&nbsp;: chaque salarié·e concerné·e mérite d'être accompagné·e avec clarté. Nous serons présent·es pour s'assurer que les droits sont connus et que les process sont respectés — sans que personne n'ait à naviguer seul·e.</p></div></div>
-      <div class="priority-card"><div class="priority-picto"><svg viewBox="0 0 24 24" fill="none" stroke="#1A1333" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/></svg></div><div class="priority-body"><h3>Égalité&nbsp;: salaires, parcours et mobilité</h3><p>La directive européenne sur l'égalité salariale impose de nouvelles obligations. Nous suivrons de près son application chez Qonto&nbsp;: écarts femmes-hommes, cohérence des augmentations, lisibilité des critères d'évolution. Au-delà des salaires, nous portons aussi la <strong>mobilité interne accessible à tou·tes</strong> et la clarté sur les <strong>career paths</strong> — pour aller au-delà des intentions et formuler des propositions concrètes et mesurables.</p></div></div>
-      <div class="priority-card"><div class="priority-picto"><svg viewBox="0 0 24 24" fill="none" stroke="#1A1333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/><circle cx="12" cy="12" r="1.5" fill="#1A1333" stroke="none"/></svg></div><div class="priority-body"><h3>Parentalité</h3><p>Des progrès ont déjà été faits chez Qonto — le nouveau <strong>congé de naissance</strong> et l'accès à des <strong>places en crèche</strong> en sont de bons exemples. Et c'est bien. Mais on peut aller plus loin. La CCN Banque est ici une <strong>vraie opportunité</strong>&nbsp;: elle prévoit un congé maternité supplémentaire rémunéré après le congé légal. Surtout, nous voulons que chaque retour de <strong>congé lié à la parentalité</strong> soit préparé et accompagné&nbsp;: revue des objectifs, temps de réadaptation, manager sensibilisé aux réalités de la parentalité — parce qu'on ne reprend pas le travail après un enfant comme après n'importe quelle absence.</p></div></div>
-      <div class="priority-card"><div class="priority-picto"><svg viewBox="0 0 24 24" fill="none" stroke="#1A1333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="priority-body"><h3>Budget CSE &amp; vie sociale</h3><p>Un budget bien géré, c'est un CSE utile au plus grand nombre. Nous voulons une gestion <strong>transparente et équitable</strong> des affaires sociales, distribuée selon les besoins réels, avec notamment une <strong>revalorisation de la valeur des tickets restaurant</strong> que nous porterons comme priorité concrète. Nous travaillerons également <strong>main dans la main avec les ERGs</strong> pour amplifier leur impact et soutenir les initiatives qui comptent vraiment pour les équipes.</p></div></div>
+      <div class="priority-card">
+        <div class="priority-picto"><svg viewBox="0 0 24 24" fill="none" stroke="#1A1333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <div class="priority-body"><h3>Changement de convention collective</h3><p>Parce que Qonto est en train de devenir une banque, nous appliquerons la <strong>Convention Collective Nationale de la Banque</strong> — plus protectrice que notre convention actuelle (Syntec), notamment sur le <strong>maintien de salaire pendant les congés maladie et maternité</strong> et les garanties à l'ancienneté. Mais attention&nbsp;: ce changement n'est pas automatique pour tout. Certaines dispositions — classification, primes, 13e mois — doivent être <strong>négociées et formalisées</strong> en accord d'entreprise pour s'appliquer vraiment. C'est exactement là que le CSE joue son rôle&nbsp;: s'assurer que personne ne passe entre les mailles.</p></div>
+      </div>
+      <div class="priority-card">
+        <div class="priority-picto"><svg viewBox="0 0 24 24" fill="none" stroke="#1A1333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+        <div class="priority-body"><h3>Télétravail&nbsp;: clarté et stabilité pour tou·tes</h3><p>Que vous travailliez en full remote ou depuis Paris, les règles du jeu doivent être claires et stables pour tou·tes. Aujourd'hui elles peuvent changer sans préavis. Nous voulons un <strong>accord d'entreprise écrit</strong> qui fixe le nombre de jours garanti, des règles équitables quel que soit votre lieu de vie — et une <strong>protection durable</strong>&nbsp;: ce que l'employeur s'engage par accord, il ne peut pas le défaire unilatéralement.</p></div>
+      </div>
+      <div class="priority-card">
+        <div class="priority-picto"><svg viewBox="0 0 24 24" fill="none" stroke="#1A1333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="priority-body"><h3>Qualité de vie &amp; santé mentale</h3><p>Prévenir plutôt que subir. Les <strong>risques psychosociaux</strong> — surcharge, isolement, burnout — sont des signaux que le management ne peut pas ignorer. Nous voulons mettre en place des <strong>outils de détection précoce</strong>, garantir des pratiques managériales saines, et s'assurer qu'un retour après un arrêt long soit accompagné d'un plan personnalisé. Nous porterons également une attention particulière à la <strong>prévention du harcèlement</strong>, en veillant à ce que chaque salarié·e dispose d'un recours clair, confidentiel et effectif. Le bien-être au travail n'est pas un luxe — c'est une condition de performance durable pour tou·tes.</p></div>
+      </div>
+      <div class="priority-card">
+        <div class="priority-picto"><svg viewBox="0 0 24 24" fill="none" stroke="#1A1333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div class="priority-body"><h3>Accompagnement lors des transitions</h3><p>Réorganisation, mobilité, départ&nbsp;: chaque salarié·e concerné·e mérite d'être accompagné·e avec clarté. Nous serons présent·es pour s'assurer que les droits sont connus et que les process sont respectés — sans que personne n'ait à naviguer seul·e.</p></div>
+      </div>
+      <div class="priority-card">
+        <div class="priority-picto"><svg viewBox="0 0 24 24" fill="none" stroke="#1A1333" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/></svg></div>
+        <div class="priority-body"><h3>Égalité&nbsp;: salaires, parcours et mobilité</h3><p>La directive européenne sur l'égalité salariale impose de nouvelles obligations. Nous suivrons de près son application chez Qonto&nbsp;: écarts femmes-hommes, cohérence des augmentations, lisibilité des critères d'évolution. Au-delà des salaires, nous portons aussi la <strong>mobilité interne accessible à tou·tes</strong> et la clarté sur les <strong>career paths</strong> — pour aller au-delà des intentions et formuler des propositions concrètes et mesurables.</p></div>
+      </div>
+      <div class="priority-card">
+        <div class="priority-picto"><svg viewBox="0 0 24 24" fill="none" stroke="#1A1333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/><circle cx="12" cy="12" r="1.5" fill="#1A1333" stroke="none"/></svg></div>
+        <div class="priority-body"><h3>Parentalité</h3><p>Des progrès ont déjà été faits chez Qonto — le nouveau <strong>congé de naissance</strong> et l'accès à des <strong>places en crèche</strong> en sont de bons exemples. Et c'est bien. Mais on peut aller plus loin. La CCN Banque est ici une <strong>vraie opportunité</strong>&nbsp;: elle prévoit un congé maternité supplémentaire rémunéré après le congé légal. Surtout, nous voulons que chaque retour de <strong>congé lié à la parentalité</strong> soit préparé et accompagné&nbsp;: revue des objectifs, temps de réadaptation, manager sensibilisé aux réalités de la parentalité — parce qu'on ne reprend pas le travail après un enfant comme après n'importe quelle absence.</p></div>
+      </div>
+      <div class="priority-card">
+        <div class="priority-picto"><svg viewBox="0 0 24 24" fill="none" stroke="#1A1333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div class="priority-body"><h3>Budget CSE &amp; vie sociale</h3><p>Un budget bien géré, c'est un CSE utile au plus grand nombre. Nous voulons une gestion <strong>transparente et équitable</strong> des affaires sociales, distribuée selon les besoins réels, avec notamment une <strong>revalorisation de la valeur des tickets restaurant</strong> que nous porterons comme priorité concrète. Nous travaillerons également <strong>main dans la main avec les ERGs</strong> pour amplifier leur impact et soutenir les initiatives qui comptent vraiment pour les équipes.</p></div>
+      </div>
     </div>
     <div class="tags-row">
       <span class="tag">IA &amp; impact sur les conditions de travail</span>
@@ -164,26 +183,34 @@
     </div>
   </div>
 
+  <!-- ENGAGEMENTS -->
   <div class="section">
     <span class="section-label">Nos engagements</span>
     <div class="engagements">
-      <div class="engagement-card"><div class="eng-picto"><svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="5" x2="18" y2="30" stroke="#4B2D8F" stroke-width="2.2" stroke-linecap="round"/><line x1="7" y1="5" x2="29" y2="5" stroke="#4B2D8F" stroke-width="2.2" stroke-linecap="round"/><line x1="7" y1="5" x2="2" y2="16" stroke="#4B2D8F" stroke-width="2" stroke-linecap="round"/><line x1="29" y1="5" x2="34" y2="16" stroke="#4B2D8F" stroke-width="2" stroke-linecap="round"/><path d="M2 16 Q4.5 22 7 16" stroke="#4B2D8F" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M29 16 Q31.5 22 34 16" stroke="#4B2D8F" stroke-width="2" stroke-linecap="round" fill="none"/><line x1="12" y1="30" x2="24" y2="30" stroke="#4B2D8F" stroke-width="2.2" stroke-linecap="round"/></svg></div><div class="engagement-text"><h4>Dialogue constructif</h4><p>Nous croyons à un dialogue social de <strong>bonne foi</strong> — apaisé, exigeant, et avant tout utile&nbsp;: celui qui aboutit à de vrais accords dans l'intérêt des salarié·es.</p></div></div>
-      <div class="engagement-card"><div class="eng-picto"><svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 7 C13 5 6 6 3 8 L3 28 C6 26 13 25 18 27 C23 25 30 26 33 28 L33 8 C30 6 23 5 18 7Z" stroke="#4B2D8F" stroke-width="2" stroke-linejoin="round" fill="none"/><line x1="18" y1="7" x2="18" y2="27" stroke="#4B2D8F" stroke-width="2" stroke-linecap="round"/><line x1="7" y1="13" x2="15" y2="12" stroke="#4B2D8F" stroke-width="1.6" stroke-linecap="round"/><line x1="7" y1="17" x2="15" y2="16" stroke="#4B2D8F" stroke-width="1.6" stroke-linecap="round"/><line x1="7" y1="21" x2="15" y2="20" stroke="#4B2D8F" stroke-width="1.6" stroke-linecap="round"/><line x1="21" y1="12" x2="29" y2="13" stroke="#4B2D8F" stroke-width="1.6" stroke-linecap="round"/><line x1="21" y1="16" x2="29" y2="17" stroke="#4B2D8F" stroke-width="1.6" stroke-linecap="round"/><line x1="21" y1="20" x2="29" y2="21" stroke="#4B2D8F" stroke-width="1.6" stroke-linecap="round"/></svg></div><div class="engagement-text"><h4>Pédagogie</h4><p>Vos droits expliqués, toutes les informations clés accessibles — régulièrement et dans les temps, pas seulement dans des comptes-rendus qui tardent à arriver.</p></div></div>
-      <div class="engagement-card"><div class="eng-picto"><svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="13" cy="12" r="4" stroke="#4B2D8F" stroke-width="2"/><circle cx="23" cy="12" r="4" stroke="#4B2D8F" stroke-width="2"/><path d="M4 29 C4 23 8 19 13 19 C15.5 19 17.2 20 18 21 C18.8 20 20.5 19 23 19 C28 19 32 23 32 29" stroke="#4B2D8F" stroke-width="2" stroke-linecap="round" fill="none"/></svg></div><div class="engagement-text"><h4>Proximité réelle</h4><p>Des élu·es <strong>choisi·es parmi vous, indépendant·es et sans conflit d'intérêt</strong> — de votre côté, joignables, qui connaissent vos réalités terrain et n'ont qu'un objectif&nbsp;: vous représenter.</p></div></div>
+      <div class="engagement-card">
+        <div class="eng-picto"><svg viewBox="0 0 36 36" fill="none"><line x1="18" y1="5" x2="18" y2="30" stroke="#4B2D8F" stroke-width="2.2" stroke-linecap="round"/><line x1="7" y1="5" x2="29" y2="5" stroke="#4B2D8F" stroke-width="2.2" stroke-linecap="round"/><line x1="7" y1="5" x2="2" y2="16" stroke="#4B2D8F" stroke-width="2" stroke-linecap="round"/><line x1="29" y1="5" x2="34" y2="16" stroke="#4B2D8F" stroke-width="2" stroke-linecap="round"/><path d="M2 16 Q4.5 22 7 16" stroke="#4B2D8F" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M29 16 Q31.5 22 34 16" stroke="#4B2D8F" stroke-width="2" stroke-linecap="round" fill="none"/><line x1="12" y1="30" x2="24" y2="30" stroke="#4B2D8F" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+        <div class="engagement-text"><h4>Dialogue constructif</h4><p>Nous croyons à un dialogue social de <strong>bonne foi</strong> — apaisé, exigeant, et avant tout utile&nbsp;: celui qui aboutit à de vrais accords dans l'intérêt des salarié·es.</p></div>
+      </div>
+      <div class="engagement-card">
+        <div class="eng-picto"><svg viewBox="0 0 36 36" fill="none"><path d="M18 7 C13 5 6 6 3 8 L3 28 C6 26 13 25 18 27 C23 25 30 26 33 28 L33 8 C30 6 23 5 18 7Z" stroke="#4B2D8F" stroke-width="2" stroke-linejoin="round" fill="none"/><line x1="18" y1="7" x2="18" y2="27" stroke="#4B2D8F" stroke-width="2" stroke-linecap="round"/><line x1="7" y1="13" x2="15" y2="12" stroke="#4B2D8F" stroke-width="1.6" stroke-linecap="round"/><line x1="7" y1="17" x2="15" y2="16" stroke="#4B2D8F" stroke-width="1.6" stroke-linecap="round"/><line x1="7" y1="21" x2="15" y2="20" stroke="#4B2D8F" stroke-width="1.6" stroke-linecap="round"/><line x1="21" y1="12" x2="29" y2="13" stroke="#4B2D8F" stroke-width="1.6" stroke-linecap="round"/><line x1="21" y1="16" x2="29" y2="17" stroke="#4B2D8F" stroke-width="1.6" stroke-linecap="round"/><line x1="21" y1="20" x2="29" y2="21" stroke="#4B2D8F" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+        <div class="engagement-text"><h4>Pédagogie</h4><p>Vos droits expliqués, toutes les informations clés accessibles — régulièrement et dans les temps, pas seulement dans des comptes-rendus qui tardent à arriver.</p></div>
+      </div>
+      <div class="engagement-card">
+        <div class="eng-picto"><svg viewBox="0 0 36 36" fill="none"><circle cx="13" cy="12" r="4" stroke="#4B2D8F" stroke-width="2"/><circle cx="23" cy="12" r="4" stroke="#4B2D8F" stroke-width="2"/><path d="M4 29 C4 23 8 19 13 19 C15.5 19 17.2 20 18 21 C18.8 20 20.5 19 23 19 C28 19 32 23 32 29" stroke="#4B2D8F" stroke-width="2" stroke-linecap="round" fill="none"/></svg></div>
+        <div class="engagement-text"><h4>Proximité réelle</h4><p>Des élu·es <strong>choisi·es parmi vous, indépendant·es et sans conflit d'intérêt</strong> — de votre côté, joignables, qui connaissent vos réalités terrain et n'ont qu'un objectif&nbsp;: vous représenter.</p></div>
+      </div>
     </div>
   </div>
 
-  <div class="cfecgc-strip">
-    <div class="cfecgc-strip-left">
-      <span class="cfecgc-strip-label">Pourquoi la CFE-CGC&nbsp;?</span>
-      <p>La CFE-CGC est le <strong>syndicat de référence des cadres</strong> en France depuis 1944 — pragmatique, constructif, apolitique. Via la <strong>FIECI</strong> (fédération Tech/numérique) et le <strong>SNB/CFE-CGC</strong>, 1<sup>er</sup> syndicat bancaire de France depuis 2017, elle couvre exactement les deux univers de Qonto. Résultat&nbsp;: des expert·es qui connaissent nos conventions collectives sur le bout des doigts, et un réseau qui a déjà négocié tous les sujets que nous portons.</p>
-    </div>
-    <div class="cfecgc-strip-right">
-      <span class="cfecgc-co-label">Présente chez</span>
-      <div class="cfecgc-co-list">Capgemini · Sopra Steria · Atos · Cegid · BlaBlaCar · Salesforce · Google France · Meta · Deliveroo</div>
+  <!-- POURQUOI CFE-CGC -->
+  <div class="cfecgc-section">
+    <span class="section-label">Pourquoi la CFE-CGC&nbsp;?</span>
+    <div class="liseré-box">
+      <p>La CFE-CGC est le <strong>syndicat de référence des cadres</strong> en France depuis 1944 — pragmatique, constructif, apolitique. Via la <strong>FIECI</strong> (fédération Tech/numérique) et le <strong>SNB/CFE-CGC</strong>, 1<sup>er</sup> syndicat bancaire de France depuis 2017, elle couvre exactement les deux univers de Qonto. Résultat&nbsp;: des expert·es qui connaissent nos conventions collectives sur le bout des doigts, et un réseau qui a déjà négocié tous les sujets que nous portons.<br><br><span style="font-size:12px;color:var(--gray);">Présente chez : Capgemini · Sopra Steria · Atos · Cegid · BlaBlaCar · Salesforce · Google France · Meta · Deliveroo</span></p>
     </div>
   </div>
 
+  <!-- FOOTER -->
   <div class="footer">
     <div>
       <div class="footer-title">Votez pour notre liste CFE-CGC</div>
@@ -191,6 +218,7 @@
     </div>
     <button class="footer-cta">Une question&nbsp;? Venez nous parler&nbsp;!</button>
   </div>
+
 </div>
 </body>
 </html>
