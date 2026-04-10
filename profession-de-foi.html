@@ -6,16 +6,16 @@
 <title>Profession de Foi — Liste CFE-CGC · Qonto</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-  :root{--violet:#4B2D8F;--violet-dark:#2E1A5E;--violet-light:#6B46C1;--violet-pale:#F4F1FB;--yellow:#F5A623;--white:#FFFFFF;--off:#FAFAFA;--mid:#E8E4F2;--gray:#6B6580;--dark:#1A1333;--text:#3D3658;--border:#EBEBEB;}
+  :root{--violet:#4B2D8F;--violet-dark:#2E1A5E;--violet-light:#6B46C1;--violet-pale:#F4F1FB;--yellow:#F5A623;--white:#FFFFFF;--off:#FAFAFA;--mid:#E8E4F2;--gray:#5A5370;--dark:#1A1333;--text:#3D3658;--border:#EBEBEB;}
   *{box-sizing:border-box;margin:0;padding:0;}
-  body{font-family:'Plus Jakarta Sans',sans-serif;background:#F0EDF8;color:var(--dark);font-size:15px;line-height:1.65;-webkit-text-size-adjust:100%;}
+  body{font-family:'Plus Jakarta Sans',sans-serif;background:#F0EDF8;color:var(--dark);font-size:17px;line-height:1.7;-webkit-text-size-adjust:100%;}
   .page{max-width:860px;margin:0 auto;background:var(--white);}
   .header{background:var(--violet-dark);padding:32px 40px 30px;position:relative;overflow:hidden;}
   .header-accent{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--yellow) 0%,rgba(245,166,35,0.2) 100%);}
-  .header-deco{position:absolute;top:50%;right:40px;transform:translateY(-50%);width:220px;pointer-events:none;z-index:3;display:flex;flex-direction:column;align-items:stretch;gap:6px;overflow:visible;}
-  @media(max-width:600px){.header-deco{width:130px;right:12px;}}
+  .header-deco{position:absolute;top:0;right:0;bottom:0;width:42%;pointer-events:none;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;overflow:hidden;padding:16px 20px;}
+  @media(max-width:600px){.header-deco{width:44%;padding:10px 10px;}}
   .wordart-wrap{width:100%;overflow:visible;}
-  .wordart{display:block;font-family:'Arial Black',Impact,sans-serif;font-weight:900;font-size:15px;text-align:center;letter-spacing:2px;line-height:1.15;white-space:nowrap;width:100%;color:#FFB300;text-shadow:1px 0 0 #CC5500,2px 1px 0 #AA3300,3px 2px 0 #882200,4px 3px 0 #661100,0 0 10px rgba(255,160,0,0.5);transform:skewY(-8deg) skewX(-4deg) scaleX(0.92) scaleY(1.15);transform-origin:center center;animation:pulse-wa 2s ease-in-out infinite alternate;}
+  .wordart{display:block;font-family:'Arial Black',Impact,sans-serif;font-weight:900;font-size:clamp(13px,2.2vw,20px);text-align:center;letter-spacing:1.5px;line-height:1.2;white-space:nowrap;color:#FFB300;text-shadow:1px 0 0 #CC5500,2px 1px 0 #AA3300,3px 2px 0 #882200,4px 3px 0 #661100,0 0 10px rgba(255,160,0,0.5);transform:skewY(-6deg) skewX(-3deg) scaleY(1.1);transform-origin:center center;animation:pulse-wa 2s ease-in-out infinite alternate;width:100%;}
   @media(min-width:600px){.wordart{font-size:20px;letter-spacing:3px;}}
   @keyframes pulse-wa{0%{color:#FFB300;text-shadow:1px 0 0 #CC5500,2px 1px 0 #AA3300,3px 2px 0 #882200,4px 3px 0 #661100,0 0 10px rgba(255,160,0,0.5);}100%{color:#FFD700;text-shadow:1px 0 0 #DD6600,2px 1px 0 #BB4400,3px 2px 0 #993300,4px 3px 0 #771100,0 0 16px rgba(255,200,0,0.8);}}
   .header-logos{display:flex;align-items:center;gap:18px;margin-bottom:24px;position:relative;z-index:2;}
@@ -25,25 +25,25 @@
   .logo-cfecgc{height:44px;filter:brightness(0) invert(1);}
   @media(min-width:600px){.logo-cfecgc{height:48px;}}
   .header-label{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:10px;position:relative;z-index:2;}
-  .header-title{font-size:26px;font-weight:800;color:white;line-height:1.15;max-width:55%;margin-bottom:10px;position:relative;z-index:2;}
-  @media(min-width:600px){.header-title{font-size:30px;}}
+  .header-title{font-size:28px;font-weight:800;color:white;line-height:1.15;max-width:55%;margin-bottom:10px;position:relative;z-index:2;}
+  @media(min-width:600px){.header-title{font-size:34px;}}
   .header-title span{color:var(--yellow);}
-  .header-sub{font-size:13px;color:rgba(255,255,255,0.6);max-width:55%;position:relative;z-index:2;}
+  .header-sub{font-size:15px;color:rgba(255,255,255,0.72);max-width:55%;position:relative;z-index:2;}
   .section{padding:36px 40px;border-bottom:1px solid var(--border);}
   @media(max-width:600px){.section{padding:28px 20px;}}
-  .section-label{font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--violet);margin-bottom:20px;display:block;}
+  .section-label{font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--violet);margin-bottom:20px;display:block;}
   .liseré-box{border-left:3px solid var(--violet);padding-left:20px;}
-  .liseré-box p{color:var(--text);font-size:14px;line-height:1.8;}
+  .liseré-box p{color:var(--text);font-size:16px;line-height:1.85;}
   .liseré-box strong{color:var(--violet);font-weight:700;}
   .liseré-box .hi{color:var(--violet-light);font-weight:600;}
-  .candidates-sub-label{font-size:9px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--gray);margin-bottom:12px;display:block;}
+  .candidates-sub-label{font-size:11px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--gray);margin-bottom:12px;display:block;}
   .candidates-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
   @media(min-width:480px){.candidates-grid{grid-template-columns:repeat(4,1fr);}}
   @media(min-width:640px){.candidates-grid{grid-template-columns:repeat(5,1fr);}}
-  .candidate-pill{padding:10px 6px;text-align:center;border-radius:8px;background:var(--off);border:1px solid var(--border);}
-  .candidate-pill .initials{width:30px;height:30px;border-radius:50%;background:var(--violet);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;}
-  .candidate-pill .name{font-size:11px;font-weight:700;color:var(--dark);line-height:1.3;}
-  .candidate-pill .team{font-size:9.5px;color:var(--gray);margin-top:1px;}
+  .candidate-pill{padding:12px 6px;text-align:center;border-radius:8px;background:var(--off);border:1px solid var(--border);min-height:72px;}
+  .candidate-pill .initials{width:34px;height:34px;border-radius:50%;background:var(--violet);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;}
+  .candidate-pill .name{font-size:13px;font-weight:700;color:var(--dark);line-height:1.3;}
+  .candidate-pill .team{font-size:11px;color:var(--gray);margin-top:1px;}
   .priorities-grid{display:grid;grid-template-columns:1fr;gap:0;}
   @media(min-width:560px){.priorities-grid{grid-template-columns:1fr 1fr;gap:0 40px;}}
   .priority-card{padding:22px 0;border-bottom:1px solid var(--border);display:flex;gap:16px;align-items:flex-start;}
@@ -52,32 +52,35 @@
   .priority-picto{width:36px;height:36px;flex-shrink:0;background:var(--yellow);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-top:2px;}
   .priority-picto svg{width:18px;height:18px;}
   .priority-body{flex:1;}
-  .priority-card h3{font-size:15px;font-weight:800;color:var(--dark);margin-bottom:6px;line-height:1.3;}
-  .priority-card p{font-size:13px;color:var(--text);line-height:1.65;}
+  .priority-card h3{font-size:17px;font-weight:800;color:var(--dark);margin-bottom:6px;line-height:1.3;}
+  .priority-card p{font-size:15px;color:var(--text);line-height:1.7;}
   .priority-card strong{color:var(--dark);font-weight:700;}
   .tags-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px;padding-top:20px;border-top:1px solid var(--border);}
-  .tag{font-size:11.5px;color:var(--gray);font-weight:500;padding:4px 12px;border-radius:20px;border:1px solid var(--mid);background:var(--off);}
+  .tag{font-size:13px;color:var(--gray);font-weight:500;padding:4px 12px;border-radius:20px;border:1px solid var(--mid);background:var(--off);}
   .engagements{display:grid;grid-template-columns:1fr;gap:14px;}
   @media(min-width:560px){.engagements{grid-template-columns:1fr 1fr 1fr;gap:18px;}}
   .engagement-card{display:flex;flex-direction:column;gap:10px;background:var(--off);border:1px solid var(--border);border-radius:12px;padding:20px;}
   @media(max-width:559px){.engagement-card{flex-direction:row;align-items:flex-start;gap:14px;padding:16px;}}
   .eng-picto{width:40px;height:40px;flex-shrink:0;border-radius:10px;background:var(--violet-pale);display:flex;align-items:center;justify-content:center;}
   .eng-picto svg{width:20px;height:20px;}
-  .engagement-card h4{font-size:14px;font-weight:800;color:var(--dark);line-height:1.3;}
-  .engagement-card p{font-size:13px;color:var(--text);line-height:1.6;}
+  .engagement-card h4{font-size:16px;font-weight:800;color:var(--dark);line-height:1.3;}
+  .engagement-card p{font-size:15px;color:var(--text);line-height:1.7;}
   .engagement-text{display:flex;flex-direction:column;gap:4px;}
   .cfecgc-section{padding:36px 40px;background:var(--white);border-top:1px solid var(--border);}
   @media(max-width:600px){.cfecgc-section{padding:28px 20px;}}
   .footer{background:var(--violet-dark);padding:28px 40px;display:flex;align-items:center;justify-content:space-between;gap:24px;position:relative;}
   .footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--yellow),rgba(245,166,35,0.2));}
   @media(max-width:560px){.footer{flex-direction:column;padding:24px 20px;align-items:flex-start;gap:14px;}}
-  .footer-title{font-size:17px;font-weight:800;color:white;margin-bottom:3px;}
-  .footer-sub{font-size:13px;color:rgba(255,255,255,0.55);}
-  .footer-cta{background:var(--yellow);color:var(--dark);font-size:13px;font-weight:700;padding:12px 22px;border-radius:8px;border:none;font-family:inherit;white-space:nowrap;flex-shrink:0;cursor:pointer;}
+  .footer-title{font-size:20px;font-weight:800;color:white;margin-bottom:3px;}
+  .footer-sub{font-size:15px;color:rgba(255,255,255,0.65);}
+  .footer-cta{background:var(--yellow);color:var(--dark);font-size:15px;font-weight:700;padding:12px 22px;border-radius:8px;border:none;font-family:inherit;white-space:nowrap;flex-shrink:0;cursor:pointer;}
+
+  :focus-visible{outline:3px solid var(--yellow);outline-offset:3px;border-radius:4px;}
+  .footer-cta:focus-visible{outline:3px solid white;outline-offset:3px;}
 </style>
 </head>
 <body>
-<div class="page">
+<div class="page" role="main">
 
   <div class="header">
     <div class="header-accent"></div>
@@ -216,7 +219,7 @@
       <div class="footer-title">Votez pour notre liste CFE-CGC</div>
       <div class="footer-sub">Un CSE transparent, formé, proche de vous — chez Qonto.</div>
     </div>
-    <button class="footer-cta">Une question&nbsp;? Venez nous parler&nbsp;!</button>
+    <button class="footer-cta" aria-label="Nous contacter pour poser une question">Une question&nbsp;? Venez nous parler&nbsp;!</button>
   </div>
 
 </div>
