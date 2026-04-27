@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qonto Copy Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #050505; --white: #ffffff;
+      --n50: #f5f5f5; --n100: #e8e8e8; --n200: #e0e0e0; --n300: #cccccc;
+      --n400: #b8b8b8; --n500: #8f8f8f; --n600: #616161;
+      --mint: #66c8c8; --mint-bg: #e8f8f8; --mint-border: #9be5da;
+    }
+    body { font-family: 'Manrope', Arial, sans-serif; background: var(--white); color: var(--black); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+    /* ── SCREENS ── */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ── HOME ── */
+    #home { max-width: 900px; margin: 0 auto; padding: 72px 32px 100px; }
+    .site-title { font-size: clamp(58px, 10vw, 108px); letter-spacing: -3px; line-height: 1; margin-bottom: 12px; }
+    .site-title .w800 { font-weight: 800; }
+    .site-title .w300 { font-weight: 300; }
+    .site-sub { font-size: 17px; color: var(--n500); font-weight: 400; margin-bottom: 72px; }
+
+    .search-bar { display: flex; align-items: center; background: var(--n50); border-radius: 100px; padding: 10px 10px 10px 24px; gap: 10px; max-width: 620px; margin: 0 auto; }
+    .search-input { flex: 1; border: none; background: transparent; font-family: 'Manrope', Arial, sans-serif; font-size: 15px; color: var(--black); outline: none; }
+    .search-input::placeholder { color: var(--n400); }
+    .search-btn { width: 44px; height: 44px; background: var(--black); border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: opacity .15s; }
+    .search-btn:hover { opacity: .82; }
+    .search-hint { text-align: center; font-size: 13px; color: var(--n400); margin-top: 10px; }
+
+    .divider { display: flex; align-items: center; gap: 14px; max-width: 620px; margin: 44px auto; font-size: 13px; color: var(--n400); }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--n200); }
+
+    .home-tools { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; max-width: 620px; margin: 0 auto; }
+    .home-tool { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 24px 16px 20px; cursor: pointer; background: none; border: none; font-family: 'Manrope', Arial, sans-serif; transition: opacity .15s; }
+    .home-tool:hover { opacity: .6; }
+    .ht-icon { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }
+    .ht-label { font-size: 14px; font-weight: 500; }
+
+    /* ── TOOL SCREEN NAV ── */
+    .tool-nav { display: flex; align-items: center; padding: 20px 32px; border-bottom: 1px solid var(--n200); gap: 14px; }
+    .nav-back { display: flex; align-items: center; gap: 7px; background: none; border: none; font-family: 'Manrope', Arial, sans-serif; font-size: 14px; font-weight: 500; color: var(--n500); cursor: pointer; transition: color .15s; padding: 0; }
+    .nav-back:hover { color: var(--black); }
+    .nav-model { margin-left: auto; font-size: 11px; font-weight: 600; letter-spacing: .4px; color: var(--n400); background: var(--n50); padding: 4px 10px; border-radius: 100px; }
+
+    /* ── HERO ── */
+    .tool-hero { max-width: 900px; margin: 0 auto; padding: 56px 32px 40px; border-bottom: 1px solid var(--n200); }
+    .tool-headline { font-size: clamp(32px, 5vw, 54px); font-weight: 800; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 10px; }
+    .tool-tagline { font-size: 16px; color: var(--n500); }
+
+    /* ── AI WORKSPACE ── */
+    .ai-wrap { max-width: 900px; margin: 0 auto; padding: 36px 32px 100px; }
+
+    /* Context bar */
+    .ctx-bar { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; }
+    .ctx-label { font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--n500); white-space: nowrap; }
+    .ctx-sep { width: 1px; height: 20px; background: var(--n200); flex-shrink: 0; }
+    .ctx-select { border: 1.5px solid var(--n200); border-radius: 100px; padding: 7px 14px; font-family: 'Manrope', Arial, sans-serif; font-size: 13px; font-weight: 500; color: var(--black); background: var(--white); outline: none; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23050505' d='M5 6L0 0h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 28px; transition: border-color .15s; }
+    .ctx-select:focus { border-color: var(--black); }
+    .ctx-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ctx-chip { position: relative; display: inline-flex; align-items: center; padding: 6px 12px; border-radius: 100px; border: 1.5px solid var(--n200); background: var(--white); font-family: 'Manrope', Arial, sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; user-select: none; transition: all .12s; letter-spacing: .2px; }
+    .ctx-chip:hover { border-color: var(--black); }
+    .ctx-chip input { position: absolute; opacity: 0; pointer-events: none; width: 0; height: 0; }
+    .ctx-chip:has(input:checked), .ctx-chip.on { background: var(--black); border-color: var(--black); color: var(--white); }
+
+    /* Main textarea */
+    .main-input { width: 100%; min-height: 170px; border: 1.5px solid var(--n200); border-radius: 16px; padding: 20px 22px; font-family: 'Manrope', Arial, sans-serif; font-size: 15px; color: var(--black); background: var(--white); outline: none; transition: border-color .15s; resize: vertical; line-height: 1.65; }
+    .main-input:focus { border-color: var(--black); }
+    .main-input::placeholder { color: var(--n400); }
+    .main-input.shake { border-color: #e53e3e; animation: shake .3s ease; }
+    @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+    /* Actions row */
+    .action-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .act-btn { position: relative; display: inline-flex; align-items: center; gap: 7px; padding: 11px 18px; border-radius: 100px; border: 1.5px solid var(--n200); background: var(--white); font-family: 'Manrope', Arial, sans-serif; font-size: 13px; font-weight: 600; color: var(--black); cursor: pointer; transition: all .15s; white-space: nowrap; }
+    .act-btn:hover:not(:disabled) { border-color: var(--black); background: var(--n50); }
+    .act-btn.solid { background: var(--black); border-color: var(--black); color: var(--white); }
+    .act-btn.solid:hover:not(:disabled) { opacity: .82; }
+    .act-btn.teal { border-color: var(--mint); color: var(--mint); }
+    .act-btn.teal:hover:not(:disabled) { background: var(--mint-bg); }
+    .act-btn.teal.open { background: var(--mint); border-color: var(--mint); color: var(--white); }
+    .act-btn:disabled { opacity: .38; cursor: not-allowed; }
+    .act-btn svg.spin { animation: spin .75s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Localize panel */
+    #loc-panel { overflow: hidden; max-height: 0; opacity: 0; transition: max-height .3s ease, opacity .22s ease, margin .22s ease; }
+    #loc-panel.open { max-height: 260px; opacity: 1; margin-top: 14px; }
+    .loc-inner { border: 1.5px solid var(--mint-border); border-radius: 16px; padding: 18px 22px; background: var(--mint-bg); }
+    .loc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .loc-heading { font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: #2f95a0; }
+    .loc-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+    .loc-chip { position: relative; display: inline-flex; align-items: center; padding: 7px 14px; border-radius: 100px; border: 1.5px solid var(--mint-border); background: var(--white); font-family: 'Manrope', Arial, sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; user-select: none; transition: all .12s; color: var(--n600); }
+    .loc-chip:hover { color: var(--black); border-color: var(--mint); }
+    .loc-chip input { position: absolute; opacity: 0; pointer-events: none; width: 0; height: 0; }
+    .loc-chip:has(input:checked), .loc-chip.on { background: var(--mint); border-color: var(--mint); color: var(--white); }
+    .loc-note { margin-top: 12px; font-size: 12px; color: var(--n600); line-height: 1.55; border-top: 1px solid var(--mint-border); padding-top: 10px; }
+
+    /* Result area */
+    #result-area { margin-top: 44px; }
+    .result-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+    .result-label { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--n500); padding-top: 2px; }
+    .result-acts { display: flex; flex-wrap: wrap; gap: 7px; }
+    .res-btn { display: inline-flex; align-items: center; gap: 5px; padding: 8px 15px; border-radius: 100px; border: 1.5px solid var(--n200); background: var(--white); font-family: 'Manrope', Arial, sans-serif; font-size: 12px; font-weight: 600; color: var(--n600); cursor: pointer; transition: all .15s; }
+    .res-btn:hover { border-color: var(--black); color: var(--black); }
+    .res-btn.primary { background: var(--black); border-color: var(--black); color: var(--white); }
+    .res-btn.primary:hover { opacity: .84; }
+    .res-btn.primary.done { background: var(--mint); border-color: var(--mint); color: var(--black); }
+
+    .result-box { background: var(--n50); border: 1px solid var(--n200); border-radius: 18px; padding: 28px 30px; font-size: 14px; color: var(--n600); line-height: 1.85; min-height: 80px; }
+    .stream-raw { white-space: pre-wrap; font-family: 'Manrope', Arial, sans-serif; word-break: break-word; }
+    .cursor { display: inline-block; width: 2px; height: 1em; background: var(--n400); vertical-align: text-bottom; margin-left: 1px; animation: blink .65s step-end infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* Rendered markdown */
+    .md-rendered { font-family: 'Manrope', Arial, sans-serif; word-break: break-word; }
+    .md-rendered h2 { font-size: 20px; font-weight: 800; letter-spacing: -.5px; margin: 22px 0 8px; color: var(--black); }
+    .md-rendered h3 { font-size: 16px; font-weight: 700; margin: 18px 0 6px; color: var(--black); }
+    .md-rendered h4 { font-size: 11px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; color: var(--n500); margin: 14px 0 5px; }
+    .md-rendered p { margin: 5px 0; color: var(--n600); }
+    .md-rendered strong { font-weight: 700; color: var(--black); }
+    .md-rendered em { font-style: italic; }
+    .md-rendered code { background: var(--n100); padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+    .md-rendered hr { border: none; border-top: 1px solid var(--n200); margin: 18px 0; }
+    .md-rendered ul { padding-left: 18px; margin: 6px 0; }
+    .md-rendered li { margin: 3px 0; color: var(--n600); }
+    .md-rendered .md-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 16px 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--n200); }
+    .md-rendered .md-table th { background: var(--n100); padding: 9px 14px; text-align: left; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: var(--n600); border-bottom: 1px solid var(--n200); }
+    .md-rendered .md-table td { padding: 10px 14px; border-bottom: 1px solid var(--n100); color: var(--black); vertical-align: top; }
+    .md-rendered .md-table tr:last-child td { border-bottom: none; }
+
+    /* Error */
+    .err-box { background: #fff5f5; border: 1px solid #fecaca; border-radius: 14px; padding: 18px 22px; color: #dc2626; font-size: 14px; line-height: 1.6; }
+    .err-box code { background: rgba(220,38,38,.1); padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+
+    /* Loading dots */
+    .loading-row { display: flex; align-items: center; gap: 10px; color: var(--n500); font-size: 13px; padding: 24px 0 8px; }
+    .dots span { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--n400); margin: 0 2px; animation: dp 1.1s ease-in-out infinite; }
+    .dots span:nth-child(2) { animation-delay: .18s; }
+    .dots span:nth-child(3) { animation-delay: .36s; }
+    @keyframes dp { 0%,80%,100% { transform: scale(.5); opacity: .35; } 40% { transform: scale(1); opacity: 1; } }
+
+    /* Toast */
+    #toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--black); color: var(--white); padding: 11px 24px; border-radius: 100px; font-size: 13px; font-weight: 600; transition: transform .24s ease; z-index: 1000; pointer-events: none; white-space: nowrap; }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 640px) {
+      .ai-wrap, .tool-hero, #home { padding-left: 20px; padding-right: 20px; }
+      .site-title { font-size: 48px; letter-spacing: -2px; }
+      .home-tools { gap: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════ HOME ════════════════ -->
+<div id="home" class="screen active">
+  <h1 class="site-title"><span class="w800">Qonto</span> <span class="w300">Copy Studio</span></h1>
+  <p class="site-sub">Write, improve, localize — live.</p>
+
+  <div class="search-bar" style="max-width:620px;margin:0 auto 10px">
+    <input id="home-q" class="search-input" type="text" placeholder="Describe what you'd like to write…" onkeydown="if(event.key==='Enter')routeSearch()">
+    <button class="search-btn" onclick="routeSearch()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </button>
+  </div>
+  <p class="search-hint">Press Enter to start.</p>
+
+  <div class="divider">or choose a tool</div>
+
+  <div class="home-tools">
+    <button class="home-tool" onclick="openTool('write')">
+      <div class="ht-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+      <span class="ht-label">Write copy</span>
+    </button>
+    <button class="home-tool" onclick="openTool('translate')">
+      <div class="ht-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+      <span class="ht-label">Localize</span>
+    </button>
+    <button class="home-tool" onclick="openTool('review')">
+      <div class="ht-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <span class="ht-label">Quality review</span>
+    </button>
+  </div>
+</div>
+
+<!-- ════════════════ KEY SETUP SCREEN ════════════════ -->
+<div id="key-screen" class="screen">
+  <div style="max-width:520px;margin:0 auto;padding:80px 32px 100px">
+    <div style="font-size:clamp(32px,6vw,52px);font-weight:800;letter-spacing:-1.5px;line-height:1.1;margin-bottom:14px">
+      One-time setup.
+    </div>
+    <p style="font-size:16px;color:var(--n500);margin-bottom:48px;line-height:1.6">
+      Qonto Copy Studio calls Claude directly from your browser. Your API key never leaves your device — it is stored only in your browser session and cleared when you close the tab.
+    </p>
+
+    <div style="margin-bottom:10px;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--n500)">Your Anthropic API key</div>
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <input id="setup-key" type="password"
+        style="flex:1;border:1.5px solid var(--n200);border-radius:12px;padding:14px 16px;font-family:'Manrope',Arial,sans-serif;font-size:15px;color:var(--black);outline:none;transition:border-color .15s"
+        placeholder="sk-ant-…"
+        onkeydown="if(event.key==='Enter')saveKey()"
+        onfocus="this.style.borderColor='var(--black)'"
+        onblur="this.style.borderColor='var(--n200)'">
+      <button onclick="saveKey()"
+        style="padding:14px 24px;background:var(--black);color:var(--white);border:none;border-radius:12px;font-family:'Manrope',Arial,sans-serif;font-size:15px;font-weight:700;cursor:pointer;white-space:nowrap;transition:opacity .15s"
+        onmouseover="this.style.opacity='.82'" onmouseout="this.style.opacity='1'">
+        Let's go
+      </button>
+    </div>
+    <div id="key-err" style="font-size:13px;color:#dc2626;min-height:18px"></div>
+
+    <div style="margin-top:36px;padding:18px 20px;background:var(--n50);border-radius:12px;font-size:13px;color:var(--n600);line-height:1.6">
+      <strong style="color:var(--black)">Where to find your key:</strong> go to
+      <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener"
+        style="color:var(--black);text-decoration:underline">console.anthropic.com → API Keys</a>
+      and create a new key. The key starts with <code style="background:var(--n100);padding:1px 5px;border-radius:4px;font-size:12px">sk-ant-</code>.<br><br>
+      <strong style="color:var(--black)">Your key is safe:</strong> it is saved to <code style="background:var(--n100);padding:1px 5px;border-radius:4px;font-size:12px">sessionStorage</code> only — it lives in your browser tab and is deleted automatically when you close it. It is never written to this file or sent anywhere except the Anthropic API.
+    </div>
+
+    <div style="margin-top:18px;font-size:12px;color:var(--n400);line-height:1.55">
+      You will need to re-enter your key each new browser session. For a shared team setup, ask your Anthropic admin to create a dedicated key and distribute the file privately.
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ AI SCREEN ════════════════ -->
+<div id="ai-screen" class="screen">
+  <nav class="tool-nav">
+    <button class="nav-back" onclick="goHome()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back
+    </button>
+    <div class="nav-model" id="nav-model">Qonto Copy Studio</div>
+  </nav>
+
+  <div class="tool-hero">
+    <div class="tool-headline" id="hero-h">Write anything.<br>Localize everything.</div>
+    <div class="tool-tagline">Tolki + QualityGuard, connected to Claude.</div>
+  </div>
+
+  <div class="ai-wrap">
+
+    <!-- Context bar -->
+    <div class="ctx-bar">
+      <span class="ctx-label">Format</span>
+      <select id="ctx-fmt" class="ctx-select">
+        <option value="">Any</option>
+        <option value="social">Social media</option>
+        <option value="email">Email</option>
+        <option value="push">Push notification</option>
+        <option value="inapp">In-app</option>
+        <option value="interstitial">Interstitial</option>
+        <option value="landing">Landing page</option>
+        <option value="ad">Ad copy</option>
+        <option value="blog">Blog</option>
+      </select>
+      <div class="ctx-sep"></div>
+      <span class="ctx-label">Language</span>
+      <div class="ctx-chips" id="src-chips"></div>
+    </div>
+
+    <!-- Main input -->
+    <textarea id="main-input" class="main-input"
+      placeholder="Paste your copy here to improve, translate or quality-check it — or describe what you'd like to write."></textarea>
+
+    <!-- Actions -->
+    <div class="action-row" id="action-row">
+      <button class="act-btn" id="btn-refine" onclick="run('refine')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        Improve my brief
+      </button>
+      <button class="act-btn solid" id="btn-draft" onclick="run('draft')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Draft copy
+      </button>
+      <button class="act-btn solid" id="btn-improve" onclick="run('improve')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Improve copy
+      </button>
+      <button class="act-btn teal" id="btn-loc" onclick="toggleLoc()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Localize
+        <svg id="loc-chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .22s"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <button class="act-btn" id="btn-review" onclick="run('review')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Quality check
+      </button>
+    </div>
+
+    <!-- Localize panel -->
+    <div id="loc-panel">
+      <div class="loc-inner">
+        <div class="loc-top">
+          <span class="loc-heading">Translate into</span>
+          <button class="act-btn solid" style="padding:8px 16px;font-size:12px" onclick="run('localize')">
+            Localize now
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+        <div class="loc-chips" id="tgt-chips"></div>
+        <div class="loc-note"><strong>Before localizing:</strong> your source copy must be final. Run "Quality check" first if you're not sure it's ready — bad source copy means bad localizations in every market.</div>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div id="result-area"></div>
+
+  </div>
+</div>
+
+<div id="toast">Copied</div>
+
+<script>
+// ════════════════════════════════════════════════════════
+// CONFIG
+// API key is entered by the user at runtime — never stored in this file.
+// ════════════════════════════════════════════════════════
+const CFG = {
+  apiKey:    '',   // leave blank — key is entered in the UI and saved to sessionStorage
+  model:     'claude-sonnet-4-6',
+  maxTokens: 4096
+};
+
+// ════════════════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════════════════
+const LANGS = {
+  en: { name: 'English',             short: 'EN', formality: 'informal — contractions welcome' },
+  fr: { name: 'French',              short: 'FR', formality: 'standard — no puns, no "Salut"' },
+  de: { name: 'German',              short: 'DE', formality: 'formal — always Sie/Ihr, never du' },
+  es: { name: 'Spanish',             short: 'ES', formality: 'informal — always tú, never usted' },
+  it: { name: 'Italian',             short: 'IT', formality: 'informal — tu' },
+  pt: { name: 'Portuguese (PT-PT)',  short: 'PT', formality: 'formal — o seu, never você or o teu' },
+  nl: { name: 'Dutch',               short: 'NL', formality: 'informal — je/jij, never u/uw' }
+};
+
+const FMTS = {
+  social:       { name: 'Social media',      lim: { 'Instagram': 'max 2200 (aim 125–150)', 'LinkedIn': 'max 3000 (aim 600–1200)', 'X / Twitter': 'max 280' } },
+  email:        { name: 'Email',             lim: { 'Subject line': 'max 42', 'Preview text': 'max 77', 'Title': 'max 35', 'Subtitle': 'max 100', 'Body': 'max 500', 'CTA': 'max 25' }, itLim: { 'Subject line': 'max 40', 'Preview text': 'max 75' } },
+  push:         { name: 'Push notification', lim: { 'Title': 'max 35', 'Body': 'max 145' } },
+  inapp:        { name: 'In-app',            lim: { 'Title': 'max 50', 'Subtext': 'max 30' } },
+  interstitial: { name: 'Interstitial',      lim: { 'Title': 'max 52', 'Body': 'max 130', 'Item ×3': 'max 72 each', 'CTA': 'max 32' } },
+  landing:      { name: 'Landing page',      lim: { 'H1': 'aim 6–10 words', 'Subheadline': '1–2 sentences', 'CTA': 'max 25' } },
+  ad:           { name: 'Ad copy',           lim: { 'Headline': 'max 30', 'Description': 'max 90', 'CTA': 'max 20' } },
+  blog:         { name: 'Blog',              lim: { 'Title': 'aim 50–70 (SEO)', 'Body': 'specify word count' } }
+};
+
+const RULES = {
+en: `ENGLISH RULES
+• Sentence case: first word + proper nouns only
+• American spelling (Merriam-Webster) | Oxford comma in lists of 3+
+• Contractions where natural: we've, don't, it's
+• Gender-neutral: "they" as singular pronoun | Numbers 1–10 as words; 11+ as numerals
+• No space before %: 4.3% | Currency before number: €25,000 | No em/en dashes
+• Dates: 31 March 2025 | Time: 17:30 (24h)`,
+
+fr: `FRENCH RULES
+• Accents on uppercase always: École, Îlot
+• Non-breaking space before ! ? : ; and inside « » | French quotes: « » — never "..."
+• Non-breaking space in numbers: 1 000, 19 %, 20 €
+• "transfer" → always "virement" | Prices include "hors taxes"
+• Inclusive: dirigeant(e)s, chef(fe)s, indépendant(e)s, client(e)s, entrepreneur(e)s
+• Inclusive writing: prêt(e) — NEVER prêt.e
+• Spellings: e-mail, week-end, start-up, fintech, Kbis
+• Never "Salut" | Max 2 ! per content | No period at end of titles | Never call Qonto a bank`,
+
+de: `GERMAN RULES
+• ALWAYS formal: Sie, Ihr — NEVER du
+• Email greeting: lowercase after salutation — "Hallo Max, vielen Dank…"
+• Sentence case for titles | Period thousands separator: 30.000 | Space before %: 19 %
+• Currency after number: 40.000 € (+ zzgl. MwSt.) | Gender-neutral plurals: Kundenprofile
+• No hyphens in Qonto compounds: "Qonto Konto" NOT "Qonto-Konto"
+• Never "kassieren" → bezahlt werden / Geld erhalten | Never exaggerated language
+• Untranslatable: X Card, Plus Card, Basic/Smart/Premium Plan, Cashflow, Dashboard
+• Never call Qonto a bank → Finanzdienstlösung, Geschäftskonto, All-in-one-Konto`,
+
+es: `SPANISH RULES
+• Always tú — never usted | Gender-neutral phrasing where possible
+• 4-digit: 1000; 5+: 40 000 | Decimals: dot (199.99 €) | Space before €, %, units
+• Prices include (sin IVA) | Quotes: « » | "pymes" always lowercase
+• CTAs: max 25 chars, verb + noun | No unverifiable superlatives
+• Untranslatable: Basic, Smart, Premium, Essential, Business, Enterprise, manager, admin
+• Never call Qonto a bank → solución financiera, cuenta de empresa`,
+
+it: `ITALIAN RULES
+• Always tu | Gender-inclusive (NEVER: Curioso di, stanco di, pronto a)
+• Quotes: "" only | Lowercase after colon | Replace — with : , or .
+• % without space: 80% | Currency with space: 100,50 €
+• NEVER -mente adverbs → con velocità, in tutta semplicità, in automatico
+• NEVER "Dì addio" or "Goditi" | "money" ≠ "soldi"
+• "for example" → per esempio (NOT ad esempio)
+• Italian email: Subject max 40, Preview max 75
+• Untranslatable: Manager, Admin, Basic, Smart, Premium, Essential, Business, Enterprise`,
+
+pt: `PORTUGUESE (PT-PT) RULES
+• Sentence case | Formal: o seu — NEVER você, NEVER o teu
+• Comma decimals | Non-breaking space thousands from 10 000+
+• Currency: 1234,56 € | Percentage: 50 %
+• No emojis (except social) | No exclamation marks | No period at titles | Never call Qonto a bank`,
+
+nl: `DUTCH RULES
+• Always je/jij — NEVER u/uw | First word + proper nouns capitalized only
+• Thousands: 123.456 (period) | Decimals: comma | € before number: € 1.234,56 | 50% no space
+• "accountant" → boekhouder | "inner-circle" → vriendenkring
+• NEVER "start-up expert" | No emojis (except social) | Max 2 ! | No period at titles
+• Never call Qonto a bank`
+};
+
+const GLOSSARY = {
+  en: 'Plans: Basic/Smart/Premium/Essential/Business/Enterprise (never translate)',
+  fr: 'transfer → virement | plan → forfait or abonnement | add-on → module',
+  de: 'account → Qonto Konto/Geschäftskonto | add-on → Add-on | free → kostenlos | /month → /Monat (zzgl. MwSt.)',
+  es: 'business account → cuenta de empresa | add-on → módulo avanzado | pay later → Pago a plazos',
+  it: 'account → conto | transfer → bonifico | accountant → commercialista | add-on → estensione | plan → piano',
+  pt: 'accountant → contabilista | cashflow → fluxo de caixa | add-on → módulo | /month → /mês (sem IVA)',
+  nl: 'accountant → boekhouder | cashflow → kasstroom | /month → /maand (excl. BTW)'
+};
+
+const TOV = `TONE OF VOICE — apply all 4 pillars to every line:
+1. To the point — no fluff, information upfront, no padding
+2. Playful but polished — warm and quick-witted, clarity over cleverness
+3. At your service — "you" before "we", customer-first, only verifiable claims
+4. In tune — tailored to audience, inclusive, no stereotypes`;
+
+const GLOBALS = `GLOBAL RULES (non-negotiable):
+- NEVER call Qonto a bank → "business finance solution" or "all-in-one business account"
+- Lead with customer benefit — "you" before "we"
+- No unverifiable superlatives: best, leader, most, number one
+- No invented facts, pricing, dates or metrics — use [placeholder] if missing
+- No period at end of titles | Sentence case for all headlines`;
+
+// ════════════════════════════════════════════════════════
+// SYSTEM PROMPT BUILDERS
+// ════════════════════════════════════════════════════════
+function getLangBlock(codes) {
+  return codes.map(c => {
+    const l = LANGS[c];
+    return `--- ${l.short} ${l.name} ---\nFormality: ${l.formality}\n${RULES[c]}\nApproved terminology: ${GLOSSARY[c]}`;
+  }).join('\n\n');
+}
+
+function getFmtLimits(fmtKey, langs = []) {
+  if (!fmtKey || !FMTS[fmtKey]) return '';
+  const f = FMTS[fmtKey];
+  let s = `CHARACTER LIMITS — ${f.name}:\n`;
+  Object.entries(f.lim).forEach(([k, v]) => { s += `• ${k}: ${v}\n`; });
+  if (langs.includes('it') && f.itLim) {
+    s += `Italian exception:\n`;
+    Object.entries(f.itLim).forEach(([k, v]) => { s += `  • ${k}: ${v}\n`; });
+  }
+  return s;
+}
+
+function sysRefine() {
+  return `You are a senior creative strategist at Qonto — a European business finance solution.
+Transform rough copy ideas or briefs into a polished, structured creative brief.
+
+Return in clean Markdown:
+
+## Creative Brief
+**Objective:** What this copy needs to achieve
+**Key message:** The single most important thing to say
+**Audience:** Who this is for and their context
+**Format recommendation:** Best format(s) for this message and why
+**Tone direction:** Specific guidance within Qonto's 4 ToV pillars
+**Must-include:** Facts, features, or CTAs to keep
+**Constraints:** Character limits, compliance notes, market specifics
+**Success looks like:** What makes this copy land
+
+${TOV}
+${GLOBALS}`;
+}
+
+function sysDraft(langCode, fmtKey) {
+  const fmtName = fmtKey && FMTS[fmtKey] ? FMTS[fmtKey].name : 'the appropriate format';
+  const fmtLims = getFmtLimits(fmtKey, langCode ? [langCode] : []);
+  const langRules = langCode ? '\n' + getLangBlock([langCode]) : '';
+  const langNote = langCode ? `Write in ${LANGS[langCode].name}.` : 'Write in the language specified in the brief.';
+  return `You are a senior copywriter for Qonto — a European business finance solution (NEVER a bank).
+
+TASK: Draft ${fmtName} copy from the brief. ${langNote}
+
+${TOV}
+
+${fmtLims ? fmtLims + '\n' : ''}${langRules}
+
+OUTPUT FORMAT:
+Present all copy elements in a table:
+| Element | Copy | Characters |
+|---------|------|------------|
+Add ⚠️ below any row that exceeds the limit.
+
+Then run a QualityGuard self-review:
+---
+🛡️ QualityGuard self-review
+🔴 Grammar & Spelling: X/5 — [finding]
+🟠 Fluency & Syntax: X/5 — [finding]
+🟡 Tone of Voice: X/5 — [finding]
+🔵 Compliance: X/5 — [note any unverifiable claims]
+**Verdict: Ready to publish / Corrections applied**
+If any gate fails 1–3: fix and show the corrected line. Gate 4: flag only.
+
+${GLOBALS}`;
+}
+
+function sysImprove(langCode, fmtKey) {
+  const fmtName = fmtKey && FMTS[fmtKey] ? FMTS[fmtKey].name : 'the copy';
+  const fmtLims = getFmtLimits(fmtKey, langCode ? [langCode] : []);
+  const langRules = langCode ? '\n' + getLangBlock([langCode]) : '';
+  const langNote = langCode ? `The copy is in ${LANGS[langCode].name}.` : '';
+  return `You are a senior copywriter for Qonto — a European business finance solution (NEVER a bank).
+
+TASK: Improve the ${fmtName} copy below. ${langNote}
+
+Focus on:
+• Stronger hook — is the opening line earning its place?
+• Benefit-led framing — customer benefit before product features
+• Cut every word that doesn't add meaning
+• Ensure all 4 ToV pillars are applied
+• Fix any grammar, fluency, or compliance issues
+
+${TOV}
+
+${fmtLims ? fmtLims + '\n' : ''}${langRules}
+
+OUTPUT FORMAT:
+First, a brief "What I changed" section (max 5 bullet points, be specific).
+
+Then the improved copy table:
+| Element | Improved copy | Characters |
+|---------|---------------|------------|
+
+Then QualityGuard:
+🔴 Grammar: X/5 | 🟠 Fluency: X/5 | 🟡 Tone of Voice: X/5 | 🔵 Compliance: X/5
+**Verdict: Ready to publish**
+
+${GLOBALS}`;
+}
+
+function sysLocalize(srcCode, tgtCodes, fmtKey) {
+  const src = LANGS[srcCode] || { name: srcCode, short: srcCode.toUpperCase() };
+  const fmtName = fmtKey && FMTS[fmtKey] ? FMTS[fmtKey].name : 'the copy';
+  const fmtLims = getFmtLimits(fmtKey, tgtCodes);
+  const tgtNames = tgtCodes.map(c => LANGS[c].name).join(', ');
+  return `You are a senior multilingual copywriter for Qonto — a European business finance solution (NEVER a bank).
+
+TASK: Localize ${fmtName} copy from ${src.name} into: ${tgtNames}.
+
+LOCALIZATION PRINCIPLES:
+• Translate meaning, not structure — find natural native equivalents
+• Preserve exactly: all facts, figures, URLs, legal text
+• Do NOT translate: plan names (Basic, Smart, Premium, Essential, Business, Enterprise), role names (Admin, Manager), or terms marked untranslatable
+• Adapt idioms and cultural references to each market
+• Apply each language's formality level precisely
+
+${fmtLims ? fmtLims + '\n' : ''}
+${getLangBlock(tgtCodes)}
+
+OUTPUT: One section per target language:
+### [Language name]
+| Element | Original (${src.short}) | Localized | Characters |
+|---------|------------------------|-----------|------------|
+⚠️ flag any element that exceeds the character limit.
+
+Then: 🔴 Grammar: X/5 | 🟠 Fluency: X/5 | 🟡 Tone of Voice: X/5 | 🔵 Compliance: X/5
+
+${GLOBALS}`;
+}
+
+function sysReview(langCode, fmtKey) {
+  const lang = langCode ? LANGS[langCode] : null;
+  const fmtLims = getFmtLimits(fmtKey, langCode ? [langCode] : []);
+  const langRules = langCode ? '\n' + getLangBlock([langCode]) : '';
+  return `You are QualityGuard — Qonto's copy quality reviewer. Be thorough and precise.
+
+${lang ? `Copy language: ${lang.name}` : 'Detect the copy language.'}
+
+Review in this order: 1) mechanical correctness, 2) fluency, 3) tone of voice, 4) compliance.
+
+${TOV}
+
+${fmtLims ? fmtLims + '\n' : ''}${langRules}
+
+4-GATE SCORING:
+🔴 Gate 1 — Grammar & Spelling   pass: 5/5  |  5=zero errors | 4=1–2 minor | 3=multiple errors
+🟠 Gate 2 — Fluency & Syntax     pass: 4/5  |  5=native | 4=clear, minor | 3=unnatural | 2=confusing
+🟡 Gate 3 — Tone of Voice        pass: 4/5  |  5=perfect Qonto | 4=on-brand | 3=salvageable | 2=major violations
+🔵 Gate 4 — Compliance           pass: 5/5  |  NEVER auto-fix — flag only, human must approve
+
+OUTPUT STRUCTURE:
+📊 Score
+🔴 Grammar: X/5 — [specific finding]
+🟠 Fluency: X/5 — [specific finding]
+🟡 Tone of Voice: X/5 — [specific finding]
+🔵 Compliance: X/5 — [flag any unverifiable claims or "bank" references]
+
+**Verdict: Ready to publish** — OR — **Corrections needed**
+
+[If corrections needed:]
+Show corrected copy (all elements). For each fix:
+✅ [what changed] — Rule: [which guideline]
+
+✨ Final score after corrections:
+🔴 Grammar: Y/5 | 🟠 Fluency: Y/5 | 🟡 Tone of Voice: Y/5 | 🔵 Compliance: Y/5
+
+${GLOBALS}`;
+}
+
+// ════════════════════════════════════════════════════════
+// MARKDOWN RENDERER
+// ════════════════════════════════════════════════════════
+function rInline(t) {
+  return t
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/`(.+?)`/g, '<code>$1</code>');
+}
+
+function renderMd(raw) {
+  const lines = raw.split('\n');
+  let html = '', inTable = false, tableRows = [], inUl = false;
+
+  function flushTable() {
+    if (!tableRows.length) return;
+    html += '<table class="md-table"><thead>';
+    let head = true;
+    for (const row of tableRows) {
+      if (/^\|[\s|:-]+\|$/.test(row.trim())) continue;
+      const cells = row.split('|').slice(1, -1).map(c => c.trim());
+      if (head) {
+        html += '<tr>' + cells.map(c => `<th>${rInline(c)}</th>`).join('') + '</tr>';
+        html += '</thead><tbody>';
+        head = false;
+      } else {
+        html += '<tr>' + cells.map(c => `<td>${rInline(c)}</td>`).join('') + '</tr>';
+      }
+    }
+    html += '</tbody></table>';
+    tableRows = []; inTable = false;
+  }
+  function flushUl() { if (inUl) { html += '</ul>'; inUl = false; } }
+
+  for (const line of lines) {
+    if (line.startsWith('|')) {
+      flushUl(); tableRows.push(line); inTable = true; continue;
+    }
+    if (inTable) flushTable();
+    if (/^#{1,4} /.test(line)) {
+      flushUl();
+      const lvl = Math.min(line.match(/^(#+)/)[1].length + 1, 5);
+      html += `<h${lvl}>${rInline(line.replace(/^#+\s/, ''))}</h${lvl}>`;
+    } else if (/^[•\-\*] /.test(line)) {
+      if (!inUl) { html += '<ul>'; inUl = true; }
+      html += `<li>${rInline(line.replace(/^[•\-\*] /, ''))}</li>`;
+    } else if (/^---+$/.test(line.trim())) {
+      flushUl(); html += '<hr>';
+    } else if (line.trim() === '') {
+      flushUl(); html += '<br>';
+    } else {
+      flushUl(); html += `<p>${rInline(line)}</p>`;
+    }
+  }
+  if (inTable) flushTable();
+  if (inUl) html += '</ul>';
+  return html;
+}
+
+// ════════════════════════════════════════════════════════
+// CLAUDE API — streaming SSE
+// ════════════════════════════════════════════════════════
+function getApiKey() {
+  return CFG.apiKey || sessionStorage.getItem('qcs_api_key') || '';
+}
+
+async function callClaude(system, user, { onChunk, onDone, onError }) {
+  const key = getApiKey();
+  if (!key) { onError('No API key — please refresh and enter your key.'); return; }
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: CFG.model,
+        max_tokens: CFG.maxTokens,
+        stream: true,
+        system,
+        messages: [{ role: 'user', content: user }]
+      })
+    });
+
+    if (!resp.ok) {
+      let msg = `API error ${resp.status}`;
+      try { const e = await resp.json(); msg = e.error?.message || msg; } catch {}
+      onError(msg); return;
+    }
+
+    const reader = resp.body.getReader();
+    const dec = new TextDecoder();
+    let buf = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      const parts = buf.split('\n');
+      buf = parts.pop();
+      for (const line of parts) {
+        if (!line.startsWith('data: ')) continue;
+        const d = line.slice(6).trim();
+        if (d === '[DONE]') { onDone(); return; }
+        try {
+          const p = JSON.parse(d);
+          if (p.type === 'content_block_delta' && p.delta?.type === 'text_delta') {
+            onChunk(p.delta.text);
+          }
+        } catch {}
+      }
+    }
+    onDone();
+  } catch (e) {
+    onError(e.message || 'Network error — check your connection.');
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// STREAMING RESULT UI
+// ════════════════════════════════════════════════════════
+let streamBuf = '', running = false;
+
+function startResult(label) {
+  streamBuf = '';
+  const ra = document.getElementById('result-area');
+  ra.innerHTML = `
+    <div style="border-top:1px solid var(--n200);margin-top:44px;padding-top:36px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--n500);margin-bottom:14px">${escH(label)}</div>
+      <div class="loading-row"><div class="dots"><span></span><span></span><span></span></div>${escH(label)}</div>
+    </div>`;
+  ra.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function onChunk(text) {
+  streamBuf += text;
+  let ra = document.getElementById('result-area');
+  let box = ra.querySelector('.result-box');
+  if (!box) {
+    ra.innerHTML = `
+      <div style="border-top:1px solid var(--n200);margin-top:44px;padding-top:36px" id="result-inner">
+        <div class="result-top">
+          <div class="result-label">Generating…</div>
+        </div>
+        <div class="result-box"><span class="stream-raw" id="stream-raw"></span><span class="cursor"></span></div>
+      </div>`;
+    box = ra.querySelector('.result-box');
+  }
+  const raw = document.getElementById('stream-raw');
+  if (raw) raw.textContent = streamBuf;
+}
+
+function onDone() {
+  running = false;
+  setButtons(false);
+  const box = document.querySelector('.result-box');
+  if (!box) return;
+  box.innerHTML = `<div class="md-rendered">${renderMd(streamBuf)}</div>`;
+
+  const top = document.querySelector('#result-inner .result-top');
+  if (top) {
+    top.innerHTML = `
+      <div class="result-label">Result</div>
+      <div class="result-acts">
+        <button class="res-btn primary" id="copy-btn" onclick="copyResult()">Copy result</button>
+        <button class="res-btn" onclick="useAsInput()">Use as input</button>
+        <button class="res-btn" onclick="run('improve')">Improve this</button>
+        <button class="res-btn" onclick="run('review')">Quality check</button>
+      </div>`;
+  }
+}
+
+function onError(msg) {
+  running = false;
+  setButtons(false);
+  document.getElementById('result-area').innerHTML = `
+    <div style="border-top:1px solid var(--n200);margin-top:44px;padding-top:36px">
+      <div class="err-box">
+        <strong>Something went wrong</strong><br>${escH(msg)}<br><br>
+        Make sure your API key starts with <code>sk-ant-</code> and that you have network access.
+      </div>
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════════
+// ACTION RUNNERS
+// ════════════════════════════════════════════════════════
+async function run(action) {
+  if (running) return;
+  const input = (document.getElementById('main-input')?.value || '').trim();
+  const fmt   = document.getElementById('ctx-fmt')?.value || '';
+  const lang  = document.querySelector('#src-chips input:checked')?.value || 'en';
+
+  if (!input) { shakeInput(); return; }
+
+  if (action === 'localize') {
+    const tgts = getTgts();
+    if (!tgts.length) { showToast('Select at least one target language'); return; }
+  }
+
+  running = true;
+  setButtons(true);
+
+  let sys, userMsg, label;
+
+  if (action === 'refine') {
+    sys = sysRefine();
+    userMsg = `Here is my rough copy idea or brief:\n\n${input}`;
+    label = 'Improving your brief…';
+
+  } else if (action === 'draft') {
+    sys = sysDraft(lang, fmt);
+    userMsg = `Brief:\n\n${input}`;
+    label = 'Drafting copy…';
+
+  } else if (action === 'improve') {
+    sys = sysImprove(lang, fmt);
+    userMsg = `Copy to improve:\n\n${input}`;
+    label = 'Improving copy…';
+
+  } else if (action === 'localize') {
+    const tgts = getTgts();
+    sys = sysLocalize(lang, tgts, fmt);
+    userMsg = `Copy to localize:\n\n${input}`;
+    label = `Localizing into ${tgts.map(c => LANGS[c].short).join(', ')}…`;
+
+  } else if (action === 'review') {
+    sys = sysReview(lang, fmt);
+    userMsg = `Copy to review:\n\n${input}`;
+    label = 'Running QualityGuard…';
+  }
+
+  startResult(label);
+  await callClaude(sys, userMsg, { onChunk, onDone, onError });
+}
+
+function getTgts() {
+  return Array.from(document.querySelectorAll('#tgt-chips input:checked')).map(i => i.value);
+}
+
+// ════════════════════════════════════════════════════════
+// LOCALIZE PANEL
+// ════════════════════════════════════════════════════════
+let locOpen = false;
+function toggleLoc() {
+  locOpen = !locOpen;
+  document.getElementById('loc-panel').classList.toggle('open', locOpen);
+  document.getElementById('btn-loc').classList.toggle('open', locOpen);
+  const ch = document.getElementById('loc-chevron');
+  if (ch) ch.style.transform = locOpen ? 'rotate(180deg)' : '';
+}
+
+// ════════════════════════════════════════════════════════
+// CHIPS
+// ════════════════════════════════════════════════════════
+function buildSrcChips() {
+  return Object.entries(LANGS).map(([k, v]) => {
+    const chk = k === 'en' ? ' checked' : '';
+    const on  = k === 'en' ? ' on' : '';
+    return `<label class="ctx-chip${on}"><input type="radio" name="src" value="${k}"${chk} onchange="onSrcChip(this)">${v.short}</label>`;
+  }).join('');
+}
+
+function buildTgtChips() {
+  return Object.entries(LANGS)
+    .filter(([k]) => k !== 'en')
+    .map(([k, v]) => `<label class="loc-chip"><input type="checkbox" value="${k}" onchange="onTgtChip(this)">${v.short} ${v.name}</label>`)
+    .join('');
+}
+
+function onSrcChip(input) {
+  document.querySelectorAll('#src-chips label').forEach(l => l.classList.remove('on'));
+  input.closest('label').classList.add('on');
+  // deselect same language in targets
+  const tgt = document.querySelector(`#tgt-chips input[value="${input.value}"]`);
+  if (tgt && tgt.checked) { tgt.checked = false; tgt.closest('label').classList.remove('on'); }
+}
+
+function onTgtChip(input) {
+  input.closest('label').classList.toggle('on', input.checked);
+}
+
+// ════════════════════════════════════════════════════════
+// CLIPBOARD + TOAST
+// ════════════════════════════════════════════════════════
+function copyResult() {
+  if (!streamBuf) return;
+  const btn = document.getElementById('copy-btn');
+  const done = () => {
+    if (!btn) return;
+    btn.textContent = 'Copied';
+    btn.classList.add('done');
+    setTimeout(() => { btn.textContent = 'Copy result'; btn.classList.remove('done'); }, 2500);
+  };
+  navigator.clipboard
+    ? navigator.clipboard.writeText(streamBuf).then(done).catch(() => fbCopy(streamBuf, done))
+    : fbCopy(streamBuf, done);
+}
+
+function fbCopy(text, cb) {
+  const ta = Object.assign(document.createElement('textarea'), { value: text });
+  ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+  document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+  document.body.removeChild(ta); cb();
+}
+
+function useAsInput() {
+  if (!streamBuf) return;
+  document.getElementById('main-input').value = streamBuf;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  showToast('Moved to input');
+}
+
+let _toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// ════════════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
+// KEY SETUP
+// ════════════════════════════════════════════════════════
+function saveKey() {
+  const k = (document.getElementById('setup-key').value || '').trim();
+  const err = document.getElementById('key-err');
+  if (!k.startsWith('sk-ant-')) {
+    err.textContent = 'That doesn\'t look right — the key should start with sk-ant-';
+    document.getElementById('setup-key').style.borderColor = '#dc2626';
+    return;
+  }
+  sessionStorage.setItem('qcs_api_key', k);
+  err.textContent = '';
+  // Go to the pending tool or default to write
+  openTool(_pendingMode || 'write');
+  _pendingMode = null;
+}
+
+let _pendingMode = null;
+
+function requireKey(mode) {
+  if (getApiKey()) return true;
+  _pendingMode = mode;
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('key-screen').classList.add('active');
+  setTimeout(() => document.getElementById('setup-key')?.focus(), 80);
+  return false;
+}
+
+function routeSearch() {
+  const q = (document.getElementById('home-q').value || '').toLowerCase();
+  if (/translat|locali/.test(q)) { openTool('translate'); return; }
+  if (/review|check|qualit/.test(q)) { openTool('review'); return; }
+  openTool('write');
+}
+
+function openTool(mode) {
+  if (!requireKey(mode)) return;
+
+  // Build chips
+  document.getElementById('src-chips').innerHTML = buildSrcChips();
+  document.getElementById('tgt-chips').innerHTML = buildTgtChips();
+
+  // Hero headline
+  const h = { write: ['Write anything.', 'Localize everything.'], translate: ['Localize everything.', 'In every Qonto market.'], review: ['Is it ready to publish?', 'QualityGuard, live.'] };
+  const [h1, h2] = h[mode] || h.write;
+  document.getElementById('hero-h').innerHTML = `${h1}<br>${h2}`;
+  document.getElementById('nav-model').textContent = `Claude ${CFG.model.replace('claude-', '')}`;
+
+  // Set main input placeholder by mode
+  const ta = document.getElementById('main-input');
+  if (mode === 'translate') ta.placeholder = 'Paste the copy you want to localize…';
+  else if (mode === 'review') ta.placeholder = 'Paste the copy you want to quality-check…';
+  else ta.placeholder = 'Paste your copy to improve — or describe what you would like to write…';
+
+  // Pre-open localize panel for translate mode
+  if (mode === 'translate' && !locOpen) toggleLoc();
+  else if (mode !== 'translate' && locOpen) toggleLoc();
+
+  // Reset
+  document.getElementById('result-area').innerHTML = '';
+  streamBuf = ''; running = false;
+  setButtons(false);
+
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('ai-screen').classList.add('active');
+  window.scrollTo(0, 0);
+  setTimeout(() => ta.focus(), 80);
+}
+
+function goHome() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('home').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ════════════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════════════
+function setButtons(disabled) {
+  document.querySelectorAll('.action-row .act-btn').forEach(b => { b.disabled = disabled; });
+}
+
+function shakeInput() {
+  const ta = document.getElementById('main-input');
+  if (!ta) return;
+  ta.classList.add('shake');
+  ta.focus();
+  setTimeout(() => ta.classList.remove('shake'), 500);
+}
+
+function escH(t) {
+  return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+</script>
+</body>
+</html>
