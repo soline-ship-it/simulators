@@ -17,7 +17,6 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
-
     .container {
       max-width: 600px;
       width: 100%;
@@ -28,365 +27,102 @@
       text-align: center;
       position: relative;
     }
-
-    h1 {
-      color: #111827;
-      margin-bottom: 10px;
-      font-size: 24px;
-    }
-
-    h2 {
-      color: #6b7280;
-      font-weight: 500;
-      font-size: 16px;
-      margin-top: 0;
-      margin-bottom: 30px;
-    }
-
-    /* Cute Peeking Cat Animation */
+    h1 { color: #111827; margin-bottom: 10px; font-size: 24px; }
+    h2 { color: #6b7280; font-weight: 500; font-size: 16px; margin-top: 0; margin-bottom: 30px; }
     .cat-container {
-      position: absolute;
-      top: -55px;
-      right: 20px;
-      width: 90px;
-      height: auto;
-      animation: floatCat 3s ease-in-out infinite;
-      z-index: 10;
-      pointer-events: none;
+      position: absolute; top: -55px; right: 20px; width: 90px;
+      animation: floatCat 3s ease-in-out infinite; z-index: 10; pointer-events: none;
     }
-
     @keyframes floatCat {
       0%, 100% { transform: translateY(0) rotate(5deg); }
       50% { transform: translateY(-8px) rotate(5deg); }
     }
-
-    /* Progress Bar */
     .progress-container {
-      width: 100%;
-      background-color: #e5e7eb;
-      height: 6px;
-      border-radius: 10px;
-      margin-bottom: 30px;
-      overflow: hidden;
+      width: 100%; background-color: #e5e7eb; height: 6px;
+      border-radius: 10px; margin-bottom: 30px; overflow: hidden;
     }
-
-    .progress-bar {
-      height: 100%;
-      background-color: #6d28d9;
-      width: 0%;
-      transition: width 0.3s ease;
-    }
-
-    /* Question Counter */
+    .progress-bar { height: 100%; background-color: #6d28d9; width: 0%; transition: width 0.3s ease; }
     .question-counter {
-      font-size: 13px;
-      color: #6b7280;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 8px;
-      text-align: left;
+      font-size: 13px; color: #6b7280; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; text-align: left;
     }
-
-    /* Questions & Options */
-    .question {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 24px;
-      line-height: 1.5;
-      text-align: left;
-    }
-
-    .options-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
+    .question { font-size: 18px; font-weight: 600; margin-bottom: 24px; line-height: 1.5; text-align: left; }
+    .options-grid { display: flex; flex-direction: column; gap: 12px; }
     .option-btn {
-      background: #f9fafb;
-      border: 2px solid #e5e7eb;
-      padding: 16px;
-      border-radius: 12px;
-      text-align: left;
-      cursor: pointer;
-      font-size: 15px;
-      transition: all 0.2s;
-      color: #374151;
-      position: relative;
+      background: #f9fafb; border: 2px solid #e5e7eb; padding: 16px;
+      border-radius: 12px; text-align: left; cursor: pointer; font-size: 15px;
+      transition: all 0.2s; color: #374151; line-height: 1.5;
     }
-
-    .option-btn:hover:not(.disabled) {
-      border-color: #6d28d9;
-      background: #f5f3ff;
-    }
-
-    .option-btn.correct {
-      background: #ecfdf5;
-      border-color: #10b981;
-      color: #065f46;
-    }
-
-    .option-btn.wrong {
-      background: #fef2f2;
-      border-color: #ef4444;
-      color: #991b1b;
-      opacity: 0.7;
-    }
-
-    .disabled {
-      cursor: default;
-      pointer-events: none;
-    }
-
-    /* Feedback Section */
+    .option-btn:hover:not(.disabled) { border-color: #6d28d9; background: #f5f3ff; }
+    .option-btn.correct { background: #ecfdf5; border-color: #10b981; color: #065f46; }
+    .option-btn.wrong { background: #fef2f2; border-color: #ef4444; color: #991b1b; opacity: 0.7; }
+    .disabled { cursor: default; pointer-events: none; }
     .feedback {
-      margin-top: 24px;
-      padding: 20px;
-      border-radius: 12px;
-      background: #f8fafc;
-      text-align: left;
-      font-size: 14px;
-      line-height: 1.6;
-      display: none;
+      margin-top: 24px; padding: 20px; border-radius: 12px; background: #f8fafc;
+      text-align: left; font-size: 14px; line-height: 1.7; display: none;
       border-left: 4px solid #6d28d9;
     }
-
-    .feedback strong {
-      display: block;
-      margin-bottom: 8px;
-      color: #6d28d9;
-    }
-
-    .feedback a {
-      color: #4338ca;
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
-
-    .feedback a:hover {
-      color: #3730a3;
-    }
-
-    /* Mockup for the Dust Skill Card */
-    .dust-skill-card {
-      background: #f9fafb;
-      border-radius: 16px;
-      padding: 16px;
-      margin: 16px 0;
-      border: 1px solid #e5e7eb;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-    
-    .dust-skill-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-    
-    .dust-skill-icon-title {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    
-    .dust-skill-icon {
-      background: #eff6ff;
-      color: #3b82f6;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-    
-    .dust-skill-title {
-      font-weight: 600;
-      color: #111827;
-      font-size: 14px;
-    }
-    
-    .dust-skill-add {
-      background: white;
-      border: 1px solid #d1d5db;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #374151;
-    }
-    
-    .dust-skill-desc {
-      font-size: 13px;
-      color: #6b7280;
-      line-height: 1.5;
-      margin-bottom: 12px;
-    }
-    
-    .dust-skill-details {
-      font-size: 13px;
-      color: #4b5563;
-      font-weight: 600;
-    }
-
-    /* Buttons Container */
-    .buttons-container {
-      display: flex;
-      gap: 12px;
-      margin-top: 24px;
-      justify-content: center;
-    }
-
-    /* Buttons */
+    .feedback strong { display: block; margin-bottom: 8px; color: #6d28d9; }
+    .feedback a { color: #4338ca; text-decoration: underline; text-underline-offset: 2px; }
+    .feedback a:hover { color: #3730a3; }
+    .feedback ul { margin: 8px 0 0 0; padding-left: 20px; }
+    .feedback ul li { margin-bottom: 6px; }
+    .buttons-container { display: flex; gap: 12px; margin-top: 24px; justify-content: center; }
     .btn-next, .btn-start, .btn-restart, .btn-prev {
-      background: #6d28d9;
-      color: white;
-      border: none;
-      padding: 14px 32px;
-      border-radius: 50px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-      position: relative;
-      z-index: 20;
+      background: #6d28d9; color: white; border: none; padding: 14px 32px;
+      border-radius: 50px; font-size: 16px; font-weight: 600; cursor: pointer;
+      transition: background 0.2s; position: relative; z-index: 20;
     }
-
-    .btn-prev {
-      background: #9ca3af;
-    }
-
-    .btn-next:hover, .btn-start:hover, .btn-restart:hover {
-      background: #5b21b6;
-    }
-
-    .btn-prev:hover {
-      background: #6b7280;
-    }
-
-    .btn-next, .btn-prev {
-      display: none;
-      flex: 1;
-    }
-
-    /* Screens */
-    .screen {
-      display: none;
-    }
-    .screen.active {
-      display: block;
-    }
-
-    .emoji-score {
-      font-size: 48px;
-      margin-bottom: 16px;
-      display: block;
-    }
-
+    .btn-prev { background: #9ca3af; }
+    .btn-next:hover, .btn-start:hover, .btn-restart:hover { background: #5b21b6; }
+    .btn-prev:hover { background: #6b7280; }
+    .btn-next, .btn-prev { display: none; flex: 1; }
+    .screen { display: none; }
+    .screen.active { display: block; }
+    .emoji-score { font-size: 48px; margin-bottom: 16px; display: block; }
     .contact-card {
-      background: #f3f4f6;
-      padding: 20px;
-      border-radius: 12px;
-      margin-top: 20px;
-      margin-bottom: 24px;
-      font-size: 14px;
-      color: #4b5563;
+      background: #f3f4f6; padding: 20px; border-radius: 12px;
+      margin-top: 20px; margin-bottom: 24px; font-size: 14px; color: #4b5563; text-align: left;
     }
-
-    /* TL;DR Card Styles */
+    .contact-card p { margin: 0 0 12px 0; }
+    .contact-card p:last-child { margin-bottom: 0; }
     .tldr-card {
-      background: #f5f3ff;
-      border: 1px solid #ddd6fe;
-      padding: 24px;
-      border-radius: 12px;
-      margin-top: -10px;
-      margin-bottom: 24px;
-      text-align: left;
+      background: #f5f3ff; border: 1px solid #ddd6fe; padding: 24px;
+      border-radius: 12px; margin-top: -10px; margin-bottom: 24px; text-align: left;
     }
-    
     .tldr-title {
-      font-size: 16px;
-      font-weight: 700;
-      color: #5b21b6;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      font-size: 16px; font-weight: 700; color: #5b21b6; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px;
     }
-    
     .tldr-list {
-      list-style-type: disc;
-      padding-left: 20px;
-      margin: 0;
-      font-size: 14px;
-      color: #374151;
-      line-height: 1.6;
+      list-style-type: disc; padding-left: 20px; margin: 0;
+      font-size: 14px; color: #374151; line-height: 1.6;
     }
-    
-    .tldr-list li {
-      margin-bottom: 10px;
-    }
-    
-    .tldr-list li:last-child {
-      margin-bottom: 0;
-    }
-
-    .tldr-card a {
-      color: #4338ca;
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
-    
-    .tldr-card a:hover {
-      color: #3730a3;
-    }
-
-    .tldr-note {
-      margin-top: 16px;
-      font-size: 13px;
-      color: #6b7280;
-      font-style: italic;
-    }
-
-    .footer-note {
-      margin-top: 20px;
-      font-size: 13px;
-      color: #6b7280;
-      font-weight: 500;
-      text-align: center;
-    }
-    
-    a {
-      color: #6d28d9;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
+    .tldr-list li { margin-bottom: 10px; }
+    .tldr-list li:last-child { margin-bottom: 0; }
+    .tldr-card a { color: #4338ca; text-decoration: underline; text-underline-offset: 2px; }
+    .tldr-card a:hover { color: #3730a3; }
+    .tldr-note { margin-top: 16px; font-size: 13px; color: #6b7280; font-style: italic; }
+    .footer-note { margin-top: 20px; font-size: 13px; color: #6b7280; font-weight: 500; text-align: center; }
+    a { color: #6d28d9; text-decoration: none; font-weight: 600; }
+    a:hover { text-decoration: underline; }
+    hr.divider { border: 0; border-top: 1px solid #e5e7eb; margin: 12px 0; }
   </style>
 </head>
 <body>
-
   <div class="container">
-    
+
     <!-- START SCREEN -->
     <div id="start-screen" class="screen active">
       <div style="font-size: 40px; margin-bottom: 20px;">🎓</div>
       <h1>Time to train!</h1>
       <h2>Master resources available for copy creation at Qonto and become an ambassador for them</h2>
       <p style="margin-bottom: 30px; line-height: 1.6;">
-        Think you know how to create the best copy at Qonto? <br>
+        Think you know how to create the best copy at Qonto?<br>
         Test your knowledge, learn the best practices, and become a prompt wizard.
       </p>
       <button class="btn-start" onclick="startQuiz()">Start quiz</button>
-      
       <p class="footer-note">By Soline Avrillas ❤️</p>
-
-      <!-- CAT IMAGE -->
       <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Animals/Cat.png" alt="Cute Cat" class="cat-container">
     </div>
 
@@ -395,13 +131,10 @@
       <div class="progress-container">
         <div id="progress-bar" class="progress-bar"></div>
       </div>
-      
       <div id="question-counter" class="question-counter"></div>
       <div id="question-text" class="question"></div>
       <div id="options-container" class="options-grid"></div>
-      
       <div id="feedback" class="feedback"></div>
-      
       <div class="buttons-container">
         <button id="prev-btn" class="btn-prev" onclick="prevQuestion()">Previous</button>
         <button id="next-btn" class="btn-next" onclick="nextQuestion()">Next question</button>
@@ -413,175 +146,253 @@
       <span id="score-emoji" class="emoji-score">🎉</span>
       <h1 id="score-title">Yeah!</h1>
       <p id="score-text" style="font-size: 18px; margin-bottom: 30px;"></p>
-      
-      <!-- TL;DR RECAP CARD -->
       <div class="tldr-card">
         <div class="tldr-title">TL;DR: Your cheat sheet</div>
         <ul class="tldr-list">
           <li><strong>Scope first:</strong> Define goal, audience, and limits before starting.</li>
           <li><strong>Prompting matters:</strong> Be precise. Context and constraints are key.</li>
-          <li><strong>Tolki <a href="https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf" target="_blank">writes</a> & <a href="https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf?p=24d31ee4c696812ab5c1ee03e3aeda5e&pm=c" target="_blank">localizes</a>:</strong> Use market-specific agents with rich context.</li>
-          <li><strong><a href="https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c" target="_blank">QualityGuard</a> checks:</strong> Mandatory for Grammar, Fluency, and Tone.</li>
+          <li>
+            <strong>Tolki <a href="https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf" target="_blank">writes</a> &amp; <a href="https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf?p=24d31ee4c696812ab5c1ee03e3aeda5e&pm=c" target="_blank">localizes</a>:</strong>
+            Available on Gemini Pro (Tolki Gem), Notion AI (Tolki skill), and Qontent.
+          </li>
+          <li>
+            <strong><a href="https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c" target="_blank">QualityGuard</a> checks:</strong>
+            4 gates — Grammar, Fluency, Tone, Compliance. Auto-fixes Gates 1–3; Compliance is always on you.
+            Available on Gemini Pro, Notion AI, and Qontent.
+          </li>
           <li><strong>You own compliance:</strong> Verify all facts, dates, and pricing yourself.</li>
-          <li><strong>Use the Hub:</strong> Your one-stop shop for bots and guidelines.</li>
+          <li>
+            <strong><a href="https://qontostudio.netlify.app/" target="_blank">Qonto Studio</a>:</strong>
+            New tool (Apr 2026) for UI copy, social posts, prints and more — but always run QualityGuard on your preferred tool before publishing.
+          </li>
+          <li><strong>Use the Hub:</strong> Your one-stop shop for bots, guidelines, and tools.</li>
         </ul>
         <p class="tldr-note">That's where we're at now! But AI evolves fast, and we're improving. Please help us do so.</p>
       </div>
-
       <div class="contact-card">
-        <p><strong>Questions?</strong> <span id="dynamic-reach-out">Reach out to <strong>Soline Avrillas</strong> directly.</span></p>
-        <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 15px 0;">
-        <p><a href="https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c" target="_blank">Visit the Self-Service Hub</a> (Use it, break it, give feedback!)</p>
-        <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 15px 0;">
-        <p><strong>Spread the word!</strong> Share this quiz with your team 🤓</p>
+        <p><strong>Questions or issues?</strong> Log them in the <a href="https://app.notion.com/p/f5b587c59c1842f09fcbdc63013f2268" target="_blank">Red Bin database</a>, or talk to <span id="dynamic-reach-out"><strong>Soline Avrillas</strong> directly.</span></p>
+        <hr class="divider">
+        <p>
+          📅 <strong>Office hours</strong> — every <strong>Monday &amp; Thursday</strong> in Soline's agenda.<br>
+          <a href="https://calendar.app.google/nxtrmftpRr8mABaC9" target="_blank">Book a slot here</a> if you need help, have a question, or want to give feedback.
+        </p>
+        <hr class="divider">
+        <p><a href="https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c" target="_blank">Visit the Self-Service Hub</a> — use it, break it, give feedback!</p>
+        <hr class="divider">
+        <p style="margin:0"><strong>Spread the word!</strong> Share this quiz with your team 🤓</p>
       </div>
-
       <button class="btn-restart" onclick="restartQuiz()">Retake quiz</button>
-
       <p class="footer-note">By Soline Avrillas ❤️</p>
-
-      <!-- CAT IMAGE -->
       <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Animals/Cat.png" alt="Cute Cat" class="cat-container">
     </div>
-
   </div>
 
   <script>
-    // --- QUIZ DATA ---
     const questions = [
+
+      // Q1 — LOCALIZATION WORKFLOW
+      {
+        question: "Is there an official localization workflow at Qonto?",
+        options: [
+          "No — everyone figures it out on their own",
+          "Sort of — there's a workflow in progress, but rules aren't 100% set yet at the Growth Leadership level",
+          "Yes — it's fully defined and mandatory for all teams"
+        ],
+        correct: 1,
+        explainer: "<strong>Sort of — and that's okay. #ownership.</strong><br><br>The rules aren't fully locked at Growth Leadership level yet, but we have a solid start. You can explore the visual workflow here: <a href='https://soline-ship-it.github.io/simulators/localization.html' target='_blank'>Localization Workflow Simulator</a>.<br><br>Until we have a super clear RASCI, let's take ownership and use the right tools when we can. The <a href='https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9' target='_blank'>Self-Service Hub</a> has everything you need to create on-brand content today."
+      },
+
+      // Q2 — TOLKI CAPABILITIES
       {
         question: "What can Tolki help with?",
         options: [
-          "To write",
-          "To localize",
-          "To write and localize"
+          "Writing only",
+          "Localizing only",
+          "Both writing and localizing"
         ],
         correct: 2,
-        explainer: "<strong>Fortunately, it helps with both!</strong><br>You can use: ES_Tolki, IT_Tolki, DE_Tolki, FR_Tolki, EN_Tolki, PO_Tolki, NL_Tolki.<br><br>Check out our guides for <a href='https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf' target='_blank'>Writing with Tolki</a> and <a href='https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf?p=24d31ee4c696812ab5c1ee03e3aeda5e&pm=c' target='_blank'>Localizing with Tolki</a>."
+        explainer: "<strong>Fortunately, it helps with both!</strong><br><br>Tolki is available on several platforms: Gemini Pro, Qontent (our CMS), and Notion AI.<br><br>Check out our guides for <a href='https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf' target='_blank'>Writing with Tolki</a> and <a href='https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf?p=24d31ee4c696812ab5c1ee03e3aeda5e&pm=c' target='_blank'>Localizing with Tolki</a>."
       },
+
+      // Q3 — SCOPE FIRST
       {
         question: "To save 30 minutes+ of rewriting later, what is the absolute first thing you should do before writing?",
         options: [
-          "Open Dust immediately",
+          "Open your writing tool immediately",
           "Define your business value, target audience, and key claims",
           "Start writing your draft directly to get ideas flowing"
         ],
         correct: 1,
         explainer: "<strong>Scope first!</strong> Spending 5 minutes defining your scope (Goal, Audience, Market, Channel) saves you 30 minutes+ of rewriting later. Always start with the 'Why' and 'Who'."
       },
+
+      // Q4 — QONTO STUDIO
       {
-        question: "What is the ONE tool you should ALWAYS go to for a quality check of your copy?",
+        question: "You discover <a href='https://qontostudio.netlify.app/' target='_blank'>Qonto Studio</a>. Can you use it to create and publish copy directly?",
         options: [
-          "Your favorite bot in Dust",
+          "Yes, it's fully optimized — create in Studio and publish without any extra checks",
+          "Yes, but always run QualityGuard on your preferred tool before publishing — the quality check in Studio isn't optimal yet",
+          "No, it's not approved for copy creation at Qonto"
+        ],
+        correct: 1,
+        explainer: "<strong><a href='https://qontostudio.netlify.app/' target='_blank'>Qonto Studio</a> is great — and it's new!</strong> Launched in April 2026, it covers multiple formats: UI copy, social posts, prints, and more.<br><br>But the copy outputs aren't fully optimized yet — we're actively working on it. Until then: always run QualityGuard on your preferred tool (Gemini Pro or Notion AI) rather than relying on the quality check in Studio itself.<br><br>The <a href='https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c' target='_blank'>Self-Service Hub</a> has everything you need in the meantime."
+      },
+
+      // Q5 — QUALITYGUARD
+      {
+        question: "What is the ONE tool you should ALWAYS use for a quality check of your copy?",
+        options: [
+          "Any AI bot you prefer",
           "Google Translate",
-          "@QualityGuard in Dust",
+          "QualityGuard (Gemini Pro, Notion AI, or Qontent)",
           "Just trust your gut"
         ],
         correct: 2,
-        explainer: "<strong>QualityGuard is your safety net.</strong> It automatically reviews Grammar, Fluency, and Tone of Voice. It also flags compliance issues. <br><br><a href='https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c' target='_blank'>Link to QualityGuard guide</a>."
+        explainer: "<strong>QualityGuard is your safety net.</strong> It reviews copy against 4 gates:<ul><li><strong>Gate 1 — Grammar &amp; spelling:</strong> must be 5/5 to pass</li><li><strong>Gate 2 — Language fluency:</strong> must be 4/5 or higher</li><li><strong>Gate 3 — Tone of Voice:</strong> must be 4/5 or higher</li><li><strong>Gate 4 — Compliance:</strong> must be 5/5 — and is always your responsibility</li></ul>Gates 1–3 are auto-fixed via Tolki when they fail. Gate 4 is never auto-fixed — you must verify facts, pricing, and dates yourself.<br><br><a href='https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c' target='_blank'>QualityGuard guide</a>"
       },
+
+      // Q6 — DEDICATED BOT
       {
-        question: "You need to write a very specific content piece, like a Sales Deck or a Survey Email with strict guidelines. What tool should you use?",
+        question: "You need to write a very specific content piece — a Sales Deck or a Survey Email with strict guidelines. What should you use?",
         options: [
-          "Standard Tolki agent (e.g., @FR_Tolki)",
-          "A dedicated bot + QualityGuard",
-          "ChatGPT or any bot in Dust",
-          "Write it manually without AI"
+          "Standard Tolki (Gemini Pro or Notion AI)",
+          "A dedicated bot, if one exists — then always QualityGuard",
+          "ChatGPT or any random AI tool",
+          "Write it manually — AI can't handle high-constraint formats"
         ],
         correct: 1,
-        explainer: "<strong>Use the specialist!</strong> If a dedicated bot exists, use it. If not, you can use Tolki but you must be extremely specific in your prompt: attach visual examples, define precise character limits, and strict constraints. We can also help you build a dedicated bot—reach out to Soline!<br><br>Check out this <a href='https://www.notion.so/qonto/24d31ee4c69680a98a22eeea0202b192?v=24d31ee4c696801db59f000cac2a1d5f&source=copy_link' target='_blank'>non-exhaustive list of standards and dedicated bots</a> (we are currently improving it)."
+        explainer: "<strong>Use the specialist!</strong> If a dedicated bot exists, use it. If not, use Tolki — but be extremely specific: attach visual examples, define precise character limits, add strict constraints. We can also help you build a dedicated bot — reach out to Soline!<br><br>And for some formats like social posts, prints, or UI copy, <a href='https://qontostudio.netlify.app/' target='_blank'>Qonto Studio</a> is the way to go — just always pair it with QualityGuard before publishing.<br><br><a href='https://www.notion.so/qonto/24d31ee4c69680a98a22eeea0202b192?v=24d31ee4c696801db59f000cac2a1d5f&source=copy_link' target='_blank'>Non-exhaustive list of standards and dedicated bots</a> (still being improved)."
       },
+
+      // Q7 — MARKET GUIDELINES
       {
-        question: "You need specific content guidelines for a market (e.g. Italy). Where do you look?",
+        question: "You need specific content guidelines for a market (e.g. Italy). Where do you look first?",
         options: [
-          "Dust, and ask any bot",
-          "The self-service content guide for the given market",
-          "Tolki_IT (or any market specific Tolki) in Dust",
-          "Ask the Comms Partners or someone else on Slack"
+          "Ask any AI tool",
+          "The self-service content guide for that market",
+          "Tolki for that market (Gemini Pro or Notion AI)",
+          "Ask the Comms Partners on Slack"
         ],
         correct: 1,
-        explainer: "<strong>There are market-specific guides for you!</strong> It was done by the former content team and you can also maintain it! <a href='https://www.notion.so/qonto/24d31ee4c69680a98a22eeea0202b192?v=2b031ee4c69680e69dd8000c853d964c&source=copy_link' target='_blank'>Access the database with the existing guides per market here</a>. <br><br>And don't forget the <a href='https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c' target='_blank'>Self-Service Hub</a> for all generic resources."
+        explainer: "<strong>There are market-specific guides for you!</strong> Built by the former content team — and you can maintain them too!<br><br><a href='https://www.notion.so/qonto/24d31ee4c69680a98a22eeea0202b192?v=2b031ee4c69680e69dd8000c853d964c&source=copy_link' target='_blank'>Market guides database</a><br><br>And always check the <a href='https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?p=24d31ee4c6968193bc6bc98d7f613d93&pm=c' target='_blank'>Self-Service Hub</a> for generic resources."
       },
+
+      // Q8 — BEST LOCALIZATION PROMPT
       {
-        question: "Which of these prompts yields the best localization?",
+        question: "Which of these prompts yields the best localization result?",
         options: [
-          "@Tolki_FR Translate this to French: [copy]",
-          "@Tolki_FR Make this sound French: [copy]",
-          "@Tolki_FR Localize this marketing email for French freelancers.<br><strong>Goal:</strong> Drive adoption for Pay Later.<br><strong>Format:</strong> Marketing Email.<br><strong>Audience:</strong> Freelancers who have already used other features...<br><strong>Limits:</strong> Subject 35-42ch, Preview 60ch.<br><strong>Context:</strong> This email will be received as part of the Pay Later campaign. Here are the key claims for it in French [Approved claims].<br><strong>Draft:</strong> [Copy]"
+          "Tolki — Translate this to French: [copy]",
+          "Tolki — Make this sound French: [copy]",
+          "Tolki — Localize this marketing email for French freelancers. Goal: drive Pay Later adoption. Format: Marketing Email. Audience: Freelancers already using other features. Limits: Subject 35–42ch, Preview 60ch. Context: Part of the Pay Later campaign, approved French claims attached. Draft: [copy]"
         ],
         correct: 2,
-        explainer: "<strong>Context is King.</strong> The best prompt includes the Format, Audience, Goal, and specific Character Limits. 'Translate' is too simple; 'Localize' with context yields high-converting copy."
+        explainer: "<strong>Context is King.</strong> The best prompt includes Format, Audience, Goal, and character limits. 'Translate' is too simple; rich context = high-converting copy. This works the same in the Tolki Gem (Gemini Pro), the Tolki skill (Notion AI), or Qontent."
       },
+
+      // Q9 — COMPLIANCE
       {
-        question: "QualityGuard flagged a sensitive info or pricing claim in your draft. Tolki didn't auto-fix it. What do you do?",
+        question: "QualityGuard flagged a compliance issue — a pricing claim or sensitive info — in your draft. What do you do?",
         options: [
-          "Publish it anyway, AI knows best",
-          "Manually verify the pricing with Product/Legal teams",
-          "Ask Tolki to check",
-          "It's not my responsibility, I just ask my manager"
+          "Publish it anyway — AI reviewed it, so it must be fine",
+          "Manually verify the claim with the Product or Legal team",
+          "Ask Tolki to fix it automatically",
+          "It's not my responsibility — I'll flag it to my manager"
         ],
         correct: 1,
-        explainer: "<strong>Compliance is on YOU.</strong> QualityGuard flags compliance issues (Pricing, Dates, Limits) but never auto-fixes them. When you're in charge of copy creation, you're also accountable to check facts."
+        explainer: "<strong>Compliance is on YOU.</strong> QualityGuard auto-fixes Grammar, Fluency, and Tone (Gates 1–3) — but it never auto-fixes Compliance (Gate 4). Pricing, dates, limits, and stats must be verified by you with the right teams."
       },
+
+      // Q10 — TOV SCORE
       {
         question: "QualityGuard gives your Tone of Voice a 2/5 score. What is a likely reason?",
         options: [
           "Your text sounded robotic and too formal",
-          "The text is too long",
-          "You sounded too self-promotional (Company-centric instead of Customer-centric)",
+          "The text was too long",
+          "You sounded too self-promotional — company-centric instead of customer-centric",
           "You used too many emojis"
         ],
-        correct: [0, 1, 2, 3], 
-        explainer: "<strong>Customer-centric always.</strong> Really, it could have been any of these answers, ahah! A low ToV score often means you are violating core Qonto principles. Make sure you know our <a href='https://www.notion.so/qonto/Tone-of-Voice-11531ee4c69680cc9fb5e4608759f755' target='_blank'>Tone of Voice guide</a>."
+        correct: [0, 1, 2, 3],
+        explainer: "<strong>Customer-centric always.</strong> Honestly, it could have been any of these — ahah! A low ToV score usually means you're violating core Qonto principles. Make sure you know our <a href='https://www.notion.so/qonto/Tone-of-Voice-11531ee4c69680cc9fb5e4608759f755' target='_blank'>Tone of Voice guide</a>."
       },
+
+      // Q11 — QUALITYGUARD IN QONTENT
       {
-        question: "You're working directly in Qontent, our dear CMS, creating copy and localizing from there. What do you need to do before publishing?",
+        question: "You're working in Qontent and about to publish localized copy. How do you run a quality check directly inside Qontent?",
         options: [
-          "Go ask QualityGuard in Dust for a quality check before we launch.",
-          "Just check the character count and publish.",
-          "Trust the automated translation completely."
+          "Switch to Content-only mode, then click 'Run quality guard' and wait for the score",
+          "Just check the character count and publish",
+          "Export the copy, check it in another tool, then re-import it"
         ],
         correct: 0,
-        explainer: "<strong>Yes, as much as we would love having everything perfect in Qontent, on edge, it's not the case yet.</strong> So for now, you do have to go to Dust and check with QualityGuard still. We're investigating other solutions, AI moves fast! Bear with us. And come talk to us if you have suggestions!"
+        explainer: "<strong>QualityGuard is built into Qontent!</strong> Here's how it works:<ul><li>Toggle to <strong>Content-only mode</strong> on the page</li><li>Click <strong>'Run quality guard'</strong></li><li>Wait for the score and suggestions — don't close the page or refresh it</li><li>Apply or dismiss the AI suggestions directly in Qontent</li></ul><a href='https://www.notion.so/qonto/Quality-Guard-in-Qontent-56131ee4c69683a0bc918100b79df425' target='_blank'>Full guide: QualityGuard in Qontent</a>"
       },
+
+      // Q12 — DONE?
       {
         question: "You used Tolki to write and QualityGuard to polish. Are you done?",
         options: [
           "Yes, ship it!",
-          "No, you should still have a native speaker review it whenever possible",
-          "No, you need to ask a professional copywriter first"
+          "No — whenever possible, have a native speaker do a final check too",
+          "No — you need a professional copywriter to sign off first"
         ],
         correct: 1,
-        explainer: "<strong>AI is a co-pilot, not a replacement.</strong> Always review the output yourself, and if you are not a native speaker, try to get a quick native check before hitting publish. No need for a pro copywriter—a native speaker (Market PMMs or reps) is enough.<br><br>Here is the <a href='https://www.notion.so/qonto/Growth-Efficiency-Clarify-Roles-Responsibilities-2ae31ee4c69680428660d48ba4b67658#2ae31ee4c6968093b5f0fbb7fdafe2d9' target='_blank'>official list of PoCs for localization</a>!"
+        explainer: "<strong>AI is a co-pilot, not a replacement.</strong> Always review the output yourself. If you're not a native speaker, get a quick native check before publishing. No need for a pro — a native speaker (Market PMMs or reps) is enough.<br><br><a href='https://www.notion.so/qonto/Growth-Efficiency-Clarify-Roles-Responsibilities-2ae31ee4c69680428660d48ba4b67658#2ae31ee4c6968093b5f0fbb7fdafe2d9' target='_blank'>Official list of localization PoCs</a>"
       },
+
+      // Q13 — CUSTOM BOT / EXTERNAL TOOLS
       {
-        question: "You love a specific bot that isn't in the Self-Service Hub. Can you use it?",
+        question: "You (or an external agency partner) use a custom AI tool for copywriting that isn't Tolki. Can you make it Qonto-compliant?",
         options: [
-          "Not really, today the only approved AI tool for writing at Qonto is Tolki.",
-          "Yes, use whatever you want as long as the text looks good to you.",
-          "Yes, but let's talk! We can add the new Qonto Tone of Voice skill to your bot."
+          "No — only Tolki and QualityGuard are approved for copy at Qonto",
+          "Yes, use whatever looks good to you",
+          "Yes — let's talk! We can help you implement Qonto's Tone of Voice guidelines and MVQ standards into your tool or your partner's agent"
         ],
         correct: 2,
-        explainer: "<strong>Let's talk about it!</strong> We now have a Tone of Voice \"skill\" in Dust that can be added to any bot. Let's test it together!<br><br><div class='dust-skill-card'><div class='dust-skill-header'><div class='dust-skill-icon-title'><div class='dust-skill-icon'>🔊</div><div class='dust-skill-title'>Qonto Tone of Voice Guidelines</div></div><div class='dust-skill-add'>+ Add</div></div><div class='dust-skill-desc'>Ensures all written communication adheres to Qonto's Tone of Voice pillars, grammar conventions,...</div><div class='dust-skill-details'>Skill details</div></div><br><em>Note: It's still in the testing phase, so we recommend you use Tolki today, and you must in any case use QualityGuard for your final checks!</em>"
+        explainer: "<strong>Yes — and this applies to internal teams and external partners alike.</strong> We have a dedicated resource page with everything needed to make any AI agent Qonto-compliant: language-specific rules, copy examples, keyword glossary, and MVQ standards.<br><br><a href='https://www.notion.so/qonto/RAG-bot-resources-external-tools-MVQ-standards-30631ee4c69680d584befa593f72aa4d' target='_blank'>ToV RAG resources + MVQ standards for external tools</a><br><br>Want to set it up together? <a href='https://calendar.app.google/nxtrmftpRr8mABaC9' target='_blank'>Book a slot in Soline's office hours</a>."
+      },
+
+      // Q14 — RED BIN / FEEDBACK
+      {
+        question: "Tolki produced a clearly off output — wrong tone, bad translation, or a compliance slip. What should you do?",
+        options: [
+          "Nothing — it happens, move on",
+          "Fix it yourself and forget about it",
+          "Log it in the Red Bin database so we can track patterns and improve",
+          "Post it in #random for the memes"
+        ],
+        correct: 2,
+        explainer: "<strong>Log it — that's how we improve!</strong> The <a href='https://app.notion.com/p/f5b587c59c1842f09fcbdc63013f2268' target='_blank'>Red Bin database</a> is where you report quality issues with Tolki or QualityGuard outputs. Every entry helps us identify patterns and fix the tools faster.<br><br>You can also <a href='https://calendar.app.google/nxtrmftpRr8mABaC9' target='_blank'>book a slot in office hours</a> — every Monday &amp; Thursday — to discuss an issue or share feedback live."
+      },
+
+      // Q15 — WHAT'S NEXT
+      {
+        question: "Will Tolki and QualityGuard stay exactly the same forever?",
+        options: [
+          "Yes — it's done, stable, and won't change",
+          "No — we're actively evolving them and joining forces with other programs",
+          "No — they'll be replaced by a fully automated system in Q3"
+        ],
+        correct: 1,
+        explainer: "<strong>We're just getting started.</strong> Here is what is in the pipeline for Q2–Q3 2026:<ul><li>Working in sync with <strong>Giulia Gori</strong> (UX Localization PM) to reinforce our skills and agents — including connecting them to the <strong>live product glossary</strong> for consistent terminology across all tools.</li><li><strong>Claude (Cowork mode)</strong> is around the corner — we're still making the Tolki and QualityGuard skills available to everyone.</li><li><a href='https://qontostudio.netlify.app/' target='_blank'><strong>Qonto Studio</strong></a>: improving the copy outputs directly inside the tool.</li></ul>Have ideas or feedback? <a href='https://calendar.app.google/nxtrmftpRr8mABaC9' target='_blank'>Book office hours</a> — every Monday &amp; Thursday."
       }
+
     ];
 
     // --- LOGIC ---
     let currentQuestionIndex = 0;
     let score = 0;
-    let answers = new Array(questions.length).fill(null); 
-    
-    const startScreen = document.getElementById('start-screen');
-    const quizScreen = document.getElementById('quiz-screen');
+    let answers = new Array(questions.length).fill(null);
+
+    const startScreen  = document.getElementById('start-screen');
+    const quizScreen   = document.getElementById('quiz-screen');
     const resultScreen = document.getElementById('result-screen');
-    
     const questionText = document.getElementById('question-text');
-    const questionCounter = document.getElementById('question-counter'); 
+    const questionCounter  = document.getElementById('question-counter');
     const optionsContainer = document.getElementById('options-container');
-    const feedbackDiv = document.getElementById('feedback');
-    const nextBtn = document.getElementById('next-btn');
-    const prevBtn = document.getElementById('prev-btn');
-    const progressBar = document.getElementById('progress-bar');
+    const feedbackDiv  = document.getElementById('feedback');
+    const nextBtn      = document.getElementById('next-btn');
+    const prevBtn      = document.getElementById('prev-btn');
+    const progressBar  = document.getElementById('progress-bar');
 
     function startQuiz() {
       startScreen.classList.remove('active');
@@ -593,61 +404,43 @@
       feedbackDiv.style.display = 'none';
       nextBtn.style.display = 'none';
       optionsContainer.innerHTML = '';
-      
-      questionCounter.textContent = `Question ${currentQuestionIndex + 1}/${questions.length}`;
 
-      const currentQ = questions[currentQuestionIndex];
-      questionText.innerHTML = currentQ.question;
-      
+      questionCounter.textContent = `Question ${currentQuestionIndex + 1} / ${questions.length}`;
+      const q = questions[currentQuestionIndex];
+      questionText.innerHTML = q.question;
+
       prevBtn.style.display = 'block';
+      progressBar.style.width = `${(currentQuestionIndex / questions.length) * 100}%`;
 
-      const progressPercent = ((currentQuestionIndex) / questions.length) * 100;
-      progressBar.style.width = `${progressPercent}%`;
-
-      currentQ.options.forEach((opt, index) => {
+      q.options.forEach((opt, index) => {
         const btn = document.createElement('div');
         btn.className = 'option-btn';
-        btn.innerHTML = opt;
-        
+        btn.textContent = opt;
+
         if (answers[currentQuestionIndex] !== null) {
-           btn.classList.add('disabled');
-           const isCorrect = Array.isArray(currentQ.correct) 
-             ? currentQ.correct.includes(index) 
-             : index === currentQ.correct;
-
-           const userChoseThis = index === answers[currentQuestionIndex];
-
-           if (isCorrect) {
-             btn.classList.add('correct');
-           } 
-           
-           if (userChoseThis && !isCorrect) {
-             btn.classList.add('wrong');
-           }
+          btn.classList.add('disabled');
+          const isCorrect = Array.isArray(q.correct) ? q.correct.includes(index) : index === q.correct;
+          if (isCorrect) btn.classList.add('correct');
+          if (index === answers[currentQuestionIndex] && !isCorrect) btn.classList.add('wrong');
         } else {
-           btn.onclick = () => checkAnswer(index, btn);
+          btn.onclick = () => checkAnswer(index, btn);
         }
-        
         optionsContainer.appendChild(btn);
       });
 
       if (answers[currentQuestionIndex] !== null) {
-        feedbackDiv.innerHTML = currentQ.explainer;
+        feedbackDiv.innerHTML = q.explainer;
         feedbackDiv.style.display = 'block';
         nextBtn.style.display = 'block';
       }
     }
 
     function checkAnswer(selectedIndex, selectedBtn) {
-      const currentQ = questions[currentQuestionIndex];
+      const q = questions[currentQuestionIndex];
       const allOptions = document.querySelectorAll('.option-btn');
-      
       answers[currentQuestionIndex] = selectedIndex;
 
-      const isCorrect = Array.isArray(currentQ.correct) 
-        ? currentQ.correct.includes(selectedIndex)
-        : selectedIndex === currentQ.correct;
-
+      const isCorrect = Array.isArray(q.correct) ? q.correct.includes(selectedIndex) : selectedIndex === q.correct;
       allOptions.forEach(btn => btn.classList.add('disabled'));
 
       if (isCorrect) {
@@ -655,24 +448,19 @@
         score++;
       } else {
         selectedBtn.classList.add('wrong');
-        
-        if (Array.isArray(currentQ.correct)) {
-           currentQ.correct.forEach(idx => {
-             allOptions[idx].classList.add('correct');
-           });
+        if (Array.isArray(q.correct)) {
+          q.correct.forEach(idx => allOptions[idx].classList.add('correct'));
         } else {
-           allOptions[currentQ.correct].classList.add('correct');
+          allOptions[q.correct].classList.add('correct');
         }
       }
-
-      feedbackDiv.innerHTML = currentQ.explainer;
+      feedbackDiv.innerHTML = q.explainer;
       feedbackDiv.style.display = 'block';
       nextBtn.style.display = 'block';
     }
 
     function nextQuestion() {
       currentQuestionIndex++;
-      
       if (currentQuestionIndex < questions.length) {
         loadQuestion();
       } else {
@@ -684,37 +472,32 @@
       if (currentQuestionIndex > 0) {
         currentQuestionIndex--;
         loadQuestion();
-      } else if (currentQuestionIndex === 0) {
-        document.getElementById('quiz-screen').classList.remove('active');
-        document.getElementById('start-screen').classList.add('active');
+      } else {
+        quizScreen.classList.remove('active');
+        startScreen.classList.add('active');
       }
     }
 
     function showResults() {
       quizScreen.classList.remove('active');
       resultScreen.classList.add('active');
-      
+
       let finalScore = 0;
       answers.forEach((ans, idx) => {
         const q = questions[idx];
-        const isCorrect = Array.isArray(q.correct)
-          ? q.correct.includes(ans)
-          : ans === q.correct;
-          
+        const isCorrect = Array.isArray(q.correct) ? q.correct.includes(ans) : ans === q.correct;
         if (isCorrect) finalScore++;
       });
 
       const scorePercent = Math.round((finalScore / questions.length) * 100);
+      document.getElementById('score-text').textContent = `Your score is ${finalScore} / ${questions.length} (${scorePercent}%)`;
 
-      document.getElementById('score-text').textContent = `Your score is ${finalScore}/${questions.length} (${scorePercent}%)`;
-      
-      const emojiEl = document.getElementById('score-emoji');
-      const titleEl = document.getElementById('score-title');
+      const emojiEl    = document.getElementById('score-emoji');
+      const titleEl    = document.getElementById('score-title');
       const reachOutEl = document.getElementById('dynamic-reach-out');
 
-      // Update specific text based on score being below 8
-      if (finalScore < 8) {
-        reachOutEl.innerHTML = "Reach out to <strong>Soline</strong>! Let's discuss what you need to get things done more efficiently and autonomously.";
+      if (scorePercent < 70) {
+        reachOutEl.innerHTML = "Reach out to <strong>Soline</strong> — let's chat about what you need to work more efficiently and autonomously.";
       } else {
         reachOutEl.innerHTML = "Reach out to <strong>Soline Avrillas</strong> directly.";
       }
@@ -738,7 +521,6 @@
       resultScreen.classList.remove('active');
       startQuiz();
     }
-
   </script>
 </body>
 </html>
