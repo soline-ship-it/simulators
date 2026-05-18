@@ -599,7 +599,7 @@ const STEPS_SS=[
       {label:'Paid Ads',owner:'PMM + Paid Ads manager',tools:['Directly on platform']},
     ],
     notes:['PMM leads. Channel owner executes technically.'],
-    gaps:['Website: page duplication in other languages should be fully owned at this stage.'],
+
   },
   {
     id:5,title:'Red bin logging',
@@ -1414,46 +1414,6 @@ const TRACKS=[
 ];
 
 /* ── VERSION HISTORY TOGGLE ── */
-function VersionHistory(){
-  const[open,setOpen]=useState(false);
-  return(
-    <div style={{borderTop:'1px solid #E0E0E0',marginTop:48,paddingTop:0}}>
-      <div onClick={()=>setOpen(!open)}
-        style={{display:'flex',alignItems:'center',gap:10,padding:'14px 32px',cursor:'pointer',background:'#fff',borderTop:'1px solid #E0E0E0'}}>
-        <IClock size={14} style={{color:'#B8B8B8'}}/>
-        <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#B8B8B8'}}>Version prior to March 27, 2026</span>
-        <IChevD size={13} style={{color:'#B8B8B8',marginLeft:'auto',transition:'transform 0.25s',transform:open?'rotate(180deg)':'rotate(0deg)'}}/>
-      </div>
-      <div className={`acc-body ${open?'open':''}`}>
-        <div className="acc-inner">
-          <div style={{background:'#FAFAFA',borderTop:'1px solid #E8E8E8',padding:'24px 32px'}}>
-            <div style={{maxWidth:700}}>
-              <div style={{display:'flex',gap:10,alignItems:'flex-start',marginBottom:16,padding:'12px 16px',background:'#fff',border:'1px solid #E0E0E0',borderRadius:10}}>
-                <INote size={14} style={{color:'#8F8F8F',flexShrink:0,marginTop:1}}/>
-                <div>
-                  <div style={{fontSize:13,fontWeight:700,color:'#050505',marginBottom:4}}>What changed in v2 (March 27)</div>
-                  <ul style={{paddingLeft:16,fontSize:13,color:'#616161',lineHeight:1.7,margin:0,display:'flex',flexDirection:'column',gap:3}}>
-                    <li><strong>Stream 1 (High-visibility):</strong> Completely redesigned. Added local orientation phase, 3 localization model options (Cascade / other options considered), and a "still being discussed" status banner.</li>
-                    <li><strong>Stream 2 (Self-serve S):</strong> PMM now owns every step end-to-end. No Comms partner, no Local POC involvement. Key trade-off callout added. Red Bin is the feedback loop.</li>
-                    <li><strong>Stream 3 (BAU):</strong> Unchanged.</li>
-                    <li><strong>Local POCs tab:</strong> Updated to reflect new model — POCs no longer involved in Self-serve S. Orientation role added for High-visibility.</li>
-                  </ul>
-                </div>
-              </div>
-              <a href="localization_v3_prior.html" target="_blank" rel="noopener noreferrer"
-                style={{display:'inline-flex',alignItems:'center',gap:8,padding:'9px 18px',background:'#050505',color:'#fff',borderRadius:10,fontSize:13,fontWeight:700,textDecoration:'none'}}>
-                <IFile size={13} style={{color:'#fff'}}/>
-                Open prior version (interactive)
-              </a>
-              <span style={{fontSize:12,color:'#8F8F8F',marginLeft:12}}>Opens in a new tab — full interactive workflow as of March 26.</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 /* ── APP ── */
 function App(){
   const[view,setView]=useState('workflow');
@@ -1513,7 +1473,7 @@ function App(){
             {activeTrack==='selfserve'&&<WorkflowRow steps={STEPS_SS} accentClr={SS_ACCENT} gradients={SS_GRADS} threadPrefix="ss" showTradeOff={true}/>}
             {activeTrack==='bau'&&<BAUWorkflow/>}
           </div>
-          <VersionHistory/>
+          
         </div>
       )}
     </div>
