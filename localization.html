@@ -327,104 +327,108 @@ const HV_SHARED_STEPS_AFTER_ORIENT=[
   },
 ];
 
-const HV_OPTIONS={
-  cascade:{
-    label:'Option 1 — Cascade',
-    sublabel:'Recommended',
-    desc:'Global teams handle master copy + first-pass localization. Local POCs handle QC & upload.',
-    tag:'Most autonomous for global teams',
-    tagClr:'#166534',tagBg:'#F0FDF4',
-    steps:[
-      {id:2,title:'First-pass translation',useCases:[{owner:'Creative writers + Comms partners / PMM',tools:['Tolki']}]},
-      {id:3,title:'Quality check',mandatory:true,useCases:[{owner:'Local Market POC',tools:['QualityGuard — always run it!'],steps:['Local POC reviews translated copy natively.','Local POC signs off or flags issues to global team.']}]},
-      {id:4,title:'Upload & publish',useCases:[{owner:'Local Market POC',tools:['Qontent / platform']}]},
-      {id:5,title:'Red bin logging',useCases:[{owner:'Anyone involved',tools:['Red Bin logging form/database']}],notes:['Log quality issues or broken processes post-launch.']},
+const HV_STEPS=[
+  {id:'0a',title:'Step 0 — Global outline',
+    useCases:[{
+      owner:'Global PMM',
+      steps:[
+        'Write the factual foundation: strategic intent, core narrative, must-win messages.',
+        'Define what is globally fixed vs locally flexible.',
+        'Flag anything likely to trigger transcreation.',
+      ],
+      tools:['Global outline template'],
+    }],
+    notes:['Mandatory for L & M. Not required for S.','Without Step 0, Local Orientation becomes vague — markets react to a blank page.'],
+  },
+  {id:'0b',title:'Local orientation',
+    useCases:[{
+      owner:'Global PMM + Market PMM / Local POC',
+      steps:[
+        'Local POC shares: competitive landscape, customer sensitivities, regulatory constraints, SEO/channel considerations.',
+        'Two categories: "dying on a hill for" (must be reflected or transcreation is triggered) and "good to have" (incorporated if possible).',
+        'Hard gate: no input after deadline = not considered.',
+      ],
+      tools:['Local orientation template'],
+    }],
+    notes:['This is the primary mechanism to prevent transcreation. Surface constraints early.','Not a veto right or co-creation session — intelligence-sharing within a window that opens and closes.'],
+  },
+  {id:'0c',title:'Transcreation gate',
+    useCases:[{
+      owner:'GLT — final escalation: CGO',
+      steps:[
+        'GLT decides per market: cascade the EN Master as-is, or trigger transcreation.',
+        'Transcreation criteria: compliance constraint OR radical strategy gap only — not market preference.',
+        'If triggered: produces a market-specific EN Master that re-enters the standard pipeline.',
+      ],
+      tools:[],
+    }],
+    notes:['Transcreation is the exception, not the rule. It generates real cost and parallel pipelines.','If GLT cannot state which of the two criteria applies, transcreation is not triggered.'],
+  },
+  {id:1,title:'EN master copy + AI first pass',
+    useCases:[{
+      owner:'Global PMM + Comms partners',
+      steps:[
+        'PMM writes the CommDoc / narrative incorporating local orientation input.',
+        'Comms partner runs AI first pass of EN Master for all markets — a 15-min mechanical task requiring no market knowledge.',
+        'Running it per-market multiplies effort with zero quality gain.',
+      ],
+      tools:['Tolki','QualityGuard — always run it!'],
+    }],
+    notes:['Creative Factory produces all assets (for L). Global channels deploy their action plan in parallel with local activation.'],
+  },
+  {id:2,title:'Localization, proofread & channel adaptation',mandatory:true,
+    useCases:[{
+      owner:'Local Market POC',
+      steps:[
+        'Receives localized drafts from Global.',
+        'Proofs and fully adapts: accuracy, consistency, message adaptation, tone of voice — not just grammar/spelling.',
+        'Adapts for channel constraints and hands off to local channels for deployment.',
+        'Channels can make technical copy tweaks without reopening review.',
+      ],
+      tools:['QualityGuard — always run it!'],
+    }],
+    notes:[
+      'Local POC owns everything from draft receipt onward. The handover point does not move based on initiative size.',
+      'This is not the place to revisit messaging or raise strategic objections — those belong in Local Orientation.',
+      'SLA: ~5 days for L, ~3 days for M.',
     ],
   },
-  handoff:{
-    label:'Option 2 — Hand-off',
-    sublabel:'',
-    desc:'Global teams handle master copy + first-pass translation. Local POCs take it from there: QC, upload, publish.',
-    tag:'Heavier for global teams',
-    tagClr:'#854D0E',tagBg:'#FEF9C3',
-    steps:[
-      {id:2,title:'First-pass translation',useCases:[{owner:'Creative writers + Comms partners / PMM',tools:['Tolki']}]},
-      {id:3,title:'Quality check',mandatory:true,useCases:[{owner:'Local Market POC',tools:['QualityGuard — always run it!'],steps:['Local POC reviews natively.','Local POC validates or sends back.']}]},
-      {id:4,title:'Upload & publish',useCases:[{owner:'Local Market POC',tools:['Qontent / platform']}]},
-      {id:5,title:'Red bin logging',useCases:[{owner:'Anyone involved',tools:['Red Bin logging form/database']}],notes:['Log quality issues or broken processes post-launch.']},
-    ],
+  {id:3,title:'Final market sign-off',mandatory:true,
+    useCases:[{
+      owner:'Local Market POC',
+      steps:[
+        'Validate: cross-channel coherence, local accuracy, regulatory compliance of copy/visuals/claims/tone of voice.',
+        'Give the final market sign-off before publish.',
+        'For L: formal QA gate (2 days, blocking). For M: SLA-based sign-off.',
+      ],
+      tools:[],
+    }],
+    notes:['Local POC is 100% accountable for market sign-off. No red bins as substitute for L.'],
   },
-  backforth:{
-    label:'Option 3 — Back & Forth',
-    sublabel:'Not recommended',
-    desc:'Global teams do master copy. Local POCs handle translation + QC. Global teams handle upload. Creates dependencies and delays.',
-    tag:'Not efficient',
-    tagClr:'#991B1B',tagBg:'#FEE2E2',
-    steps:[
-      {id:2,title:'First-pass translation',useCases:[{owner:'Local Market POC',tools:['Tolki']}]},
-      {id:3,title:'Quality check',mandatory:true,useCases:[{owner:'Local Market POC',tools:['QualityGuard — always run it!']}]},
-      {id:4,title:'Upload & publish',useCases:[{owner:'Comms partners / PMM',tools:['Qontent / platform']}]},
-      {id:5,title:'Red bin logging',useCases:[{owner:'Anyone involved',tools:['Red Bin logging form/database']}],notes:['Log quality issues or broken processes post-launch.']},
-    ],
+  {id:4,title:'Go live + Red bin logging',
+    useCases:[{
+      owner:'Local channels + anyone involved',
+      tools:['Red Bin logging form/database'],
+    }],
+    notes:['Log quality issues or broken processes post-launch. Feedback loop for system improvement.'],
   },
-};
+];
 
 function HighVisStream(){
-  const[selOpt,setSelOpt]=useState('cascade');
-  const opt=HV_OPTIONS[selOpt];
   return(
     <div>
       {/* Status banner */}
-      <div style={{background:'#FFF9EC',border:'1.5px solid #F59E0B',borderRadius:12,padding:'12px 18px',marginBottom:20,display:'flex',gap:10,alignItems:'flex-start'}}>
-        <IClock size={15} style={{color:'#D97706',flexShrink:0,marginTop:1}}/>
+      <div style={{background:'#F0FDF4',border:'1.5px solid #86EFAC',borderRadius:12,padding:'12px 18px',marginBottom:20,display:'flex',gap:10,alignItems:'flex-start'}}>
+        <IClock size={15} style={{color:'#166534',flexShrink:0,marginTop:1}}/>
         <div>
-          <div style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#B45309',marginBottom:3}}>Still being discussed — not finalised</div>
-          <p style={{fontSize:13,color:'#78350F',lineHeight:1.6,margin:0}}>Markets want to be involved earlier. Three localization models are on the table. The local orientation phase is confirmed regardless of which option is chosen.</p>
+          <div style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#166534',marginBottom:3}}>Model decided — Cascade · Applies to L & M</div>
+          <p style={{fontSize:13,color:'#14532D',lineHeight:1.6,margin:'0 0 4px 0'}}>Upstream steps (Step 0, Local Orientation, Transcreation gate) are mandatory for L & M. Global runs AI first pass, Local POC owns everything downstream. SLA: ~38 days for L, ~28 days for M.</p>
+          <a href="https://www.notion.so/qonto/Growth-Operating-Model-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658" target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:'#166534',fontWeight:600}}>Full operating model on Notion →</a>
         </div>
       </div>
 
-      {/* Orientation phase — always shown */}
-      <div style={{background:'#fff',border:'2px solid #050505',borderRadius:12,padding:'14px 18px',marginBottom:20,display:'flex',gap:12,alignItems:'flex-start'}}>
-        <div style={{width:36,height:36,borderRadius:'50%',background:'linear-gradient(135deg,#3D3D3D,#050505)',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:800,flexShrink:0}}>0</div>
-        <div style={{flex:1}}>
-          <div style={{fontSize:14,fontWeight:700,color:'#050505',marginBottom:4}}>Local orientation phase <span style={{fontSize:11,fontWeight:600,color:'#616161',marginLeft:6}}>— happens before any content production</span></div>
-          <div style={{display:'flex',alignItems:'flex-start',gap:7,marginBottom:8,background:'#F5F5F5',borderRadius:8,padding:'7px 10px',width:'fit-content'}}>
-            <IUser size={13} style={{color:'#050505'}}/>
-            <span style={{fontSize:13,fontWeight:700,color:'#050505'}}>PMM + Comms partners (project owners) + Local markets</span>
-          </div>
-          <p style={{fontSize:13,color:'#616161',lineHeight:1.6,margin:0}}>Local POCs are consulted early to share market specificities, local constraints, and audience insights — before the Creative Factory starts production. Their input shapes the brief.</p>
-        </div>
-      </div>
-
-      {/* Step 1 — always shared */}
-      <div style={{overflowX:'auto',paddingBottom:8,marginBottom:16}}>
-        <div style={{display:'flex',alignItems:'flex-start',minWidth:'max-content',gap:0}}>
-          <StepCard
-            step={{id:1,title:'EN master copy',useCases:[{owner:'Creative writers + Comms partners / PMM',tools:['Tolki','QualityGuard — always run it!']}],notes:['Creative Factory handles the creative concept based on local orientation inputs.']}}
-            accentClr={HV_ACCENT} gradBg={HV_GRADS[0]} threadPrefix="hv-shared" showTradeOff={false}
-          />
-          <ConnArrow/>
-          {/* Option selector inline */}
-          <div style={{width:340,flexShrink:0,display:'flex',flexDirection:'column',gap:8,paddingTop:12}}>
-            <div style={{fontSize:12,fontWeight:700,color:'#616161',marginBottom:4}}>Then — choose a localization model:</div>
-            {Object.entries(HV_OPTIONS).map(([key,o])=>(
-              <div key={key} className="option-tab" onClick={()=>setSelOpt(key)}
-                style={{border:`2px solid ${selOpt===key?'#050505':'#E0E0E0'}`,borderRadius:10,padding:'11px 14px',background:selOpt===key?'#050505':'#fff',cursor:'pointer',transition:'all 0.18s ease'}}>
-                <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:4}}>
-                  <span style={{fontSize:13,fontWeight:700,color:selOpt===key?'#fff':'#050505'}}>{o.label}</span>
-                  <span style={{fontSize:10,fontWeight:700,background:selOpt===key?'rgba(255,255,255,0.15)':o.tagBg,color:selOpt===key?'#fff':o.tagClr,borderRadius:20,padding:'2px 8px'}}>{o.tag}</span>
-                </div>
-                <p style={{fontSize:12,color:selOpt===key?'rgba(255,255,255,0.75)':'#616161',margin:0,lineHeight:1.5}}>{o.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Steps for selected option */}
-      <div key={selOpt} className="fade-in">
-        <WorkflowRow steps={opt.steps} accentClr={HV_ACCENT} gradients={HV_GRADS.slice(1)} threadPrefix={`hv-${selOpt}`} showTradeOff={false}/>
-      </div>
+      {/* Linear workflow — all steps including upstream */}
+      <WorkflowRow steps={HV_STEPS} accentClr={HV_ACCENT} gradients={HV_GRADS} threadPrefix="hv" showTradeOff={false}/>
     </div>
   );
 }
@@ -815,11 +819,12 @@ function ScopeToggle(){
                 <p style={{fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:'0 0 8px 0'}}>Check your project size in <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> first — L or M = High-visibility, S or M = Self-serve. Not in Panorama = BAU. Then use <strong>Find your path</strong> to get your personalised steps.</p>
                 <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8,marginTop:16}}>
                   <IAlert size={14} style={{color:'#B45309'}}/>
-                  <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Not covered here</span>
+                  <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Out of scope</span>
                 </div>
                 <ul style={{paddingLeft:18,fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:0,display:'flex',flexDirection:'column',gap:2}}>
-                  <li>Purely creative / OOH campaigns with no localization need</li>
-                  <li>Website homepage (handled separately)</li>
+                  <li>Purely creative / OOH with no localization need (no copy to translate)</li>
+                  <li>Website homepage — handled separately</li>
+                  <li>Social media and SEO — autonomous, not part of this workflow</li>
                 </ul>
               </div>
               <div style={{flex:1,minWidth:200}}>
@@ -829,10 +834,10 @@ function ScopeToggle(){
                 </div>
                 <p style={{fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:'0 0 16px 0'}}><strong>Social media</strong> and <strong>SEO</strong> are fully autonomous. Not part of this workflow.</p>
                 <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8}}>
-                  <IClock size={14} style={{color:'#D97706'}}/>
-                  <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Still being discussed</span>
+                  <IClock size={14} style={{color:'#166534'}}/>
+                  <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Stream 1 — decided</span>
                 </div>
-                <p style={{fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:0}}>Stream 1 (High-visibility) localization model is not yet finalised — 3 options on the table.</p>
+                <p style={{fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:0}}>Model chosen: <strong>Hand-off</strong>. Comms partners do first-pass, local POCs own full localization. Other models kept in the workflow for reference. Check <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> to confirm if your project is L or M.</p>
               </div>
             </div>
           </div>
@@ -887,12 +892,13 @@ function LocalPOCView(){
   ];
   const sections=[
     {
-      label:'High-visibility (L) — Cascade or Hand-off',
+      label:'High-visibility (L & M) — Cascade model',
       accent:'#050505',labelBg:'#1A1A1A',labelText:'#fff',
       items:[
-        {tag:'Orientation',text:'You are consulted before production starts — share market specificities and local constraints. This shapes the brief for the Creative Factory.'},
-        {tag:'Native review',text:<>Run <a href="https://www.notion.so/qonto/Check-copy-quality-24d31ee4c6968193bc6bc98d7f613d93" target="_blank" rel="noopener noreferrer">QualityGuard</a> first, then review the localized copy natively. You are the last quality gate before go-live.</>},
-        {tag:'Cascade only',text:'You also handle upload & publish in Qontent / platform.'},
+        {tag:'Appointed by',text:'Local Head of Marketing appoints you before each quarter (or ad hoc during quarter with capacity check). You are the single named local responsible for the initiative.'},
+        {tag:'Upstream',text:'You share local context, competitive landscape, regulatory constraints, and SEO/channel considerations with Global PMM during Local Orientation. Two categories: "dying on a hill for" (must be reflected) and "good to have".'},
+        {tag:'Downstream',text:'You own everything from draft receipt onward: proofread, message adaptation, channel handover, sign-off. You do not hold the pen — you drive execution.'},
+        {tag:'Final sign-off',text:'You validate cross-channel coherence, local accuracy, and regulatory compliance before publish. This is the blocking gate for L.'},
       ],
     },
     {
@@ -923,7 +929,7 @@ function LocalPOCView(){
     {key:'s2',text:<><strong>BAU:</strong> Create <strong>#proofread-website</strong> and <strong>#proofread-paid-ads</strong> — same model as #proofread-crm.</>},
     {key:'s3',text:<><strong>Global projects:</strong> Create a dedicated Slack channel per project so POCs have one clear entry point for localization requests.</>},
   ];
-  const tagStyles={'FYI':{clr:'#616161',bg:'#F5F5F5'},'Your role':{clr:'#461068',bg:'#EDE8FF'},'Orientation':{clr:'#050505',bg:'#E8E8E8'},'Native review':{clr:'#7B4DB8',bg:'#F5F0FF'},'Cascade only':{clr:'#2F95A0',bg:'#E6F7F7'},'CRM':{clr:'#7B4DB8',bg:'#F5F0FF'},'Website & Paid Ads':{clr:'#461068',bg:'#EDE8FF'},'Not involved':{clr:'#991B1B',bg:'#FEE2E2'},'Red Bin':{clr:'#CE6033',bg:'#FFF5F0'}};
+  const tagStyles={'FYI':{clr:'#616161',bg:'#F5F5F5'},'Your role':{clr:'#461068',bg:'#EDE8FF'},'Orientation':{clr:'#050505',bg:'#E8E8E8'},'Native review':{clr:'#7B4DB8',bg:'#F5F0FF'},'Full ownership':{clr:'#166534',bg:'#F0FDF4'},'Quarterly planning':{clr:'#050505',bg:'#E8E8E8'},'Appointed by':{clr:'#050505',bg:'#E8E8E8'},'Upstream':{clr:'#050505',bg:'#E8E8E8'},'Downstream':{clr:'#166534',bg:'#F0FDF4'},'Final sign-off':{clr:'#991B1B',bg:'#FEE2E2'},'Cascade only':{clr:'#2F95A0',bg:'#E6F7F7'},'CRM':{clr:'#7B4DB8',bg:'#F5F0FF'},'Website & Paid Ads':{clr:'#461068',bg:'#EDE8FF'},'Not involved':{clr:'#991B1B',bg:'#FEE2E2'},'Red Bin':{clr:'#CE6033',bg:'#FFF5F0'},'Upload & publish':{clr:'#3275C4',bg:'#EFF6FF'}};
   return(
     <div style={{padding:'24px 20px 60px',maxWidth:580,margin:'0 auto'}} className="fade-in">
       <div style={{marginBottom:18}}>
@@ -1029,19 +1035,13 @@ function getPathResult(answers){
   const{role,projectType,channel,langs,hvOption}=answers;
 
   if(projectType==='highvis') return{
-    type:'highvis',track:'highvis',langs:langs||[],hvOption:hvOption||'cascade',
+    type:'highvis',track:'highvis',langs:langs||[],
     steps:[
       {n:0,title:'Local orientation',owner:'PMM + Comms partners + Local markets',note:'Before production — local POCs share market specificities that shape the brief.',tools:[]},
       {n:1,title:'EN master copy',owner:'Creative writers + Comms partners / PMM',tools:['Tolki','QualityGuard — always run it!']},
-      ...(hvOption==='cascade'||hvOption==='handoff'?[
-        {n:2,title:'First-pass translation',owner:'Creative writers + Comms partners / PMM',tools:['Tolki']},
-        {n:3,title:'Quality check',owner:'Local Market POC',mandatory:true,tools:['QualityGuard — always run it!']},
-        {n:4,title:'Upload & publish',owner:hvOption==='cascade'?'Local Market POC':'Local Market POC',tools:['Qontent / platform']},
-      ]:[
-        {n:2,title:'First-pass translation',owner:'Local Market POC',tools:['Tolki']},
-        {n:3,title:'Quality check',owner:'Local Market POC',mandatory:true,tools:['QualityGuard — always run it!']},
-        {n:4,title:'Upload & publish',owner:'Comms partners / PMM',tools:['Qontent / platform']},
-      ]),
+      {n:2,title:'First-pass translation',owner:'Comms partners / PMM',note:'Quick first-pass — a rough base, not final.',tools:['Tolki']},
+      {n:3,title:'Localization & review',owner:'Local Market POC',mandatory:true,note:'Full ownership: accuracy, message adaptation, tone of voice. Designated in quarterly planning.',tools:['QualityGuard — always run it!']},
+      {n:4,title:'Upload & publish',owner:'Local Market POC',tools:['Qontent / platform']},
       {n:5,title:'Red bin logging',owner:'Anyone involved',tools:['Red Bin logging form/database']},
     ],
   };
@@ -1089,11 +1089,9 @@ function PathFinder({onViewWorkflow}){
       setAnswers(next);setScreen('projectType');
     } else if(key==='projectType'){
       setAnswers(next);
-      if(val==='highvis')setScreen('hvOption');
+      if(val==='highvis')setScreen('langs');
       else if(next.channel)setScreen('langs');
       else setScreen('channel');
-    } else if(key==='hvOption'){
-      setAnswers(next);setScreen('langs');
     } else if(key==='channel'){
       setAnswers(next);setScreen('langs');
     }
@@ -1104,7 +1102,7 @@ function PathFinder({onViewWorkflow}){
     else if(screen==='hvOption')setScreen('projectType');
     else if(screen==='channel')setScreen('projectType');
     else if(screen==='langs'){
-      if(answers.projectType==='highvis')setScreen('hvOption');
+      if(answers.projectType==='highvis')setScreen('projectType');
       else if(roleImpliesChannel(answers.role))setScreen('projectType');
       else setScreen('channel');
     } else if(screen==='result')setScreen('langs');
@@ -1159,20 +1157,6 @@ function PathFinder({onViewWorkflow}){
         {value:'selfserve',label:'Global projects — Self-serve',sub:'In Panorama S or M — PMM end-to-end'},
         {value:'bau',label:'BAU / Channel ad-hoc',sub:'Not in Panorama — CRM, Website, Paid Ads'},
       ].map(o=><OptionBtn key={o.value} opt={o} selected={answers.projectType===o.value} onClick={()=>pick('projectType',o.value)}/>)}
-    </Shell>
-  );
-
-  if(screen==='hvOption') return(
-    <Shell title="Which localization model? (still being discussed)">
-      <div style={{background:'#FFF9EC',border:'1px solid #F59E0B',borderRadius:8,padding:'10px 14px',marginBottom:16,fontSize:13,color:'#78350F'}}>
-        ⚠️ This choice is not finalised. Select the model you're working with, or the most likely one.
-      </div>
-      {[
-        {value:'cascade',label:'Option 1 — Cascade',sub:'Global teams handle master + translation. Local POCs: QC + upload.'},
-        {value:'handoff',label:'Option 2 — Hand-off',sub:'Global teams handle master + translation. Local POCs: QC + upload.'},
-        {value:'backforth',label:'Option 3 — Back & Forth',sub:'Not recommended. Local POCs handle translation + QC. Global teams upload.'},
-      ].map(o=><OptionBtn key={o.value} opt={o} selected={answers.hvOption===o.value} onClick={()=>pick('hvOption',o.value)}/>)}
-      <button onClick={back} style={{marginTop:16,fontSize:13,fontWeight:600,color:'#8F8F8F',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',display:'flex',alignItems:'center',gap:4}}>← Back</button>
     </Shell>
   );
 
@@ -1276,7 +1260,7 @@ function PathFinder({onViewWorkflow}){
 
 /* ── TRACKS ── */
 const TRACKS=[
-  {id:'highvis',label:'Global projects — High-visibility / Creativity',sizing:'In Panorama — L & sometimes M',desc:'PMM + Comms partners co-own. Local orientation phase. Creative Factory handles production. Localization model TBD.',activeBg:'#050505',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)',warning:true},
+  {id:'highvis',label:'Global projects — High-visibility / Creativity',sizing:'In Panorama — L & sometimes M',desc:'Cascade model. Upstream phases + Creative Factory, then Local POC owns the full localization pipeline.',activeBg:'#050505',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
   {id:'selfserve',label:'Global projects — Self-serve',sizing:'In Panorama — S & sometimes M',desc:'PMM owns end-to-end. No Comms partner, no local POC involvement. Red Bin handles edge cases.',activeBg:'#7B4DB8',badgeBg:'rgba(255,255,255,0.2)',badgeText:'rgba(255,255,255,0.9)'},
   {id:'bau',label:'BAU / Channel ad-hoc — Self-serve',sizing:'Not in Panorama',desc:'CRM lifecycle, Paid Ads, Website — recurring channel-owned projects. Local POCs do QC.',activeBg:'#461068',badgeBg:'rgba(255,255,255,0.15)',badgeText:'rgba(255,255,255,0.85)'},
 ];
@@ -1301,7 +1285,7 @@ function VersionHistory(){
                 <div>
                   <div style={{fontSize:13,fontWeight:700,color:'#050505',marginBottom:4}}>What changed in v2 (March 27)</div>
                   <ul style={{paddingLeft:16,fontSize:13,color:'#616161',lineHeight:1.7,margin:0,display:'flex',flexDirection:'column',gap:3}}>
-                    <li><strong>Stream 1 (High-visibility):</strong> Completely redesigned. Added local orientation phase, 3 localization model options (Cascade / Hand-off / Back & Forth), and a "still being discussed" status banner.</li>
+                    <li><strong>Stream 1 (High-visibility):</strong> Completely redesigned. Added local orientation phase, 3 localization model options (Cascade / other options considered), and a "still being discussed" status banner.</li>
                     <li><strong>Stream 2 (Self-serve S):</strong> PMM now owns every step end-to-end. No Comms partner, no Local POC involvement. Key trade-off callout added. Red Bin is the feedback loop.</li>
                     <li><strong>Stream 3 (BAU):</strong> Unchanged.</li>
                     <li><strong>Local POCs tab:</strong> Updated to reflect new model — POCs no longer involved in Self-serve S. Orientation role added for High-visibility.</li>
@@ -1372,7 +1356,6 @@ function App(){
                 return(
                   <div key={track.id} className="track-card" onClick={()=>setActiveTrack(track.id)}
                     style={{flex:'1 1 240px',maxWidth:380,minWidth:220,border:`2px solid ${isActive?track.activeBg:'#E0E0E0'}`,background:isActive?track.activeBg:'#fff',padding:'18px 20px',position:'relative'}}>
-                    {track.warning&&<div style={{position:'absolute',top:12,right:12}}><IClock size={13} style={{color:isActive?'rgba(255,255,255,0.6)':'#D97706'}}/></div>}
                     <div style={{display:'inline-block',background:isActive?track.badgeBg:'#F5F5F5',color:isActive?track.badgeText:'#616161',border:`1px solid ${isActive?'rgba(255,255,255,0.15)':'#E0E0E0'}`,fontSize:12,fontWeight:700,borderRadius:20,padding:'4px 12px',marginBottom:10,letterSpacing:'0.02em'}}>{track.sizing}</div>
                     <div style={{fontSize:16,fontWeight:700,color:isActive?'#fff':'#050505',lineHeight:1.3,marginBottom:6}}>{track.label}</div>
                     <p style={{fontSize:13.5,color:isActive?'rgba(255,255,255,0.75)':'#616161',margin:0,lineHeight:1.6}}>{track.desc}</p>
