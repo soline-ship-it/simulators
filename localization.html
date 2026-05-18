@@ -308,9 +308,12 @@ function WorkflowRow({steps,accentClr,gradients,threadPrefix,showTradeOff}){
 const HV_ACCENT='#050505';
 const HV_GRADS=[
   'linear-gradient(135deg,#3D3D3D,#050505)',
+  'linear-gradient(135deg,#555555,#2A2A2A)',
   'linear-gradient(135deg,#616161,#3D3D3D)',
   'linear-gradient(135deg,#050505,#1A1A1A)',
   'linear-gradient(135deg,#3D3D3D,#050505)',
+  'linear-gradient(135deg,#555555,#2A2A2A)',
+  'linear-gradient(135deg,#616161,#3D3D3D)',
   'linear-gradient(135deg,#FFB590,#CE6033)',
 ];
 
@@ -376,7 +379,7 @@ const HV_STEPS=[
     }],
     notes:['Creative Factory produces all assets (for L). Global channels deploy their action plan in parallel with local activation.'],
   },
-  {id:2,title:'Localization, proofread & channel adaptation',mandatory:true,
+  {id:2,title:'Localization & review',mandatory:true,
     useCases:[{
       owner:'Local Market POC',
       steps:[
@@ -393,7 +396,7 @@ const HV_STEPS=[
       'SLA: ~5 days for L, ~3 days for M.',
     ],
   },
-  {id:3,title:'Final market sign-off',mandatory:true,
+  {id:3,title:'Final sign-off',mandatory:true,
     useCases:[{
       owner:'Local Market POC',
       steps:[
@@ -405,9 +408,16 @@ const HV_STEPS=[
     }],
     notes:['Local POC is 100% accountable for market sign-off. No red bins as substitute for L.'],
   },
-  {id:4,title:'Go live + Red bin logging',
+  {id:4,title:'Upload & publish',
     useCases:[{
-      owner:'Local channels + anyone involved',
+      owner:'Local Market POC + Local channels',
+      tools:['Qontent / platform'],
+    }],
+    notes:['Local channels handle technical deployment. Local POC coordinates.'],
+  },
+  {id:5,title:'Red bin logging',
+    useCases:[{
+      owner:'Anyone involved',
       tools:['Red Bin logging form/database'],
     }],
     notes:['Log quality issues or broken processes post-launch. Feedback loop for system improvement.'],
@@ -429,6 +439,44 @@ function HighVisStream(){
 
       {/* Linear workflow — all steps including upstream */}
       <WorkflowRow steps={HV_STEPS} accentClr={HV_ACCENT} gradients={HV_GRADS} threadPrefix="hv" showTradeOff={false}/>
+
+      {/* Channel fork — compact */}
+      <div style={{marginTop:24,background:'#fff',border:'1px solid #E0E0E0',borderRadius:14,padding:'18px 22px'}}>
+        <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:16}}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8F8F8F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+          <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Then forks per channel — Local POC drives each lane</span>
+        </div>
+        {[
+          {
+            label:'Website',
+            color:'#2F95A0', bg:'#F0FDFA', border:'#99F6E4',
+            steps:['Receive EN + local copies','Build page structure','Create local copy with AI','Build assets','Review (local mktg + PMM)','Publish'],
+          },
+          {
+            label:'CRM',
+            color:'#7B2D8B', bg:'#FDF4FF', border:'#E9D5FF',
+            steps:['Receive EN copies + challenge claims & CTAs','AI translation via Qontent (Comms partners)','Local mktg review into Qontent','Build flow in C.io','Review before publish (Comms + CRM + PMM)','Publish'],
+          },
+          {
+            label:'Paid Ads',
+            color:'#B45309', bg:'#FFFBEB', border:'#FDE68A',
+            steps:['Receive EN copy','AI first pass adaptation','Review & adapt (local mktg)','Publish on platform'],
+          },
+        ].map(lane=>(
+          <div key={lane.label} style={{display:'flex',alignItems:'flex-start',gap:12,marginBottom:12,padding:'10px 14px',background:lane.bg,border:`1px solid ${lane.border}`,borderRadius:10}}>
+            <div style={{flexShrink:0,background:lane.color,color:'#fff',fontSize:11,fontWeight:700,borderRadius:6,padding:'3px 10px',marginTop:2,whiteSpace:'nowrap'}}>{lane.label}</div>
+            <div style={{display:'flex',alignItems:'center',gap:0,flexWrap:'wrap',rowGap:6}}>
+              {lane.steps.map((step,i)=>(
+                <React.Fragment key={i}>
+                  <span style={{fontSize:12,color:'#3D3D3D',fontWeight:500,whiteSpace:'nowrap'}}>{step}</span>
+                  {i<lane.steps.length-1&&<span style={{color:'#CCCCCC',margin:'0 6px',fontSize:12}}>→</span>}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        ))}
+        <p style={{fontSize:12,color:'#8F8F8F',margin:0,fontStyle:'italic'}}>Note: SEO is autonomous — not part of this flow. Paid Ads detail pending confirmation.</p>
+      </div>
     </div>
   );
 }
