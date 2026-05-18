@@ -64,10 +64,10 @@ const fmtLinks=(text,stepId)=>{
   if(typeof text!=='string')return text;
   const parts=text.split(/(QualityGuard|Red Bin logging form\/database|Tolki|Customer\.io|Qontent)/g);
   return parts.map((p,i)=>{
-    if(p==='QualityGuard')return <a key={i} href="https://www.notion.so/qonto/Check-copy-quality-24d31ee4c6968193bc6bc98d7f613d93" target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}>{p}</a>;
+    if(p==='QualityGuard')return <a key={i} href="https://www.notion.so/qonto/Check-copy-quality-24d31ee4c6968193bc6bc98d7f613d93?v=24d31ee4c69681748503000c8203fb66#7aea17d7f63b4c8a9b472b523e33e255" target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}>{p}</a>;
     if(p==='Red Bin logging form/database')return <a key={i} href="https://www.notion.so/qonto/Growth-Efficiency-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658#31931ee4c6968068814de2683bf18120" target="_blank" rel="noopener noreferrer" style={{color:'#CE6033'}} onClick={e=>e.stopPropagation()}>{p}</a>;
-    if(p==='Qontent')return <a key={i} href="https://www.notion.so/qonto/Self-service-Content-Hub-24d31ee4c6968012a815e4f458c7cdc9?source=copy_link#31931ee4c69680ca8491ea4a114aadf2" target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}>{p}</a>;
-    if(p==='Customer.io')return <a key={i} href="https://customer.io" target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}>{p}</a>;
+    if(p==='Qontent')return <a key={i} href="https://www.notion.so/qonto/Localize-24d31ee4c696812ab5c1ee03e3aeda5e?source=copy_link#e960315e45d5471c9449b6d86de55b70" target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}>{p}</a>;
+    if(p==='Customer.io')return <span key={i} style={{fontWeight:600}}>Customer.io</span>;
     if(p==='Tolki'){
       const url=stepId===1?"https://www.notion.so/qonto/Write-24d31ee4c69681f0aab6ce8b465ab8cf":"https://www.notion.so/qonto/Localize-24d31ee4c696812ab5c1ee03e3aeda5e";
       return <a key={i} href={url} target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}>{p}</a>;
@@ -579,13 +579,6 @@ const STEPS_SS=[
       owner:'PMM',
       tools:['Tolki','Qontent (if Website / CRM)'],
     }],
-    gaps:[
-      'No standardized localization request path across channels.',
-      '🗣 Discussed March 24 — to rediscuss: local teams (FR) suggest mirroring the BAU model instead: project owner handles master copy + localization, markets only do a quality check (or skip entirely). Project owner also owns upload/publish. Pre-condition: markets get involved earlier in GTM to brief on local specificities before content production. (Philippine & Delphine, FR)',
-    ],
-    suggestions:[
-      'For each global project, create a dedicated Slack channel so there is one clear place for any localization support if needed.',
-    ],
   },
   {
     id:3,title:'Quality check',mandatory:true,
@@ -593,7 +586,10 @@ const STEPS_SS=[
       owner:'PMM',
       tools:['QualityGuard — always run it!'],
     }],
-    notes:['Compliance remains the PMM\'s responsibility. No native review in this model — edge cases go to Red Bin.'],
+    notes:[
+      'No native review in this model — deliberate trade-off of quality for speed. Edge cases go to Red Bin.',
+      'Exception — CRM: a native review always takes place, even for S, either by the requester (if they speak the language), via #proofread-crm, or by a CRM team member.',
+    ],
   },
   {
     id:4,title:'Upload & publish',
@@ -696,7 +692,7 @@ function LocalPOCsCompact(){
       <div onClick={e=>{e.stopPropagation();setOpen(!open);}} style={{padding:'9px 14px',background:'#F9F7FF',display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer'}}>
         <div style={{display:'flex',alignItems:'center',gap:6}}>
           <IUsers size={13} style={{color:'#7B4DB8'}}/>
-          <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#7B4DB8'}}>Local POCs</span>
+          <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#7B4DB8'}}>Local POCs — BAU & Global S only</span>
         </div>
         <IChevD size={13} style={{color:'#7B4DB8',transition:'transform 0.25s',transform:open?'rotate(180deg)':'rotate(0deg)'}}/>
       </div>
@@ -863,7 +859,11 @@ function LocalPOCsBlock(){
       <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:14,paddingBottom:12,borderBottom:'1px solid #F0EAFF'}}>
         <IUsers size={16} style={{color:'#7B4DB8'}}/>
         <span style={{fontSize:14,fontWeight:700,color:'#050505'}}>Local POCs</span>
-        <span style={{fontSize:11,color:'#8F8F8F',marginLeft:'auto',fontWeight:500}}>Steps 2 & 3</span>
+        <span style={{fontSize:11,color:'#8F8F8F',marginLeft:'auto',fontWeight:500}}>BAU & Global S — Steps 2 & 3</span>
+        </div>
+        <div style={{fontSize:12,color:'#B45309',background:'#FFF9EC',border:'1px solid #FDE68A',borderRadius:7,padding:'6px 10px',marginBottom:12}}>
+          ⚠️ For M & L projects, a dedicated Local POC per market is appointed at the quarterly planning meeting — not this list.
+        </div>
       </div>
       <div style={{display:'grid',gridTemplateColumns:'repeat(6,1fr)',gap:10,marginBottom:14}}>
         {pocs.map(p=>(
@@ -918,7 +918,7 @@ function ScopeToggle(){
       <div onClick={()=>setOpen(!open)} style={{padding:'14px 20px',display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer'}}>
         <div style={{display:'flex',alignItems:'center',gap:10}}>
           <ITarget size={17} style={{color:'#7B4DB8'}}/>
-          <span style={{fontSize:15,fontWeight:600,color:'#050505'}}>Scope: <span style={{fontWeight:500,color:'#616161'}}>3 workflows documented — High-visibility (L), Self-serve (S), and BAU / Channel ad-hoc.</span></span>
+          <span style={{fontSize:15,fontWeight:600,color:'#050505'}}>Scope: <span style={{fontWeight:500,color:'#616161'}}>3 workflows documented — High-visibility (L), Self-serve (S), and BAU / Channel-owned.</span></span>
         </div>
         <div style={{display:'flex',alignItems:'center',gap:5,fontSize:13,fontWeight:600,color:'#7B4DB8',flexShrink:0}}>
           {open?'Hide':'See details & exceptions'}
@@ -1028,7 +1028,7 @@ function LocalPOCView(){
       ],
     },
     {
-      label:'BAU / Channel ad-hoc',
+      label:'BAU / Channel-owned',
       accent:'#461068',labelBg:'#461068',labelText:'#fff',
       items:[
         {tag:'Native review',text:<>Run <a href="https://www.notion.so/qonto/Check-copy-quality-24d31ee4c6968193bc6bc98d7f613d93" target="_blank" rel="noopener noreferrer">QualityGuard</a> first, then review natively. You are the last quality gate.</>},
@@ -1273,7 +1273,7 @@ function PathFinder({onViewWorkflow}){
       {[
         {value:'highvis',label:'Global projects — High-visibility / Creativity',sub:'In Panorama L or M — Creative Factory involved'},
         {value:'selfserve',label:'Global projects — Self-serve',sub:'In Panorama S or M — PMM end-to-end'},
-        {value:'bau',label:'BAU / Channel ad-hoc',sub:'Not in Panorama — CRM, Website, Paid Ads'},
+        {value:'bau',label:'BAU / Channel-owned',sub:'Not in Panorama — CRM, Website, Paid Ads'},
       ].map(o=><OptionBtn key={o.value} opt={o} selected={answers.projectType===o.value} onClick={()=>pick('projectType',o.value)}/>)}
     </Shell>
   );
@@ -1310,7 +1310,7 @@ function PathFinder({onViewWorkflow}){
 
   if(screen==='result'){
     const result=getPathResult({...answers,langs:langSel});
-    const trackColors={highvis:{bg:'#050505',label:'Global projects — High-visibility / Creativity'},selfserve:{bg:'#7B4DB8',label:'Global projects — Self-serve'},bau:{bg:'#461068',label:'BAU / Channel ad-hoc'+(result.channel?` · ${result.channel}`:'')}};
+    const trackColors={highvis:{bg:'#050505',label:'Global projects — High-visibility / Creativity'},selfserve:{bg:'#7B4DB8',label:'Global projects — Self-serve'},bau:{bg:'#461068',label:'BAU / Channel-owned'+(result.channel?` · ${result.channel}`:'')}};
     const tc=trackColors[result.type];
     const pocList=langSel.map(l=>LANGS.find(x=>x.label===l)).filter(Boolean);
     return(
@@ -1380,7 +1380,7 @@ function PathFinder({onViewWorkflow}){
 const TRACKS=[
   {id:'highvis',label:'Global projects — High-visibility / Creativity',sizing:'In Panorama — L & sometimes M',desc:'Cascade model. Upstream phases + Creative Factory, then Local POC owns the full localization pipeline.',activeBg:'#050505',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
   {id:'selfserve',label:'Global projects — Self-serve',sizing:'In Panorama — S & sometimes M',desc:'PMM owns end-to-end. No Comms partner, no local POC involvement. Red Bin handles edge cases.',activeBg:'#7B4DB8',badgeBg:'rgba(255,255,255,0.2)',badgeText:'rgba(255,255,255,0.9)'},
-  {id:'bau',label:'BAU / Channel ad-hoc — Self-serve',sizing:'Not in Panorama',desc:'CRM lifecycle, Paid Ads, Website — recurring channel-owned projects. Local POCs do QC.',activeBg:'#461068',badgeBg:'rgba(255,255,255,0.15)',badgeText:'rgba(255,255,255,0.85)'},
+  {id:'bau',label:'BAU / Channel-owned',sizing:'Not in Panorama',desc:'CRM lifecycle, Paid Ads, Website — recurring channel-owned projects. Local POCs do QC.',activeBg:'#461068',badgeBg:'rgba(255,255,255,0.15)',badgeText:'rgba(255,255,255,0.85)'},
 ];
 
 /* ── VERSION HISTORY TOGGLE ── */
