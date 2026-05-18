@@ -856,12 +856,13 @@ function LocalPOCsBlock(){
   ];
   return(
     <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:14,padding:'18px 22px',boxShadow:'0 1px 4px rgba(0,0,0,0.05)'}}>
-      <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:14,paddingBottom:12,borderBottom:'1px solid #F0EAFF'}}>
-        <IUsers size={16} style={{color:'#7B4DB8'}}/>
-        <span style={{fontSize:14,fontWeight:700,color:'#050505'}}>Local POCs</span>
-        <span style={{fontSize:11,color:'#8F8F8F',marginLeft:'auto',fontWeight:500}}>BAU & Global S — Steps 2 & 3</span>
+      <div style={{marginBottom:14,paddingBottom:12,borderBottom:'1px solid #F0EAFF'}}>
+        <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
+          <IUsers size={16} style={{color:'#7B4DB8'}}/>
+          <span style={{fontSize:14,fontWeight:700,color:'#050505'}}>Local POCs</span>
+          <span style={{fontSize:11,color:'#8F8F8F',marginLeft:'auto',fontWeight:500}}>BAU & Global S — Steps 2 & 3</span>
         </div>
-        <div style={{fontSize:12,color:'#B45309',background:'#FFF9EC',border:'1px solid #FDE68A',borderRadius:7,padding:'6px 10px',marginBottom:12}}>
+        <div style={{fontSize:12,color:'#B45309',background:'#FFF9EC',border:'1px solid #FDE68A',borderRadius:7,padding:'6px 10px'}}>
           ⚠️ For M & L projects, a dedicated Local POC per market is appointed at the quarterly planning meeting — not this list.
         </div>
       </div>
@@ -1150,84 +1151,94 @@ const STEP_GRAD_PF=[
 ];
 
 function getPathResult(answers){
-  const{role,projectType,channel,langs,hvOption}=answers;
+  const{role,projectType,channel,langs}=answers;
 
   if(projectType==='highvis') return{
     type:'highvis',track:'highvis',langs:langs||[],
     steps:[
-      {n:0,title:'Local orientation',owner:'PMM + Comms partners + Local markets',note:'Before production — local POCs share market specificities that shape the brief.',tools:[]},
-      {n:1,title:'EN master copy',owner:'Creative writers + Comms partners / PMM',tools:['Tolki','QualityGuard — always run it!']},
-      {n:2,title:'First-pass translation',owner:'Comms partners / PMM',note:'Quick first-pass — a rough base, not final.',tools:['Tolki']},
-      {n:3,title:'Localization & review',owner:'Local Market POC',mandatory:true,note:'Full ownership: accuracy, message adaptation, tone of voice. Designated in quarterly planning.',tools:['QualityGuard — always run it!']},
-      {n:4,title:'Upload & publish',owner:'Local Market POC',tools:['Qontent / platform']},
+      {n:'A→D',title:'Upstream phases',owner:'GLT + Global PMM + Local markets',
+        note:'GLT sizes the project. Global PMM writes Step 0 outline. Local POC (appointed by Head of Marketing at quarterly planning) shares market context. GLT decides on transcreation.',
+        tools:[]},
+      {n:1,title:'EN master copy + AI first pass',owner:'Global PMM + Comms partners + Creative Factory',
+        tools:['Tolki','QualityGuard — always run it!']},
+      {n:2,title:'Localization & review',owner:'Local Market POC',mandatory:true,
+        note:'Full ownership from draft receipt — accuracy, tone of voice, message adaptation. Not just grammar.',
+        tools:['QualityGuard — always run it!']},
+      {n:3,title:'Final sign-off',owner:'Local Market POC',mandatory:true,
+        note:'For L: blocking gate — no publish until signed off. For M: SLA-based.',
+        tools:[]},
+      {n:4,title:'Upload & publish',owner:'Local Market POC + Local channels',tools:['Qontent']},
       {n:5,title:'Red bin logging',owner:'Anyone involved',tools:['Red Bin logging form/database']},
     ],
   };
 
   if(projectType==='selfserve') return{
     type:'selfserve',track:'selfserve',langs:langs||[],
-    tradeOff:'Growth efficiency: PMM owns end-to-end. Trade-off: markets have no say. Edge cases go to Red Bin.',
+    tradeOff:'Growth efficiency: PMM owns end-to-end, no local review. Trade-off: markets have no say. Edge cases handled via Red Bin post-publish. Exception: CRM always gets a native review.',
     steps:[
       {n:1,title:'EN master copy',owner:'PMM',tools:['Tolki','QualityGuard — always run it!']},
-      {n:2,title:'First-pass translation',owner:'PMM',tools:['Tolki','Qontent (if Website / CRM)']},
-      {n:3,title:'Quality check',owner:'PMM',mandatory:true,tools:['QualityGuard — always run it!']},
-      {n:4,title:'Upload & publish',owner:`PMM + ${channel||'channel owner'}`,tools:[channel==='Paid Ads'?'Directly on platform':'Qontent']},
+      {n:2,title:'First-pass translation',owner:'PMM',tools:['Tolki','Qontent']},
+      {n:3,title:'Quality check',owner:'PMM',mandatory:true,
+        note:'QualityGuard only — no native review. Exception: CRM always gets a native review (requester / #proofread-crm / CRM team member).',
+        tools:['QualityGuard — always run it!']},
+      {n:4,title:'Upload & publish',owner:`PMM + ${channel==='CRM'?'CRM manager':channel==='Website'?'Website manager':channel==='Paid Ads'?'Paid Ads manager':'channel owner'}`,
+        tools:[channel==='Paid Ads'?'Directly on platform':'Qontent']},
       {n:5,title:'Red bin logging',owner:'Anyone involved',tools:['Red Bin logging form/database']},
     ],
   };
 
-  // BAU
   const ch=channel||'CRM';
   return{
     type:'bau',track:'bau',channel:ch,langs:langs||[],
     steps:[
-      {n:1,title:'EN master copy',owner:`Project owner (${ch==='CRM'?'PMM or CRM manager':ch==='Website'?'Website manager':'Paid Ads manager'})`,tools:['Tolki','QualityGuard — always run it!']},
-      {n:2,title:'First-pass translation',owner:`Project owner (${ch==='CRM'?'PMM or CRM manager':ch==='Website'?'Website manager':'Paid Ads manager'})`,tools:['Tolki',ch!=='Paid Ads'?'Qontent':''].filter(Boolean)},
-      {n:3,title:'Quality check',owner:'Local Market POC',mandatory:true,note:ch==='CRM'?'Request proofread via #proofread-crm.':'No dedicated channel yet — reach out to local POC directly.',tools:['QualityGuard — always run it!']},
-      {n:4,title:'Upload & publish',owner:`Project owner (${ch==='CRM'?'PMM or CRM manager':ch==='Website'?'Website manager':'Paid Ads manager'})`,tools:[ch==='Paid Ads'?'Upload directly on platform':'Qontent']},
+      {n:1,title:'EN master copy',
+        owner:`Project owner (${ch==='CRM'?'PMM or CRM manager':ch==='Website'?'Website manager':'Paid Ads manager'})`,
+        tools:['Tolki','QualityGuard — always run it!']},
+      {n:2,title:'First-pass translation',
+        owner:`Project owner (${ch==='CRM'?'PMM or CRM manager':ch==='Website'?'Website manager':'Paid Ads manager'})`,
+        tools:['Tolki',...(ch!=='Paid Ads'?['Qontent']:[])],
+        showPOCs:true},
+      {n:3,title:'Quality check',owner:'Local Market POC',mandatory:true,
+        note:ch==='CRM'?'Use #proofread-crm to request review.':'No dedicated channel yet — reach out to local POC directly.',
+        tools:['QualityGuard — always run it!'],
+        showPOCs:true},
+      {n:4,title:'Upload & publish',
+        owner:`Project owner (${ch==='CRM'?'PMM or CRM manager':ch==='Website'?'Website manager':'Paid Ads manager'})`,
+        tools:[ch==='Paid Ads'?'Upload directly on platform':'Qontent']},
       {n:5,title:'Red bin logging',owner:'Anyone involved',tools:['Red Bin logging form/database']},
     ],
   };
 }
 
 function PathFinder({onViewWorkflow}){
-  const[screen,setScreen]=useState('role');
+  const[screen,setScreen]=useState('projectType');
   const[answers,setAnswers]=useState({});
   const[langSel,setLangSel]=useState([]);
 
-  const reset=()=>{setScreen('role');setAnswers({});setLangSel([]);};
-  const roleImpliesChannel=role=>['crm','web','ads'].includes(role);
+  const reset=()=>{setScreen('projectType');setAnswers({});setLangSel([]);};
 
   const pick=(key,val)=>{
     const next={...answers,[key]:val};
-    if(key==='role'){
-      if(val==='crm')next.channel='CRM';
-      if(val==='web')next.channel='Website';
-      if(val==='ads')next.channel='Paid Ads';
-      setAnswers(next);setScreen('projectType');
-    } else if(key==='projectType'){
+    if(key==='projectType'){
       setAnswers(next);
       if(val==='highvis')setScreen('langs');
-      else if(next.channel)setScreen('langs');
-      else setScreen('channel');
+      else if(val==='selfserve')setScreen('channel');
+      else setScreen('channel'); // bau
     } else if(key==='channel'){
       setAnswers(next);setScreen('langs');
     }
   };
 
   const back=()=>{
-    if(screen==='projectType')setScreen('role');
-    else if(screen==='hvOption')setScreen('projectType');
-    else if(screen==='channel')setScreen('projectType');
+    if(screen==='channel')setScreen('projectType');
     else if(screen==='langs'){
       if(answers.projectType==='highvis')setScreen('projectType');
-      else if(roleImpliesChannel(answers.role))setScreen('projectType');
       else setScreen('channel');
     } else if(screen==='result')setScreen('langs');
   };
 
-  const progressMap={role:20,projectType:40,hvOption:55,channel:60,langs:80,result:100};
-  const stepLabel={role:'Role',projectType:'Project type',hvOption:'Localization model',channel:'Channel',langs:'Languages'};
+  const progressMap={projectType:25,channel:55,langs:80,result:100};
+  const stepLabel={projectType:'Project type',channel:'Channel',langs:'Languages'};
 
   const OptionBtn=({opt,onClick,selected})=>(
     <button onClick={onClick} style={{width:'100%',textAlign:'left',padding:'13px 16px',borderRadius:10,border:`1.5px solid ${selected?'#050505':'#E0E0E0'}`,background:selected?'#F5F5F5':'#fff',cursor:'pointer',fontFamily:'inherit',display:'flex',alignItems:'center',justifyContent:'space-between',transition:'all 0.15s ease',marginBottom:8}}>
@@ -1235,12 +1246,13 @@ function PathFinder({onViewWorkflow}){
         <div style={{fontSize:14,fontWeight:600,color:'#050505'}}>{opt.label}</div>
         {opt.sub&&<div style={{fontSize:12,color:'#8F8F8F',marginTop:2}}>{opt.sub}</div>}
       </div>
-      {selected?<span style={{width:18,height:18,borderRadius:'50%',background:'#050505',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><svg width="10" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4,9 11,1" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
-      :<IChevR size={14} style={{color:'#CCCCCC',flexShrink:0}}/>}
+      {selected
+        ?<span style={{width:18,height:18,borderRadius:'50%',background:'#050505',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><svg width="10" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4,9 11,1" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
+        :<IChevR size={14} style={{color:'#CCCCCC',flexShrink:0}}/>}
     </button>
   );
 
-  const Shell=({title,children})=>(
+  const Shell=({title,sub,children})=>(
     <div style={{maxWidth:520,margin:'0 auto',padding:'32px 0'}}>
       {screen!=='result'&&(
         <div style={{marginBottom:24}}>
@@ -1253,36 +1265,33 @@ function PathFinder({onViewWorkflow}){
         </div>
       )}
       <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:16,padding:'28px'}}>
-        <h3 style={{fontSize:18,fontWeight:700,color:'#050505',marginBottom:20,lineHeight:1.3}}>{title}</h3>
+        <h3 style={{fontSize:18,fontWeight:700,color:'#050505',marginBottom:sub?6:20,lineHeight:1.3}}>{title}</h3>
+        {sub&&<p style={{fontSize:13,color:'#8F8F8F',marginBottom:20,lineHeight:1.5}}>{sub}</p>}
         {children}
-        {screen!=='role'&&screen!=='result'&&<button onClick={back} style={{marginTop:16,fontSize:13,fontWeight:600,color:'#8F8F8F',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',display:'flex',alignItems:'center',gap:4}}>← Back</button>}
+        {screen!=='projectType'&&screen!=='result'&&(
+          <button onClick={back} style={{marginTop:16,fontSize:13,fontWeight:600,color:'#8F8F8F',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',display:'flex',alignItems:'center',gap:4}}>← Back</button>
+        )}
       </div>
     </div>
   );
 
-  if(screen==='role') return(
-    <Shell title="What is your role?">
-      {[{id:'pmm',label:'PMM'},{id:'comms',label:'Comms partner'},{id:'crm',label:'CRM manager'},{id:'web',label:'Website manager'},{id:'ads',label:'Paid Ads manager'},{id:'local',label:'Local Market POC'}].map(r=>(
-        <OptionBtn key={r.id} opt={r} selected={answers.role===r.id} onClick={()=>pick('role',r.id)}/>
-      ))}
-    </Shell>
-  );
-
   if(screen==='projectType') return(
-    <Shell title="What type of project is this?">
+    <Shell title="What type of project is this?" sub="Not sure? Check Panorama first — L or M = High-visibility, S = Self-serve, not in Panorama = BAU.">
       {[
-        {value:'highvis',label:'Global projects — High-visibility / Creativity',sub:'In Panorama L or M — Creative Factory involved'},
-        {value:'selfserve',label:'Global projects — Self-serve',sub:'In Panorama S or M — PMM end-to-end'},
-        {value:'bau',label:'BAU / Channel-owned',sub:'Not in Panorama — CRM, Website, Paid Ads'},
+        {value:'highvis',label:'Global — High-visibility / Creativity',sub:'In Panorama L or M · Upstream phases + Creative Factory · Local POC owns downstream'},
+        {value:'selfserve',label:'Global — Self-serve',sub:'In Panorama S · PMM end-to-end · No local review (except CRM)'},
+        {value:'bau',label:'BAU / Channel-owned',sub:'Not in Panorama · CRM, Website, Paid Ads · Local POC does QC'},
       ].map(o=><OptionBtn key={o.value} opt={o} selected={answers.projectType===o.value} onClick={()=>pick('projectType',o.value)}/>)}
     </Shell>
   );
 
   if(screen==='channel') return(
     <Shell title="Which channel?">
-      {['CRM / Email','Website','Paid Ads','Other'].map(ch=>(
-        <OptionBtn key={ch} opt={{value:ch==='CRM / Email'?'CRM':ch,label:ch}} selected={answers.channel===(ch==='CRM / Email'?'CRM':ch)} onClick={()=>pick('channel',ch==='CRM / Email'?'CRM':ch)}/>
-      ))}
+      {[
+        {value:'CRM',label:'CRM / Email',sub:'Customer.io'},
+        {value:'Website',label:'Website',sub:'Qontent'},
+        {value:'Paid Ads',label:'Paid Ads',sub:''},
+      ].map(ch=><OptionBtn key={ch.value} opt={{label:ch.label,sub:ch.sub}} selected={answers.channel===ch.value} onClick={()=>pick('channel',ch.value)}/>)}
     </Shell>
   );
 
@@ -1293,14 +1302,20 @@ function PathFinder({onViewWorkflow}){
         <div style={{height:4,background:'#E8E8E8',borderRadius:2,overflow:'hidden'}}><div style={{height:'100%',width:'80%',background:'#050505',borderRadius:2}}/></div>
       </div>
       <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:16,padding:'28px'}}>
-        <h3 style={{fontSize:18,fontWeight:700,color:'#050505',marginBottom:20}}>Which language(s)?</h3>
-        {LANGS.map(l=>{const sel=langSel.includes(l.label);return(
-          <button key={l.label} onClick={()=>setLangSel(p=>sel?p.filter(x=>x!==l.label):[...p,l.label])} style={{width:'100%',textAlign:'left',padding:'11px 14px',borderRadius:10,border:`1.5px solid ${sel?'#050505':'#E0E0E0'}`,background:sel?'#F5F5F5':'#fff',cursor:'pointer',fontFamily:'inherit',display:'flex',alignItems:'center',justifyContent:'space-between',transition:'all 0.15s ease',marginBottom:8}}>
-            <span style={{fontSize:14,fontWeight:600,color:'#050505'}}>{l.flag} {l.label}</span>
-            {sel&&<span style={{width:18,height:18,borderRadius:'50%',background:'#050505',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><svg width="10" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4,9 11,1" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg></span>}
-          </button>
-        );})}
-        <button onClick={()=>{setAnswers(a=>({...a,langs:langSel}));setScreen('result');}} disabled={langSel.length===0} style={{marginTop:4,width:'100%',padding:'12px',borderRadius:10,border:'none',background:langSel.length>0?'#050505':'#E0E0E0',color:langSel.length>0?'#fff':'#8F8F8F',fontSize:14,fontWeight:700,cursor:langSel.length>0?'pointer':'not-allowed',fontFamily:'inherit',transition:'all 0.15s ease'}}>
+        <h3 style={{fontSize:18,fontWeight:700,color:'#050505',marginBottom:6}}>Which language(s)?</h3>
+        <p style={{fontSize:13,color:'#8F8F8F',marginBottom:20}}>Select all that apply — we'll show your POCs where relevant.</p>
+        {LANGS.map(l=>{
+          const sel=langSel.includes(l.label);
+          return(
+            <button key={l.label} onClick={()=>setLangSel(p=>sel?p.filter(x=>x!==l.label):[...p,l.label])}
+              style={{width:'100%',textAlign:'left',padding:'11px 14px',borderRadius:10,border:`1.5px solid ${sel?'#050505':'#E0E0E0'}`,background:sel?'#F5F5F5':'#fff',cursor:'pointer',fontFamily:'inherit',display:'flex',alignItems:'center',justifyContent:'space-between',transition:'all 0.15s ease',marginBottom:8}}>
+              <span style={{fontSize:14,fontWeight:600,color:'#050505'}}>{l.flag} {l.label}</span>
+              {sel&&<span style={{width:18,height:18,borderRadius:'50%',background:'#050505',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><svg width="10" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4,9 11,1" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg></span>}
+            </button>
+          );
+        })}
+        <button onClick={()=>{setAnswers(a=>({...a,langs:langSel}));setScreen('result');}} disabled={langSel.length===0}
+          style={{marginTop:8,width:'100%',padding:'12px',borderRadius:10,border:'none',background:langSel.length>0?'#050505':'#E0E0E0',color:langSel.length>0?'#fff':'#8F8F8F',fontSize:14,fontWeight:700,cursor:langSel.length>0?'pointer':'not-allowed',fontFamily:'inherit'}}>
           See my workflow →
         </button>
         <button onClick={back} style={{marginTop:12,fontSize:13,fontWeight:600,color:'#8F8F8F',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',display:'flex',alignItems:'center',gap:4}}>← Back</button>
@@ -1310,51 +1325,63 @@ function PathFinder({onViewWorkflow}){
 
   if(screen==='result'){
     const result=getPathResult({...answers,langs:langSel});
-    const trackColors={highvis:{bg:'#050505',label:'Global projects — High-visibility / Creativity'},selfserve:{bg:'#7B4DB8',label:'Global projects — Self-serve'},bau:{bg:'#461068',label:'BAU / Channel-owned'+(result.channel?` · ${result.channel}`:'')}};
-    const tc=trackColors[result.type];
+    const trackMeta={
+      highvis:{bg:'#050505',label:'Global — High-visibility / Creativity'},
+      selfserve:{bg:'#7B4DB8',label:'Global — Self-serve'+(answers.channel?` · ${answers.channel}`:'')},
+      bau:{bg:'#461068',label:'BAU / Channel-owned'+(result.channel?` · ${result.channel}`:'')},
+    };
+    const tc=trackMeta[result.type];
     const pocList=langSel.map(l=>LANGS.find(x=>x.label===l)).filter(Boolean);
+    const showPOCsInResult=(result.type==='bau')||(result.type==='highvis');
+
     return(
-      <div style={{maxWidth:820,margin:'0 auto',padding:'32px 0'}} className="fade-in">
-        <div style={{background:tc.bg,borderRadius:14,padding:'18px 24px',marginBottom:20}}>
-          <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',color:'rgba(255,255,255,0.6)',marginBottom:4}}>Your workflow</div>
-          <div style={{fontSize:17,fontWeight:700,color:'#fff'}}>{tc.label}</div>
-          {result.hvOption&&<div style={{fontSize:12,color:'rgba(255,255,255,0.7)',marginTop:4}}>{HV_OPTIONS[result.hvOption]?.label}</div>}
+      <div style={{maxWidth:720,margin:'0 auto',padding:'32px 0'}} className="fade-in">
+        {/* Header */}
+        <div style={{background:tc.bg,borderRadius:14,padding:'16px 22px',marginBottom:16}}>
+          <div style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',color:'rgba(255,255,255,0.55)',marginBottom:3}}>Your workflow</div>
+          <div style={{fontSize:16,fontWeight:700,color:'#fff'}}>{tc.label}</div>
         </div>
+
+        {/* Trade-off */}
         {result.tradeOff&&<TradeOffCallout text={result.tradeOff}/>}
-        <div style={{display:'flex',flexDirection:'column',gap:10,marginTop:16,marginBottom:20}}>
+
+        {/* Steps */}
+        <div style={{display:'flex',flexDirection:'column',gap:8,marginTop:16,marginBottom:16}}>
           {result.steps.map((s,i)=>(
-            <div key={s.n} style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:12,padding:'16px 20px',display:'flex',gap:16,alignItems:'flex-start'}}>
-              <div style={{width:36,height:36,borderRadius:'50%',background:STEP_GRAD_PF[Math.min(i,4)],color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:800,flexShrink:0}}>{s.n}</div>
+            <div key={s.n} style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:12,padding:'14px 18px',display:'flex',gap:14,alignItems:'flex-start'}}>
+              <div style={{width:34,height:34,borderRadius:'50%',background:STEP_GRAD_PF[Math.min(i,4)],color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,flexShrink:0,lineHeight:1}}>{s.n}</div>
               <div style={{flex:1}}>
-                <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6,flexWrap:'wrap'}}>
-                  <span style={{fontSize:15,fontWeight:700,color:'#050505'}}>{s.title}</span>
-                  {s.mandatory&&<span style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.04em',background:'#F5F0FF',color:'#7B4DB8',borderRadius:20,padding:'2px 8px'}}>Mandatory</span>}
+                <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:5,flexWrap:'wrap'}}>
+                  <span style={{fontSize:14,fontWeight:700,color:'#050505'}}>{s.title}</span>
+                  {s.mandatory&&<span style={{fontSize:9,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.04em',background:'#F5F0FF',color:'#7B4DB8',borderRadius:20,padding:'2px 8px'}}>Mandatory</span>}
                 </div>
-                {s.note&&<p style={{fontSize:13,color:'#616161',margin:'0 0 8px',lineHeight:1.55,fontStyle:'italic'}}>{s.note}</p>}
-                <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:s.tools&&s.tools.length>0?8:0,background:'#F5F5F5',borderRadius:8,padding:'6px 10px',width:'fit-content'}}>
-                  <IUser size={13} style={{color:'#050505'}}/>
+                {s.note&&<p style={{fontSize:12,color:'#616161',margin:'0 0 6px',lineHeight:1.55,fontStyle:'italic'}}>{s.note}</p>}
+                <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:s.tools&&s.tools.length>0?6:0,background:'#F5F5F5',borderRadius:7,padding:'5px 9px',width:'fit-content'}}>
+                  <IUser size={12} style={{color:'#050505'}}/>
                   <span style={{fontSize:13,fontWeight:700,color:'#050505'}}>{s.owner}</span>
                 </div>
-                {s.tools&&s.tools.length>0&&(
-                  <div style={{display:'flex',alignItems:'flex-start',gap:6}}>
-                    <IWrench size={13} style={{color:'#8F8F8F',marginTop:2}}/>
-                    <div style={{display:'flex',flexWrap:'wrap',gap:'3px 14px'}}>
-                      {s.tools.map((t,ti)=><span key={ti} style={{fontSize:13,color:'#616161',lineHeight:1.6}}>{fmtLinks(t,s.n)}</span>)}
+                {s.tools&&s.tools.filter(Boolean).length>0&&(
+                  <div style={{display:'flex',alignItems:'flex-start',gap:5,marginTop:4}}>
+                    <IWrench size={12} style={{color:'#8F8F8F',marginTop:2}}/>
+                    <div style={{display:'flex',flexWrap:'wrap',gap:'2px 12px'}}>
+                      {s.tools.filter(Boolean).map((t,ti)=><span key={ti} style={{fontSize:12,color:'#616161',lineHeight:1.6}}>{fmtLinks(t,s.n)}</span>)}
                     </div>
                   </div>
                 )}
-                {(s.n===2||s.n===3)&&pocList.length>0&&(
-                  <div style={{marginTop:10,padding:'10px 12px',background:'#F9F7FF',border:'1px solid #E9E0FF',borderRadius:8}}>
-                    <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8}}>
-                      <IUsers size={12} style={{color:'#7B4DB8'}}/>
-                      <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#7B4DB8'}}>Your POC{pocList.length>1?'s':''}</span>
+                {s.showPOCs&&showPOCsInResult&&pocList.length>0&&(
+                  <div style={{marginTop:8,padding:'8px 10px',background:'#F9F7FF',border:'1px solid #E9E0FF',borderRadius:8}}>
+                    <div style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#7B4DB8',marginBottom:6}}>
+                      Your POC{pocList.length>1?'s':''} {result.type==='highvis'?'— appointed at quarterly planning':'— BAU & S list'}
                     </div>
-                    <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
-                      {pocList.map(p=>(
-                        <span key={p.label} style={{display:'inline-flex',alignItems:'center',gap:5,background:'#fff',border:'1px solid #E9E0FF',borderRadius:20,padding:'4px 10px',fontSize:13,color:'#3D3D3D',fontWeight:500}}>
-                          {p.flag} <span style={{fontWeight:600,color:'#461068'}}>{p.poc}</span>
-                        </span>
-                      ))}
+                    <div style={{display:'flex',flexWrap:'wrap',gap:5}}>
+                      {result.type==='highvis'
+                        ?<span style={{fontSize:12,color:'#461068',fontStyle:'italic'}}>Designated by Head of Marketing before the quarter for this initiative.</span>
+                        :pocList.map(p=>(
+                          <span key={p.label} style={{display:'inline-flex',alignItems:'center',gap:5,background:'#fff',border:'1px solid #E9E0FF',borderRadius:20,padding:'3px 9px',fontSize:12,color:'#3D3D3D',fontWeight:500}}>
+                            {p.flag} <span style={{fontWeight:600,color:'#461068'}}>{p.poc}</span>
+                          </span>
+                        ))
+                      }
                     </div>
                   </div>
                 )}
@@ -1362,20 +1389,23 @@ function PathFinder({onViewWorkflow}){
             </div>
           ))}
         </div>
-        <div style={{background:'#FFF5F0',border:'1px solid #FFD5C0',borderRadius:10,padding:'11px 16px',fontSize:13,color:'#7A250C',marginBottom:20,display:'flex',gap:8,alignItems:'flex-start'}}>
-          <IAlert size={14} style={{color:'#CE6033',flexShrink:0,marginTop:1}}/>
+
+        {/* Red bin reminder */}
+        <div style={{background:'#FFF5F0',border:'1px solid #FFD5C0',borderRadius:10,padding:'10px 14px',fontSize:13,color:'#7A250C',marginBottom:16,display:'flex',gap:8,alignItems:'flex-start'}}>
+          <IAlert size={13} style={{color:'#CE6033',flexShrink:0,marginTop:1}}/>
           <span>After launch, log any quality issue in the <a href="https://www.notion.so/qonto/Growth-Efficiency-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658#31931ee4c6968068814de2683bf18120" target="_blank" rel="noopener noreferrer" style={{color:'#CE6033'}}>Red Bin logging form</a>.</span>
         </div>
+
+        {/* Actions */}
         <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
-          <button onClick={()=>onViewWorkflow(result.track)} style={{padding:'10px 20px',borderRadius:10,border:`2px solid ${tc.bg}`,background:tc.bg,color:'#fff',fontSize:13,fontWeight:700,cursor:'pointer',fontFamily:'inherit'}}>View full workflow →</button>
-          <button onClick={reset} style={{padding:'10px 20px',borderRadius:10,border:'1px solid #E0E0E0',background:'#fff',color:'#616161',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'inherit'}}>← Start over</button>
+          <button onClick={()=>onViewWorkflow(result.track)} style={{padding:'10px 18px',borderRadius:10,border:`2px solid ${tc.bg}`,background:tc.bg,color:'#fff',fontSize:13,fontWeight:700,cursor:'pointer',fontFamily:'inherit'}}>View full workflow →</button>
+          <button onClick={reset} style={{padding:'10px 18px',borderRadius:10,border:'1px solid #E0E0E0',background:'#fff',color:'#616161',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'inherit'}}>← Start over</button>
         </div>
       </div>
     );
   }
   return null;
 }
-
 /* ── TRACKS ── */
 const TRACKS=[
   {id:'highvis',label:'Global projects — High-visibility / Creativity',sizing:'In Panorama — L & sometimes M',desc:'Cascade model. Upstream phases + Creative Factory, then Local POC owns the full localization pipeline.',activeBg:'#050505',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
@@ -1448,10 +1478,6 @@ function App(){
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
             Find your path
           </button>
-          <button onClick={()=>setView('pocs')} style={{display:'flex',alignItems:'center',gap:6,padding:'7px 14px',borderRadius:8,border:'none',cursor:'pointer',fontSize:13,fontWeight:600,fontFamily:'inherit',background:view==='pocs'?'#7B4DB8':'transparent',color:view==='pocs'?'#fff':'#8F8F8F',boxShadow:view==='pocs'?'0 1px 3px rgba(123,77,184,0.25)':'none',transition:'all 0.15s'}}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            Local POCs
-          </button>
         </div>
       </header>
 
@@ -1459,8 +1485,6 @@ function App(){
         <div style={{padding:'0 32px 80px'}}>
           <PathFinder onViewWorkflow={handleViewWorkflow}/>
         </div>
-      ):view==='pocs'?(
-        <LocalPOCView/>
       ):(
         <div style={{padding:'28px 32px 0'}}>
           <ScopeToggle/>
