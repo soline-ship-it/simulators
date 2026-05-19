@@ -62,10 +62,11 @@ const IClock=({size=16,style})=><Ico size={size} style={style} ch={<><circle cx=
 /* ── LINK FORMATTER ── */
 const fmtLinks=(text,stepId)=>{
   if(typeof text!=='string')return text;
-  const parts=text.split(/(QualityGuard|Red Bin logging form\/database|Tolki|Customer\.io|Qontent)/g);
+  const parts=text.split(/(QualityGuard|Red Bin logging form\/database|Tolki|Customer\.io|Qontent \(Tolki & QualityGuard accessible from here\)|Qontent)/g);
   return parts.map((p,i)=>{
     if(p==='QualityGuard')return <a key={i} href="https://www.notion.so/qonto/Check-copy-quality-24d31ee4c6968193bc6bc98d7f613d93?v=24d31ee4c69681748503000c8203fb66#7aea17d7f63b4c8a9b472b523e33e255" target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}>{p}</a>;
     if(p==='Red Bin logging form/database')return <a key={i} href="https://www.notion.so/qonto/Growth-Efficiency-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658#31931ee4c6968068814de2683bf18120" target="_blank" rel="noopener noreferrer" style={{color:'#CE6033'}} onClick={e=>e.stopPropagation()}>{p}</a>;
+    if(p==='Qontent (Tolki & QualityGuard accessible from here)')return <span key={i}><a href="https://www.notion.so/qonto/Localize-24d31ee4c696812ab5c1ee03e3aeda5e?source=copy_link#e960315e45d5471c9449b6d86de55b70" target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}>Qontent</a><span style={{color:'#8F8F8F',fontSize:'0.9em'}}> — <a href="https://www.notion.so/qonto/Localize-24d31ee4c696812ab5c1ee03e3aeda5e?source=copy_link#e960315e45d5471c9449b6d86de55b70" target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}>Tolki</a> & <a href="https://www.notion.so/qonto/Check-copy-quality-24d31ee4c6968193bc6bc98d7f613d93?v=24d31ee4c69681748503000c8203fb66#7aea17d7f63b4c8a9b472b523e33e255" target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}>QualityGuard</a> accessible from here</span></span>;
     if(p==='Qontent')return <a key={i} href="https://www.notion.so/qonto/Localize-24d31ee4c696812ab5c1ee03e3aeda5e?source=copy_link#e960315e45d5471c9449b6d86de55b70" target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}>{p}</a>;
     if(p==='Customer.io')return <span key={i} style={{fontWeight:600}}>Customer.io</span>;
     if(p==='Tolki'){
@@ -362,12 +363,12 @@ const HV_STEPS=[
       'Website':{
         owner:'Local Market POC + Website team',
         steps:['Receive EN + local copies.','Build page structure.','Create local copy with AI.','Review (local mktg + PMM).'],
-        tools:['QualityGuard — always run it!','Qontent'],
+        tools:['Qontent (Tolki & QualityGuard accessible from here)'],
       },
       'CRM':{
         owner:'Local Market POC + CRM team',
         steps:['Receive EN copies. Challenge claims & CTAs before building.','AI translation via Qontent (Comms partners).','Local mktg review into Qontent.','Build flow in Customer.io.'],
-        tools:['QualityGuard — always run it!','Qontent','Customer.io'],
+        tools:['Qontent (Tolki & QualityGuard accessible from here)','Customer.io'],
       },
       'Paid Ads':{
         owner:'Local Market POC + Paid Ads team',
@@ -577,7 +578,7 @@ const STEPS_SS=[
     id:2,title:'First-pass translation',
     useCases:[{
       owner:'PMM',
-      tools:['Tolki','Qontent (if Website / CRM)'],
+      tools:['Qontent (Tolki & QualityGuard accessible from here)'],
     }],
   },
   {
@@ -629,8 +630,8 @@ const STEPS_BAU=[
     id:1,title:'EN master copy',
     ruleOfThumb:'When no professional creative writer is involved, the project owner delivers the master copy.',
     channels:{
-      'CRM':{owner:'Project owner (PMM or CRM manager)',tools:['Tolki','Qontent','QualityGuard — always run it!']},
-      'Website':{owner:'Project owner (Website manager)',tools:['Tolki','Qontent','QualityGuard — always run it!']},
+      'CRM':{owner:'Project owner (PMM or CRM manager)',tools:['Qontent (Tolki & QualityGuard accessible from here)']},
+      'Website':{owner:'Project owner (Website manager)',tools:['Qontent (Tolki & QualityGuard accessible from here)']},
       'Paid Ads':{owner:'Project owner (Paid Ads manager)',tools:['Tolki','QualityGuard — always run it!']},
     },
     notes:[],
@@ -638,8 +639,8 @@ const STEPS_BAU=[
   {
     id:2,title:'First-pass translation',
     channels:{
-      'CRM':{owner:'Project owner (PMM or CRM manager)',tools:['Tolki','Qontent']},
-      'Website':{owner:'Project owner (Website manager)',tools:['Tolki','Qontent']},
+      'CRM':{owner:'Project owner (PMM or CRM manager)',tools:['Qontent (Tolki & QualityGuard accessible from here)']},
+      'Website':{owner:'Project owner (Website manager)',tools:['Qontent (Tolki & QualityGuard accessible from here)']},
       'Paid Ads':{owner:'Project owner (Paid Ads manager)',tools:['Tolki']},
     },
     showPOCs:true,
@@ -1177,7 +1178,7 @@ function getPathResult(answers){
     tradeOff:'Growth efficiency: PMM owns end-to-end, no local review. Trade-off: markets have no say. Edge cases handled via Red Bin post-publish. Exception: CRM always gets a native review.',
     steps:[
       {n:1,title:'EN master copy',owner:'PMM',tools:['Tolki','QualityGuard — always run it!']},
-      {n:2,title:'First-pass translation',owner:'PMM',tools:['Tolki','Qontent']},
+      {n:2,title:'First-pass translation',owner:'PMM',tools:['Qontent (Tolki & QualityGuard accessible from here)']},
       {n:3,title:'Quality check',owner:'PMM',mandatory:true,
         note:'QualityGuard only — no native review. Exception: CRM always gets a native review (requester / #proofread-crm / CRM team member).',
         tools:['QualityGuard — always run it!']},
@@ -1196,7 +1197,7 @@ function getPathResult(answers){
         tools:['Tolki','QualityGuard — always run it!']},
       {n:2,title:'First-pass translation',
         owner:`Project owner (${ch==='CRM'?'PMM or CRM manager':ch==='Website'?'Website manager':'Paid Ads manager'})`,
-        tools:['Tolki',...(ch!=='Paid Ads'?['Qontent']:[])],
+        tools:[ch!=='Paid Ads'?'Qontent (Tolki & QualityGuard accessible from here)':'Tolki'],
         showPOCs:true},
       {n:3,title:'Quality check',owner:'Local Market POC',mandatory:true,
         note:ch==='CRM'?'Use #proofread-crm to request review.':'No dedicated channel yet — reach out to local POC directly.',
