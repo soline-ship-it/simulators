@@ -1391,12 +1391,6 @@ function PathFinder({onViewWorkflow}){
           ))}
         </div>
 
-        {/* Red bin reminder */}
-        <div style={{background:'#FFF5F0',border:'1px solid #FFD5C0',borderRadius:10,padding:'10px 14px',fontSize:13,color:'#7A250C',marginBottom:16,display:'flex',gap:8,alignItems:'flex-start'}}>
-          <IAlert size={13} style={{color:'#CE6033',flexShrink:0,marginTop:1}}/>
-          <span>After launch, log any quality issue in the <a href="https://www.notion.so/qonto/Growth-Efficiency-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658#31931ee4c6968068814de2683bf18120" target="_blank" rel="noopener noreferrer" style={{color:'#CE6033'}}>Red Bin logging form</a>.</span>
-        </div>
-
         {/* Actions */}
         <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
           <button onClick={()=>onViewWorkflow(result.track)} style={{padding:'10px 18px',borderRadius:10,border:`2px solid ${tc.bg}`,background:tc.bg,color:'#fff',fontSize:13,fontWeight:700,cursor:'pointer',fontFamily:'inherit'}}>View full workflow →</button>
@@ -1418,7 +1412,7 @@ const TRACKS=[
 /* ── APP ── */
 function App(){
   const[view,setView]=useState('workflow');
-  const[activeTrack,setActiveTrack]=useState('selfserve');
+  const[activeTrack,setActiveTrack]=useState(null);
   const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
   const handleViewWorkflow=(track)=>{setActiveTrack(track);setView('workflow');};
 
@@ -1468,12 +1462,19 @@ function App(){
             </div>
           </div>
           {/* Content */}
-          <div key={activeTrack} className="fade-in" style={{paddingBottom:0}}>
-            <Legend activeTrack={activeTrack}/>
-            {activeTrack==='highvis'&&<HighVisStream/>}
-            {activeTrack==='selfserve'&&<WorkflowRow steps={STEPS_SS} accentClr={SS_ACCENT} gradients={SS_GRADS} threadPrefix="ss" showTradeOff={true}/>}
-            {activeTrack==='bau'&&<BAUWorkflow/>}
-          </div>
+          {activeTrack?(
+            <div key={activeTrack} className="fade-in" style={{paddingBottom:0}}>
+              <Legend activeTrack={activeTrack}/>
+              {activeTrack==='highvis'&&<HighVisStream/>}
+              {activeTrack==='selfserve'&&<WorkflowRow steps={STEPS_SS} accentClr={SS_ACCENT} gradients={SS_GRADS} threadPrefix="ss" showTradeOff={true}/>}
+              {activeTrack==='bau'&&<BAUWorkflow/>}
+            </div>
+          ):(
+            <div style={{textAlign:'center',padding:'48px 24px',color:'#B8B8B8'}}>
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#CCCCCC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{margin:'0 auto 12px',display:'block'}}><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+              <p style={{fontSize:14,fontWeight:600,color:'#B8B8B8',margin:0}}>Select a workflow type above to get started.</p>
+            </div>
+          )}
           
         </div>
       )}
