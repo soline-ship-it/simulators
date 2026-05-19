@@ -330,7 +330,7 @@ const HV_UPSTREAM=[
   {
     id:'C', label:'Local orientation',
     owner:'Global PMM + Market PMM / Local POC',
-    detail:'"Dying on a hill for" vs "good to have". Hard gate — no input after deadline.',
+    detail:'"Dying on a hill for" vs "good to have". Includes SEO & channel considerations. Hard gate — no input after deadline.',
     badge:'Hard gate',badgeColor:'#991B1B',badgeBg:'#FEE2E2',
   },
   {
@@ -348,8 +348,9 @@ const HV_STEPS=[
       owner:'Global PMM + Comms partners + Creative Factory',
       tools:['Tolki','QualityGuard — always run it!'],
       steps:[
-        'PMM writes the CommDoc incorporating local orientation input.',
-        'Creative Factory produces all brand/visual assets (for L).',
+        'Global PMM writes the CommDoc incorporating local orientation input.',
+        'Creative Factory produces all brand/visual assets (Creative Essentials) in all locales.',
+        'Comms partner writes the EN Master copy, sometimes with the help of the Creative Copywriter, and gets it validated.',
         'Comms partner runs AI first pass for all markets — 15-min mechanical task, no market knowledge needed.',
       ],
     }],
@@ -393,7 +394,7 @@ const HV_STEPS=[
     id:4, title:'Upload & publish',
     channels:{
       'Website':{owner:'Website team',tools:['Qontent'],steps:['Build assets.','Publish.']},
-      'CRM':{owner:'CRM team',tools:['Qontent','Customer.io'],steps:['Build emails / push in Customer.io.','Review before publish (Comms + CRM + PMM).','Publish.']},
+      'CRM':{owner:'Local Market POC + CRM team',tools:['Qontent','Customer.io'],steps:['Build emails / push in Customer.io.','Review before publish (Local POC + CRM + PMM — Comms partner informed).','Publish.']},
       'Paid Ads':{owner:'Paid Ads team',tools:['Platform'],steps:['Publish on platform.']},
     },
   },
@@ -546,7 +547,6 @@ function HighVisStream(){
           ))}
         </div>
       </div>
-      <p style={{fontSize:12,color:'#8F8F8F',marginTop:8,fontStyle:'italic'}}>Note: SEO is autonomous — not part of this flow. Paid Ads detail to be confirmed.</p>
     </div>
   );
 }
