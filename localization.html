@@ -218,7 +218,7 @@ function StepCard({step,accentClr,gradBg,threadPrefix,showTradeOff}){
             {step.mandatory&&<div style={{fontSize:9,fontWeight:700,background:'rgba(255,255,255,0.25)',borderRadius:20,padding:'2px 7px',display:'inline-block',letterSpacing:'0.04em',textTransform:'uppercase'}}>Mandatory</div>}
           </div>
         </div>
-        <div style={{position:'absolute',top:-2,right:-2,width:22,height:22,borderRadius:'50%',background:'#fff',border:'2px solid #E0E0E0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,color:'#3D3D3D',zIndex:2}}>{step.id}</div>
+        <div style={{position:'absolute',top:-2,right:-2,minWidth:22,height:22,padding:String(step.id).length>1?'0 4px':0,borderRadius:11,background:'#fff',border:'2px solid #E0E0E0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:String(step.id).length>1?10:11,fontWeight:800,color:'#3D3D3D',zIndex:2}}>{step.id}</div>
       </div>
       <div style={{width:1,height:14,background:'#CCCCCC'}}/>
       <div style={{width:'100%',background:'#fff',border:'1px solid #E0E0E0',borderRadius:14,padding:'16px',boxShadow:'0 1px 4px rgba(0,0,0,0.05)'}}>
@@ -315,7 +315,7 @@ const HV_UPSTREAM=[
   {
     id:'B', label:'Step 0 — Global outline',
     owner:'Global PMM',
-    detail:'Strategic intent, core narrative, fixed vs. flexible. Mandatory for L & M.',
+    detail:'Strategic intent, core narrative, fixed vs. flexible, channel scope & format requirements. Mandatory for L & M.',
   },
   {
     id:'C', label:'Local orientation',
@@ -332,23 +332,54 @@ const HV_UPSTREAM=[
 ];
 const HV_STEPS=[
   {
-    id:1, title:'Creative Essentials + master copy & assets',
+    id:'1.1', title:'Creative Essentials',
     useCases:[{
       owner:'Global PMM + Comms Partners + Creative Factory',
       tools:['Tolki','QualityGuard — always run it!'],
       steps:[
-        'Global PMM co-owns the GTM package messagng (Comms Doc + narrative) with Comms Partners (incl. EN Master).',
-        'Comms Partners write the Creative Brief.',
-        'Creative Factory (Brand Designer + Creative Writer pairing) delivers Creative Essentials (incl. tagline for Paid Ads) + Production — visual assets & hero/secondary copy (masters in EN + FR / DE / IT).',
-        'Comms Partners loop in channel POCs with the creative concept and collect final outputs (specs, formats, etc.) before production starts.',
-        'Comms Partners run an AI first pass on remaining text, all markets.',
+        <><strong>Messaging:</strong> Global PMM co-owns the GTM package messaging (Comms Doc + narrative) with Comms Partners.</>,
+        <><strong>Creative Brief:</strong> Comms Partners write it, translating the messaging into creative direction for Creative Factory.</>,
+        <><strong>Creative Essentials:</strong> Creative Factory (Brand Designer + Creative Writer pairing) delivers them, incl. tagline for Paid Ads.</>,
+        <><strong>Channel loop & market sync:</strong> Comms Partners align channel POCs on the creative concept (formats already collected in Step 0) and keep Local POCs informed before production starts.</>,
       ],
     }],
     notes:[
-      'Creative Writer\'s lead language varies by project — can start in IT, DE, FR or EN.',
-      'Creative direction is locked at Creative Essentials — Production executes it, it does not revisit it.',
-      'Local POC is designated at the start of the project (by Head of Marketing) and briefed via a dedicated project Slack channel.',
-      '⚠️ Creative Essentials shared with channels = creative foundation, not final production assets. They are later adapted to channel requirements with the dedicated designer.',
+      'Local POCs are designated by the Head of Marketing at project kickoff — looped in via a dedicated project Slack channel.',
+      'Creative Writer\'s lead language is project-dependent — can be IT, DE, FR or EN.',
+      '⚠️ Creative Essentials = creative foundation, not final production assets. The creative direction is locked; the assets are later adapted to channel specs with the dedicated designer.',
+    ],
+  },
+  {
+    id:'1.2', title:'Production: Master copy',
+    channels:{
+      'Website':{
+        owner:'Creative Factory',
+        steps:[
+          'Creative Factory delivers hero + key section copies (masters EN + FR / DE / IT) + visual assets.',
+        ],
+        tools:['Tolki','QualityGuard — always run it!'],
+      },
+      'CRM':{
+        owner:'Creative Factory + Comms Partners + CRM team',
+        steps:[
+          'Creative Copywriter (Creative Factory) writes the EN Master — key claims, lines of text — + first translation pass (AI or peer copywriter for first-class translation).',
+          'Comms Partners write the full email based on EN Master (with Creative Copywriter help when needed).',
+          'Comms Partners translate the full email with AI.',
+          'CRM team builds the email in Qontent.',
+        ],
+        tools:['Tolki','QualityGuard — always run it!','Qontent (Tolki & QualityGuard accessible from here)'],
+      },
+      'Paid Ads':{
+        owner:'Creative Factory + Comms Partners',
+        steps:[
+          'Comms Partners share Creative Essentials with Paid Ads team — dedicated designer adapts visual assets to ad formats.',
+          'Creative Copywriter writes Paid Ads master copies (EN + FR / DE / IT) based on channel specs from Step 0.',
+        ],
+        tools:['Tolki','QualityGuard — always run it!'],
+      },
+    },
+    notes:[
+      'Master copy production is channel-specific. Each channel kicks off as soon as Creative Essentials are signed off.',
     ],
   },
   {
@@ -360,15 +391,17 @@ const HV_STEPS=[
         tools:['Qontent (Tolki & QualityGuard accessible from here)'],
       },
       'CRM':{
-        owner:'Local Market POC + CRM team',
-        steps:['Receive EN copies. Challenge claims & CTAs before building.','AI translation via Qontent (Comms Partners).','Local mktg review into Qontent.','Build flow in Customer.io.'],
-        tools:['Qontent (Tolki & QualityGuard accessible from here)','Customer.io'],
+        owner:'Local Market POC',
+        steps:[
+          'Local POC reviews and proofreads the email in Qontent.',
+        ],
+        tools:['Qontent (Tolki & QualityGuard accessible from here)'],
       },
       'Paid Ads':{
-        owner:'Creative Writer + Comms Partners + Local POC + Paid Ads team',
+        owner:'Comms Partners + Local POC + Paid Ads team',
         steps:[
-          'Creative Writer copywrites the Paid Ads master copies (EN + FR / DE / IT) based on channel specs gathered in Step 1.',
-          'Comms Partners share copies with Local POCs for validation (visibility + alignment before launch).',
+          'Comms Partners share copies + creative assets (for context) with Local POCs for copy validation.',
+          'For PT / NL: available-language Comms Partner or Local POC adapts the copy.',
           'Paid Ads team receives all-market copies + final creative assets.',
           'Paid Ads team builds and launches ads on platforms.',
         ],
@@ -430,7 +463,7 @@ function HVStepCard({step,gradBg,selectedCh,onSelectCh}){
             {step.mandatory&&<div style={{fontSize:9,fontWeight:700,background:'rgba(255,255,255,0.25)',borderRadius:20,padding:'2px 7px',display:'inline-block',letterSpacing:'0.04em',textTransform:'uppercase'}}>Mandatory</div>}
           </div>
         </div>
-        <div style={{position:'absolute',top:-2,right:-2,width:22,height:22,borderRadius:'50%',background:'#fff',border:'2px solid #E0E0E0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,color:'#3D3D3D',zIndex:2}}>{step.id}</div>
+        <div style={{position:'absolute',top:-2,right:-2,minWidth:22,height:22,padding:String(step.id).length>1?'0 4px':0,borderRadius:11,background:'#fff',border:'2px solid #E0E0E0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:String(step.id).length>1?10:11,fontWeight:800,color:'#3D3D3D',zIndex:2}}>{step.id}</div>
       </div>
       <div style={{width:1,height:14,background:'#CCCCCC'}}/>
       <div style={{width:'100%',background:'#fff',border:'1px solid #E0E0E0',borderRadius:14,padding:'16px',boxShadow:'0 1px 4px rgba(0,0,0,0.05)'}}>
@@ -729,7 +762,7 @@ function BAUStepCard({step,gradBg,selectedCh,onSelectCh}){
             {step.mandatory&&<div style={{fontSize:9,fontWeight:700,background:'rgba(255,255,255,0.25)',borderRadius:20,padding:'2px 7px',display:'inline-block',letterSpacing:'0.04em',textTransform:'uppercase'}}>Mandatory</div>}
           </div>
         </div>
-        <div style={{position:'absolute',top:-2,right:-2,width:22,height:22,borderRadius:'50%',background:'#fff',border:'2px solid #E0E0E0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,color:'#3D3D3D',zIndex:2}}>{step.id}</div>
+        <div style={{position:'absolute',top:-2,right:-2,minWidth:22,height:22,padding:String(step.id).length>1?'0 4px':0,borderRadius:11,background:'#fff',border:'2px solid #E0E0E0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:String(step.id).length>1?10:11,fontWeight:800,color:'#3D3D3D',zIndex:2}}>{step.id}</div>
       </div>
       <div style={{width:1,height:14,background:'#CCCCCC'}}/>
       <div style={{width:'100%',background:'#fff',border:'1px solid #E0E0E0',borderRadius:14,padding:'16px',boxShadow:'0 1px 4px rgba(0,0,0,0.05)'}}>
@@ -1145,8 +1178,11 @@ function getPathResult(answers){
       {n:'A→D',title:'Upstream phases',owner:'GLT + Global PMM + Local markets',
         note:'GLT sizes the project. Global PMM writes Step 0 outline. Local POC (appointed by Head of Marketing at quarterly planning) shares market context. GLT decides on transcreation.',
         tools:[]},
-      {n:1,title:'Creative Essentials + master copy & assets',owner:'Global PMM + Comms Partners + Creative Factory',
-        note:'Creative Factory (Brand Designer + Creative Writer pairing) delivers Creative Essentials + Production — visual assets & hero/secondary copy (masters EN + FR/DE/IT). Mandatory for all L & M.',
+      {n:'1.1',title:'Creative Essentials',owner:'Global PMM + Comms Partners + Creative Factory',
+        note:'Messaging, Creative Brief, Creative Essentials delivery (incl. tagline for Paid Ads), and channel + market loop before production.',
+        tools:['Tolki','QualityGuard — always run it!']},
+      {n:'1.2',title:'Production: Master copy',owner:'Creative Factory + Comms Partners (channel-specific)',
+        note:'Master copy production splits by channel — Website (Creative Factory copies), CRM (Creative Factory + Comms Partners write & translate the full email), Paid Ads (Creative Copywriter writes ad copies based on Step 0 specs).',
         tools:['Tolki','QualityGuard — always run it!']},
       {n:2,title:'Localization & review',owner:'Local Market POC',mandatory:true,
         note:'Full ownership from draft receipt — accuracy, tone of voice, message adaptation. Not just grammar.',
