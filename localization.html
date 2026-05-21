@@ -82,7 +82,7 @@ function Accordion({title,items,type,stepId}){
   let bg,border,titleClr,textClr,badgeBg,icon;
   if(isGap){bg='#FFF5F5';border='#FECACA';titleClr='#991B1B';textClr='#7F1D1D';badgeBg='#FEE2E2';icon=<IAlert size={13} style={{color:'#991B1B'}}/>;}
   else if(isSug){bg='#FFFDF0';border='#FDE68A';titleClr='#854D0E';textClr='#713F12';badgeBg='#FEF9C3';icon=<IBulb size={13} style={{color:'#CA8A04'}}/>;}
-  else if(isProc){bg='#F9F9F9';border='#E8E8E8';titleClr='#3D3D3D';textClr='#3D3D3D';badgeBg='#E8E8E8';icon=<IWorkflow size={13} style={{color:'#8F8F8F'}}/>;}
+  else if(isProc){bg='#FFFCE8';border='#FEF08A';titleClr='#713F12';textClr='#3D3D3D';badgeBg='#FEF9C3';icon=<IWorkflow size={13} style={{color:'#A16207'}}/>;}
   else{bg='#FFFDF0';border='#FDE68A';titleClr='#854D0E';textClr='#713F12';badgeBg='#FEF9C3';icon=<IBulb size={13} style={{color:'#CA8A04'}}/>;}
   return(
     <div style={{marginTop:isProc?8:10,border:`1px solid ${border}`,borderRadius:10,overflow:'hidden'}}>
@@ -363,12 +363,21 @@ const HV_STEPS=[
         tools:['Qontent (Tolki & QualityGuard accessible from here)','Customer.io'],
       },
       'Paid Ads':{
-        owner:'Local Market POC + Paid Ads team',
-        steps:['Receive EN copy.','AI first pass adaptation.','Review & adapt (local mktg).'],
+        owner:'Comms Partners + Paid Ads team',
+        steps:[
+          'Receive EN master + AI-translated copies (all markets) + Creative Essentials (hero/secondary copy in FR/DE/IT + visual assets).',
+          'Comms Partners adapt copy for ad format (char limits, hooks, CTAs) + remain available for questions.',
+          'Paid Ads team builds ads on platform.',
+        ],
         tools:['QualityGuard — always run it!'],
       },
     },
-    notes:['Local POC owns everything from draft receipt. Not the place to revisit messaging — that belongs in Local Orientation.','SLA: ~5 days for L, ~3 days for M.'],
+    notes:[
+      'Local POC owns everything from draft receipt for Website & CRM. Not the place to revisit messaging — that belongs in Local Orientation.',
+      'Paid Ads: no Local POC involvement in this step. Sign-off happens at Step 3.',
+      'For markets without hero/secondary copy in lead language (PT, NL): the available-language Comms Partner — or the Local POC — handles adaptation.',
+      'SLA: ~5 days for L, ~3 days for M.',
+    ],
   },
   {
     id:3, title:'Final sign-off', mandatory:true,
@@ -492,7 +501,7 @@ function HighVisStream(){
         <IClock size={15} style={{color:'#166534',flexShrink:0,marginTop:1}}/>
         <div>
           <div style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#166534',marginBottom:3}}>Model decided — Cascade · L & M</div>
-          <p style={{fontSize:13,color:'#14532D',lineHeight:1.6,margin:'0 0 4px 0'}}>High investment in the creative concept — <strong>Creative Factory always involved</strong> (Creative Essentials + Production) for every L and M. Global teams own the master + AI first pass. Local POC owns everything downstream — full content responsibility, not just a final check. SLA: ~38 days for L, ~28 days for M.</p>
+          <p style={{fontSize:13,color:'#14532D',lineHeight:1.6,margin:'0 0 4px 0'}}>High investment in the creative concept — <strong>Creative Factory always involved</strong> (Creative Essentials + Production) for every L and M. Global teams own the master + AI first pass. Local POC drives downstream — proofing, adapting, owning final market sign-off. Channel teams execute upload. SLA: ~38 days for L, ~28 days for M.</p>
           <a href="https://www.notion.so/qonto/Growth-Operating-Model-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658" target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:'#166534',fontWeight:600}}>Full operating model on Notion →</a>
         </div>
       </div>
@@ -936,7 +945,7 @@ function ScopeToggle(){
                   <IClock size={14} style={{color:'#166534'}}/>
                   <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Stream 1 — decided</span>
                 </div>
-                <p style={{fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:0}}>Model chosen: <strong>Cascade</strong>. Heavy creative investment — Creative Factory always involved for L & M (Creative Essentials + Production). Local POCs own full downstream localization. Check <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> to confirm if your project is L or M.</p>
+                <p style={{fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:0}}>Model chosen: <strong>Cascade</strong>. Heavy creative investment — Creative Factory always involved for L & M (Creative Essentials + Production). Local POCs drive downstream localization & own final sign-off; channel teams execute upload. Check <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> to confirm if your project is L or M.</p>
               </div>
             </div>
           </div>
@@ -1243,7 +1252,7 @@ function PathFinder({onViewWorkflow}){
   if(screen==='projectType') return(
     <Shell title="What type of project is this?" sub="Not sure? Check Panorama first — L or M = High-visibility, S = Self-serve, not in Panorama = BAU.">
       {[
-        {value:'highvis',label:'Global — High-visibility / Creativity',sub:'In Panorama L or M · Upstream phases + Creative Factory always involved · Local POC owns downstream'},
+        {value:'highvis',label:'Global — High-visibility / Creativity',sub:'In Panorama L or M · Upstream phases + Creative Factory · Local POC drives localization & sign-off'},
         {value:'selfserve',label:'Global — Self-serve',sub:'In Panorama S · PMM end-to-end · No Creative Factory, no local review (except CRM)'},
         {value:'bau',label:'BAU / Channel-owned',sub:'Not in Panorama · CRM, Website, Paid Ads · Local POC does QC'},
       ].map(o=><OptionBtn key={o.value} opt={o} selected={answers.projectType===o.value} onClick={()=>pick('projectType',o.value)}/>)}
@@ -1360,7 +1369,7 @@ function PathFinder({onViewWorkflow}){
 }
 /* ── TRACKS ── */
 const TRACKS=[
-  {id:'highvis',label:'Global projects — High-visibility / Creativity',sizing:'In Panorama — L & M',desc:'Cascade model. Heavy investment in the creative concept — Creative Factory always involved (Creative Essentials + Production). Local POC owns the full downstream localization pipeline.',activeBg:'#050505',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
+  {id:'highvis',label:'Global projects — High-visibility / Creativity',sizing:'In Panorama — L & M',desc:'Cascade model. Heavy investment in the creative concept — Creative Factory always involved (Creative Essentials + Production). Local POC coordinates downstream localization & owns final market sign-off; channel teams execute upload.',activeBg:'#050505',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
   {id:'selfserve',label:'Global projects — Self-serve',sizing:'In Panorama — S',desc:'PMM owns end-to-end. No Comms Partners, no Creative Factory, no local POC involvement. Red Bin handles edge cases.',activeBg:'#7B4DB8',badgeBg:'rgba(255,255,255,0.2)',badgeText:'rgba(255,255,255,0.9)'},
   {id:'bau',label:'BAU / Channel-owned',sizing:'Not in Panorama',desc:'CRM lifecycle, Paid Ads, Website — recurring channel-owned projects. Local POCs do QC.',activeBg:'#461068',badgeBg:'rgba(255,255,255,0.15)',badgeText:'rgba(255,255,255,0.85)'},
 ];
