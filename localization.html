@@ -337,9 +337,10 @@ const HV_STEPS=[
       owner:'Global PMM + Comms Partners + Creative Factory',
       tools:['Tolki','QualityGuard — always run it!'],
       steps:[
-        'Global PMM writes the CommDoc / narrative (incl. EN Master — Comms Partners support on messaging).',
+        'Global PMM co-owns the GTM package (Comms Doc + narrative) with Comms Partners (incl. EN Master).',
         'Comms Partners write the Creative Brief.',
-        'Creative Factory (Brand Designer + Creative Writer pairing) delivers Creative Essentials + Production — visual assets & hero/secondary copy (masters in EN + FR / DE / IT).',
+        'Creative Factory (Brand Designer + Creative Writer pairing) delivers Creative Essentials (incl. tagline for Paid Ads) + Production — visual assets & hero/secondary copy (masters in EN + FR / DE / IT).',
+        'Comms Partners loop in channel POCs with the creative concept and collect final outputs (specs, formats, etc.) before production starts.',
         'Comms Partners run an AI first pass on remaining text, all markets.',
       ],
     }],
@@ -347,6 +348,7 @@ const HV_STEPS=[
       'Creative Writer\'s lead language varies by project — can start in IT, DE, FR or EN.',
       'Creative direction is locked at Creative Essentials — Production executes it, it does not revisit it.',
       'Local POC is designated at the start of the project (by Head of Marketing) and briefed via a dedicated project Slack channel.',
+      '⚠️ Creative Essentials shared with channels = creative foundation, not final production assets. They are later adapted to channel requirements with the dedicated designer.',
     ],
   },
   {
@@ -363,18 +365,19 @@ const HV_STEPS=[
         tools:['Qontent (Tolki & QualityGuard accessible from here)','Customer.io'],
       },
       'Paid Ads':{
-        owner:'Comms Partners + Paid Ads team',
+        owner:'Creative Writer + Comms Partners + Local POC + Paid Ads team',
         steps:[
-          'Receive EN master + AI-translated copies (all markets) + Creative Essentials (hero/secondary copy in FR/DE/IT + visual assets).',
-          'Comms Partners adapt copy for ad format (char limits, hooks, CTAs) + remain available for questions.',
-          'Paid Ads team builds ads on platform.',
+          'Creative Writer copywrites the Paid Ads master copies (EN + FR / DE / IT) based on channel specs gathered in Step 1.',
+          'Comms Partners share copies with Local POCs for validation (visibility + alignment before launch).',
+          'Paid Ads team receives all-market copies + final creative assets.',
+          'Paid Ads team builds and launches ads on platforms.',
         ],
         tools:['QualityGuard — always run it!'],
       },
     },
     notes:[
       'Local POC owns everything from draft receipt for Website & CRM. Not the place to revisit messaging — that belongs in Local Orientation.',
-      'Paid Ads: no Local POC involvement in this step. Sign-off happens at Step 3.',
+      'Paid Ads: Local POC validates copy in this step (visibility before launch). No additional sign-off in Step 3 — Local POC is informed.',
       'For markets without hero/secondary copy in lead language (PT, NL): the available-language Comms Partner — or the Local POC — handles adaptation.',
       'SLA: ~5 days for L, ~3 days for M.',
     ],
@@ -392,7 +395,7 @@ const HV_STEPS=[
     }],
     notes:[
       'Local POC is fully accountable for the localized output — accuracy, tone of voice, consistency. Not just the final touch.',
-      'Paid Ads: sign-off applies to the localized copy & creative pre-launch. Once live, in-flight variants and A/B iterations don\'t require new sign-off — Local POC is informed.',
+      'Paid Ads: no Step 3 sign-off needed — Local POC already validated in Step 2 and is informed of in-flight variants & A/B iterations once live.',
     ],
   },
   {
