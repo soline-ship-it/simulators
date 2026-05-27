@@ -144,7 +144,11 @@ function UpstreamStep({u,idx}){
               <div key={pi} style={{borderTop:pi>0?'1px dashed #BAE6FD':'none',paddingTop:pi>0?7:0}}>
                 <div style={{fontSize:11,color:'#0369A1',fontWeight:700,marginBottom:2}}>{p.label}</div>
                 <div style={{fontSize:10,color:'#0369A1',fontWeight:500,marginBottom:2}}>&#x25B6; {p.owner}</div>
-                <div style={{fontSize:11,color:'#3D3D3D',lineHeight:1.45}}>{p.detail}</div>
+                <div style={{fontSize:11,color:'#3D3D3D',lineHeight:1.55,display:'flex',flexDirection:'column',gap:4}}>
+                  {p.detail.split('\n').map((line,li)=>(
+                    <span key={li}>{line}</span>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
@@ -384,14 +388,9 @@ const HV_UPSTREAM=[
     badge:'Gates Production',badgeColor:'#991B1B',badgeBg:'#FEE2E2',
     parallels:[
       {
-        label:'Channel Orientations',
-        owner:'Paid · Website · CRM',
-        detail:'Kicks off when Step 0 is signed off. Each channel shares best practices, checklist & high-level needs. Input to the Creative Brief.',
-      },
-      {
-        label:'User Flow Mapping',
-        owner:'Marketing team',
-        detail:'Runs in parallel with Local Orientation. Syncs with Creative Factory at end — output feeds Creative Asset Production (Step 1.2).',
+        label:'Parallel tracks',
+        owner:'Marketing teams — Website · Paid Ads · CRM',
+        detail:'• User Flow Mapping: runs in parallel, syncs with Creative Factory at the end → output feeds Step 1.2.\n• Channel Orientations: each channel shares best practices, checklist & high-level needs → input to the Creative Brief.',
       },
     ],
   },
@@ -841,19 +840,19 @@ function HighVisStream(){
       <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:16,flexWrap:'wrap'}}>
         <span style={{fontSize:12,color:'#8F8F8F',fontWeight:600}}>Click a channel to highlight:</span>
         {Object.keys(CHAN_COLOR).map(ch=>(
-          <button key={ch} onClick={()=>setSelCh(selCh===ch?null:ch)}
-            style={{padding:'5px 14px',borderRadius:20,border:`2px solid ${selCh===ch?CHAN_BORDER[ch]:'#E0E0E0'}`,background:selCh===ch?CHAN_BG[ch]:'#fff',color:selCh===ch?CHAN_COLOR[ch]:'#616161',fontSize:13,fontWeight:700,cursor:'pointer',fontFamily:'inherit',transition:'all 0.15s ease'}}>{ch}</button>
+          <div key={ch} style={{display:'flex',flexDirection:'column',alignItems:'center',gap:4}}>
+            <button onClick={()=>setSelCh(selCh===ch?null:ch)}
+              style={{padding:'5px 14px',borderRadius:20,border:`2px solid ${selCh===ch?CHAN_BORDER[ch]:'#E0E0E0'}`,background:selCh===ch?CHAN_BG[ch]:'#fff',color:selCh===ch?CHAN_COLOR[ch]:'#616161',fontSize:13,fontWeight:700,cursor:'pointer',fontFamily:'inherit',transition:'all 0.15s ease'}}>{ch}</button>
+            <Tooltip text={`View clean diagram for the ${ch} channel — downloadable as SVG`}>
+              <button onClick={()=>setDiagCh(ch)}
+                style={{display:'flex',alignItems:'center',gap:3,fontSize:10,fontWeight:600,color:'#8F8F8F',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',padding:0,textDecoration:'underline',textDecorationStyle:'dotted'}}>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+                diagram
+              </button>
+            </Tooltip>
+          </div>
         ))}
         {selCh&&<button onClick={()=>setSelCh(null)} style={{padding:'5px 12px',borderRadius:20,border:'1px solid #E0E0E0',background:'#fff',color:'#8F8F8F',fontSize:12,fontWeight:600,cursor:'pointer',fontFamily:'inherit'}}>Clear &#x2715;</button>}
-        <div style={{marginLeft:'auto',display:'flex',gap:6}}>
-          {Object.keys(CHAN_COLOR).map(ch=>(
-            <button key={ch} onClick={()=>setDiagCh(ch)}
-              style={{display:'flex',alignItems:'center',gap:5,fontSize:11,fontWeight:600,color:'#461068',background:'#F0EAFF',border:'1px solid #E9E0FF',borderRadius:20,padding:'4px 10px',cursor:'pointer',fontFamily:'inherit'}}>
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-              {ch}
-            </button>
-          ))}
-        </div>
       </div>
       <div style={{overflowX:'auto',paddingBottom:12}}>
         <div style={{display:'flex',alignItems:'flex-start',minWidth:'max-content',gap:0}}>
