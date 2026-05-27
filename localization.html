@@ -117,6 +117,19 @@ function Accordion({title,items,type,stepId}){
     </div>
   );
 }
+/* ── PARALLEL CALLOUT ── */
+function ParallelCallout({title,owner,detail}){
+  return(
+    <div style={{marginBottom:12,background:'#F0F9FF',border:'1px dashed #0369A1',borderRadius:10,padding:'10px 12px'}}>
+      <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:5}}>
+        <span style={{fontSize:10,fontWeight:800,background:'#E0F2FE',color:'#0369A1',padding:'2px 8px',borderRadius:20,letterSpacing:'0.05em'}}>‖ PARALLEL</span>
+        <span style={{fontSize:12,fontWeight:700,color:'#0369A1'}}>{title}</span>
+      </div>
+      <div style={{fontSize:12,color:'#3D3D3D',lineHeight:1.55,marginBottom:4}}>{detail}</div>
+      <div style={{fontSize:11,color:'#0369A1',fontWeight:600}}>Owner: {owner}</div>
+    </div>
+  );
+}
 /* ── NOTE FRAME ── */
 function NoteFrame({notes,stepId}){
   if(!notes||notes.length===0)return null;
@@ -308,26 +321,34 @@ const HV_GRADS=[
 ];
 const HV_UPSTREAM=[
   {
-    id:'A', label:'GLT sizes as L or M',
+    label:'Sizing',
     owner:'GLT — quarterly reunion',
-    detail:'Project enters the pipeline. Size determines which upstream steps apply.',
+    detail:'Project sized as L or M. Size determines which upstream steps apply.',
+    trigger:true,
   },
   {
-    id:'B', label:'Step 0 — Global outline',
+    label:'Step 0 — Global Outline',
     owner:'Global PMM',
-    detail:'Strategic intent, core narrative, fixed vs. flexible, channel scope & format requirements. Mandatory for L & M.',
+    detail:'One-pager: strategic intent, core narrative, fixed vs. flexible. Legal flags when + what they need to check.',
   },
   {
-    id:'C', label:'Local orientation',
-    owner:'Global PMM + Market PMM / Local POC',
-    detail:'"Dying on a hill for" vs "good to have". Includes SEO & channel considerations. Hard gate — no input after deadline.',
-    badge:'Hard gate',badgeColor:'#991B1B',badgeBg:'#FEE2E2',
+    label:'Local Orientation',
+    owner:'Local POC + PMM + SEO content manager',
+    detail:'"Dying on a hill" vs "good to have". Includes SEO inputs from SEO content manager.',
+    badge:'Gates Production',badgeColor:'#991B1B',badgeBg:'#FEE2E2',
   },
   {
-    id:'D', label:'Transcreation gate',
+    label:'Transcreation Gate',
     owner:'GLT — escalation: CGO',
-    detail:'Cascade EN Master as-is, or trigger transcreation. Compliance constraint OR radical strategy gap only.',
-    badge:'GLT call',badgeColor:'#7B4DB8',badgeBg:'#F5F0FF',
+    detail:'Cascade EN Master as-is, or trigger transcreation. Compliance or radical strategy gap only.',
+    badge:'Gates Production',badgeColor:'#991B1B',badgeBg:'#FEE2E2',
+  },
+];
+const HV_UPSTREAM_PARALLEL=[
+  {
+    label:'Channel Orientations',
+    owner:'Paid · Website · CRM',
+    detail:'Each channel provides high-level requirements: best practices, checklist, past learnings, high-level needs (e.g., videos). Input to the Creative Brief.',
   },
 ];
 const HV_STEPS=[
@@ -338,48 +359,52 @@ const HV_STEPS=[
       tools:['Tolki','QualityGuard — always run it!'],
       steps:[
         <><strong>Messaging:</strong> Global PMM co-owns the GTM package messaging (Comms Doc + narrative) with Comms Partners.</>,
-        <><strong>Creative Brief:</strong> Comms Partners write it, translating the messaging into creative direction for Creative Factory.</>,
-        <><strong>Creative Essentials:</strong> Creative Factory (Brand Designer + Creative Writer pairing) delivers them, incl. tagline for Paid Ads.</>,
-        <><strong>Channel loop & market informed:</strong> Comms Partners align channel POCs on the creative concept (formats already collected in Step 0) and keep Local POCs informed before production starts.</>,
+        <><strong>Creative Brief:</strong> Comms Partners write it — based on PMM messaging + Channel Orientations inputs.</>,
+        <><strong>Creative Essentials (EN):</strong> Creative Factory (Brand Designer + Creative Writer) delivers concept pitch + key claims per channel + tagline for Paid Ads.</>,
+        <><strong>Local CE translation:</strong> Local Creative Copywriters translate the Creative Essentials into all needed locales.</>,
+        <><strong>Market loop:</strong> Comms Partners keep Local POCs informed throughout.</>,
       ],
     }],
+    parallel:{
+      title:'User Flow Mapping',
+      owner:'Marketing team',
+      detail:'Runs in parallel with Creative Essentials. At the end, Creative Factory + Marketing sync to cross-check experience continuity. Output = requirements for Creative Asset Production (Step 1.2).',
+    },
     notes:[
-      'Local POCs are designated by the Head of Marketing at project kickoff — looped in via a dedicated project Slack channel.',
-      'Creative Writer\'s lead language is project-dependent — can be IT, DE, FR or EN.',
+      'Can start in parallel with upstream phases — only Local Orientation + Transcreation Gate gate Production.',
+      'Creative Writer\'s lead language is project-dependent — can start in IT, DE, FR or EN.',
       '⚠️ Creative Essentials = creative foundation, not final production assets.',
     ],
   },
   {
-    id:'1.2', title:'Production: Master copy',
+    id:'1.2', title:'Creative Asset Production',
     channels:{
       'Website':{
         owner:'Creative Factory',
         steps:[
           'Creative Factory delivers hero + key section copies (masters EN + FR / DE / IT) + visual assets.',
         ],
-        tools:['Tolki','QualityGuard — always run it!'],
+        tools:['Qontent (Tolki & QualityGuard accessible from here)'],
       },
       'CRM':{
-        owner:'Creative Factory + Comms Partners + CRM team',
+        owner:'Comms Partners',
         steps:[
-          'Creative Copywriter (Creative Factory) writes the EN Master — key claims, lines of text — + first translation pass (AI or peer copywriter for first-class translation).',
-          'Comms Partners write the full email based on EN Master (with Creative Copywriter help when needed).',
-          'Comms Partners translate the full email with AI.',
-          'CRM team builds the email in Qontent.',
+          'Global Comms Partners write the full email (EN Master copy) based on the Creative Essentials — with Creative Copywriter help if needed.',
+          'Global Comms Partners translate with AI directly in Qontent — with CRM help if needed.',
         ],
         tools:['Qontent (Tolki & QualityGuard accessible from here)'],
       },
       'Paid Ads':{
         owner:'Creative Factory (Creative Copywriter + dedicated designer)',
         steps:[
-          'Creative Copywriter writes all Paid Ads master copies — in-asset (tagline, subtitle, etc.) and external (primary text, headlines, etc.) — in EN + FR / DE / IT, based on channel specs from Step 0.',
+          'Creative Copywriter writes all Paid Ads master copies — in-asset (tagline, subtitle, etc.) and external (primary text, headlines, etc.) — in EN + FR / DE / IT, based on Channel Orientations inputs.',
           'Dedicated designer adapts visual assets to ad formats.',
         ],
-        tools:['Tolki','QualityGuard — always run it!'],
+        tools:['Qontent (Tolki & QualityGuard accessible from here)'],
       },
     },
     notes:[
-      'Master copy production is channel-specific. Each channel kicks off as soon as Creative Essentials are signed off.',
+      'Kicks off as soon as Creative Essentials are signed off.',
     ],
   },
   {
@@ -393,7 +418,7 @@ const HV_STEPS=[
       'CRM':{
         owner:'Local Market POC',
         steps:[
-          'Local POC reviews and proofreads the email in Qontent.',
+          'Local POC reviews and proofreads the email in Qontent, based on the Creative Essentials.',
         ],
         tools:['Qontent (Tolki & QualityGuard accessible from here)'],
       },
@@ -411,8 +436,11 @@ const HV_STEPS=[
     notes:[
       'Local POC owns everything from draft receipt for Website & CRM. Not the place to revisit messaging — that belongs in Local Orientation.',
       'Paid Ads: Local POC validates copy in this step (visibility before launch). No additional sign-off in Step 3 — Local POC is informed.',
-      'For markets without hero/secondary copy in lead language (PT, NL): the available-language Comms Partner — or the Local POC — handles adaptation.',
+      'For markets without dedicated lead-language copy (PT, NL): the available-language Comms Partner — or the Local POC — handles adaptation.',
       'SLA: ~5 days for L, ~3 days for M.',
+    ],
+    gaps:[
+      'CRM: no automatic notification to Local POC when their review is needed. WIP — Madeleine + Sébastien working on auto-ping in Qontent.',
     ],
   },
   {
@@ -434,9 +462,30 @@ const HV_STEPS=[
   {
     id:4, title:'Upload & publish',
     channels:{
-      'Website':{owner:'Website team',tools:['Qontent'],steps:['Build assets.','Publish.']},
-      'CRM':{owner:'Local Market POC + CRM team',tools:['Qontent','Customer.io'],steps:['Build emails / push in Customer.io.','(Optional) Review before publish (Local POC + CRM + PMM — Comms Partners informed).','Publish.']},
-      'Paid Ads':{owner:'Paid Ads team',tools:['Platform'],steps:['Publish on platform.']},
+      'Website':{
+        owner:'Website team',
+        tools:['Qontent (Tolki & QualityGuard accessible from here)'],
+        steps:[
+          'Build assets.',
+          'Publish.',
+        ],
+      },
+      'CRM':{
+        owner:'CRM team',
+        tools:['Customer.io'],
+        steps:[
+          'CRM team builds the email in Customer.io.',
+          '(Optional) Sends for review to Local POC before publish — Comms Partners may be added for visibility.',
+          'CRM publishes.',
+        ],
+      },
+      'Paid Ads':{
+        owner:'Paid Ads team',
+        tools:['Platform'],
+        steps:[
+          'Publish on platform.',
+        ],
+      },
     },
   },
   {
@@ -467,6 +516,7 @@ function HVStepCard({step,gradBg,selectedCh,onSelectCh}){
       </div>
       <div style={{width:1,height:14,background:'#CCCCCC'}}/>
       <div style={{width:'100%',background:'#fff',border:'1px solid #E0E0E0',borderRadius:14,padding:'16px',boxShadow:'0 1px 4px rgba(0,0,0,0.05)'}}>
+        {step.parallel&&<ParallelCallout {...step.parallel}/>}
         {/* Single use case */}
         {!hasChannels&&step.useCases&&step.useCases.map((uc,i)=>(
           <div key={i} style={{border:'1.5px solid #E0E0E0',borderRadius:10,padding:'12px',marginBottom:i<step.useCases.length-1?10:0,background:'#fff'}}>
@@ -537,18 +587,42 @@ function HighVisStream(){
         <IClock size={15} style={{color:'#166534',flexShrink:0,marginTop:1}}/>
         <div>
           <div style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#166534',marginBottom:3}}>Model decided — Cascade · L & M</div>
-          <p style={{fontSize:13,color:'#14532D',lineHeight:1.6,margin:'0 0 4px 0'}}>High investment in the creative concept — <strong>Creative Factory always involved</strong> (Creative Essentials + Production) for every L and M. Global teams own the master + AI first pass. Local POC drives downstream — proofing, adapting, owning final market sign-off. Channel teams execute upload. SLA: ~38 days for L, ~28 days for M.</p>
+          <p style={{fontSize:13,color:'#14532D',lineHeight:1.6,margin:'0 0 4px 0'}}>High investment in the creative concept — <strong>Creative Factory always involved</strong> (Creative Essentials + Creative Asset Production) for every L and M. Global teams own the master + AI first pass. Local POC drives downstream — proofing, adapting, owning final market sign-off. Channel teams execute upload. SLA: ~38 days for L, ~28 days for M.</p>
           <a href="https://www.notion.so/qonto/Growth-Operating-Model-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658" target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:'#166534',fontWeight:600}}>Full operating model on Notion →</a>
+        </div>
+      </div>
+      {/* Project setup — POC identification */}
+      <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:12,padding:'12px 16px',marginBottom:16}}>
+        <div style={{display:'flex',alignItems:'center',gap:7,marginBottom:8}}>
+          <IUsers size={14} style={{color:'#7B4DB8'}}/>
+          <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#7B4DB8'}}>Project setup</span>
+          <span style={{fontSize:11,color:'#8F8F8F',marginLeft:'auto',fontStyle:'italic'}}>Identified at Quarterly Planning — 2 weeks after the Quarterly Reunion</span>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:10}}>
+          <div style={{background:'#FAFAFA',border:'1px solid #E8E8E8',borderRadius:8,padding:'8px 12px'}}>
+            <div style={{fontSize:10,fontWeight:700,color:'#7B4DB8',textTransform:'uppercase',letterSpacing:'0.04em',marginBottom:3}}>Local POC</div>
+            <div style={{fontSize:12,color:'#3D3D3D',lineHeight:1.45}}>1 per market — appointed by Local Head of Marketing. Single POC for the project.</div>
+          </div>
+          <div style={{background:'#FAFAFA',border:'1px solid #E8E8E8',borderRadius:8,padding:'8px 12px'}}>
+            <div style={{fontSize:10,fontWeight:700,color:'#7B4DB8',textTransform:'uppercase',letterSpacing:'0.04em',marginBottom:3}}>Core team</div>
+            <div style={{fontSize:12,color:'#3D3D3D',lineHeight:1.45}}>Comms Partner · Designer Builder · Creative Copywriter</div>
+          </div>
+          <div style={{background:'#FAFAFA',border:'1px solid #E8E8E8',borderRadius:8,padding:'8px 12px'}}>
+            <div style={{fontSize:10,fontWeight:700,color:'#7B4DB8',textTransform:'uppercase',letterSpacing:'0.04em',marginBottom:3}}>Paid POC</div>
+            <div style={{fontSize:12,color:'#3D3D3D',lineHeight:1.45}}>Regional Paid manager (if local initiative) — otherwise Alicia Dassance (Global Paid POC).</div>
+          </div>
         </div>
       </div>
       {/* Upstream block — grey, compact */}
       <div style={{background:'#F5F5F5',border:'1px solid #E0E0E0',borderRadius:12,padding:'14px 18px',marginBottom:20}}>
-        <div style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.07em',color:'#8F8F8F',marginBottom:12}}>Upstream phases — before production starts</div>
+        <div style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.07em',color:'#8F8F8F',marginBottom:4}}>Upstream phases</div>
+        <div style={{fontSize:11,color:'#616161',marginBottom:14,fontStyle:'italic',lineHeight:1.5}}>Creative Essentials (Step 1.1) can start in parallel — only Local Orientation + Transcreation Gate gate Production.</div>
+        {/* Sequential top row */}
         <div style={{display:'flex',gap:0,alignItems:'flex-start',overflowX:'auto'}}>
           {HV_UPSTREAM.map((u,i)=>(
-            <React.Fragment key={u.id}>
-              <div style={{display:'flex',flexDirection:'column',alignItems:'center',minWidth:150,maxWidth:190,flexShrink:0}}>
-                <div style={{width:28,height:28,borderRadius:'50%',background:'#3D3D3D',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,marginBottom:6}}>{u.id}</div>
+            <React.Fragment key={u.label}>
+              <div style={{display:'flex',flexDirection:'column',alignItems:'center',minWidth:160,maxWidth:200,flexShrink:0}}>
+                <div style={{width:28,height:28,borderRadius:'50%',background:u.trigger?'#fff':'#3D3D3D',color:u.trigger?'#3D3D3D':'#fff',border:u.trigger?'2px solid #3D3D3D':'none',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:800,marginBottom:6}}>{i+1}</div>
                 <div style={{textAlign:'center',padding:'0 6px'}}>
                   <div style={{fontSize:12,fontWeight:700,color:'#050505',marginBottom:2,lineHeight:1.3}}>{u.label}</div>
                   <div style={{fontSize:11,color:'#616161',lineHeight:1.45,marginBottom:u.badge?4:0}}>{u.detail}</div>
@@ -560,6 +634,25 @@ function HighVisStream(){
               )}
             </React.Fragment>
           ))}
+        </div>
+        {/* Parallel lane */}
+        <div style={{marginTop:14,paddingTop:12,borderTop:'1px dashed #B8B8B8'}}>
+          <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
+            <span style={{fontSize:10,fontWeight:800,background:'#E0F2FE',color:'#0369A1',padding:'2px 8px',borderRadius:20,letterSpacing:'0.05em'}}>‖ PARALLEL</span>
+            <span style={{fontSize:11,color:'#616161',fontStyle:'italic'}}>Kicks off when Step 0 is signed off — does not block Creative Essentials.</span>
+          </div>
+          <div style={{display:'flex',gap:14,alignItems:'flex-start',overflowX:'auto'}}>
+            {HV_UPSTREAM_PARALLEL.map(u=>(
+              <div key={u.label} style={{flex:'1 1 280px',background:'#fff',border:'1px dashed #0369A1',borderRadius:10,padding:'10px 12px',display:'flex',gap:10,alignItems:'flex-start',maxWidth:480}}>
+                <div style={{width:24,height:24,borderRadius:'50%',background:'#E0F2FE',color:'#0369A1',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:800,flexShrink:0}}>‖</div>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:12,fontWeight:700,color:'#050505',marginBottom:2,lineHeight:1.3}}>{u.label}</div>
+                  <div style={{fontSize:11,color:'#616161',lineHeight:1.45,marginBottom:4}}>{u.detail}</div>
+                  <div style={{fontSize:11,color:'#0369A1',fontWeight:600}}>Owner: {u.owner}</div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       {/* Channel selector pills */}
@@ -981,7 +1074,7 @@ function ScopeToggle(){
                   <IClock size={14} style={{color:'#166534'}}/>
                   <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Stream 1 — decided</span>
                 </div>
-                <p style={{fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:0}}>Model chosen: <strong>Cascade</strong>. Heavy creative investment — Creative Factory always involved for L & M (Creative Essentials + Production). Local POCs drive downstream localization & own final sign-off; channel teams execute upload. Check <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> to confirm if your project is L or M.</p>
+                <p style={{fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:0}}>Model chosen: <strong>Cascade</strong>. Heavy creative investment — Creative Factory always involved for L & M (Creative Essentials + Creative Asset Production). Local POCs drive downstream localization & own final sign-off; channel teams execute upload. Check <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> to confirm if your project is L or M.</p>
               </div>
             </div>
           </div>
@@ -1175,22 +1268,24 @@ function getPathResult(answers){
   if(projectType==='highvis') return{
     type:'highvis',track:'highvis',langs:langs||[],
     steps:[
-      {n:'A→D',title:'Upstream phases',owner:'GLT + Global PMM + Local markets',
-        note:'GLT sizes the project. Global PMM writes Step 0 outline. Local POC (appointed by Head of Marketing at quarterly planning) shares market context. GLT decides on transcreation.',
+      {n:'↑',title:'Upstream phases',owner:'GLT + Global PMM + Local POC + Channels',
+        note:'GLT sizes. Global PMM writes Step 0 (one-pager, incl. legal flags). Local POC + PMM + SEO content manager run Local Orientation. GLT decides transcreation. In parallel: Channel Orientations (Paid · Website · CRM) provide high-level requirements that feed the Creative Brief.',
         tools:[]},
       {n:'1.1',title:'Creative Essentials',owner:'Global PMM + Comms Partners + Creative Factory',
-        note:'Messaging, Creative Brief, Creative Essentials delivery (incl. tagline for Paid Ads), and channel + market loop before production.',
+        note:'Can start in parallel with upstream. Creative Factory delivers concept pitch + key claims per channel + tagline for Paid Ads. Local CCs translate CE into all locales. User Flow Mapping runs in parallel (Marketing team).',
         tools:['Tolki','QualityGuard — always run it!']},
-      {n:'1.2',title:'Production: Master copy',owner:'Creative Factory + Comms Partners (channel-specific)',
-        note:'Master copy production splits by channel — Website (Creative Factory copies), CRM (Creative Factory + Comms Partners write & translate the full email), Paid Ads (Creative Copywriter writes ad copies based on Step 0 specs).',
-        tools:['Tolki','QualityGuard — always run it!']},
+      {n:'1.2',title:'Creative Asset Production',owner:'Creative Factory + Comms Partners (channel-specific)',
+        note:'Website: Creative Factory delivers hero + key section copies + assets. CRM: Comms Partners write the EN Master full email + AI translate in Qontent. Paid Ads: Creative Copywriter writes all copies (in-asset + external) + dedicated designer adapts assets to formats.',
+        tools:['Qontent (Tolki & QualityGuard accessible from here)']},
       {n:2,title:'Localization & review',owner:'Local Market POC',mandatory:true,
-        note:'Full ownership from draft receipt — accuracy, tone of voice, message adaptation. Not just grammar.',
-        tools:['QualityGuard — always run it!']},
+        note:'Full ownership from draft receipt — accuracy, tone of voice, message adaptation. Review based on the Creative Essentials.',
+        tools:['Qontent (Tolki & QualityGuard accessible from here)','QualityGuard — always run it!']},
       {n:3,title:'Final sign-off',owner:'Local Market POC',mandatory:true,
-        note:'For L: blocking gate — no publish until signed off. For M: SLA-based.',
+        note:'For L: blocking gate — no publish until signed off. For M: SLA-based. Paid Ads: no Step 3 — already validated in Step 2.',
         tools:[]},
-      {n:4,title:'Upload & publish',owner:'Local Market POC + Local channels',tools:['Qontent']},
+      {n:4,title:'Upload & publish',owner:'Channel teams',
+        note:'CRM builds in Customer.io + (optional) Local POC review before publish. Website publishes via Qontent. Paid Ads publishes on platform.',
+        tools:['Qontent (Tolki & QualityGuard accessible from here)','Customer.io']},
       {n:5,title:'Red bin logging',owner:'Anyone involved',tools:['Red Bin logging form/database']},
     ],
   };
@@ -1408,7 +1503,7 @@ function PathFinder({onViewWorkflow}){
 }
 /* ── TRACKS ── */
 const TRACKS=[
-  {id:'highvis',label:'Global projects — High-visibility / Creativity',sizing:'In Panorama — L & M',desc:'Cascade model. Heavy investment in the creative concept — Creative Factory always involved (Creative Essentials + Production). Local POC coordinates downstream localization & owns final market sign-off; channel teams execute upload.',activeBg:'#050505',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
+  {id:'highvis',label:'Global projects — High-visibility / Creativity',sizing:'In Panorama — L & M',desc:'Cascade model. Heavy investment in the creative concept — Creative Factory always involved (Creative Essentials + Creative Asset Production). Local POC coordinates downstream localization & owns final market sign-off; channel teams execute upload.',activeBg:'#050505',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
   {id:'selfserve',label:'Global projects — Self-serve',sizing:'In Panorama — S',desc:'PMM owns end-to-end. No Comms Partners, no Creative Factory, no local POC involvement. Red Bin handles edge cases.',activeBg:'#7B4DB8',badgeBg:'rgba(255,255,255,0.2)',badgeText:'rgba(255,255,255,0.9)'},
   {id:'bau',label:'BAU / Channel-owned',sizing:'Not in Panorama',desc:'CRM lifecycle, Paid Ads, Website — recurring channel-owned projects. Local POCs do QC.',activeBg:'#461068',badgeBg:'rgba(255,255,255,0.15)',badgeText:'rgba(255,255,255,0.85)'},
 ];
