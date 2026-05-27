@@ -85,7 +85,7 @@ function Accordion({title,items,type,stepId}){
   let bg,border,titleClr,textClr,badgeBg,icon;
   if(isGap){bg='#FFF5F5';border='#FECACA';titleClr='#991B1B';textClr='#7F1D1D';badgeBg='#FEE2E2';icon=<IAlert size={13} style={{color:'#991B1B'}}/>;}
   else if(isSug){bg='#FFFDF0';border='#FDE68A';titleClr='#854D0E';textClr='#713F12';badgeBg='#FEF9C3';icon=<IBulb size={13} style={{color:'#CA8A04'}}/>;}
-  else if(isProc){bg='#F9F9F9';border='#E8E8E8';titleClr='#3D3D3D';textClr='#3D3D3D';badgeBg='#E8E8E8';icon=<IWorkflow size={13} style={{color:'#8F8F8F'}}/>;}
+  else if(isProc){bg='#FFFDF0';border='#FDE68A';titleClr='#854D0E';textClr='#713F12';badgeBg='#FEF9C3';icon=<IWorkflow size={13} style={{color:'#CA8A04'}}/>;}
   else{bg='#FFFDF0';border='#FDE68A';titleClr='#854D0E';textClr='#713F12';badgeBg='#FEF9C3';icon=<IBulb size={13} style={{color:'#CA8A04'}}/>;}
   return(
     <div style={{marginTop:isProc?8:10,border:`1px solid ${border}`,borderRadius:10,overflow:'hidden'}}>
@@ -511,9 +511,9 @@ function Tooltip({text,children}){
       onMouseEnter={()=>setShow(true)} onMouseLeave={()=>setShow(false)}>
       {children}
       {show&&(
-        <span style={{position:'absolute',bottom:'calc(100% + 6px)',left:'50%',transform:'translateX(-50%)',background:'#050505',color:'#fff',fontSize:12,fontWeight:500,lineHeight:1.5,borderRadius:8,padding:'8px 12px',whiteSpace:'pre-wrap',maxWidth:260,zIndex:100,boxShadow:'0 4px 12px rgba(0,0,0,0.2)',pointerEvents:'none'}}>
+        <span style={{position:'absolute',bottom:'calc(100% + 8px)',left:'50%',transform:'translateX(-50%)',background:'#F5F5F5',color:'#3D3D3D',fontSize:13,fontWeight:400,lineHeight:1.6,borderRadius:10,padding:'10px 14px',whiteSpace:'normal',width:300,zIndex:100,boxShadow:'0 4px 16px rgba(0,0,0,0.12)',border:'1px solid #E0E0E0',pointerEvents:'none'}}>
           {text}
-          <span style={{position:'absolute',top:'100%',left:'50%',transform:'translateX(-50%)',width:0,height:0,borderLeft:'5px solid transparent',borderRight:'5px solid transparent',borderTop:'5px solid #050505'}}/>
+          <span style={{position:'absolute',top:'100%',left:'50%',transform:'translateX(-50%)',width:0,height:0,borderLeft:'6px solid transparent',borderRight:'6px solid transparent',borderTop:'6px solid #E0E0E0'}}/>
         </span>
       )}
     </span>
@@ -1075,7 +1075,7 @@ function Legend({activeTrack}){
             <div style={{display:'flex',alignItems:'center',gap:5}}><IUser size={13} style={{color:'#7B4DB8'}}/><span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Owner</span></div>
             <div style={{display:'flex',alignItems:'center',gap:5}}><IWrench size={13} style={{color:'#8F8F8F'}}/><span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Tools</span></div>
             <div style={{display:'flex',alignItems:'center',gap:5}}><INote size={13} style={{color:'#616161'}}/><span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Note</span></div>
-            <div style={{display:'flex',alignItems:'center',gap:5}}><IWorkflow size={13} style={{color:'#8F8F8F'}}/><span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Process steps (expandable)</span></div>
+            <div style={{display:'flex',alignItems:'center',gap:5}}><IWorkflow size={13} style={{color:'#CA8A04'}}/><span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Process steps (expandable)</span></div>
             <div style={{display:'flex',alignItems:'center',gap:5}}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8F8F8F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               <span style={{fontSize:13,color:'#3D3D3D',fontWeight:500}}>Comments</span>
