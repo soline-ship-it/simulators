@@ -144,7 +144,7 @@ function UpstreamStep({u,idx}){
         {items.length>0&&(
           <button onClick={e=>{e.stopPropagation();setOpen(!open);}}
             style={{display:'flex',alignItems:'center',gap:4,fontSize:10,fontWeight:600,color:'#0369A1',background:'#E0F2FE',border:'none',borderRadius:20,padding:'2px 8px',cursor:'pointer',fontFamily:'inherit',marginTop:4,width:'100%',justifyContent:'center'}}>
-            &#8214; {items.length===1?`${items[0].label} · ${items[0].owner}`:'Parallel tracks · Marketing teams'}
+            &#8214; Parallel tracks · Marketing teams
             <IChevD size={9} style={{color:'#0369A1',transition:'transform 0.2s',transform:open?'rotate(180deg)':'none'}}/>
           </button>
         )}
@@ -152,7 +152,7 @@ function UpstreamStep({u,idx}){
           <div style={{marginTop:4,background:'#F0F9FF',border:'1px solid #BAE6FD',borderRadius:8,padding:'8px 10px',textAlign:'left',display:'flex',flexDirection:'column',gap:7}}>
             {items.map((p,pi)=>(
               <div key={pi} style={{borderTop:pi>0?'1px dashed #BAE6FD':'none',paddingTop:pi>0?7:0}}>
-                <div style={{fontSize:10,color:'#0369A1',fontWeight:600,marginBottom:4}}>&#x25B6; {p.owner}</div>
+                <div style={{fontSize:10,fontWeight:700,color:'#0369A1',marginBottom:3}}>Paid Ads · Website · CRM</div>
                 <div style={{fontSize:11,color:'#3D3D3D',lineHeight:1.55,display:'flex',flexDirection:'column',gap:4}}>
                   {p.detail.split('\n').map((line,li)=>(
                     <span key={li}>{line}</span>
