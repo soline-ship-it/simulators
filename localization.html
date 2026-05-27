@@ -385,9 +385,9 @@ const HV_UPSTREAM=[
   },
   {
     id:'B',
-    label:'Step 0 — Global Outline',
+    label:'Global Outline',
     owner:'Global PMM',
-    detail:'One-pager: strategic intent, core narrative, fixed vs. flexible. Legal flags.',
+    detail:'1-pager: strategic intent, core narrative, fixed vs. flexible. Legal flags. (Notion: "Step 0")',
   },
   {
     id:'C',
@@ -664,109 +664,125 @@ function InfoBubble({text}){
 /* ── CHANNEL DIAGRAM MODAL ── */
 const DIAG_STEPS={
   'Website':[
-    {n:'↑',title:'Upstream',owner:'GLT + Global PMM + Local POC',color:'#3D3D3D'},
-    {n:'1.1',title:'Creative Essentials',owner:'Global PMM + Comms Partners + Creative Factory',color:'#7B4DB8'},
-    {n:'1.2',title:'Asset Production',owner:'Creative Factory',note:'Hero + section copies + visual assets (EN + FR/DE/IT)',color:'#A585DB'},
-    {n:'2',title:'Localization & review',owner:'Local Market POC + Website team',note:'Receive copies → build structure → create local copy with AI → review',mandatory:true,color:'#461068'},
-    {n:'3',title:'Final sign-off',owner:'Local Market POC',note:'L: blocking gate · M: SLA-based',mandatory:true,color:'#5B0E8C'},
-    {n:'4',title:'Upload & publish',owner:'Website team',note:'Upload assets → Publish via Qontent',color:'#CE6033'},
-    {n:'5',title:'Red bin logging',owner:'Anyone involved',color:'#B86040'},
+    {n:'↑',title:'Upstream phases',owner:'GLT · Global PMM · Local POC',tools:['—'],process:'A: Sizing → B: Global Outline → C: Local Orientation → D: Transcreation Gate',color:'#3D3D3D'},
+    {n:'1.1',title:'Creative Essentials',owner:'Global PMM + Comms Partners + Creative Factory',tools:['Tolki','QualityGuard'],process:'PMM writes CommDoc · Comms Partner writes brief · Creative Factory delivers concept + copy lines · Local CCs translate CEs',attention:'Starts after A — runs in parallel with B,C,D. Sign-off gates step 1.2.',color:'#7B4DB8'},
+    {n:'1.2',title:'Asset Production',owner:'Creative Factory',tools:['Qontent'],process:'Delivers hero + key section copies (EN + FR/DE/IT) + visual assets',attention:'Kicks off only once Creative Essentials are signed off.',color:'#A585DB'},
+    {n:'2',title:'Localization & review',owner:'Local Market POC + Website team',tools:['Qontent'],process:'Receive EN + local copies → build page structure → create local copy with AI → review (local mktg + PMM)',attention:'Local POC owns from draft receipt. Not the place to revisit messaging.',mandatory:true,color:'#461068'},
+    {n:'3',title:'Final sign-off',owner:'Local Market POC',tools:['—'],process:'Validate cross-channel coherence, local accuracy, regulatory compliance',attention:'L: blocking gate — no publish until signed off. M: SLA-based.',mandatory:true,color:'#5B0E8C'},
+    {n:'4',title:'Upload & publish',owner:'Website team',tools:['Qontent'],process:'Upload assets → Publish',color:'#CE6033'},
+    {n:'5',title:'Red bin logging',owner:'Anyone involved',tools:['Red Bin form'],process:'Log quality issues or broken processes post-launch',color:'#B86040'},
   ],
   'CRM':[
-    {n:'↑',title:'Upstream',owner:'GLT + Global PMM + Local POC',color:'#3D3D3D'},
-    {n:'1.1',title:'Creative Essentials',owner:'Global PMM + Comms Partners + Creative Factory',color:'#7B4DB8'},
-    {n:'1.2',title:'Asset Production',owner:'Comms Partners',note:'Write full email (EN Master) → AI translate in Qontent',color:'#A585DB'},
-    {n:'2',title:'Localization & review',owner:'Local Market POC',note:'Review + proofread email in Qontent based on Creative Essentials',mandatory:true,color:'#461068'},
-    {n:'3',title:'Final sign-off',owner:'Local Market POC',note:'L: blocking gate · M: SLA-based',mandatory:true,color:'#5B0E8C'},
-    {n:'4',title:'Upload & publish',owner:'CRM team',note:'Build in Customer.io → (optional) review → publish',color:'#CE6033'},
-    {n:'5',title:'Red bin logging',owner:'Anyone involved',color:'#B86040'},
+    {n:'↑',title:'Upstream phases',owner:'GLT · Global PMM · Local POC',tools:['—'],process:'A: Sizing → B: Global Outline → C: Local Orientation → D: Transcreation Gate',color:'#3D3D3D'},
+    {n:'1.1',title:'Creative Essentials',owner:'Global PMM + Comms Partners + Creative Factory',tools:['Tolki','QualityGuard'],process:'PMM writes CommDoc · Comms Partner writes brief · Creative Factory delivers concept + copy lines · Local CCs translate CEs',attention:'Starts after A — runs in parallel with B,C,D.',color:'#7B4DB8'},
+    {n:'1.2',title:'Asset Production',owner:'Comms Partners',tools:['Qontent'],process:'Write full email (EN Master copy) based on Creative Essentials → AI translate in Qontent',attention:'Kicks off only once Creative Essentials are signed off.',color:'#A585DB'},
+    {n:'2',title:'Localization & review',owner:'Local Market POC',tools:['Qontent'],process:'Review + proofread email in Qontent based on Creative Essentials',attention:'No auto-notification WIP (Madeleine + Sébastien). Local POC owns from receipt.',mandatory:true,color:'#461068'},
+    {n:'3',title:'Final sign-off',owner:'Local Market POC',tools:['—'],process:'Validate coherence, accuracy, regulatory compliance',attention:'L: blocking gate. M: SLA-based.',mandatory:true,color:'#5B0E8C'},
+    {n:'4',title:'Upload & publish',owner:'CRM team',tools:['Customer.io'],process:'CRM builds email in Customer.io → (optional) review before publish → CRM publishes',attention:'Only CRM team has Customer.io access. PMM hands off copy from Qontent.',color:'#CE6033'},
+    {n:'5',title:'Red bin logging',owner:'Anyone involved',tools:['Red Bin form'],process:'Log quality issues or broken processes post-launch',color:'#B86040'},
   ],
   'Paid Ads':[
-    {n:'↑',title:'Upstream',owner:'GLT + Global PMM + Local POC',color:'#3D3D3D'},
-    {n:'1.1',title:'Creative Essentials',owner:'Global PMM + Comms Partners + Creative Factory',color:'#7B4DB8'},
-    {n:'1.2',title:'Asset Production',owner:'Creative Factory (CC + designer)',note:'CC writes all copies EN+FR/DE/IT · Designer adapts to ad formats',color:'#A585DB'},
-    {n:'2',title:'Localization & review',owner:'Comms Partners + Local POC + Paid Ads team',note:'Copy validation → Paid Ads team builds + launches',mandatory:true,color:'#461068'},
-    {n:'4',title:'Upload & publish',owner:'Paid Ads team',note:'Publish on platform (no Step 3 — already validated in Step 2)',color:'#CE6033'},
-    {n:'5',title:'Red bin logging',owner:'Anyone involved',color:'#B86040'},
+    {n:'↑',title:'Upstream phases',owner:'GLT · Global PMM · Local POC',tools:['—'],process:'A: Sizing → B: Global Outline → C: Local Orientation → D: Transcreation Gate',color:'#3D3D3D'},
+    {n:'1.1',title:'Creative Essentials',owner:'Global PMM + Comms Partners + Creative Factory',tools:['Tolki','QualityGuard'],process:'PMM writes CommDoc · Comms Partner writes brief · Creative Factory delivers concept + copy lines + tagline for Paid Ads',attention:'Starts after A — runs in parallel with B,C,D.',color:'#7B4DB8'},
+    {n:'1.2',title:'Asset Production',owner:'Creative Factory (CC + Designer)',tools:['Tolki','QualityGuard'],process:'CC writes all copies (in-asset + external) in EN + FR/DE/IT · Designer adapts visual assets to ad formats',attention:'No Qontent — Paid Ads never uses it. Kicks off once CEs are signed off.',color:'#A585DB'},
+    {n:'2',title:'Localization & review',owner:'Comms Partners + Local POC + Paid Ads team',tools:['QualityGuard'],process:'Comms Partners share copies + assets for copy validation · PT/NL: available-language CP or Local POC adapts · Paid Ads team builds + launches',attention:'No Step 3 for Paid Ads — Local POC already validates here.',mandatory:true,color:'#461068'},
+    {n:'4',title:'Upload & publish',owner:'Paid Ads team',tools:['Platform'],process:'Publish on platform',attention:'Local POC is informed of in-flight variants & A/B iterations once live.',color:'#CE6033'},
+    {n:'5',title:'Red bin logging',owner:'Anyone involved',tools:['Red Bin form'],process:'Log quality issues or broken processes post-launch',color:'#B86040'},
   ],
 };
 
 function ChannelDiagram({channel,onClose}){
   const steps=DIAG_STEPS[channel]||[];
-  const W=160,H=120,GAP=32,PAD=40,CIRCLE_R=24;
-  const totalW=steps.length*(W+GAP)-GAP+PAD*2;
-  const totalH=H+PAD*2+80;
+  const CW=190, CH=260, GAP=28, PAD=24;
+  const totalW=steps.length*(CW+GAP)-GAP+PAD*2;
+  const totalH=CH+PAD*2+32;
+  const svgId=`diag-svg-${channel.replace(/\s/g,'-')}`;
 
   const downloadSVG=()=>{
-    const svgEl=document.getElementById('diag-svg-'+channel.replace(' ','-'));
-    if(!svgEl)return;
-    const blob=new Blob([svgEl.outerHTML],{type:'image/svg+xml'});
+    const el=document.getElementById(svgId);
+    if(!el)return;
+    const blob=new Blob([el.outerHTML],{type:'image/svg+xml'});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');
-    a.href=url; a.download=`localization-${channel.toLowerCase().replace(' ','-')}.svg`; a.click();
+    a.href=url;a.download=`localization-hv-${channel.toLowerCase().replace(/\s/g,'-')}.svg`;a.click();
     URL.revokeObjectURL(url);
   };
 
   return(
-    <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.6)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:24}} onClick={onClose}>
-      <div style={{background:'#fff',borderRadius:16,padding:28,maxWidth:'95vw',maxHeight:'90vh',overflow:'auto',boxShadow:'0 20px 60px rgba(0,0,0,0.3)'}} onClick={e=>e.stopPropagation()}>
-        {/* Header */}
-        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:20,gap:16}}>
+    <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.65)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:20}} onClick={onClose}>
+      <div style={{background:'#fff',borderRadius:16,padding:24,maxWidth:'98vw',maxHeight:'92vh',overflow:'auto',boxShadow:'0 24px 64px rgba(0,0,0,0.3)'}} onClick={e=>e.stopPropagation()}>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:18,gap:16}}>
           <div>
-            <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',color:'#8F8F8F',marginBottom:3}}>High-visibility · L & M · Cascade</div>
-            <div style={{fontSize:18,fontWeight:800,color:'#050505'}}>{channel} — end-to-end flow</div>
+            <div style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',color:'#8F8F8F',marginBottom:2}}>High-visibility · L & M · Cascade model</div>
+            <div style={{fontSize:17,fontWeight:800,color:'#050505'}}>{channel} — end-to-end flow</div>
           </div>
-          <div style={{display:'flex',gap:8}}>
+          <div style={{display:'flex',gap:8,flexShrink:0}}>
             <button onClick={downloadSVG} style={{display:'flex',alignItems:'center',gap:6,fontSize:12,fontWeight:700,color:'#7B4DB8',background:'#F5F0FF',border:'1px solid #E9E0FF',borderRadius:8,padding:'7px 14px',cursor:'pointer',fontFamily:'inherit'}}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Download SVG
             </button>
-            <button onClick={onClose} style={{fontSize:12,fontWeight:700,color:'#616161',background:'#F5F5F5',border:'1px solid #E0E0E0',borderRadius:8,padding:'7px 14px',cursor:'pointer',fontFamily:'inherit'}}>Close &#x2715;</button>
+            <button onClick={onClose} style={{fontSize:12,fontWeight:700,color:'#616161',background:'#F5F5F5',border:'1px solid #E0E0E0',borderRadius:8,padding:'7px 14px',cursor:'pointer',fontFamily:'inherit'}}>&#x2715;</button>
           </div>
         </div>
-        {/* SVG Diagram */}
-        <div style={{overflowX:'auto'}}>
-          <svg id={`diag-svg-${channel.replace(' ','-')}`} width={totalW} height={totalH} viewBox={`0 0 ${totalW} ${totalH}`} xmlns="http://www.w3.org/2000/svg" style={{fontFamily:'Manrope,Arial,sans-serif',display:'block'}}>
-            <rect width={totalW} height={totalH} fill="#FAFAFA" rx="12"/>
+        <div style={{overflowX:'auto',paddingBottom:4}}>
+          <svg id={svgId} width={totalW} height={totalH} viewBox={`0 0 ${totalW} ${totalH}`} xmlns="http://www.w3.org/2000/svg">
+            <rect width={totalW} height={totalH} fill="#F8F8F8" rx="12"/>
             {steps.map((s,i)=>{
-              const cx=PAD+i*(W+GAP)+W/2;
-              const cy=PAD+CIRCLE_R+10;
-              const nextCx=PAD+(i+1)*(W+GAP)+W/2;
+              const x=PAD+i*(CW+GAP);
+              const y=PAD;
+              const cx=x+CW/2;
+              const nextX=PAD+(i+1)*(CW+GAP);
               return(
                 <g key={i}>
-                  {i<steps.length-1&&(
-                    <line x1={cx+CIRCLE_R} y1={cy} x2={nextCx-CIRCLE_R} y2={cy} stroke="#CCCCCC" strokeWidth="1.5" strokeDasharray="4 3"/>
-                  )}
-                  {i<steps.length-1&&(
-                    <polyline points={`${nextCx-CIRCLE_R-6},${cy-4} ${nextCx-CIRCLE_R+2},${cy} ${nextCx-CIRCLE_R-6},${cy+4}`} fill="none" stroke="#CCCCCC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  )}
-                  <circle cx={cx} cy={cy} r={CIRCLE_R} fill={s.color}/>
-                  {s.mandatory&&<circle cx={cx} cy={cy} r={CIRCLE_R+3} fill="none" stroke={s.color} strokeWidth="2" strokeDasharray="4 3" opacity="0.5"/>}
-                  <text x={cx} y={cy+5} textAnchor="middle" fontSize="12" fontWeight="800" fill="#fff">{s.n}</text>
-                  <text x={cx} y={cy+CIRCLE_R+16} textAnchor="middle" fontSize="11" fontWeight="700" fill="#050505">{s.title}</text>
-                  <foreignObject x={cx-W/2} y={cy+CIRCLE_R+24} width={W} height={50}>
-                    <div xmlns="http://www.w3.org/1999/xhtml" style={{fontSize:10,color:'#8F8F8F',textAlign:'center',lineHeight:'1.4'}}>
-                      {s.owner}
-                    </div>
+                  {i<steps.length-1&&<>
+                    <line x1={x+CW+2} y1={y+36} x2={nextX-2} y2={y+36} stroke="#CCCCCC" strokeWidth="1.5" strokeDasharray="4 3"/>
+                    <polyline points={`${nextX-8},${y+31} ${nextX-1},${y+36} ${nextX-8},${y+41}`} fill="none" stroke="#CCCCCC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </>}
+                  {/* Card */}
+                  <rect x={x} y={y} width={CW} height={CH} rx="10" fill="#fff" stroke={s.color} strokeWidth="1.5"/>
+                  {s.mandatory&&<rect x={x} y={y} width={CW} height={CH} rx="10" fill="none" stroke={s.color} strokeWidth="3" strokeDasharray="6 3" opacity="0.35"/>}
+                  {/* Top color bar */}
+                  <rect x={x} y={y} width={CW} height={32} rx="10" fill={s.color}/>
+                  <rect x={x} y={y+20} width={CW} height={12} fill={s.color}/>
+                  {/* Step badge */}
+                  <rect x={x+6} y={y+6} width={24} height={20} rx="10" fill="rgba(255,255,255,0.25)"/>
+                  <text x={x+18} y={y+19} textAnchor="middle" fontSize="9" fontWeight="800" fill="#fff">{s.n}</text>
+                  {/* Title */}
+                  <text x={x+35} y={y+20} fontSize="10" fontWeight="700" fill="#fff">{s.title}</text>
+                  {/* Owner */}
+                  <text x={x+8} y={y+46} fontSize="8" fill="#8F8F8F" fontWeight="600">Owner</text>
+                  <foreignObject x={x+6} y={y+50} width={CW-12} height={36}>
+                    <div xmlns="http://www.w3.org/1999/xhtml" style={{fontSize:'9px',color:'#050505',lineHeight:'1.4',fontWeight:'600'}}>{s.owner}</div>
                   </foreignObject>
-                  {s.note&&(
-                    <foreignObject x={cx-W/2} y={cy+CIRCLE_R+52} width={W} height={40}>
-                      <div xmlns="http://www.w3.org/1999/xhtml" style={{fontSize:9,color:'#461068',textAlign:'center',lineHeight:'1.35',fontStyle:'italic'}}>
-                        {s.note}
-                      </div>
+                  {/* Tools */}
+                  <text x={x+8} y={y+96} fontSize="8" fill="#8F8F8F" fontWeight="600">Tools</text>
+                  <foreignObject x={x+6} y={y+100} width={CW-12} height={22}>
+                    <div xmlns="http://www.w3.org/1999/xhtml" style={{fontSize:'9px',color:'#7B4DB8',lineHeight:'1.4'}}>{s.tools.join(' · ')}</div>
+                  </foreignObject>
+                  {/* Process */}
+                  <text x={x+8} y={y+130} fontSize="8" fill="#8F8F8F" fontWeight="600">Process</text>
+                  <foreignObject x={x+6} y={y+134} width={CW-12} height={52}>
+                    <div xmlns="http://www.w3.org/1999/xhtml" style={{fontSize:'8.5px',color:'#3D3D3D',lineHeight:'1.45'}}>{s.process}</div>
+                  </foreignObject>
+                  {/* Attention */}
+                  {s.attention&&<>
+                    <line x1={x+6} y1={y+193} x2={x+CW-6} y2={y+193} stroke="#FDE68A" strokeWidth="1"/>
+                    <text x={x+8} y={y+204} fontSize="7.5" fill="#B45309" fontWeight="600">⚠ Note</text>
+                    <foreignObject x={x+6} y={y+208} width={CW-12} height={44}>
+                      <div xmlns="http://www.w3.org/1999/xhtml" style={{fontSize:'8px',color:'#B45309',lineHeight:'1.4',fontStyle:'italic'}}>{s.attention}</div>
                     </foreignObject>
-                  )}
+                  </>}
                 </g>
               );
             })}
-            <text x={PAD} y={totalH-12} fontSize="9" fill="#CCCCCC">Qonto Localization Workflow — High-visibility / {channel}</text>
+            <text x={PAD} y={totalH-8} fontSize="8" fill="#CCCCCC" fontFamily="Manrope,Arial,sans-serif">Qonto Localization Workflow — High-visibility / {channel} · localization-workflow.html</text>
           </svg>
         </div>
-        {/* Legend */}
-        <div style={{display:'flex',gap:16,marginTop:16,flexWrap:'wrap'}}>
-          <div style={{display:'flex',alignItems:'center',gap:5,fontSize:11,color:'#616161'}}><div style={{width:12,height:12,borderRadius:'50%',border:'2px dashed #461068',background:'transparent'}}/> Mandatory gate</div>
-          <div style={{display:'flex',alignItems:'center',gap:5,fontSize:11,color:'#616161'}}><div style={{width:12,height:12,borderRadius:'50%',background:'#CE6033'}}/> Upload & publish</div>
-          <div style={{display:'flex',alignItems:'center',gap:5,fontSize:11,color:'#616161'}}><div style={{width:12,height:12,borderRadius:'50%',background:'#3D3D3D'}}/> Upstream phases</div>
+        <div style={{display:'flex',gap:16,marginTop:14,flexWrap:'wrap',fontSize:11,color:'#8F8F8F'}}>
+          <div style={{display:'flex',alignItems:'center',gap:5}}><div style={{width:10,height:10,borderRadius:2,border:'2px dashed #461068'}}/> Mandatory gate</div>
+          <div style={{display:'flex',alignItems:'center',gap:5}}><div style={{width:10,height:10,borderRadius:2,background:'#CE6033'}}/> Upload & publish</div>
+          <div style={{display:'flex',alignItems:'center',gap:5}}><div style={{width:10,height:10,borderRadius:2,background:'#7B4DB8'}}/> Creative steps</div>
+          <div style={{display:'flex',alignItems:'center',gap:5}}><span style={{fontSize:9,color:'#B45309'}}>⚠</span> Attention point</div>
         </div>
       </div>
     </div>
@@ -853,11 +869,12 @@ function HighVisStream(){
           <div key={ch} style={{display:'flex',flexDirection:'column',alignItems:'center',gap:4}}>
             <button onClick={()=>setSelCh(selCh===ch?null:ch)}
               style={{padding:'5px 14px',borderRadius:20,border:`2px solid ${selCh===ch?CHAN_BORDER[ch]:'#E0E0E0'}`,background:selCh===ch?CHAN_BG[ch]:'#fff',color:selCh===ch?CHAN_COLOR[ch]:'#616161',fontSize:13,fontWeight:700,cursor:'pointer',fontFamily:'inherit',transition:'all 0.15s ease'}}>{ch}</button>
-            <Tooltip text={`View clean diagram for the ${ch} channel — downloadable as SVG`}>
+            <Tooltip text={`Vue diagramme ${ch} — téléchargeable en SVG`}>
               <button onClick={()=>setDiagCh(ch)}
-                style={{display:'flex',alignItems:'center',gap:3,fontSize:10,fontWeight:600,color:'#8F8F8F',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',padding:0,textDecoration:'underline',textDecorationStyle:'dotted'}}>
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-                diagram
+                style={{display:'flex',alignItems:'center',justifyContent:'center',width:22,height:22,borderRadius:6,border:'1px solid #E0E0E0',background:'#FAFAFA',cursor:'pointer',padding:0,color:'#8F8F8F',transition:'all 0.15s ease'}}
+                onMouseEnter={e=>{e.currentTarget.style.background='#F0EAFF';e.currentTarget.style.borderColor='#BFA6EA';e.currentTarget.style.color='#7B4DB8';}}
+                onMouseLeave={e=>{e.currentTarget.style.background='#FAFAFA';e.currentTarget.style.borderColor='#E0E0E0';e.currentTarget.style.color='#8F8F8F';}}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               </button>
             </Tooltip>
           </div>
