@@ -138,13 +138,13 @@ function UpstreamStep({u,idx}){
         {u.badge&&(
           <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:4,marginBottom:4}}>
             <span style={{fontSize:10,fontWeight:700,background:u.badgeBg,color:u.badgeColor,borderRadius:20,padding:'1px 7px',display:'inline-block'}}>{u.badge}</span>
-            {u.tooltip&&<InfoBubble text={u.tooltip}/>}
+            {u.tooltip&&<InfoBubble placement="below" text={u.tooltip}/>}
           </div>
         )}
         {items.length>0&&(
           <button onClick={e=>{e.stopPropagation();setOpen(!open);}}
             style={{display:'flex',alignItems:'center',gap:4,fontSize:10,fontWeight:600,color:'#0369A1',background:'#E0F2FE',border:'none',borderRadius:20,padding:'2px 8px',cursor:'pointer',fontFamily:'inherit',marginTop:4,width:'100%',justifyContent:'center'}}>
-            &#8214; {items.length===1?items[0].label:'Parallel tracks'}
+            &#8214; {items.length===1?`${items[0].label} · ${items[0].owner}`:'Parallel tracks · Marketing teams'}
             <IChevD size={9} style={{color:'#0369A1',transition:'transform 0.2s',transform:open?'rotate(180deg)':'none'}}/>
           </button>
         )}
@@ -152,8 +152,7 @@ function UpstreamStep({u,idx}){
           <div style={{marginTop:4,background:'#F0F9FF',border:'1px solid #BAE6FD',borderRadius:8,padding:'8px 10px',textAlign:'left',display:'flex',flexDirection:'column',gap:7}}>
             {items.map((p,pi)=>(
               <div key={pi} style={{borderTop:pi>0?'1px dashed #BAE6FD':'none',paddingTop:pi>0?7:0}}>
-                <div style={{fontSize:11,color:'#0369A1',fontWeight:700,marginBottom:2}}>{p.label}</div>
-                <div style={{fontSize:10,color:'#0369A1',fontWeight:500,marginBottom:2}}>&#x25B6; {p.owner}</div>
+                <div style={{fontSize:10,color:'#0369A1',fontWeight:600,marginBottom:4}}>&#x25B6; {p.owner}</div>
                 <div style={{fontSize:11,color:'#3D3D3D',lineHeight:1.55,display:'flex',flexDirection:'column',gap:4}}>
                   {p.detail.split('\n').map((line,li)=>(
                     <span key={li}>{line}</span>
@@ -648,24 +647,25 @@ function HVStepCard({step,gradBg,selectedCh,onSelectCh}){
   );
 }
 /* ── TOOLTIP ── */
-function Tooltip({text,children}){
+function Tooltip({text,children,placement='above'}){
   const[show,setShow]=useState(false);
+  const isBelow=placement==='below';
   return(
     <span style={{position:'relative',display:'inline-flex',alignItems:'center'}}
       onMouseEnter={()=>setShow(true)} onMouseLeave={()=>setShow(false)}>
       {children}
       {show&&(
-        <span style={{position:'absolute',bottom:'calc(100% + 8px)',left:'50%',transform:'translateX(-50%)',background:'#F5F5F5',color:'#3D3D3D',fontSize:13,fontWeight:400,lineHeight:1.6,borderRadius:10,padding:'10px 14px',whiteSpace:'normal',width:300,zIndex:100,boxShadow:'0 4px 16px rgba(0,0,0,0.12)',border:'1px solid #E0E0E0',pointerEvents:'none',textTransform:'none',letterSpacing:'normal',fontStyle:'normal'}}>
+        <span style={{position:'absolute',...(isBelow?{top:'calc(100% + 8px)'}:{bottom:'calc(100% + 8px)'}),left:'50%',transform:'translateX(-50%)',background:'#F5F5F5',color:'#3D3D3D',fontSize:13,fontWeight:400,lineHeight:1.6,borderRadius:10,padding:'10px 14px',whiteSpace:'pre-line',width:300,zIndex:200,boxShadow:'0 4px 16px rgba(0,0,0,0.12)',border:'1px solid #E0E0E0',pointerEvents:'none',textTransform:'none',letterSpacing:'normal',fontStyle:'normal'}}>
           {text}
-          <span style={{position:'absolute',top:'100%',left:'50%',transform:'translateX(-50%)',width:0,height:0,borderLeft:'6px solid transparent',borderRight:'6px solid transparent',borderTop:'6px solid #E0E0E0'}}/>
+          <span style={{position:'absolute',...(isBelow?{bottom:'100%',borderBottom:'6px solid #E0E0E0',borderTop:'none'}:{top:'100%',borderTop:'6px solid #E0E0E0',borderBottom:'none'}),left:'50%',transform:'translateX(-50%)',width:0,height:0,borderLeft:'6px solid transparent',borderRight:'6px solid transparent'}}/>
         </span>
       )}
     </span>
   );
 }
-function InfoBubble({text}){
+function InfoBubble({text,placement='above'}){
   return(
-    <Tooltip text={<span style={{whiteSpace:'pre-line'}}>{text}</span>}>
+    <Tooltip text={<span style={{whiteSpace:'pre-line'}}>{text}</span>} placement={placement}>
       <span style={{display:'inline-flex',alignItems:'center',justifyContent:'center',width:16,height:16,borderRadius:'50%',background:'#E8E8E8',color:'#616161',fontSize:10,fontWeight:700,cursor:'default',marginLeft:5,flexShrink:0}}>?</span>
     </Tooltip>
   );
@@ -834,7 +834,7 @@ function HighVisStream(){
         {/* Header row */}
         <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:14}}>
           <span style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.07em',color:'#8F8F8F'}}>Upstream phases</span>
-          <InfoBubble text="These phases gate Creative Asset Production (Step 1.2) — not Creative Essentials. Step 1.1 can start after Step A (Sizing) and run in parallel with B, C, D. But 1.2 only begins once Creative Essentials are signed off AND all four phases are complete."/>
+          <InfoBubble placement="below" text="These phases gate Creative Asset Production (Step 1.2) — not Creative Essentials. Step 1.1 can start after Step A (Sizing) and run in parallel with B, C, D. But 1.2 only begins once Creative Essentials are signed off AND all four phases are complete."/>
           <button onClick={()=>setTeamOpen(!teamOpen)}
             style={{marginLeft:'auto',display:'flex',alignItems:'center',gap:5,fontSize:11,fontWeight:600,color:'#7B4DB8',background:'#fff',border:'1px solid #E9E0FF',borderRadius:20,padding:'3px 10px',cursor:'pointer',fontFamily:'inherit'}}>
             <IUsers size={11} style={{color:'#7B4DB8'}}/>
