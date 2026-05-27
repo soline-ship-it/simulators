@@ -435,12 +435,17 @@ const HV_STEPS=[
         <><strong>Creative Essentials (EN):</strong> Creative Factory (Brand Designer + Creative Writer) delivers concept pitch + key claims per channel + tagline for Paid Ads.</>,
         <><strong>Local CE translation:</strong> Local Creative Copywriters translate the Creative Essentials into all needed locales.</>,
         <><strong>Market loop:</strong> Comms Partners keep Local POCs informed throughout.</>,
+        <><strong style={{color:'#7B4DB8'}}>↳ CE sign-off:</strong> Brand Director + VP Design approve the Creative Essentials. Creative Factory then checks back with <em>all channel teams</em> (Website, CRM, Paid Ads) to confirm the output matches their requirements before production starts.</>,
+        <><strong style={{color:'#7B4DB8'}}>↳ Concept-to-channel alignment:</strong> Creative Factory walks all channel teams through the Creative Essentials + User Flow. Each channel validates the concept applies to their format and requirements. <strong>This is the gate before Step 1.2 starts.</strong></>,
       ],
     }],
     notes:[
       <span>⚡ Can start as soon as Sizing (A) is done — runs in parallel with <a href="#hv-upstream" onClick={e=>{e.preventDefault();e.stopPropagation();document.getElementById('hv-upstream')?.scrollIntoView({behavior:'smooth',block:'start'});}}>upstream phases B, C, D</a>. Local orientation input is incorporated before sign-off.</span>,
       "Creative Writer's lead language is project-dependent — can start in IT, DE, FR or EN.",
       '⚠️ Creative Essentials = creative foundation, not final production assets. Step 1.2 only starts once signed off.',
+    ],
+    gaps:[
+      '⚠️ Alignment gap — When can Creative Essentials start? Julie\'s position: CE can begin after Sizing (A), before Local Orientation is complete — otherwise timelines never hold. Notion page says: CE starts after Local Orientation and Creative Brief, which itself depends on Local Orientation + Channel Orientations. These two views are not reconciled. To align with Julie before updating the tool.',
     ],
   },
   {
@@ -455,6 +460,7 @@ const HV_STEPS=[
       },
       'CRM':{
         owner:'Comms Partners',
+        note:'One-shot campaigns only — automation flows follow a separate process.',
         steps:[
           'Global Comms Partners write the full email (EN Master copy) based on the Creative Essentials — with Creative Copywriter help if needed.',
           'Global Comms Partners translate with AI directly in Qontent — with CRM help if needed.',
@@ -622,6 +628,7 @@ function HVStepCard({step,gradBg,selectedCh,onSelectCh}){
                 <IUser size={13} style={{color:CHAN_COLOR[ch],marginTop:1}}/>
                 <span style={{fontSize:13,fontWeight:700,color:CHAN_COLOR[ch],lineHeight:1.4}}>{uc.owner}</span>
               </div>
+              {uc.note&&<div style={{fontSize:11,color:'#B45309',background:'#FFF9EC',border:'1px solid #FDE68A',borderRadius:6,padding:'4px 8px',marginTop:5,fontStyle:'italic'}}>{uc.note}</div>}
               {uc.steps&&<Accordion title="Process" items={uc.steps} type="process" stepId={step.id}/>}
               {uc.tools&&(
                 <div style={{display:'flex',alignItems:'flex-start',gap:7,marginTop:7}}>
@@ -870,6 +877,9 @@ function HighVisStream(){
             </React.Fragment>
           ))}
         </div>
+        <div style={{marginTop:12,background:'#FFF5F5',border:'1px solid #FECACA',borderRadius:8,padding:'8px 12px',fontSize:12,color:'#7F1D1D',lineHeight:1.5}}>
+          <strong style={{color:'#991B1B'}}>⚠️ Gap — Legal:</strong> When, what, and how Legal gets involved in the upstream phase is not yet defined. Open question — to be scoped.
+        </div>
       </div>
       {diagCh&&<ChannelDiagram channel={diagCh} onClose={()=>setDiagCh(null)}/>}
       <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:16,flexWrap:'wrap'}}>
@@ -923,7 +933,7 @@ const STEPS_SS=[
       tools:['Tolki','QualityGuard — always run it!'],
     }],
     tradeOff:'Growth efficiency principle: one project owner (PMM) handles this end-to-end. Trade-off: no creative concept investment (no Creative Essentials), no local orientation, no local review. Edge cases handled via Red Bin, case by case.',
-    notes:[],
+    notes:['CRM: this stream covers one-shot campaigns only. Automation flows follow a separate process.'],
   },
   {
     id:2,title:'First-pass translation',
@@ -946,7 +956,7 @@ const STEPS_SS=[
   {
     id:4,title:'Upload & publish',
     useCases:[
-      {label:'CRM',owner:'PMM → CRM team',tools:['Customer.io'],steps:['PMM finalizes copy in Qontent and hands off to CRM team.','CRM team builds email in Customer.io.','CRM team publishes.']},
+      {label:'CRM — one-shot',owner:'PMM → CRM team',tools:['Customer.io'],steps:['PMM finalizes copy in Qontent and hands off to CRM team.','CRM team builds email in Customer.io.','CRM team publishes.']},
       {label:'Website',owner:'PMM + Website manager',tools:['Qontent']},
       {label:'Paid Ads',owner:'PMM + Paid Ads manager',tools:['Directly on platform']},
     ],
@@ -982,10 +992,7 @@ const STEPS_BAU=[
       'Website':{owner:'Project owner (Website manager)',tools:['Qontent (Tolki & QualityGuard accessible from here)']},
       'Paid Ads':{owner:'Project owner (Paid Ads manager)',tools:['Tolki','QualityGuard — always run it!']},
     },
-    notes:[],
-  },
-  {
-    id:2,title:'First-pass translation',
+    notes:['CRM: covers both one-shot campaigns and automation flows.'],
     channels:{
       'CRM':{owner:'Project owner (PMM or CRM manager)',tools:['Qontent (Tolki & QualityGuard accessible from here)']},
       'Website':{owner:'Project owner (Website manager)',tools:['Qontent (Tolki & QualityGuard accessible from here)']},
