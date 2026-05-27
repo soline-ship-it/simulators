@@ -135,7 +135,12 @@ function UpstreamStep({u,idx}){
           </div>
         )}
         <div style={{fontSize:11,color:'#616161',lineHeight:1.45,marginBottom:u.badge?4:0}}>{u.detail}</div>
-        {u.badge&&<span style={{fontSize:10,fontWeight:700,background:u.badgeBg,color:u.badgeColor,borderRadius:20,padding:'1px 7px',display:'inline-block',marginBottom:4}}>{u.badge}</span>}
+        {u.badge&&(
+          <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:4,marginBottom:4}}>
+            <span style={{fontSize:10,fontWeight:700,background:u.badgeBg,color:u.badgeColor,borderRadius:20,padding:'1px 7px',display:'inline-block'}}>{u.badge}</span>
+            {u.tooltip&&<InfoBubble text={u.tooltip}/>}
+          </div>
+        )}
         {items.length>0&&(
           <button onClick={e=>{e.stopPropagation();setOpen(!open);}}
             style={{display:'flex',alignItems:'center',gap:4,fontSize:10,fontWeight:600,color:'#0369A1',background:'#E0F2FE',border:'none',borderRadius:20,padding:'2px 8px',cursor:'pointer',fontFamily:'inherit',marginTop:4,width:'100%',justifyContent:'center'}}>
@@ -407,8 +412,9 @@ const HV_UPSTREAM=[
     id:'D',
     label:'Transcreation Gate',
     owner:'GLT — escalation: CGO',
-    detail:'Compliance or radical strategy gap only.',
+    detail:'Exception, not the default. Two triggers only: compliance constraint OR radical strategy gap.',
     badge:'Gates Production',badgeColor:'#991B1B',badgeBg:'#FEE2E2',
+    tooltip:'NOT triggered by:\n• Market preference\n• Tone adjustments\n• "We\'d have written it differently"\n\nIf triggered:\n• One extra EN Master per affected market\n• Re-enters the standard pipeline independently\n• Real cost: extra production + Comms Partner bandwidth\n\nDecision: GLT. Escalation: CGO.',
   },
 ];
 const HV_UPSTREAM_PARALLEL=[
@@ -433,7 +439,7 @@ const HV_STEPS=[
       ],
     }],
     notes:[
-      '⚡ Can start as soon as Sizing is done — runs in parallel with B, C, D. Local orientation input is incorporated before sign-off.',
+      <span>⚡ Can start as soon as Sizing (A) is done — runs in parallel with <a href="#hv-upstream" onClick={e=>{e.preventDefault();e.stopPropagation();document.getElementById('hv-upstream')?.scrollIntoView({behavior:'smooth',block:'start'});}}>upstream phases B, C, D</a>. Local orientation input is incorporated before sign-off.</span>,
       "Creative Writer's lead language is project-dependent — can start in IT, DE, FR or EN.",
       '⚠️ Creative Essentials = creative foundation, not final production assets. Step 1.2 only starts once signed off.',
     ],
@@ -467,6 +473,9 @@ const HV_STEPS=[
     },
     notes:[
       'Kicks off as soon as Creative Essentials are signed off.',
+    ],
+    gaps:[
+      'Multiple EN Masters (one per market) multiply Comms Partner workload — one full draft/validate/AI-translate/upload cycle per market, on top of everything else. Quality risk follows: disconnected copy, meaningless CTAs, blocks promoting features not yet live in a given market. Compounded by a Qontent limitation: AI translation can\'t be triggered from a locale page — only from the main page view.',
     ],
   },
   {
@@ -656,7 +665,7 @@ function Tooltip({text,children}){
 }
 function InfoBubble({text}){
   return(
-    <Tooltip text={text}>
+    <Tooltip text={<span style={{whiteSpace:'pre-line'}}>{text}</span>}>
       <span style={{display:'inline-flex',alignItems:'center',justifyContent:'center',width:16,height:16,borderRadius:'50%',background:'#E8E8E8',color:'#616161',fontSize:10,fontWeight:700,cursor:'default',marginLeft:5,flexShrink:0}}>?</span>
     </Tooltip>
   );
@@ -821,7 +830,7 @@ function HighVisStream(){
       </div>
 
       {/* Project setup — collapsible inside upstream */}
-      <div style={{background:'#F5F5F5',border:'1px solid #E0E0E0',borderRadius:12,padding:'14px 18px',marginBottom:20}}>
+      <div id="hv-upstream" style={{background:'#F5F5F5',border:'1px solid #E0E0E0',borderRadius:12,padding:'14px 18px',marginBottom:20}}>
         {/* Header row */}
         <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:14}}>
           <span style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.07em',color:'#8F8F8F'}}>Upstream phases</span>
