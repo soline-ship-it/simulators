@@ -36,6 +36,7 @@ a:hover{text-decoration:underline;}
 <div id="root"></div>
 <script type="text/babel">
 const {useState,useEffect}=React;
+
 /* ── ICONS ── */
 const Ico=({ch,size=16,style={}})=>(<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0,...style}}>{ch}</svg>);
 const IChevD=({size=16,style})=><Ico size={size} style={style} ch={<polyline points="6 9 12 15 18 9"/>}/>;
@@ -57,6 +58,7 @@ const IStar=({size=16,style})=><Ico size={size} style={style} ch={<><polygon poi
 const INote=({size=16,style})=><Ico size={size} style={style} ch={<><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></>}/>;
 const IZap=({size=16,style})=><Ico size={size} style={style} ch={<><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></>}/>;
 const IClock=({size=16,style})=><Ico size={size} style={style} ch={<><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></>}/>;
+
 /* ── LINK FORMATTER ── */
 const fmtLinks=(text,stepId)=>{
   if(typeof text!=='string')return text;
@@ -74,6 +76,7 @@ const fmtLinks=(text,stepId)=>{
     return p;
   });
 };
+
 /* ── ACCORDION ── */
 function Accordion({title,items,type,stepId}){
   const[open,setOpen]=useState(false);
@@ -82,7 +85,7 @@ function Accordion({title,items,type,stepId}){
   let bg,border,titleClr,textClr,badgeBg,icon;
   if(isGap){bg='#FFF5F5';border='#FECACA';titleClr='#991B1B';textClr='#7F1D1D';badgeBg='#FEE2E2';icon=<IAlert size={13} style={{color:'#991B1B'}}/>;}
   else if(isSug){bg='#FFFDF0';border='#FDE68A';titleClr='#854D0E';textClr='#713F12';badgeBg='#FEF9C3';icon=<IBulb size={13} style={{color:'#CA8A04'}}/>;}
-  else if(isProc){bg='#FFFCE8';border='#FEF08A';titleClr='#713F12';textClr='#3D3D3D';badgeBg='#FEF9C3';icon=<IWorkflow size={13} style={{color:'#A16207'}}/>;}
+  else if(isProc){bg='#F9F9F9';border='#E8E8E8';titleClr='#3D3D3D';textClr='#3D3D3D';badgeBg='#E8E8E8';icon=<IWorkflow size={13} style={{color:'#8F8F8F'}}/>;}
   else{bg='#FFFDF0';border='#FDE68A';titleClr='#854D0E';textClr='#713F12';badgeBg='#FEF9C3';icon=<IBulb size={13} style={{color:'#CA8A04'}}/>;}
   return(
     <div style={{marginTop:isProc?8:10,border:`1px solid ${border}`,borderRadius:10,overflow:'hidden'}}>
@@ -117,19 +120,7 @@ function Accordion({title,items,type,stepId}){
     </div>
   );
 }
-/* ── PARALLEL CALLOUT ── */
-function ParallelCallout({title,owner,detail}){
-  return(
-    <div style={{marginBottom:12,background:'#F0F9FF',border:'1px dashed #0369A1',borderRadius:10,padding:'10px 12px'}}>
-      <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:5}}>
-        <span style={{fontSize:10,fontWeight:800,background:'#E0F2FE',color:'#0369A1',padding:'2px 8px',borderRadius:20,letterSpacing:'0.05em'}}>‖ PARALLEL</span>
-        <span style={{fontSize:12,fontWeight:700,color:'#0369A1'}}>{title}</span>
-      </div>
-      <div style={{fontSize:12,color:'#3D3D3D',lineHeight:1.55,marginBottom:4}}>{detail}</div>
-      <div style={{fontSize:11,color:'#0369A1',fontWeight:600}}>Owner: {owner}</div>
-    </div>
-  );
-}
+
 /* ── NOTE FRAME ── */
 function NoteFrame({notes,stepId}){
   if(!notes||notes.length===0)return null;
@@ -150,6 +141,7 @@ function NoteFrame({notes,stepId}){
     </div>
   );
 }
+
 /* ── TRADE-OFF CALLOUT ── */
 function TradeOffCallout({text}){
   return(
@@ -162,6 +154,7 @@ function TradeOffCallout({text}){
     </div>
   );
 }
+
 /* ── COMMENT THREAD ── */
 function CommentThread({threadId}){
   const[comments,setComments]=useState([]);
@@ -218,6 +211,7 @@ function CommentThread({threadId}){
     </div>
   );
 }
+
 /* ── STEP CARD (generic) ── */
 function StepCard({step,accentClr,gradBg,threadPrefix,showTradeOff}){
   const[selUC,setSelUC]=useState(null);
@@ -231,7 +225,7 @@ function StepCard({step,accentClr,gradBg,threadPrefix,showTradeOff}){
             {step.mandatory&&<div style={{fontSize:9,fontWeight:700,background:'rgba(255,255,255,0.25)',borderRadius:20,padding:'2px 7px',display:'inline-block',letterSpacing:'0.04em',textTransform:'uppercase'}}>Mandatory</div>}
           </div>
         </div>
-        <div style={{position:'absolute',top:-2,right:-2,minWidth:22,height:22,padding:String(step.id).length>1?'0 4px':0,borderRadius:11,background:'#fff',border:'2px solid #E0E0E0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:String(step.id).length>1?10:11,fontWeight:800,color:'#3D3D3D',zIndex:2}}>{step.id}</div>
+        <div style={{position:'absolute',top:-2,right:-2,width:22,height:22,borderRadius:'50%',background:'#fff',border:'2px solid #E0E0E0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,color:'#3D3D3D',zIndex:2}}>{step.id}</div>
       </div>
       <div style={{width:1,height:14,background:'#CCCCCC'}}/>
       <div style={{width:'100%',background:'#fff',border:'1px solid #E0E0E0',borderRadius:14,padding:'16px',boxShadow:'0 1px 4px rgba(0,0,0,0.05)'}}>
@@ -284,6 +278,7 @@ function StepCard({step,accentClr,gradBg,threadPrefix,showTradeOff}){
     </div>
   );
 }
+
 /* ── CONNECTOR ARROW ── */
 const ConnArrow=()=>(
   <div style={{display:'flex',alignItems:'center',paddingTop:48,paddingLeft:8,paddingRight:8,flexShrink:0}}>
@@ -293,6 +288,7 @@ const ConnArrow=()=>(
     </svg>
   </div>
 );
+
 /* ── GENERIC WORKFLOW ROW ── */
 function WorkflowRow({steps,accentClr,gradients,threadPrefix,showTradeOff}){
   return(
@@ -308,6 +304,7 @@ function WorkflowRow({steps,accentClr,gradients,threadPrefix,showTradeOff}){
     </div>
   );
 }
+
 /* ══════════════════════════════════════════════
    STREAM 1 — HIGH-VISIBILITY
 ══════════════════════════════════════════════ */
@@ -319,94 +316,58 @@ const HV_GRADS=[
   'linear-gradient(135deg,#9BC5EA,#A585DB)',
   'linear-gradient(135deg,#FFB590,#CE6033)',
 ];
+
 const HV_UPSTREAM=[
   {
-    label:'Sizing',
+    id:'A', label:'GLT sizes as L or M',
     owner:'GLT — quarterly reunion',
-    detail:'L or M sizing. Determines which upstream steps apply.',
-    trigger:true,
+    detail:'Project enters the pipeline. Size determines which upstream steps apply.',
   },
   {
-    label:'Step 0 — Global Outline',
+    id:'B', label:'Step 0 — Global outline',
     owner:'Global PMM',
-    detail:'One-pager: strategic intent, narrative, fixed vs. flexible. Legal flags when + what.',
+    detail:'Strategic intent, core narrative, fixed vs. flexible. Mandatory for L & M.',
   },
   {
-    label:'Local Orientation',
-    owner:'Local POC + PMM + SEO content manager',
-    detail:'Local context, "dying on a hill" vs "good to have", SEO inputs.',
-    badge:'Gates Step 1.2',badgeColor:'#991B1B',badgeBg:'#FEE2E2',
+    id:'C', label:'Local orientation',
+    owner:'Global PMM + Market PMM / Local POC',
+    detail:'"Dying on a hill for" vs "good to have". Includes SEO & channel considerations. Hard gate — no input after deadline.',
+    badge:'Hard gate',badgeColor:'#991B1B',badgeBg:'#FEE2E2',
   },
   {
-    label:'Transcreation Gate',
+    id:'D', label:'Transcreation gate',
     owner:'GLT — escalation: CGO',
-    detail:'Cascade EN Master as-is, or trigger transcreation. Compliance or radical strategy gap only.',
-    badge:'Gates Step 1.2',badgeColor:'#991B1B',badgeBg:'#FEE2E2',
+    detail:'Cascade EN Master as-is, or trigger transcreation. Compliance constraint OR radical strategy gap only.',
+    badge:'GLT call',badgeColor:'#7B4DB8',badgeBg:'#F5F0FF',
   },
 ];
-const HV_UPSTREAM_PARALLEL=[
-  {
-    label:'Channel Orientations',
-    owner:'Paid · Website · CRM',
-    detail:'High-level channel requirements: best practices, checklist, past learnings, high-level needs (videos, etc.).',
-    feeds:'Creative Brief (Step 1.1)',
-  },
-  {
-    label:'User Flow Mapping',
-    owner:'Marketing team',
-    detail:'Maps the user journey for the campaign. Sync with Creative Factory at end-of-phase to cross-check experience continuity.',
-    feeds:'Step 1.2 requirements',
-  },
-];
+
 const HV_STEPS=[
   {
     id:'1.1', title:'Creative Essentials',
     useCases:[{
-      owner:'Global PMM + Comms Partners + Creative Factory',
-      tools:['Tolki','QualityGuard — always run it!'],
+      owner:'Creative Factory + Comms partners',
       steps:[
-        <><strong>Messaging:</strong> Global PMM co-owns the GTM package messaging (Comms Doc + narrative) with Comms Partners.</>,
-        <><strong>Creative Brief:</strong> Comms Partners write it — based on PMM messaging + Channel Orientations inputs.</>,
-        <><strong>Creative Essentials (EN):</strong> Creative Factory (Brand Designer + Creative Writer) delivers concept pitch + key claims per channel + tagline for Paid Ads.</>,
-        <><strong>Local CE translation:</strong> Local Creative Copywriters translate the Creative Essentials into all needed locales.</>,
-        <><strong>Market loop:</strong> Comms Partners keep Local POCs informed throughout.</>,
+        'Comms partner writes the Creative Brief (channels, formats, key visuals, copy direction).',
+        'Creative Factory delivers Creative Essentials: creative concept, hero & secondary copy lines, visual direction (key visuals, lifestyle imagery, product demo).',
+        'Creative Essentials are signed off by Creative Factory leadership before any asset goes into production.',
       ],
+      tools:[],
     }],
-    notes:[
-      'Creative Writer\'s lead language is project-dependent — can start in IT, DE, FR or EN.',
-      '⚠️ Creative Essentials = creative foundation, not final production assets.',
-    ],
+    notes:['Creative Essentials = the single creative source of truth. Production (step 1.2) cannot start until signed off.'],
   },
   {
-    id:'1.2', title:'Creative Asset Production',
-    channels:{
-      'Website':{
-        owner:'Creative Factory',
-        steps:[
-          'Creative Factory delivers hero + key section copies (masters EN + FR / DE / IT) + visual assets.',
-        ],
-        tools:['Qontent (Tolki & QualityGuard accessible from here)'],
-      },
-      'CRM':{
-        owner:'Comms Partners',
-        steps:[
-          'Global Comms Partners write the full email (EN Master copy) based on the Creative Essentials — with Creative Copywriter help if needed.',
-          'Global Comms Partners translate with AI directly in Qontent — with CRM help if needed.',
-        ],
-        tools:['Qontent (Tolki & QualityGuard accessible from here)'],
-      },
-      'Paid Ads':{
-        owner:'Creative Factory (Creative Copywriter + dedicated designer)',
-        steps:[
-          'Creative Copywriter writes all Paid Ads master copies — in-asset (tagline, subtitle, etc.) and external (primary text, headlines, etc.) — in EN + FR / DE / IT, based on Channel Orientations inputs.',
-          'Dedicated designer adapts visual assets to ad formats.',
-        ],
-        tools:['Qontent (Tolki & QualityGuard accessible from here)'],
-      },
-    },
-    notes:[
-      'Kicks off as soon as Creative Essentials are signed off.',
-    ],
+    id:'1.2', title:'EN master copy + AI first pass',
+    useCases:[{
+      owner:'Global PMM + Comms partners',
+      tools:['Qontent (Tolki & QualityGuard accessible from here)'],
+      steps:[
+        'Global PMM writes the CommDoc incorporating local orientation input.',
+        'Comms partner writes the EN Master copy, sometimes with the help of the Creative Copywriter, and gets it validated.',
+        'Comms partner runs AI first pass for all markets — 15-min mechanical task, no market knowledge needed.',
+      ],
+    }],
+    notes:['Local POC is designated at the start of the project (by Head of Marketing) and briefed via a dedicated project Slack channel.'],
   },
   {
     id:2, title:'Localization & review', mandatory:true,
@@ -417,32 +378,17 @@ const HV_STEPS=[
         tools:['Qontent (Tolki & QualityGuard accessible from here)'],
       },
       'CRM':{
-        owner:'Local Market POC',
-        steps:[
-          'Local POC reviews and proofreads the email in Qontent, based on the Creative Essentials.',
-        ],
-        tools:['Qontent (Tolki & QualityGuard accessible from here)'],
+        owner:'Local Market POC + CRM team',
+        steps:['Receive EN copies. Challenge claims & CTAs before building.','AI translation via Qontent (Comms partners).','Local mktg review into Qontent.','Build flow in Customer.io.'],
+        tools:['Qontent (Tolki & QualityGuard accessible from here)','Customer.io'],
       },
       'Paid Ads':{
-        owner:'Comms Partners + Local POC + Paid Ads team',
-        steps:[
-          'Comms Partners share copies + creative assets (for context) with Local POCs for copy validation.',
-          'For PT / NL: available-language Comms Partner or Local POC adapts the copy.',
-          'Paid Ads team receives all-market copies + final creative assets.',
-          'Paid Ads team builds and launches ads on platforms.',
-        ],
+        owner:'Local Market POC + Paid Ads team',
+        steps:['Receive EN copy.','AI first pass adaptation.','Review & adapt (local mktg).'],
         tools:['QualityGuard — always run it!'],
       },
     },
-    notes:[
-      'Website & CRM: Local POC owns the full review — full message adaptation, not just grammar.',
-      'Paid Ads: Local POC validates here (visibility pre-launch). No separate Step 3 sign-off.',
-      'PT / NL (no lead-language master): available-language Comms Partner or Local POC adapts.',
-      'SLA — L: ~5 days · M: ~3 days.',
-    ],
-    gaps:[
-      'CRM: no automatic notification to Local POC when their review is needed. WIP — Madeleine + Sébastien working on auto-ping in Qontent.',
-    ],
+    notes:['Local POC owns everything from draft receipt. Not the place to revisit messaging — that belongs in Local Orientation.','SLA: ~5 days for L, ~3 days for M.'],
   },
   {
     id:3, title:'Final sign-off', mandatory:true,
@@ -455,38 +401,14 @@ const HV_STEPS=[
       ],
       tools:[],
     }],
-    notes:[
-      'Local POC fully accountable — accuracy, tone of voice, consistency.',
-      'Paid Ads: no Step 3 sign-off. Local POC informed of in-flight variants once live.',
-    ],
+    notes:['Local POC is fully accountable for the localized output — accuracy, tone of voice, consistency. Not just the final touch.'],
   },
   {
     id:4, title:'Upload & publish',
     channels:{
-      'Website':{
-        owner:'Website team',
-        tools:['Qontent (Tolki & QualityGuard accessible from here)'],
-        steps:[
-          'Build assets.',
-          'Publish.',
-        ],
-      },
-      'CRM':{
-        owner:'CRM team',
-        tools:['Customer.io'],
-        steps:[
-          'CRM team builds the email in Customer.io.',
-          '(Optional) Sends for review to Local POC before publish — Comms Partners may be added for visibility.',
-          'CRM publishes.',
-        ],
-      },
-      'Paid Ads':{
-        owner:'Paid Ads team',
-        tools:['Platform'],
-        steps:[
-          'Publish on platform.',
-        ],
-      },
+      'Website':{owner:'Website team',tools:['Qontent'],steps:['Upload assets.','Publish.']},
+      'CRM':{owner:'Local Market POC + CRM team',tools:['Qontent','Customer.io'],steps:['Build emails / push in Customer.io.','(Optional) Review before publish (Local POC + CRM + PMM — Comms partner informed).','Publish.']},
+      'Paid Ads':{owner:'Paid Ads team',tools:['Platform'],steps:['Publish on platform.']},
     },
   },
   {
@@ -498,9 +420,11 @@ const HV_STEPS=[
     notes:['Log quality issues or broken processes post-launch. Applies to M and S — not a substitute for L sign-off.'],
   },
 ];
+
 const CHAN_COLOR={'Website':'#7B4DB8','CRM':'#7B4DB8','Paid Ads':'#7B4DB8'};
 const CHAN_BG={'Website':'#F5F0FF','CRM':'#F5F0FF','Paid Ads':'#F5F0FF'};
 const CHAN_BORDER={'Website':'#BFA6EA','CRM':'#BFA6EA','Paid Ads':'#BFA6EA'};
+
 function HVStepCard({step,gradBg,selectedCh,onSelectCh}){
   const hasChannels=!!step.channels;
   const channels=hasChannels?Object.keys(step.channels):[];
@@ -513,11 +437,10 @@ function HVStepCard({step,gradBg,selectedCh,onSelectCh}){
             {step.mandatory&&<div style={{fontSize:9,fontWeight:700,background:'rgba(255,255,255,0.25)',borderRadius:20,padding:'2px 7px',display:'inline-block',letterSpacing:'0.04em',textTransform:'uppercase'}}>Mandatory</div>}
           </div>
         </div>
-        <div style={{position:'absolute',top:-2,right:-2,minWidth:22,height:22,padding:String(step.id).length>1?'0 4px':0,borderRadius:11,background:'#fff',border:'2px solid #E0E0E0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:String(step.id).length>1?10:11,fontWeight:800,color:'#3D3D3D',zIndex:2}}>{step.id}</div>
+        <div style={{position:'absolute',top:-2,right:-2,width:22,height:22,borderRadius:'50%',background:'#fff',border:'2px solid #E0E0E0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,color:'#3D3D3D',zIndex:2}}>{step.id}</div>
       </div>
       <div style={{width:1,height:14,background:'#CCCCCC'}}/>
       <div style={{width:'100%',background:'#fff',border:'1px solid #E0E0E0',borderRadius:14,padding:'16px',boxShadow:'0 1px 4px rgba(0,0,0,0.05)'}}>
-        {step.parallel&&<ParallelCallout {...step.parallel}/>}
         {/* Single use case */}
         {!hasChannels&&step.useCases&&step.useCases.map((uc,i)=>(
           <div key={i} style={{border:'1.5px solid #E0E0E0',borderRadius:10,padding:'12px',marginBottom:i<step.useCases.length-1?10:0,background:'#fff'}}>
@@ -579,102 +502,123 @@ function HVStepCard({step,gradBg,selectedCh,onSelectCh}){
     </div>
   );
 }
+
+/* ── TOOLTIP ── */
+function Tooltip({text,children}){
+  const[show,setShow]=useState(false);
+  return(
+    <span style={{position:'relative',display:'inline-flex',alignItems:'center'}}
+      onMouseEnter={()=>setShow(true)} onMouseLeave={()=>setShow(false)}>
+      {children}
+      {show&&(
+        <span style={{position:'absolute',bottom:'calc(100% + 6px)',left:'50%',transform:'translateX(-50%)',background:'#050505',color:'#fff',fontSize:12,fontWeight:500,lineHeight:1.5,borderRadius:8,padding:'8px 12px',whiteSpace:'pre-wrap',maxWidth:260,zIndex:100,boxShadow:'0 4px 12px rgba(0,0,0,0.2)',pointerEvents:'none'}}>
+          {text}
+          <span style={{position:'absolute',top:'100%',left:'50%',transform:'translateX(-50%)',width:0,height:0,borderLeft:'5px solid transparent',borderRight:'5px solid transparent',borderTop:'5px solid #050505'}}/>
+        </span>
+      )}
+    </span>
+  );
+}
+
+function InfoBubble({text}){
+  return(
+    <Tooltip text={text}>
+      <span style={{display:'inline-flex',alignItems:'center',justifyContent:'center',width:16,height:16,borderRadius:'50%',background:'#E8E8E8',color:'#616161',fontSize:10,fontWeight:700,cursor:'default',marginLeft:5,flexShrink:0}}>?</span>
+    </Tooltip>
+  );
+}
+
 function HighVisStream(){
   const[selCh,setSelCh]=useState(null);
-  const[showSetup,setShowSetup]=useState(false);
+  const[teamOpen,setTeamOpen]=useState(false);
   return(
     <div>
-      {/* Stream 1 hero — bullets + collapsible project setup */}
-      <div style={{background:'#F0FDF4',border:'1.5px solid #86EFAC',borderRadius:12,padding:'14px 20px',marginBottom:16}}>
-        <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:10,flexWrap:'wrap'}}>
-          <IClock size={15} style={{color:'#166534'}}/>
-          <span style={{fontSize:12,fontWeight:800,textTransform:'uppercase',letterSpacing:'0.06em',color:'#166534'}}>Stream 1 — Cascade · L & M</span>
-          <span style={{fontSize:11,color:'#166534',background:'#DCFCE7',borderRadius:20,padding:'2px 9px',fontWeight:700,marginLeft:'auto'}}>SLA · L = 38 d · M = 28 d</span>
+      {/* Status banner — bullets on separate lines */}
+      <div style={{background:'#F0FDF4',border:'1.5px solid #86EFAC',borderRadius:12,padding:'14px 18px',marginBottom:16}}>
+        <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:10}}>
+          <IClock size={14} style={{color:'#166534'}}/>
+          <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#166534'}}>
+            Model decided — Cascade
+            <InfoBubble text={"Cascade: Global teams produce the EN Master + run the AI first pass for all markets. Local POCs receive the drafts and own everything downstream — localization, sign-off, upload."} />
+            {' '}· L & M
+          </span>
         </div>
-        <ul style={{listStyle:'none',display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))',gap:'5px 18px',margin:'0 0 10px',padding:0}}>
+        <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:5,margin:'0 0 8px 0',paddingLeft:2}}>
           {[
-            <>Heavy creative investment — <strong>Creative Factory always involved</strong></>,
-            <>Global teams own the EN Master + AI first pass</>,
-            <>Local POC drives downstream proofing + sign-off</>,
-            <>Channel teams execute upload</>,
+            'Global PMM + Comms partners own the EN Master and AI first pass.',
+            'Local POC owns everything downstream — full content responsibility, not just a final check.',
+            'SLA: ~38 working days for L · ~28 working days for M.',
           ].map((b,i)=>(
-            <li key={i} style={{display:'flex',gap:7,alignItems:'flex-start',fontSize:13,color:'#14532D',lineHeight:1.55}}>
-              <span style={{width:5,height:5,borderRadius:'50%',background:'#16A34A',flexShrink:0,marginTop:8}}/>
-              <span>{b}</span>
+            <li key={i} style={{display:'flex',gap:7,fontSize:13,color:'#14532D',lineHeight:1.55}}>
+              <span style={{width:5,height:5,borderRadius:'50%',background:'#22C55E',flexShrink:0,marginTop:7}}/>
+              {b}
             </li>
           ))}
         </ul>
-        <div style={{display:'flex',alignItems:'center',gap:14,flexWrap:'wrap',marginTop:6}}>
-          <button onClick={()=>setShowSetup(s=>!s)} style={{display:'inline-flex',alignItems:'center',gap:5,padding:'5px 11px',borderRadius:20,border:'1.5px solid #86EFAC',background:showSetup?'#DCFCE7':'#fff',color:'#166534',fontSize:12,fontWeight:700,cursor:'pointer',fontFamily:'inherit'}}>
-            <IUsers size={12}/>
-            {showSetup?'Hide project team':'See project team'}
-            <IChevD size={11} style={{transform:showSetup?'rotate(180deg)':'rotate(0deg)',transition:'transform 0.2s'}}/>
+        <a href="https://www.notion.so/qonto/Growth-Operating-Model-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658" target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:'#166534',fontWeight:600}}>Full operating model on Notion →</a>
+      </div>
+
+      {/* Upstream block — redesigned with owners, sequence, tooltips */}
+      <div style={{background:'#F5F5F5',border:'1px solid #E0E0E0',borderRadius:12,padding:'16px 20px',marginBottom:20}}>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14,flexWrap:'wrap',gap:8}}>
+          <div style={{display:'flex',alignItems:'center',gap:6}}>
+            <span style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.07em',color:'#8F8F8F'}}>Upstream phases</span>
+            <InfoBubble text={"What happens before Step 1 (EN Master copy) can start. These gates are sequential hard dependencies — each must be completed before the next begins."}/>
+          </div>
+          <button onClick={()=>setTeamOpen(!teamOpen)}
+            style={{fontSize:11,fontWeight:700,color:'#7B4DB8',background:'#F5F0FF',border:'1px solid #E9E0FF',borderRadius:20,padding:'3px 10px',cursor:'pointer',fontFamily:'inherit',display:'flex',alignItems:'center',gap:5}}>
+            <IUsers size={11} style={{color:'#7B4DB8'}}/>
+            How is the project team set up?
+            <IChevD size={10} style={{color:'#7B4DB8',transition:'transform 0.2s',transform:teamOpen?'rotate(180deg)':'none'}}/>
           </button>
-          <a href="https://www.notion.so/qonto/Growth-Operating-Model-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658" target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:'#166534',fontWeight:600}}>Full operating model on Notion →</a>
         </div>
-        {showSetup&&(
-          <div style={{marginTop:12,paddingTop:12,borderTop:'1px solid #BBF7D0'}} className="fade-in">
-            <div style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#166534',marginBottom:8}}>Project team — identified at Quarterly Planning (2 weeks after Quarterly Reunion)</div>
-            <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(210px,1fr))',gap:8}}>
+
+        {/* Team setup accordion */}
+        <div className={`acc-body ${teamOpen?'open':''}`}>
+          <div className="acc-inner">
+            <div style={{background:'#F0EAFF',borderRadius:10,padding:'12px 14px',marginBottom:14,display:'flex',flexDirection:'column',gap:6}}>
               {[
-                {label:'Local POC',text:'1 per market — appointed by Local Head of Marketing. Single POC for the project.'},
-                {label:'Core team',text:'Comms Partner · Designer Builder · Creative Copywriter'},
-                {label:'Paid POC',text:'Regional Paid manager (if local initiative) — otherwise Alicia Dassance (Global Paid POC).'},
-              ].map(c=>(
-                <div key={c.label} style={{background:'#fff',border:'1px solid #BBF7D0',borderRadius:8,padding:'7px 11px'}}>
-                  <div style={{fontSize:10,fontWeight:700,color:'#166534',textTransform:'uppercase',letterSpacing:'0.04em',marginBottom:3}}>{c.label}</div>
-                  <div style={{fontSize:12,color:'#14532D',lineHeight:1.45}}>{c.text}</div>
+                {role:'Global PMM',resp:'Owns the project end-to-end. Writes the CommDoc, drives the upstream phases, coordinates with Creative Factory and Comms partners.'},
+                {role:'Comms partners',resp:'Co-own the project brief. Write the EN Master copy (sometimes with Creative Copywriter). Run the AI first pass for all markets.'},
+                {role:'Creative Factory',resp:'Produces all brand/visual assets (Creative Essentials) in all locales — kicks off as soon as Creative Essentials are signed off.'},
+                {role:'Local Market POC',resp:'Appointed by Head of Marketing before the quarter. Shares local context during orientation. Owns everything downstream from draft receipt.'},
+              ].map(t=>(
+                <div key={t.role} style={{display:'flex',gap:10,alignItems:'flex-start'}}>
+                  <div style={{display:'flex',alignItems:'center',gap:5,flexShrink:0,minWidth:150}}>
+                    <IUser size={12} style={{color:'#7B4DB8'}}/>
+                    <span style={{fontSize:12,fontWeight:700,color:'#461068'}}>{t.role}</span>
+                  </div>
+                  <span style={{fontSize:12,color:'#3D3D3D',lineHeight:1.55}}>{t.resp}</span>
                 </div>
               ))}
             </div>
           </div>
-        )}
-      </div>
-      {/* Upstream block — phases + gating + parallel */}
-      <div style={{background:'#F5F5F5',border:'1px solid #E0E0E0',borderRadius:12,padding:'14px 18px',marginBottom:20}}>
-        <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:12,flexWrap:'wrap'}}>
-          <span style={{fontSize:10,fontWeight:800,textTransform:'uppercase',letterSpacing:'0.07em',color:'#3D3D3D'}}>Upstream phases</span>
-          <span style={{fontSize:11,color:'#616161',fontStyle:'italic'}}>What happens before Step 1.2 (Creative Asset Production) can start.</span>
         </div>
-        {/* Sequential row — gates Step 1.2 */}
-        <div style={{display:'flex',gap:0,alignItems:'stretch',overflowX:'auto',marginBottom:14}}>
+
+        {/* Steps A→D with owners, sequential */}
+        <div style={{display:'flex',gap:0,alignItems:'flex-start',overflowX:'auto'}}>
           {HV_UPSTREAM.map((u,i)=>(
-            <React.Fragment key={u.label}>
-              <div style={{display:'flex',flexDirection:'column',alignItems:'center',minWidth:170,maxWidth:210,flexShrink:0,background:'#fff',border:`1px solid ${u.badge?'#FECACA':'#E0E0E0'}`,borderRadius:10,padding:'10px 8px'}}>
-                <div style={{width:26,height:26,borderRadius:'50%',background:u.trigger?'#fff':'#3D3D3D',color:u.trigger?'#3D3D3D':'#fff',border:u.trigger?'2px solid #3D3D3D':'none',display:'flex',alignItems:'center',justifyContent:'center',fontSize:12,fontWeight:800,marginBottom:5}}>{i+1}</div>
-                <div style={{textAlign:'center',padding:'0 4px'}}>
+            <React.Fragment key={u.id}>
+              <div style={{display:'flex',flexDirection:'column',alignItems:'center',minWidth:155,maxWidth:185,flexShrink:0}}>
+                <div style={{width:28,height:28,borderRadius:'50%',background:'#3D3D3D',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,marginBottom:6}}>{u.id}</div>
+                <div style={{textAlign:'center',padding:'0 6px'}}>
                   <div style={{fontSize:12,fontWeight:700,color:'#050505',marginBottom:3,lineHeight:1.3}}>{u.label}</div>
-                  <div style={{fontSize:11,color:'#616161',lineHeight:1.45,marginBottom:u.badge?6:0}}>{u.detail}</div>
+                  <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:4,marginBottom:4}}>
+                    <IUser size={11} style={{color:'#8F8F8F'}}/>
+                    <span style={{fontSize:10,color:'#8F8F8F',fontWeight:600}}>{u.owner}</span>
+                  </div>
+                  <div style={{fontSize:11,color:'#616161',lineHeight:1.45,marginBottom:u.badge?4:0}}>{u.detail}</div>
                   {u.badge&&<span style={{fontSize:10,fontWeight:700,background:u.badgeBg,color:u.badgeColor,borderRadius:20,padding:'1px 7px',display:'inline-block'}}>{u.badge}</span>}
                 </div>
               </div>
               {i<HV_UPSTREAM.length-1&&(
-                <div style={{display:'flex',alignItems:'center',flexShrink:0,color:'#B8B8B8',fontSize:14,margin:'0 3px'}}>→</div>
+                <div style={{paddingTop:13,flexShrink:0,color:'#CCCCCC',fontSize:16,margin:'0 2px'}}>→</div>
               )}
             </React.Fragment>
           ))}
         </div>
-        {/* Parallel lane — feeds Steps 1.1 / 1.2 */}
-        <div style={{paddingTop:12,borderTop:'1px dashed #B8B8B8'}}>
-          <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8,flexWrap:'wrap'}}>
-            <span style={{fontSize:10,fontWeight:800,background:'#E0F2FE',color:'#0369A1',padding:'2px 8px',borderRadius:20,letterSpacing:'0.05em'}}>‖ PARALLEL</span>
-            <span style={{fontSize:11,color:'#616161',fontStyle:'italic'}}>Kicks off after Step 0. Does not block Creative Essentials (Step 1.1).</span>
-          </div>
-          <div style={{display:'flex',gap:14,alignItems:'stretch',overflowX:'auto'}}>
-            {HV_UPSTREAM_PARALLEL.map(u=>(
-              <div key={u.label} style={{flex:'1 1 280px',background:'#fff',border:'1px dashed #0369A1',borderRadius:10,padding:'10px 12px',display:'flex',gap:10,alignItems:'flex-start',maxWidth:520}}>
-                <div style={{width:24,height:24,borderRadius:'50%',background:'#E0F2FE',color:'#0369A1',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:800,flexShrink:0}}>‖</div>
-                <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontSize:12,fontWeight:700,color:'#050505',marginBottom:2,lineHeight:1.3}}>{u.label}</div>
-                  <div style={{fontSize:11,color:'#616161',lineHeight:1.45,marginBottom:5}}>{u.detail}</div>
-                  <div style={{fontSize:10,color:'#0369A1',fontWeight:600,marginBottom:3}}>Owner: {u.owner}</div>
-                  {u.feeds&&<div style={{fontSize:10,fontWeight:700,color:'#0369A1',background:'#E0F2FE',borderRadius:20,padding:'2px 8px',display:'inline-block'}}>→ Feeds {u.feeds}</div>}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
+
       {/* Channel selector pills */}
       <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:16,flexWrap:'wrap'}}>
         <span style={{fontSize:12,color:'#8F8F8F',fontWeight:600}}>Click a channel to highlight across all steps:</span>
@@ -684,6 +628,7 @@ function HighVisStream(){
         ))}
         {selCh&&<button onClick={()=>setSelCh(null)} style={{padding:'5px 12px',borderRadius:20,border:'1px solid #E0E0E0',background:'#fff',color:'#8F8F8F',fontSize:12,fontWeight:600,cursor:'pointer',fontFamily:'inherit'}}>Clear ✕</button>}
       </div>
+
       {/* Numbered steps */}
       <div style={{overflowX:'auto',paddingBottom:12}}>
         <div style={{display:'flex',alignItems:'flex-start',minWidth:'max-content',gap:0}}>
@@ -698,6 +643,7 @@ function HighVisStream(){
     </div>
   );
 }
+
 /* ══════════════════════════════════════════════
    STREAM 2 — SELF-SERVE (PMM end-to-end)
 ══════════════════════════════════════════════ */
@@ -714,10 +660,10 @@ const STEPS_SS=[
     id:1,title:'EN master copy',
     useCases:[{
       owner:'PMM',
-      ruleOfThumb:'PMM owns and delivers the master copy end-to-end. No Comms Partners, no Creative Factory.',
+      ruleOfThumb:'PMM owns and delivers the master copy end-to-end. No Comms partner involvement.',
       tools:['Tolki','QualityGuard — always run it!'],
     }],
-    tradeOff:'Growth efficiency principle: one project owner (PMM) handles this end-to-end. Trade-off: no creative concept investment (no Creative Essentials), no local orientation, no local review. Edge cases handled via Red Bin, case by case.',
+    tradeOff:'Growth efficiency principle: one project owner (PMM) handles this end-to-end. The trade-off: markets have no say and no orientation phase. Edge cases are handled via Red Bin, case by case.',
     notes:[],
   },
   {
@@ -746,6 +692,7 @@ const STEPS_SS=[
       {label:'Paid Ads',owner:'PMM + Paid Ads manager',tools:['Directly on platform']},
     ],
     notes:['PMM leads. Channel owner executes technically.'],
+
   },
   {
     id:5,title:'Red bin logging',
@@ -753,6 +700,7 @@ const STEPS_SS=[
     notes:['Purpose: log quality issues post-launch. In this model, edge cases are expected — Red Bin is the main feedback loop.'],
   },
 ];
+
 /* ══════════════════════════════════════════════
    STREAM 3 — BAU (unchanged)
 ══════════════════════════════════════════════ */
@@ -768,6 +716,7 @@ const BAU_CHANNELS=['CRM','Website','Paid Ads'];
 const CHANNEL_COLOR={'CRM':'#7B4DB8','Website':'#7B4DB8','Paid Ads':'#7B4DB8'};
 const CHANNEL_BG={'CRM':'#F5F0FF','Website':'#F5F0FF','Paid Ads':'#F5F0FF'};
 const CHANNEL_BORDER={'CRM':'#BFA6EA','Website':'#BFA6EA','Paid Ads':'#BFA6EA'};
+
 const STEPS_BAU=[
   {
     id:1,title:'EN master copy',
@@ -819,6 +768,7 @@ const STEPS_BAU=[
     notes:['Purpose: log quality issues discovered post-launch, or broken delivery processes.'],
   },
 ];
+
 /* ── LOCAL POCs compact block ── */
 function LocalPOCsCompact(){
   const pocs=[
@@ -858,6 +808,7 @@ function LocalPOCsCompact(){
     </div>
   );
 }
+
 /* ── BAU STEP CARD ── */
 function BAUStepCard({step,gradBg,selectedCh,onSelectCh}){
   const channels=BAU_CHANNELS;
@@ -875,7 +826,7 @@ function BAUStepCard({step,gradBg,selectedCh,onSelectCh}){
             {step.mandatory&&<div style={{fontSize:9,fontWeight:700,background:'rgba(255,255,255,0.25)',borderRadius:20,padding:'2px 7px',display:'inline-block',letterSpacing:'0.04em',textTransform:'uppercase'}}>Mandatory</div>}
           </div>
         </div>
-        <div style={{position:'absolute',top:-2,right:-2,minWidth:22,height:22,padding:String(step.id).length>1?'0 4px':0,borderRadius:11,background:'#fff',border:'2px solid #E0E0E0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:String(step.id).length>1?10:11,fontWeight:800,color:'#3D3D3D',zIndex:2}}>{step.id}</div>
+        <div style={{position:'absolute',top:-2,right:-2,width:22,height:22,borderRadius:'50%',background:'#fff',border:'2px solid #E0E0E0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,color:'#3D3D3D',zIndex:2}}>{step.id}</div>
       </div>
       <div style={{width:1,height:14,background:'#CCCCCC'}}/>
       <div style={{width:'100%',background:'#fff',border:'1px solid #E0E0E0',borderRadius:14,padding:'16px',boxShadow:'0 1px 4px rgba(0,0,0,0.05)'}}>
@@ -951,6 +902,7 @@ function BAUStepCard({step,gradBg,selectedCh,onSelectCh}){
     </div>
   );
 }
+
 function BAUWorkflow(){
   const[selCh,setSelCh]=useState(null);
   const STEP_W=360,CONN_W=52;
@@ -984,6 +936,7 @@ function BAUWorkflow(){
     </div>
   );
 }
+
 /* ── LOCAL POCs BLOCK (full, for BAU) ── */
 function LocalPOCsBlock(){
   const pocs=[
@@ -1021,6 +974,7 @@ function LocalPOCsBlock(){
     </div>
   );
 }
+
 /* ── HIGH-LEVEL BAR ── */
 function HighLevelBar(){
   const steps=[
@@ -1049,6 +1003,7 @@ function HighLevelBar(){
     </div>
   );
 }
+
 /* ── SCOPE TOGGLE ── */
 function ScopeToggle(){
   const[open,setOpen]=useState(false);
@@ -1057,7 +1012,7 @@ function ScopeToggle(){
       <div onClick={()=>setOpen(!open)} style={{padding:'14px 20px',display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer'}}>
         <div style={{display:'flex',alignItems:'center',gap:10}}>
           <ITarget size={17} style={{color:'#7B4DB8'}}/>
-          <span style={{fontSize:15,fontWeight:600,color:'#050505'}}>Scope: <span style={{fontWeight:500,color:'#616161'}}>3 workflows documented — High-visibility (L & M), Self-serve (S), and BAU / Channel-owned.</span></span>
+          <span style={{fontSize:15,fontWeight:600,color:'#050505'}}>Scope: <span style={{fontWeight:500,color:'#616161'}}>3 workflows documented — High-visibility (L), Self-serve (S), and BAU / Channel-owned.</span></span>
         </div>
         <div style={{display:'flex',alignItems:'center',gap:5,fontSize:13,fontWeight:600,color:'#7B4DB8',flexShrink:0}}>
           {open?'Hide':'See details & exceptions'}
@@ -1073,7 +1028,7 @@ function ScopeToggle(){
                   <IBulb size={14} style={{color:'#7B4DB8'}}/>
                   <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Not sure which stream applies to you?</span>
                 </div>
-                <p style={{fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:'0 0 8px 0'}}>Check your project size in <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> first — <strong>L or M = High-visibility</strong> (Creative Factory always involved), <strong>S = Self-serve</strong>, <strong>not in Panorama = BAU</strong>. Then use <strong>Find your path</strong> to get your personalised steps.</p>
+                <p style={{fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:'0 0 8px 0'}}>Check your project size in <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> first — L or M = High-visibility, S or M = Self-serve. Not in Panorama = BAU. Then use <strong>Find your path</strong> to get your personalised steps.</p>
                 <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8,marginTop:16}}>
                   <IAlert size={14} style={{color:'#B45309'}}/>
                   <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Out of scope</span>
@@ -1094,20 +1049,7 @@ function ScopeToggle(){
                   <IClock size={14} style={{color:'#166534'}}/>
                   <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Stream 1 — decided</span>
                 </div>
-                <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:5}}>
-                  {[
-                    <>Model: <strong>Cascade</strong></>,
-                    <>Creative Factory always involved (Creative Essentials + Creative Asset Production)</>,
-                    <>Local POCs drive downstream localization & own final sign-off</>,
-                    <>Channel teams execute upload</>,
-                    <>Check <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> to confirm L/M sizing</>,
-                  ].map((b,i)=>(
-                    <li key={i} style={{display:'flex',gap:6,fontSize:14,color:'#3D3D3D',lineHeight:1.55}}>
-                      <span style={{width:5,height:5,borderRadius:'50%',background:'#166534',flexShrink:0,marginTop:8}}/>
-                      <span>{b}</span>
-                    </li>
-                  ))}
-                </ul>
+                <p style={{fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:0}}>Model chosen: <strong>Hand-off</strong>. Comms partners do first-pass, local POCs own full localization. Other models kept in the workflow for reference. Check <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> to confirm if your project is L or M.</p>
               </div>
             </div>
           </div>
@@ -1116,6 +1058,7 @@ function ScopeToggle(){
     </div>
   );
 }
+
 /* ── LEGEND ── */
 function Legend({activeTrack}){
   const[open,setOpen]=useState(false);
@@ -1148,6 +1091,7 @@ function Legend({activeTrack}){
     </div>
   );
 }
+
 /* ── LOCAL POC PAGE ── */
 function LocalPOCView(){
   const pocs=[
@@ -1280,6 +1224,7 @@ function LocalPOCView(){
     </div>
   );
 }
+
 /* ── PATH FINDER ── */
 const LANGS=[
   {flag:'🇫🇷',label:'French',poc:'@Delphine de Roquemaurel'},
@@ -1289,6 +1234,7 @@ const LANGS=[
   {flag:'🇵🇹',label:'Portuguese',poc:'@Julia Latorre'},
   {flag:'🇳🇱',label:'Dutch',poc:'@Rosemarijn Disseldorp'},
 ];
+
 const STEP_GRAD_PF=[
   'linear-gradient(135deg,#BFA6EA,#7B4DB8)',
   'linear-gradient(135deg,#D5C8FF,#A585DB)',
@@ -1296,62 +1242,32 @@ const STEP_GRAD_PF=[
   'linear-gradient(135deg,#9BC5EA,#A585DB)',
   'linear-gradient(135deg,#FFB590,#CE6033)',
 ];
+
 function getPathResult(answers){
   const{role,projectType,channel,langs}=answers;
+
   if(projectType==='highvis') return{
     type:'highvis',track:'highvis',langs:langs||[],
     steps:[
-      {n:'↑',title:'Upstream phases',owner:'GLT + Global PMM + Local POC + Channels',
-        bullets:[
-          'GLT sizes the project as L or M.',
-          'Global PMM writes Step 0 (one-pager, incl. legal flags).',
-          'Local POC + PMM + SEO content manager run Local Orientation.',
-          'GLT decides transcreation (cascade vs. transcreate).',
-          'In parallel: Channel Orientations (Paid · Website · CRM) feed the Creative Brief.',
-        ],
+      {n:'A→D',title:'Upstream phases',owner:'GLT + Global PMM + Local markets',
+        note:'GLT sizes the project. Global PMM writes Step 0 outline. Local POC (appointed by Head of Marketing at quarterly planning) shares market context. GLT decides on transcreation.',
         tools:[]},
-      {n:'1.1',title:'Creative Essentials',owner:'Global PMM + Comms Partners + Creative Factory',
-        bullets:[
-          'Can start in parallel with upstream.',
-          'Creative Factory delivers concept pitch + key claims per channel + tagline for Paid Ads.',
-          'Local CCs translate the CE into all needed locales.',
-          'User Flow Mapping runs in parallel (Marketing team).',
-        ],
+      {n:1,title:'EN master copy + AI first pass',owner:'Global PMM + Comms partners + Creative Factory',
         tools:['Tolki','QualityGuard — always run it!']},
-      {n:'1.2',title:'Creative Asset Production',owner:'Creative Factory + Comms Partners (channel-specific)',
-        bullets:[
-          'Website — Creative Factory delivers hero + key section copies + assets.',
-          'CRM — Comms Partners write the EN Master full email + AI translate in Qontent.',
-          'Paid Ads — Creative Copywriter writes all copies (in-asset + external) + designer adapts to formats.',
-        ],
-        tools:['Qontent (Tolki & QualityGuard accessible from here)']},
       {n:2,title:'Localization & review',owner:'Local Market POC',mandatory:true,
-        bullets:[
-          'Local POC reviews based on the Creative Essentials.',
-          'Full ownership: accuracy, tone of voice, message adaptation.',
-          'Paid Ads: Local POC also validates here (no separate Step 3).',
-        ],
-        tools:['Qontent (Tolki & QualityGuard accessible from here)','QualityGuard — always run it!']},
+        note:'Full ownership from draft receipt — accuracy, tone of voice, message adaptation. Not just grammar.',
+        tools:['QualityGuard — always run it!']},
       {n:3,title:'Final sign-off',owner:'Local Market POC',mandatory:true,
-        bullets:[
-          'L — blocking gate (no publish until signed off).',
-          'M — SLA-based sign-off.',
-          'Paid Ads — no Step 3, already validated in Step 2.',
-        ],
+        note:'For L: blocking gate — no publish until signed off. For M: SLA-based.',
         tools:[]},
-      {n:4,title:'Upload & publish',owner:'Channel teams',
-        bullets:[
-          'CRM — builds in Customer.io + (optional) Local POC review before publish.',
-          'Website — publishes via Qontent.',
-          'Paid Ads — publishes on platform.',
-        ],
-        tools:['Qontent (Tolki & QualityGuard accessible from here)','Customer.io']},
+      {n:4,title:'Upload & publish',owner:'Local Market POC + Local channels',tools:['Qontent']},
       {n:5,title:'Red bin logging',owner:'Anyone involved',tools:['Red Bin logging form/database']},
     ],
   };
+
   if(projectType==='selfserve') return{
     type:'selfserve',track:'selfserve',langs:langs||[],
-    tradeOff:'Growth efficiency: PMM owns end-to-end, no Creative Factory, no local review. Trade-off: markets have no say, no creative concept investment. Edge cases handled via Red Bin post-publish. Exception: CRM always gets a native review.',
+    tradeOff:'Growth efficiency: PMM owns end-to-end, no local review. Trade-off: markets have no say. Edge cases handled via Red Bin post-publish. Exception: CRM always gets a native review.',
     steps:[
       {n:1,title:'EN master copy',owner:'PMM',tools:['Tolki','QualityGuard — always run it!']},
       {n:2,title:'First-pass translation',owner:'PMM',tools:['Qontent (Tolki & QualityGuard accessible from here)']},
@@ -1363,6 +1279,7 @@ function getPathResult(answers){
       {n:5,title:'Red bin logging',owner:'Anyone involved',tools:['Red Bin logging form/database']},
     ],
   };
+
   const ch=channel||'CRM';
   return{
     type:'bau',track:'bau',channel:ch,langs:langs||[],
@@ -1385,11 +1302,14 @@ function getPathResult(answers){
     ],
   };
 }
+
 function PathFinder({onViewWorkflow}){
   const[screen,setScreen]=useState('projectType');
   const[answers,setAnswers]=useState({});
   const[langSel,setLangSel]=useState([]);
+
   const reset=()=>{setScreen('projectType');setAnswers({});setLangSel([]);};
+
   const pick=(key,val)=>{
     const next={...answers,[key]:val};
     if(key==='projectType'){
@@ -1401,6 +1321,7 @@ function PathFinder({onViewWorkflow}){
       setAnswers(next);setScreen('langs');
     }
   };
+
   const back=()=>{
     if(screen==='channel')setScreen('projectType');
     else if(screen==='langs'){
@@ -1408,33 +1329,22 @@ function PathFinder({onViewWorkflow}){
       else setScreen('channel');
     } else if(screen==='result')setScreen('langs');
   };
+
   const progressMap={projectType:25,channel:55,langs:80,result:100};
   const stepLabel={projectType:'Project type',channel:'Channel',langs:'Languages'};
+
   const OptionBtn=({opt,onClick,selected})=>(
-    <button onClick={onClick} style={{width:'100%',textAlign:'left',padding:'13px 16px',borderRadius:10,border:`1.5px solid ${selected?'#050505':'#E0E0E0'}`,background:selected?'#FAFAFA':'#fff',cursor:'pointer',fontFamily:'inherit',display:'flex',alignItems:'flex-start',gap:12,transition:'all 0.15s ease',marginBottom:8}}>
-      <div style={{flex:1,minWidth:0}}>
-        <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:opt.bullets?7:(opt.sub?2:0),flexWrap:'wrap'}}>
-          {opt.sizing&&<span style={{padding:'2px 9px',borderRadius:20,background:opt.accentBg||'#F5F5F5',color:opt.accent||'#3D3D3D',fontSize:10,fontWeight:800,textTransform:'uppercase',letterSpacing:'0.04em'}}>{opt.sizing}</span>}
-          <span style={{fontSize:14,fontWeight:700,color:'#050505'}}>{opt.label}</span>
-        </div>
-        {opt.bullets?(
-          <ul style={{listStyle:'none',margin:0,padding:0,display:'flex',flexDirection:'column',gap:3}}>
-            {opt.bullets.map((b,i)=>(
-              <li key={i} style={{display:'flex',gap:6,fontSize:12,color:'#616161',lineHeight:1.5}}>
-                <span style={{width:4,height:4,borderRadius:'50%',background:'#CCC',flexShrink:0,marginTop:7}}/>
-                <span>{b}</span>
-              </li>
-            ))}
-          </ul>
-        ):opt.sub?(
-          <div style={{fontSize:12,color:'#8F8F8F'}}>{opt.sub}</div>
-        ):null}
+    <button onClick={onClick} style={{width:'100%',textAlign:'left',padding:'13px 16px',borderRadius:10,border:`1.5px solid ${selected?'#050505':'#E0E0E0'}`,background:selected?'#F5F5F5':'#fff',cursor:'pointer',fontFamily:'inherit',display:'flex',alignItems:'center',justifyContent:'space-between',transition:'all 0.15s ease',marginBottom:8}}>
+      <div>
+        <div style={{fontSize:14,fontWeight:600,color:'#050505'}}>{opt.label}</div>
+        {opt.sub&&<div style={{fontSize:12,color:'#8F8F8F',marginTop:2}}>{opt.sub}</div>}
       </div>
       {selected
-        ?<span style={{width:18,height:18,borderRadius:'50%',background:'#050505',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,marginTop:4}}><svg width="10" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4,9 11,1" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
-        :<IChevR size={14} style={{color:'#CCCCCC',flexShrink:0,marginTop:4}}/>}
+        ?<span style={{width:18,height:18,borderRadius:'50%',background:'#050505',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><svg width="10" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4,9 11,1" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
+        :<IChevR size={14} style={{color:'#CCCCCC',flexShrink:0}}/>}
     </button>
   );
+
   const Shell=({title,sub,children})=>(
     <div style={{maxWidth:520,margin:'0 auto',padding:'32px 0'}}>
       {screen!=='result'&&(
@@ -1457,30 +1367,27 @@ function PathFinder({onViewWorkflow}){
       </div>
     </div>
   );
+
   if(screen==='projectType') return(
-    <Shell title="What type of project is this?" sub="Check Panorama first — the size determines which stream applies.">
+    <Shell title="What type of project is this?" sub="Not sure? Check Panorama first — L or M = High-visibility, S = Self-serve, not in Panorama = BAU.">
       {[
-        {value:'highvis',label:'Global — High-visibility / Creativity',
-          sizing:'Panorama · L or M',accent:'#fff',accentBg:'#050505',
-          bullets:['Creative Factory always involved','Heavy upstream investment + local sign-off','EN Master cascaded to all markets']},
-        {value:'selfserve',label:'Global — Self-serve',
-          sizing:'Panorama · S',accent:'#fff',accentBg:'#7B4DB8',
-          bullets:['PMM owns end-to-end','No Creative Factory, no local review (except CRM)','Edge cases → Red Bin']},
-        {value:'bau',label:'BAU / Channel-owned',
-          sizing:'Not in Panorama',accent:'#fff',accentBg:'#461068',
-          bullets:['Project owner manages copy + AI translation','Local POC = native review (last quality gate)','Per channel: CRM · Website · Paid Ads']},
+        {value:'highvis',label:'Global — High-visibility / Creativity',sub:'In Panorama L or M · Upstream phases + Creative Factory · Local POC owns downstream'},
+        {value:'selfserve',label:'Global — Self-serve',sub:'In Panorama S · PMM end-to-end · No local review (except CRM)'},
+        {value:'bau',label:'BAU / Channel-owned',sub:'Not in Panorama · CRM, Website, Paid Ads · Local POC does QC'},
       ].map(o=><OptionBtn key={o.value} opt={o} selected={answers.projectType===o.value} onClick={()=>pick('projectType',o.value)}/>)}
     </Shell>
   );
+
   if(screen==='channel') return(
-    <Shell title="Which channel?" sub="Each channel has its own owners, tools, and review path.">
+    <Shell title="Which channel?">
       {[
-        {value:'CRM',label:'CRM / Email',sub:'Built in Customer.io · translated in Qontent'},
-        {value:'Website',label:'Website',sub:'Built in Qontent'},
-        {value:'Paid Ads',label:'Paid Ads',sub:'Published on platform'},
+        {value:'CRM',label:'CRM / Email',sub:'Customer.io'},
+        {value:'Website',label:'Website',sub:'Qontent'},
+        {value:'Paid Ads',label:'Paid Ads',sub:''},
       ].map(ch=><OptionBtn key={ch.value} opt={{label:ch.label,sub:ch.sub}} selected={answers.channel===ch.value} onClick={()=>pick('channel',ch.value)}/>)}
     </Shell>
   );
+
   if(screen==='langs') return(
     <div style={{maxWidth:520,margin:'0 auto',padding:'32px 0'}}>
       <div style={{marginBottom:24}}>
@@ -1508,6 +1415,7 @@ function PathFinder({onViewWorkflow}){
       </div>
     </div>
   );
+
   if(screen==='result'){
     const result=getPathResult({...answers,langs:langSel});
     const trackMeta={
@@ -1518,6 +1426,7 @@ function PathFinder({onViewWorkflow}){
     const tc=trackMeta[result.type];
     const pocList=langSel.map(l=>LANGS.find(x=>x.label===l)).filter(Boolean);
     const showPOCsInResult=(result.type==='bau')||(result.type==='highvis');
+
     return(
       <div style={{maxWidth:720,margin:'0 auto',padding:'32px 0'}} className="fade-in">
         {/* Header */}
@@ -1525,8 +1434,10 @@ function PathFinder({onViewWorkflow}){
           <div style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',color:'rgba(255,255,255,0.55)',marginBottom:3}}>Your workflow</div>
           <div style={{fontSize:16,fontWeight:700,color:'#fff'}}>{tc.label}</div>
         </div>
+
         {/* Trade-off */}
         {result.tradeOff&&<TradeOffCallout text={result.tradeOff}/>}
+
         {/* Steps */}
         <div style={{display:'flex',flexDirection:'column',gap:8,marginTop:16,marginBottom:16}}>
           {result.steps.map((s,i)=>(
@@ -1537,18 +1448,7 @@ function PathFinder({onViewWorkflow}){
                   <span style={{fontSize:14,fontWeight:700,color:'#050505'}}>{s.title}</span>
                   {s.mandatory&&<span style={{fontSize:9,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.04em',background:'#F5F0FF',color:'#7B4DB8',borderRadius:20,padding:'2px 8px'}}>Mandatory</span>}
                 </div>
-                {s.bullets?(
-                  <ul style={{listStyle:'none',padding:0,margin:'0 0 8px',display:'flex',flexDirection:'column',gap:3}}>
-                    {s.bullets.map((b,bi)=>(
-                      <li key={bi} style={{display:'flex',gap:6,fontSize:12,color:'#616161',lineHeight:1.55}}>
-                        <span style={{width:4,height:4,borderRadius:'50%',background:'#CCC',flexShrink:0,marginTop:7}}/>
-                        <span>{b}</span>
-                      </li>
-                    ))}
-                  </ul>
-                ):s.note?(
-                  <p style={{fontSize:12,color:'#616161',margin:'0 0 6px',lineHeight:1.55,fontStyle:'italic'}}>{s.note}</p>
-                ):null}
+                {s.note&&<p style={{fontSize:12,color:'#616161',margin:'0 0 6px',lineHeight:1.55,fontStyle:'italic'}}>{s.note}</p>}
                 <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:s.tools&&s.tools.length>0?6:0,background:'#F5F5F5',borderRadius:7,padding:'5px 9px',width:'fit-content'}}>
                   <IUser size={12} style={{color:'#050505'}}/>
                   <span style={{fontSize:13,fontWeight:700,color:'#050505'}}>{s.owner}</span>
@@ -1582,6 +1482,7 @@ function PathFinder({onViewWorkflow}){
             </div>
           ))}
         </div>
+
         {/* Actions */}
         <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
           <button onClick={()=>onViewWorkflow(result.track)} style={{padding:'10px 18px',borderRadius:10,border:`2px solid ${tc.bg}`,background:tc.bg,color:'#fff',fontSize:13,fontWeight:700,cursor:'pointer',fontFamily:'inherit'}}>View full workflow →</button>
@@ -1594,10 +1495,11 @@ function PathFinder({onViewWorkflow}){
 }
 /* ── TRACKS ── */
 const TRACKS=[
-  {id:'highvis',label:'Global projects — High-visibility / Creativity',sizing:'In Panorama — L & M',desc:'Cascade model. Heavy investment in the creative concept — Creative Factory always involved (Creative Essentials + Creative Asset Production). Local POC coordinates downstream localization & owns final market sign-off; channel teams execute upload.',activeBg:'#050505',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
-  {id:'selfserve',label:'Global projects — Self-serve',sizing:'In Panorama — S',desc:'PMM owns end-to-end. No Comms Partners, no Creative Factory, no local POC involvement. Red Bin handles edge cases.',activeBg:'#7B4DB8',badgeBg:'rgba(255,255,255,0.2)',badgeText:'rgba(255,255,255,0.9)'},
+  {id:'highvis',label:'Global projects — High-visibility / Creativity',sizing:'In Panorama — L & sometimes M',desc:'Cascade model. Upstream phases + Creative Factory, then Local POC owns the full localization pipeline.',activeBg:'#050505',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
+  {id:'selfserve',label:'Global projects — Self-serve',sizing:'In Panorama — S & sometimes M',desc:'PMM owns end-to-end. No Comms partner, no local POC involvement. Red Bin handles edge cases.',activeBg:'#7B4DB8',badgeBg:'rgba(255,255,255,0.2)',badgeText:'rgba(255,255,255,0.9)'},
   {id:'bau',label:'BAU / Channel-owned',sizing:'Not in Panorama',desc:'CRM lifecycle, Paid Ads, Website — recurring channel-owned projects. Local POCs do QC.',activeBg:'#461068',badgeBg:'rgba(255,255,255,0.15)',badgeText:'rgba(255,255,255,0.85)'},
 ];
+
 /* ── VERSION HISTORY TOGGLE ── */
 /* ── APP ── */
 function App(){
@@ -1605,6 +1507,7 @@ function App(){
   const[activeTrack,setActiveTrack]=useState(null);
   const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
   const handleViewWorkflow=(track)=>{setActiveTrack(track);setView('workflow');};
+
   return(
     <div style={{minHeight:'100vh',background:'#F5F5F5'}}>
       <header style={{background:'#fff',borderBottom:'1px solid #E0E0E0',padding:'14px 32px',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:50,boxShadow:'0 1px 3px rgba(0,0,0,0.05)'}}>
@@ -1624,6 +1527,7 @@ function App(){
           </button>
         </div>
       </header>
+
       {view==='path'?(
         <div style={{padding:'0 32px 80px'}}>
           <PathFinder onViewWorkflow={handleViewWorkflow}/>
@@ -1663,12 +1567,13 @@ function App(){
               <p style={{fontSize:14,fontWeight:600,color:'#B8B8B8',margin:0}}>Select a workflow type above to get started.</p>
             </div>
           )}
-
+          
         </div>
       )}
     </div>
   );
 }
+
 ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 </script>
 </body>
