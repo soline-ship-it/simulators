@@ -321,22 +321,27 @@ const HV_GRADS=[
 ];
 const HV_UPSTREAM=[
   {
+    letter:'A',
     label:'Sizing',
     owner:'GLT — quarterly reunion',
     detail:'L or M sizing. Determines which upstream steps apply.',
     trigger:true,
   },
   {
+    letter:'B',
     label:'Step 0 — Global Outline',
     owner:'Global PMM',
     detail:'One-pager: strategic intent, narrative, fixed vs. flexible. Legal flags when + what.',
   },
   {
+    letter:'C',
     label:'Local Orientation',
     owner:'Local POC + PMM + SEO content manager',
     detail:'Local context, "dying on a hill" vs "good to have", SEO inputs.',
+    mandatory:true,
   },
   {
+    letter:'D bis',
     label:'Transcreation Gate',
     owner:'GLT — escalation: CGO',
     detail:'Cascade EN Master Key messages as-is, or trigger transcreation. Compliance or radical strategy gap only.',
@@ -345,33 +350,29 @@ const HV_UPSTREAM=[
 ];
 const HV_UPSTREAM_PARALLEL=[
   {
-    label:'Channel Orientations',
+    label:'Marketing channels',
     owner:'Paid · Website · CRM',
     detail:'High-level channel requirements: best practices, checklist, past learnings, high-level needs (videos, etc.).',
     feeds:'Creative Brief (Creative Essentials phase)',
   },
-  {
-    label:'User Flow Mapping',
-    owner:'Marketing team',
-    detail:'Maps the user journey for the campaign. Sync with Creative Factory at end-of-phase to cross-check experience continuity.',
-    feeds:'Step 1 requirements',
-  },
 ];
 /* Creative Essentials — upstream phase (creative foundation before Production) */
 const HV_UPSTREAM_CE={
+  letter:'D',
   label:'Creative Essentials',
-  owner:'Global PMM + Comms Partners + Creative Factory',
+  owner:'Comms Partners + Creative Factory',
   short:'Creative foundation (concept + key claims + visual direction) before any asset goes into production.',
   subSteps:[
     {title:'Creative Brief',by:'Comms Partners',
-     desc:'Based on PMM messaging + Channel Orientations inputs.',
+     desc:'Based on Step 0 + Local Orientation + Marketing channels inputs.',
      info:'Inputs gathering from channels can start in parallel after Step 0. Final brief to Creative Factory only after Local Orientation (and Transcreation Gate if triggered).'},
     {title:'Creative Essentials (EN)',by:'Creative Factory (Brand Designer + Creative Writer)',
      desc:'Concept pitch + key claims per channel + tagline for Paid Ads.'},
     {title:'Local CE translation',by:'Local Creative Copywriters',
      desc:'Translate Creative Essentials into all needed locales.'},
-    {title:'Market loop',by:'Comms Partners',
-     desc:'Keep Local POCs informed throughout.'},
+    {title:'Loop-in',by:'Comms Partners',
+     desc:'User Flow Mapping cross-check + keep Local POCs and Marketing channels informed throughout.',
+     info:'Merges market loop with User Flow Mapping. Marketing team maps the user journey; Comms Partners sync with Creative Factory at end-of-phase to cross-check experience continuity, then loop in Local POCs and channel owners.'},
   ],
   notes:[
     'Creative Writer\'s lead language is project-dependent — can start in IT, DE, FR or EN.',
@@ -602,15 +603,14 @@ function InfoBubble({text}){
 function UpstreamCECard({ce}){
   return(
     <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:12,padding:'14px 16px'}}>
-      <div style={{display:'flex',alignItems:'flex-start',gap:10,flexWrap:'wrap',marginBottom:10}}>
-        <div style={{flex:1,minWidth:200}}>
-          <div style={{fontSize:14,fontWeight:700,color:'#050505',marginBottom:2,lineHeight:1.3}}>{ce.label}</div>
-          <div style={{fontSize:11,color:'#616161',lineHeight:1.45}}>{ce.short}</div>
-        </div>
+      <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:6}}>
+        {ce.letter&&<span style={{fontSize:11,fontWeight:800,color:'#3D3D3D',background:'#EDEDED',borderRadius:6,padding:'1px 6px',letterSpacing:'0.02em'}}>{ce.letter}</span>}
+        <div style={{fontSize:14,fontWeight:700,color:'#050505',lineHeight:1.3}}>{ce.label}</div>
       </div>
-      <div style={{display:'flex',alignItems:'flex-start',gap:7,background:'#F5F0FF',borderRadius:8,padding:'7px 10px',marginBottom:10}}>
-        <IUser size={13} style={{color:'#7B4DB8',marginTop:1}}/>
-        <span style={{fontSize:13,fontWeight:700,color:'#7B4DB8',lineHeight:1.4}}>{ce.owner}</span>
+      <div style={{fontSize:11,color:'#616161',lineHeight:1.45,marginBottom:10}}>{ce.short}</div>
+      <div style={{display:'flex',alignItems:'flex-start',gap:5,marginBottom:12}}>
+        <IUser size={12} style={{color:'#7B4DB8',marginTop:2,flexShrink:0}}/>
+        <span style={{fontSize:12,fontWeight:600,color:'#7B4DB8',lineHeight:1.4}}>{ce.owner}</span>
       </div>
       <ol style={{listStyle:'none',padding:0,margin:'0 0 10px',display:'flex',flexDirection:'column',gap:6}}>
         {ce.subSteps.map((s,i)=>(
@@ -704,23 +704,27 @@ function HighVisStream(){
           </div>
         )}
       </div>
-      {/* Upstream block — sequential phases + Creative Essentials + parallel lane */}
+      {/* Upstream block — sequential phases A→D bis + parallel Marketing channels + Creative Essentials D */}
       <div style={{background:'#F5F5F5',border:'1px solid #E0E0E0',borderRadius:12,padding:'14px 18px',marginBottom:20}}>
         <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:12,flexWrap:'wrap'}}>
           <span style={{fontSize:10,fontWeight:800,textTransform:'uppercase',letterSpacing:'0.07em',color:'#3D3D3D'}}>Upstream phases</span>
-          <InfoBubble text="Market alignment first, then creative foundation. All upstream phases happen before Step 1 (Production)."/>
+          <InfoBubble text="Market alignment (A→D bis) feeds the Creative Essentials phase (D). All upstream phases happen before Step 1 (Production)."/>
         </div>
-        {/* Sequential phases (Sizing → Step 0 → Local Orientation → Transcreation Gate) */}
+        {/* Sequential phases A → B → C → D bis */}
         <div style={{display:'flex',gap:0,alignItems:'stretch',overflowX:'auto',marginBottom:14}}>
           {HV_UPSTREAM.map((u,i)=>(
             <React.Fragment key={u.label}>
-              <div style={{display:'flex',flexDirection:'column',minWidth:180,maxWidth:230,flexShrink:0,background:'#fff',border:u.conditional?'1.5px dashed #B8860B':'1px solid #E0E0E0',borderRadius:10,padding:'10px 11px'}}>
-                <div style={{fontSize:12,fontWeight:700,color:'#050505',marginBottom:4,lineHeight:1.3}}>{u.label}</div>
+              <div style={{display:'flex',flexDirection:'column',minWidth:180,maxWidth:230,flexShrink:0,background:'#fff',border:u.conditional?'1.5px dashed #B8860B':'1px solid #E0E0E0',borderRadius:10,padding:'10px 11px',position:'relative'}}>
+                <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}>
+                  <span style={{fontSize:11,fontWeight:800,color:u.conditional?'#92400E':'#3D3D3D',background:u.conditional?'#FEF3C7':'#EDEDED',borderRadius:6,padding:'1px 6px',letterSpacing:'0.02em'}}>{u.letter}</span>
+                  <div style={{fontSize:12,fontWeight:700,color:'#050505',lineHeight:1.3}}>{u.label}</div>
+                </div>
                 <div style={{fontSize:11,color:'#616161',lineHeight:1.45,marginBottom:6}}>{u.detail}</div>
-                <div style={{display:'flex',alignItems:'flex-start',gap:5,marginBottom:u.conditional?6:0}}>
+                <div style={{display:'flex',alignItems:'flex-start',gap:5,marginBottom:(u.conditional||u.mandatory)?6:0}}>
                   <IUser size={11} style={{color:'#7B4DB8',marginTop:2,flexShrink:0}}/>
                   <span style={{fontSize:11,fontWeight:600,color:'#7B4DB8',lineHeight:1.4}}>{u.owner}</span>
                 </div>
+                {u.mandatory&&<span style={{fontSize:10,fontWeight:700,background:'#FECACA',color:'#991B1B',borderRadius:20,padding:'1px 7px',display:'inline-block',alignSelf:'flex-start'}}>Mandatory</span>}
                 {u.conditional&&<span style={{fontSize:10,fontWeight:700,background:'#FEF3C7',color:'#92400E',borderRadius:20,padding:'1px 7px',display:'inline-block',alignSelf:'flex-start'}}>Conditional — only if triggered</span>}
               </div>
               {i<HV_UPSTREAM.length-1&&(
@@ -729,28 +733,38 @@ function HighVisStream(){
             </React.Fragment>
           ))}
         </div>
-        {/* Creative Essentials — rich card (output of upstream, feeds Step 1) */}
-        <UpstreamCECard ce={HV_UPSTREAM_CE}/>
-        {/* Parallel lane — feeds Creative Essentials */}
-        <div style={{paddingTop:12,marginTop:14,borderTop:'1px dashed #B8B8B8'}}>
+        {/* Parallel lane — Marketing channels (runs in parallel with A→D bis, before Transcreation) */}
+        <div style={{position:'relative',marginBottom:14}}>
           <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8,flexWrap:'wrap'}}>
-            <span style={{fontSize:10,fontWeight:800,background:'#E0F2FE',color:'#0369A1',padding:'2px 8px',borderRadius:20,letterSpacing:'0.05em'}}>‖ PARALLEL</span>
-            <span style={{fontSize:11,color:'#616161',fontStyle:'italic'}}>Kicks off after Step 0. Feeds Creative Essentials.</span>
+            <span style={{fontSize:10,fontWeight:800,background:'#E0F2FE',color:'#0369A1',padding:'2px 8px',borderRadius:20,letterSpacing:'0.05em'}}>‖ IN PARALLEL</span>
+            <span style={{fontSize:11,color:'#616161',fontStyle:'italic'}}>Runs alongside A→C, before D bis. Feeds the Creative Brief.</span>
           </div>
           <div style={{display:'flex',gap:14,alignItems:'stretch',overflowX:'auto'}}>
             {HV_UPSTREAM_PARALLEL.map(u=>(
-              <div key={u.label} style={{flex:'1 1 280px',background:'#fff',border:'1px dashed #0369A1',borderRadius:10,padding:'10px 12px',display:'flex',gap:10,alignItems:'flex-start',maxWidth:520}}>
+              <div key={u.label} style={{flex:'1 1 320px',background:'#fff',border:'1.5px dashed #0369A1',borderRadius:10,padding:'10px 12px',display:'flex',gap:10,alignItems:'flex-start',maxWidth:560}}>
                 <div style={{width:24,height:24,borderRadius:'50%',background:'#E0F2FE',color:'#0369A1',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:800,flexShrink:0}}>‖</div>
                 <div style={{flex:1,minWidth:0}}>
                   <div style={{fontSize:12,fontWeight:700,color:'#050505',marginBottom:2,lineHeight:1.3}}>{u.label}</div>
                   <div style={{fontSize:11,color:'#616161',lineHeight:1.45,marginBottom:5}}>{u.detail}</div>
-                  <div style={{fontSize:10,color:'#0369A1',fontWeight:600,marginBottom:3}}>Owner: {u.owner}</div>
+                  <div style={{display:'flex',alignItems:'flex-start',gap:5,marginBottom:5}}>
+                    <IUser size={11} style={{color:'#7B4DB8',marginTop:2,flexShrink:0}}/>
+                    <span style={{fontSize:11,fontWeight:600,color:'#7B4DB8',lineHeight:1.4}}>{u.owner}</span>
+                  </div>
                   {u.feeds&&<div style={{fontSize:10,fontWeight:700,color:'#0369A1',background:'#E0F2FE',borderRadius:20,padding:'2px 8px',display:'inline-block'}}>→ Feeds {u.feeds}</div>}
                 </div>
               </div>
             ))}
           </div>
         </div>
+        {/* Down-arrow showing flow continues to Creative Essentials */}
+        <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:8,marginBottom:8}}>
+          <div style={{width:1,height:18,background:'#B8B8B8'}}/>
+        </div>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'center',marginBottom:10}}>
+          <svg width="14" height="10" viewBox="0 0 14 10"><polyline points="1,1 7,8 13,1" fill="none" stroke="#B8B8B8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </div>
+        {/* Creative Essentials — D, rich card (output of upstream, feeds Step 1) */}
+        <UpstreamCECard ce={HV_UPSTREAM_CE}/>
       </div>
       {/* Channel selector pills */}
       <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:16,flexWrap:'wrap'}}>
