@@ -966,6 +966,168 @@ const STEPS_BAU=[
     notes:['Purpose: log quality issues discovered post-launch, or broken delivery processes.'],
   },
 ];
+/* ══════════════════════════════════════════════
+   STREAM 4 — LOCAL-DRIVEN (M Local, market initiative)
+══════════════════════════════════════════════ */
+const LD_ACCENT='#0E7490';
+const LD_GRADS=[
+  'linear-gradient(135deg,#67E8F9,#0E7490)',
+  'linear-gradient(135deg,#A5F3FC,#0891B2)',
+  'linear-gradient(135deg,#0E7490,#155E75)',
+  'linear-gradient(135deg,#9BC5EA,#A585DB)',
+  'linear-gradient(135deg,#FFB590,#CE6033)',
+];
+/* Upstream phases for Local-driven (mirror Stream 1 structure, simpler) */
+const LD_UPSTREAM=[
+  {
+    letter:'A',
+    label:'Sizing',
+    owner:'GLT — quarterly reunion',
+    detail:'Sized M Local. Single-market initiative, not cascaded.',
+    trigger:true,
+  },
+  {
+    letter:'B',
+    label:'Step 0 — Global sense-check',
+    owner:'Global PMM',
+    detail:'Brief from Global PMM — not co-creation, not a veto. Confirms alignment with the global strategy.',
+  },
+];
+/* Downstream steps for Local-driven (4 steps, mirror Self-serve / BAU structure) */
+const LD_STEPS=[
+  {
+    id:1, title:'Local content production',
+    useCases:[{
+      owner:'Local Market team',
+      tools:['Tolki','QualityGuard — always run it!'],
+      steps:[
+        'Content produced directly in local language. No EN cascade, no AI first pass from a global master.',
+        'SEO input if the project is indexed.',
+        'Opportunistically, can ask for a second view / help from a Local Comms Partner.',
+      ],
+    }],
+  },
+  {
+    id:2, title:'Quality check', mandatory:true,
+    useCases:[{
+      owner:'Local Market team',
+      tools:['QualityGuard — always run it!'],
+      steps:[
+        'Run QualityGuard on the local content.',
+        'Final market sign-off before publish.',
+      ],
+    }],
+    notes:['Compliance remains your responsibility regardless of tooling.'],
+  },
+  {
+    id:3, title:'Upload & publish',
+    useCases:[{
+      owner:'Local Market team + relevant channel(s)',
+      tools:['Qontent','Customer.io (if CRM)','Platform (if Paid Ads)'],
+      steps:[
+        'End-to-end ownership by the market.',
+        'If a central channel is needed (e.g. CRM), the market hands localized content to the channel for build — but the market drives.',
+      ],
+    }],
+  },
+  {
+    id:4, title:'Red bin logging',
+    useCases:[{
+      owner:'Anyone involved',
+      tools:['Red Bin logging form/database'],
+    }],
+    notes:['Purpose: log quality issues discovered post-launch, or broken delivery processes.'],
+  },
+];
+/* ── LOCAL-DRIVEN STREAM (mirror Stream 1 structure) ── */
+function LocalDrivenStream(){
+  const[showUp,setShowUp]=useState(false);
+  const[showDown,setShowDown]=useState(false);
+  return(
+    <div>
+      {/* Stream 4 hero — bullets */}
+      <div style={{background:'#ECFEFF',border:'1.5px solid #67E8F9',borderRadius:12,padding:'14px 20px',marginBottom:16}}>
+        <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:10,flexWrap:'wrap'}}>
+          <IClock size={15} style={{color:'#0E7490'}}/>
+          <span style={{fontSize:12,fontWeight:800,textTransform:'uppercase',letterSpacing:'0.06em',color:'#0E7490'}}>Stream 4 — Local-driven · M Local</span>
+          <InfoBubble text="Local-driven = a single market drives the initiative end-to-end. Global PMM only sense-checks alignment. No cascade, no Creative Essentials."/>
+        </div>
+        <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:5,margin:'0 0 4px',padding:0}}>
+          {[
+            <>Market owns end-to-end — content produced directly in local language</>,
+            <>Global PMM sense-checks only (not co-creation, not a veto)</>,
+            <>No cascade, no Creative Essentials, no localization downstream</>,
+            <>If a central channel is needed, the market hands content to channel — market still drives</>,
+          ].map((b,i)=>(
+            <li key={i} style={{display:'flex',gap:7,alignItems:'flex-start',fontSize:13,color:'#155E75',lineHeight:1.55}}>
+              <span style={{width:5,height:5,borderRadius:'50%',background:'#0E7490',flexShrink:0,marginTop:8}}/>
+              <span>{b}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      {/* Upstream toggle — collapsed by default */}
+      <div style={{background:'#fff',border:'1.5px solid #B8B8B8',borderRadius:12,marginBottom:12,boxShadow:'0 1px 3px rgba(0,0,0,0.05)'}}>
+        <div onClick={()=>setShowUp(!showUp)} style={{padding:'14px 18px',display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer',background:showUp?'#FAFAFA':'#fff',borderRadius:'12px 12px 0 0'}}>
+          <div style={{display:'flex',alignItems:'center',gap:8,flexWrap:'wrap'}}>
+            <span style={{fontSize:12,fontWeight:800,textTransform:'uppercase',letterSpacing:'0.07em',color:'#050505'}}>Upstream phases</span>
+            <InfoBubble text="Market alignment only. Sizing by GLT, then a light global sense-check. No Local Orientation, no Transcreation Gate, no Creative Essentials."/>
+            <span style={{fontSize:11,color:'#8F8F8F',fontStyle:'italic'}}>A → B → Steps 1-4</span>
+          </div>
+          <div style={{display:'flex',alignItems:'center',gap:6,flexShrink:0}}>
+            <span style={{fontSize:11,fontWeight:600,color:'#0E7490'}}>{showUp?'Hide':'Click to expand'}</span>
+            <IChevD size={14} style={{color:'#0E7490',transition:'transform 0.25s',transform:showUp?'rotate(180deg)':'rotate(0deg)'}}/>
+          </div>
+        </div>
+        {showUp&&<div style={{padding:'14px 18px',background:'#F5F5F5',borderTop:'1px solid #E0E0E0',borderRadius:'0 0 12px 12px'}} className="fade-in">
+          <div style={{display:'flex',gap:0,alignItems:'flex-start',overflowX:'auto'}}>
+            {LD_UPSTREAM.map((u,i)=>(
+              <React.Fragment key={u.label}>
+                <UpstreamPhaseCard u={u}/>
+                {i<LD_UPSTREAM.length-1&&(
+                  <div style={{display:'flex',alignItems:'flex-start',flexShrink:0,color:'#B8B8B8',fontSize:14,margin:'18px 3px 0'}}>→</div>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+          {/* Arrow down to Step 1 */}
+          <div style={{position:'relative',height:32,marginTop:10}}>
+            <div style={{position:'absolute',left:'50%',top:0,width:0,transform:'translateX(-50%)',display:'flex',flexDirection:'column',alignItems:'center'}}>
+              <div style={{width:2,height:18,background:'#3D3D3D'}}/>
+              <svg width="18" height="12" viewBox="0 0 18 12"><polyline points="1,1 9,10 17,1" fill="none" stroke="#3D3D3D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </div>
+          </div>
+        </div>}
+      </div>
+      {/* Downstream toggle — collapsed by default */}
+      <div style={{background:'#fff',border:'1.5px solid #B8B8B8',borderRadius:12,marginBottom:14,boxShadow:'0 1px 3px rgba(0,0,0,0.05)'}}>
+        <div onClick={()=>setShowDown(!showDown)} style={{padding:'14px 18px',display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer',background:showDown?'#FAFAFA':'#fff',borderRadius:'12px 12px 0 0'}}>
+          <div style={{display:'flex',alignItems:'center',gap:8,flexWrap:'wrap'}}>
+            <span style={{fontSize:12,fontWeight:800,textTransform:'uppercase',letterSpacing:'0.07em',color:'#050505'}}>Downstream phases</span>
+            <InfoBubble text="Market produces, runs Quality check, publishes, and logs red bins. No channel fork — if a central channel is involved, the market hands content for build."/>
+            <span style={{fontSize:11,color:'#8F8F8F',fontStyle:'italic'}}>Step 1 → 2 → 3 → 4</span>
+          </div>
+          <div style={{display:'flex',alignItems:'center',gap:6,flexShrink:0}}>
+            <span style={{fontSize:11,fontWeight:600,color:'#0E7490'}}>{showDown?'Hide':'Click to expand'}</span>
+            <IChevD size={14} style={{color:'#0E7490',transition:'transform 0.25s',transform:showDown?'rotate(180deg)':'rotate(0deg)'}}/>
+          </div>
+        </div>
+        {showDown&&<div style={{padding:'14px 18px',background:'#F5F5F5',borderTop:'1px solid #E0E0E0',borderRadius:'0 0 12px 12px'}} className="fade-in">
+          <div style={{overflowX:'auto',paddingBottom:12}}>
+            <div style={{display:'flex',alignItems:'flex-start',minWidth:'max-content',gap:0}}>
+              {LD_STEPS.map((step,idx)=>(
+                <React.Fragment key={step.id}>
+                  <HVStepCard step={step} gradBg={LD_GRADS[idx]||LD_GRADS[LD_GRADS.length-1]} selectedCh={null} onSelectCh={()=>{}}/>
+                  {idx<LD_STEPS.length-1&&<ConnArrow/>}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        </div>}
+      </div>
+    </div>
+  );
+}
 /* ── LOCAL POCs compact block ── */
 function LocalPOCsCompact(){
   const pocs=[
@@ -1201,10 +1363,10 @@ function ScopeToggle(){
   const[open,setOpen]=useState(false);
   return(
     <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:12,marginBottom:24,overflow:'hidden',boxShadow:'0 1px 3px rgba(0,0,0,0.04)'}}>
-      <div onClick={()=>setOpen(!open)} style={{padding:'14px 20px',display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer'}}>
-        <div style={{display:'flex',alignItems:'center',gap:10}}>
-          <ITarget size={17} style={{color:'#7B4DB8'}}/>
-          <span style={{fontSize:15,fontWeight:600,color:'#050505'}}>Scope: <span style={{fontWeight:500,color:'#616161'}}>3 workflows documented — High-visibility (L & M), Self-serve (S), and BAU / Channel-owned.</span></span>
+      <div onClick={()=>setOpen(!open)} style={{padding:'14px 20px',display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer',gap:14}}>
+        <div style={{display:'flex',alignItems:'center',gap:10,flexWrap:'wrap'}}>
+          <ITarget size={17} style={{color:'#7B4DB8',flexShrink:0}}/>
+          <span style={{fontSize:15,fontWeight:600,color:'#050505'}}>Scope: <span style={{fontWeight:500,color:'#616161'}}>4 workflows documented — <strong>1.</strong> High-visibility (L & M) · <strong>2.</strong> Self-serve (S) · <strong>3.</strong> BAU / Channel-owned · <strong>4.</strong> Local-driven (M Local).</span></span>
         </div>
         <div style={{display:'flex',alignItems:'center',gap:5,fontSize:13,fontWeight:600,color:'#7B4DB8',flexShrink:0}}>
           {open?'Hide':'See details & exceptions'}
@@ -1214,48 +1376,22 @@ function ScopeToggle(){
       <div className={`acc-body ${open?'open':''}`}>
         <div className="acc-inner">
           <div style={{padding:'0 20px 20px',borderTop:'1px solid #F0F0F0'}}>
-            <div style={{paddingTop:16,display:'flex',gap:32,flexWrap:'wrap'}}>
-              <div style={{flex:2,minWidth:260}}>
-                <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8}}>
-                  <IBulb size={14} style={{color:'#7B4DB8'}}/>
-                  <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Not sure which stream applies to you?</span>
-                </div>
-                <p style={{fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:'0 0 8px 0'}}>Check your project size in <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> first — <strong>L or M = High-visibility</strong> (Creative Factory always involved), <strong>S = Self-serve</strong>, <strong>not in Panorama = BAU</strong>. Then use <strong>Find your path</strong> to get your personalised steps.</p>
-                <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8,marginTop:16}}>
-                  <IAlert size={14} style={{color:'#B45309'}}/>
-                  <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Out of scope</span>
-                </div>
-                <ul style={{paddingLeft:18,fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:0,display:'flex',flexDirection:'column',gap:2}}>
-                  <li>Purely creative / OOH with no localization need (no copy to translate)</li>
-                  <li>Website homepage — handled separately</li>
-                  <li>Social media and SEO — autonomous, not part of this workflow</li>
-                </ul>
+            <div style={{paddingTop:16}}>
+              <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8}}>
+                <IBulb size={14} style={{color:'#7B4DB8'}}/>
+                <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Not sure which stream applies to you?</span>
               </div>
-              <div style={{flex:1,minWidth:200}}>
-                <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8}}>
-                  <IPhone size={14} style={{color:'#7B4DB8'}}/>
-                  <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Autonomous — out of scope</span>
-                </div>
-                <p style={{fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:'0 0 16px 0'}}><strong>Social media</strong> and <strong>SEO</strong> are fully autonomous. Not part of this workflow.</p>
-                <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8}}>
-                  <IClock size={14} style={{color:'#166534'}}/>
-                  <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Stream 1 — decided</span>
-                </div>
-                <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:5}}>
-                  {[
-                    <>Model: <strong>Cascade</strong></>,
-                    <>Creative Factory always involved (Creative Essentials + Creative Asset Production)</>,
-                    <>Local POCs drive downstream localization & own final sign-off</>,
-                    <>Channel teams execute upload</>,
-                    <>Check <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> to confirm L/M sizing</>,
-                  ].map((b,i)=>(
-                    <li key={i} style={{display:'flex',gap:6,fontSize:14,color:'#3D3D3D',lineHeight:1.55}}>
-                      <span style={{width:5,height:5,borderRadius:'50%',background:'#166534',flexShrink:0,marginTop:8}}/>
-                      <span>{b}</span>
-                    </li>
-                  ))}
-                </ul>
+              <p style={{fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:'0 0 8px 0'}}>Check your project size in <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> first — <strong>L or M global = Stream 1</strong> (High-visibility), <strong>M Local = Stream 4</strong> (Local-driven), <strong>S = Stream 2</strong> (Self-serve), <strong>not in Panorama = Stream 3</strong> (BAU). Then use <strong>Find your path</strong> to get your personalised steps.</p>
+              <p style={{fontSize:13,color:'#616161',lineHeight:1.6,margin:'4px 0 0 0'}}>Full operating model on Notion: <a href="https://www.notion.so/qonto/Growth-Operating-Model-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658" target="_blank" rel="noopener noreferrer">Growth Operating Model — Roles, Responsibilities, Ways of Working</a>.</p>
+              <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8,marginTop:16}}>
+                <IAlert size={14} style={{color:'#B45309'}}/>
+                <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Out of scope</span>
               </div>
+              <ul style={{paddingLeft:18,fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:0,display:'flex',flexDirection:'column',gap:2}}>
+                <li>Purely creative / OOH with no localization need (no copy to translate)</li>
+                <li>Website homepage — handled separately</li>
+                <li>Social media — fully autonomous, not part of this workflow</li>
+              </ul>
             </div>
           </div>
         </div>
@@ -1266,7 +1402,7 @@ function ScopeToggle(){
 /* ── LEGEND ── */
 function Legend({activeTrack}){
   const[open,setOpen]=useState(false);
-  const hint=activeTrack==='selfserve'?'On step 4 — click a card to highlight a channel':activeTrack==='bau'?'Click a channel pill above to highlight it across all steps':null;
+  const hint=activeTrack==='localdriven'?'Market owns end-to-end — no channel fork':activeTrack==='selfserve'?'On step 4 — click a card to highlight a channel':activeTrack==='bau'?'Click a channel pill above to highlight it across all steps':null;
   return(
     <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:10,marginBottom:24,overflow:'hidden',width:'fit-content',minWidth:220}}>
       <div onClick={()=>setOpen(!open)} style={{padding:'9px 16px',display:'flex',alignItems:'center',gap:10,cursor:'pointer'}}>
@@ -1496,6 +1632,33 @@ function getPathResult(answers){
       {n:5,title:'Red bin logging',owner:'Anyone involved',tools:['Red Bin logging form/database']},
     ],
   };
+  if(projectType==='localdriven') return{
+    type:'localdriven',track:'localdriven',langs:langs||[],
+    tradeOff:'Market owns end-to-end. Global PMM sense-checks only. Trade-off: no cascade, no Creative Essentials, no shared upstream — initiative stays scoped to one market.',
+    steps:[
+      {n:'↑',title:'Upstream — Market alignment',owner:'GLT + Global PMM',
+        bullets:[
+          'A. Sizing — GLT sizes the project as M Local at Quarterly Reunion.',
+          'B. Step 0 — Global sense-check by Global PMM (not co-creation, not a veto).',
+        ],
+        tools:[]},
+      {n:1,title:'Local content production',owner:'Local Market team',
+        bullets:[
+          'Content produced directly in local language.',
+          'No EN cascade, no AI first pass from a global master.',
+          'SEO input if the project is indexed.',
+          'Opportunistically, can ask for a second view / help from a Local Comms Partner.',
+        ],
+        tools:['Tolki','QualityGuard — always run it!']},
+      {n:2,title:'Quality check',owner:'Local Market team',mandatory:true,
+        bullets:['Run QualityGuard on the local content.','Final market sign-off before publish.','Compliance remains your responsibility regardless of tooling.'],
+        tools:['QualityGuard — always run it!']},
+      {n:3,title:'Upload & publish',owner:'Local Market team + relevant channel(s)',
+        bullets:['End-to-end ownership by the market.','If a central channel is needed (e.g. CRM), market hands localized content to channel for build — market drives.'],
+        tools:['Qontent','Customer.io (if CRM)','Platform (if Paid Ads)']},
+      {n:4,title:'Red bin logging',owner:'Anyone involved',tools:['Red Bin logging form/database']},
+    ],
+  };
   if(projectType==='selfserve') return{
     type:'selfserve',track:'selfserve',langs:langs||[],
     tradeOff:'Growth efficiency: PMM owns end-to-end, no Creative Factory, no local review. Trade-off: markets have no say, no creative concept investment. Edge cases handled via Red Bin post-publish. Exception: CRM always gets a native review.',
@@ -1541,7 +1704,7 @@ function PathFinder({onViewWorkflow}){
     const next={...answers,[key]:val};
     if(key==='projectType'){
       setAnswers(next);
-      if(val==='highvis')setScreen('langs');
+      if(val==='highvis'||val==='localdriven')setScreen('langs');
       else if(val==='selfserve')setScreen('channel');
       else setScreen('channel'); // bau
     } else if(key==='channel'){
@@ -1551,7 +1714,7 @@ function PathFinder({onViewWorkflow}){
   const back=()=>{
     if(screen==='channel')setScreen('projectType');
     else if(screen==='langs'){
-      if(answers.projectType==='highvis')setScreen('projectType');
+      if(answers.projectType==='highvis'||answers.projectType==='localdriven')setScreen('projectType');
       else setScreen('channel');
     } else if(screen==='result')setScreen('langs');
   };
@@ -1610,6 +1773,9 @@ function PathFinder({onViewWorkflow}){
         {value:'highvis',label:'Global — High-visibility / Creativity',
           sizing:'Panorama · L or M',accent:'#fff',accentBg:'#050505',
           bullets:['Creative Factory always involved','Heavy upstream investment + local sign-off','EN Master Key messages cascaded to all markets']},
+        {value:'localdriven',label:'Local-driven — Market initiative',
+          sizing:'Panorama · M Local',accent:'#fff',accentBg:'#0E7490',
+          bullets:['Market owns end-to-end','Global PMM sense-checks only (not co-creation, not a veto)','No EN cascade — content produced directly in local language']},
         {value:'selfserve',label:'Global — Self-serve',
           sizing:'Panorama · S',accent:'#fff',accentBg:'#7B4DB8',
           bullets:['PMM owns end-to-end','No Creative Factory, no local review (except CRM)','Edge cases → Red Bin']},
@@ -1659,6 +1825,7 @@ function PathFinder({onViewWorkflow}){
     const result=getPathResult({...answers,langs:langSel});
     const trackMeta={
       highvis:{bg:'#050505',label:'Global — High-visibility / Creativity'},
+      localdriven:{bg:'#0E7490',label:'Local-driven — Market initiative'},
       selfserve:{bg:'#7B4DB8',label:'Global — Self-serve'+(answers.channel?` · ${answers.channel}`:'')},
       bau:{bg:'#461068',label:'BAU / Channel-owned'+(result.channel?` · ${result.channel}`:'')},
     };
@@ -1741,9 +1908,10 @@ function PathFinder({onViewWorkflow}){
 }
 /* ── TRACKS ── */
 const TRACKS=[
-  {id:'highvis',label:'Global projects — High-visibility / Creativity',sizing:'In Panorama — L & M',desc:'Cascade. Creative Factory always involved. Local POC owns sign-off.',activeBg:'#050505',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
-  {id:'selfserve',label:'Global projects — Self-serve',sizing:'In Panorama — S',desc:'PMM owns end-to-end. No local review (except CRM).',activeBg:'#7B4DB8',badgeBg:'rgba(255,255,255,0.2)',badgeText:'rgba(255,255,255,0.9)'},
-  {id:'bau',label:'BAU / Channel-owned',sizing:'Not in Panorama',desc:'Channel-owned (CRM, Paid, Website). Local POC = native review.',activeBg:'#461068',badgeBg:'rgba(255,255,255,0.15)',badgeText:'rgba(255,255,255,0.85)'},
+  {id:'highvis',streamNum:1,label:'Global projects — High-visibility / Creativity',sizing:'In Panorama — L & M',desc:'Cascade. Creative Factory always involved. Local POC owns sign-off.',activeBg:'#050505',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
+  {id:'selfserve',streamNum:2,label:'Global projects — Self-serve',sizing:'In Panorama — S',desc:'PMM owns end-to-end. No local review (except CRM).',activeBg:'#7B4DB8',badgeBg:'rgba(255,255,255,0.2)',badgeText:'rgba(255,255,255,0.9)'},
+  {id:'bau',streamNum:3,label:'BAU / Channel-owned',sizing:'Not in Panorama',desc:'Channel-owned (CRM, Paid, Website). Local POC = native review.',activeBg:'#461068',badgeBg:'rgba(255,255,255,0.15)',badgeText:'rgba(255,255,255,0.85)'},
+  {id:'localdriven',streamNum:4,label:'Local-driven projects — Market initiative',sizing:'In Panorama — M Local',desc:'Market owns end-to-end. Global PMM provides sense-check only.',activeBg:'#0E7490',badgeBg:'rgba(255,255,255,0.18)',badgeText:'rgba(255,255,255,0.85)'},
 ];
 /* ── VERSION HISTORY TOGGLE ── */
 /* ── APP ── */
@@ -1788,6 +1956,7 @@ function App(){
                 return(
                   <div key={track.id} className="track-card" onClick={()=>setActiveTrack(track.id)}
                     style={{flex:'1 1 240px',maxWidth:380,minWidth:220,border:`2px solid ${isActive?track.activeBg:'#E0E0E0'}`,background:isActive?track.activeBg:'#fff',padding:'18px 20px',position:'relative'}}>
+                    <div style={{fontSize:10,fontWeight:800,textTransform:'uppercase',letterSpacing:'0.08em',color:isActive?'rgba(255,255,255,0.6)':'#B8B8B8',marginBottom:4}}>Stream {track.streamNum}</div>
                     <div style={{display:'inline-block',background:isActive?track.badgeBg:'#F5F5F5',color:isActive?track.badgeText:'#616161',border:`1px solid ${isActive?'rgba(255,255,255,0.15)':'#E0E0E0'}`,fontSize:12,fontWeight:700,borderRadius:20,padding:'4px 12px',marginBottom:10,letterSpacing:'0.02em'}}>{track.sizing}</div>
                     <div style={{fontSize:16,fontWeight:700,color:isActive?'#fff':'#050505',lineHeight:1.3,marginBottom:6}}>{track.label}</div>
                     <p style={{fontSize:13.5,color:isActive?'rgba(255,255,255,0.75)':'#616161',margin:0,lineHeight:1.6}}>{track.desc}</p>
@@ -1803,6 +1972,7 @@ function App(){
               {activeTrack==='highvis'&&<HighVisStream/>}
               {activeTrack==='selfserve'&&<WorkflowRow steps={STEPS_SS} accentClr={SS_ACCENT} gradients={SS_GRADS} threadPrefix="ss" showTradeOff={true}/>}
               {activeTrack==='bau'&&<BAUWorkflow/>}
+              {activeTrack==='localdriven'&&<LocalDrivenStream/>}
             </div>
           ):(
             <div style={{textAlign:'center',padding:'48px 24px',color:'#B8B8B8'}}>
