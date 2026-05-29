@@ -1965,6 +1965,35 @@ function App(){
               })}
             </div>
           </div>
+          {/* Channel workflow downloads — under track selector */}
+          <div style={{marginBottom:28,background:'#FAFAFA',border:'1px solid #E0E0E0',borderRadius:12,padding:'16px 18px'}}>
+            <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:10,flexWrap:'wrap'}}>
+              <IFile size={14} style={{color:'#3D3D3D'}}/>
+              <span style={{fontSize:11,fontWeight:800,textTransform:'uppercase',letterSpacing:'0.07em',color:'#3D3D3D'}}>Download channel workflows</span>
+              <span style={{fontSize:12,color:'#8F8F8F',fontStyle:'italic'}}>1 PDF per channel · covers all 4 streams</span>
+            </div>
+            <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+              {[
+                {label:'Website (& SEO)',file:'localization-workflow-website-seo.pdf'},
+                {label:'CRM',file:'localization-workflow-crm.pdf'},
+                {label:'Paid Ads',file:'localization-workflow-paid-ads.pdf'},
+              ].map(d=>(
+                <a key={d.file} href={d.file} download
+                  style={{flex:'1 1 200px',maxWidth:300,display:'flex',alignItems:'center',gap:10,padding:'10px 14px',borderRadius:10,border:'1.5px solid #B8B8B8',background:'#fff',cursor:'pointer',textDecoration:'none',fontFamily:'inherit',transition:'all 0.15s ease'}}
+                  onMouseEnter={e=>{e.currentTarget.style.borderColor='#050505';e.currentTarget.style.background='#FAFAFA';}}
+                  onMouseLeave={e=>{e.currentTarget.style.borderColor='#B8B8B8';e.currentTarget.style.background='#fff';}}>
+                  <div style={{width:28,height:28,borderRadius:6,background:'#050505',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                    <span style={{fontSize:9,fontWeight:800,color:'#fff',letterSpacing:'0.04em'}}>PDF</span>
+                  </div>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{fontSize:13,fontWeight:700,color:'#050505',lineHeight:1.3}}>{d.label}</div>
+                    <div style={{fontSize:11,color:'#8F8F8F'}}>4 streams · mirrors the workflow</div>
+                  </div>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7B4DB8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                </a>
+              ))}
+            </div>
+          </div>
           {/* Content */}
           {activeTrack?(
             <div key={activeTrack} className="fade-in" style={{paddingBottom:0}}>
