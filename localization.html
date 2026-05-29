@@ -1974,11 +1974,11 @@ function App(){
             </div>
             <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
               {[
-                {label:'Website (& SEO)',file:'localization-workflow-website-seo.pdf'},
-                {label:'CRM',file:'localization-workflow-crm.pdf'},
-                {label:'Paid Ads',file:'localization-workflow-paid-ads.pdf'},
+                {label:'Website (& SEO)',url:'https://app.notion.com/p/qonto/Soline-s-suggestion-Localization-Workflow-36e31ee4c69681bc8688e5dc418568e9?source=copy_link#36f31ee4c696807780dff5e92a1d9eb2'},
+                {label:'CRM',url:'https://app.notion.com/p/qonto/Soline-s-suggestion-Localization-Workflow-36e31ee4c69681bc8688e5dc418568e9?source=copy_link#36f31ee4c6968026a474da241dcd6812'},
+                {label:'Paid Ads',url:'https://app.notion.com/p/qonto/Soline-s-suggestion-Localization-Workflow-36e31ee4c69681bc8688e5dc418568e9?source=copy_link#36f31ee4c6968025aa44db54cef57af3'},
               ].map(d=>(
-                <a key={d.file} href={d.file} download
+                <a key={d.label} href={d.url} target="_blank" rel="noopener noreferrer"
                   style={{flex:'1 1 200px',maxWidth:300,display:'flex',alignItems:'center',gap:10,padding:'10px 14px',borderRadius:10,border:'1.5px solid #B8B8B8',background:'#fff',cursor:'pointer',textDecoration:'none',fontFamily:'inherit',transition:'all 0.15s ease'}}
                   onMouseEnter={e=>{e.currentTarget.style.borderColor='#050505';e.currentTarget.style.background='#FAFAFA';}}
                   onMouseLeave={e=>{e.currentTarget.style.borderColor='#B8B8B8';e.currentTarget.style.background='#fff';}}>
