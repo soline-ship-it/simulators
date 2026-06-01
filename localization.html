@@ -336,7 +336,7 @@ const HV_UPSTREAM=[
   {
     letter:'C',
     label:'Local Orientation',
-    owner:'Local POC + PMM + SEO content manager',
+    owner:'Local Market POC + PMM + SEO content manager',
     detail:'Local context, "dying on a hill" vs "good to have", SEO inputs. Local Orientation is key for SEO.',
     mandatory:true,
   },
@@ -372,8 +372,8 @@ const HV_UPSTREAM_CE={
     {title:'Local CE translation',by:'Local Creative Copywriters',
      desc:'Translate Creative Essentials into all needed locales.'},
     {title:'Loop-in',by:'Comms Partners',
-     desc:'User Flow Mapping cross-check + keep Local POCs and Marketing channels informed throughout.',
-     info:'Merges market loop with User Flow Mapping. Marketing team maps the user journey; Comms Partners sync with Creative Factory at end-of-phase to cross-check experience continuity, then loop in Local POCs and channel owners.'},
+     desc:'User Flow Mapping cross-check + keep Local Market POCs and Marketing channels informed throughout.',
+     info:'Merges market loop with User Flow Mapping. Marketing team maps the user journey; Comms Partners sync with Creative Factory at end-of-phase to cross-check experience continuity, then loop in Local Market POCs and channel owners.'},
   ],
   notes:[
     'Creative Writer\'s lead language is project-dependent — can start in IT, DE, FR or EN.',
@@ -424,15 +424,15 @@ const HV_STEPS=[
       'CRM':{
         owner:'Local Market POC',
         steps:[
-          'Local POC reviews and proofreads the email in Qontent, based on the Creative Essentials.',
+          'Local Market POC reviews and proofreads the email in Qontent, based on the Creative Essentials.',
         ],
         tools:['Qontent (Tolki & QualityGuard accessible from here)'],
       },
       'Paid Ads':{
-        owner:'Comms Partners + Local POC + Paid Ads team',
+        owner:'Comms Partners + Local Market POC + Paid Ads team',
         steps:[
-          'Comms Partners share copies + creative assets (for context) with Local POCs for copy validation.',
-          'For PT / NL: available-language Comms Partner or Local POC adapts the copy.',
+          'Comms Partners share copies + creative assets (for context) with Local Market POCs for copy validation.',
+          'For PT / NL: available-language Comms Partner or Local Market POC adapts the copy.',
           'Paid Ads team receives all-market copies + final creative assets.',
           'Paid Ads team builds and launches ads on platforms.',
         ],
@@ -440,13 +440,13 @@ const HV_STEPS=[
       },
     },
     notes:[
-      'Website & CRM: Local POC owns the full review — full message adaptation, not just grammar.',
-      'Paid Ads: Local POC validates here (visibility pre-launch). No separate Step 3 sign-off.',
-      'PT / NL (no lead-language master copy): available-language Comms Partner or Local POC adapts.',
+      'Website & CRM: Local Market POC owns the full review — full message adaptation, not just grammar.',
+      'Paid Ads: Local Market POC validates here (visibility pre-launch). No separate Step 3 sign-off.',
+      'PT / NL (no lead-language master copy): available-language Comms Partner or Local Market POC adapts.',
       'SLA — L: ~5 days · M: ~3 days.',
     ],
     gaps:[
-      'CRM: no automatic notification to Local POC when their review is needed. WIP — Madeleine + Sébastien working on auto-ping in Qontent.',
+      'CRM: no automatic notification to Local Market POC when their review is needed. WIP — Madeleine + Sébastien working on auto-ping in Qontent.',
     ],
   },
   {
@@ -461,8 +461,8 @@ const HV_STEPS=[
       tools:[],
     }],
     notes:[
-      'Local POC fully accountable — accuracy, tone of voice, consistency.',
-      'Paid Ads: no Step 3 sign-off. Local POC informed of in-flight variants once live.',
+      'Local Market POC fully accountable — accuracy, tone of voice, consistency.',
+      'Paid Ads: no Step 3 sign-off. Local Market POC informed of in-flight variants once live.',
     ],
   },
   {
@@ -481,7 +481,7 @@ const HV_STEPS=[
         tools:['Customer.io'],
         steps:[
           'CRM team builds the email in Customer.io.',
-          '(Optional) Sends for review to Local POC before publish — Comms Partners may be added for visibility.',
+          '(Optional) Sends for review to Local Market POC before publish — Comms Partners may be added for visibility.',
           'CRM publishes.',
         ],
       },
@@ -691,7 +691,7 @@ function HighVisStream(){
           {[
             <>Heavy creative investment — <strong>Creative Factory always involved</strong></>,
             <>Global teams own the EN Master copy + AI first pass</>,
-            <>Local POC drives downstream proofing + sign-off</>,
+            <>Local Market POC drives downstream proofing + sign-off</>,
             <>Channel teams execute upload</>,
           ].map((b,i)=>(
             <li key={i} style={{display:'flex',gap:7,alignItems:'flex-start',fontSize:13,color:'#14532D',lineHeight:1.55}}>
@@ -713,7 +713,7 @@ function HighVisStream(){
             <div style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#166534',marginBottom:8}}>Project team — identified at Quarterly Planning (2 weeks after Quarterly Reunion)</div>
             <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(210px,1fr))',gap:8}}>
               {[
-                {label:'Local POC',text:'1 per market — appointed by Local Head of Marketing. Single POC for the project.'},
+                {label:'Local Market POC',text:'1 per market — appointed by Local Head of Marketing. Single POC for the project.'},
                 {label:'Core team',text:'Comms Partner · Designer Builder · Creative Copywriter'},
                 {label:'Paid POC',text:'Regional Paid manager (if local initiative) — otherwise Alicia Dassance (Global Paid POC).'},
               ].map(c=>(
@@ -938,9 +938,9 @@ const STEPS_BAU=[
   {
     id:3,title:'Quality check',mandatory:true,
     channels:{
-      'CRM':{owner:'Local Market POC',steps:['Project owner runs QualityGuard.','Project owner requests proofread from local POCs (CRM: use #proofread-crm — no dedicated channel yet for other channels).','Local Market POC takes charge of the review.'],tools:['QualityGuard — always run it!']},
-      'Website':{owner:'Local Market POC',steps:['Project owner runs QualityGuard.','Project owner requests proofread from local POCs (CRM: use #proofread-crm — no dedicated channel yet for other channels).','Local Market POC takes charge of the review.'],tools:['QualityGuard — always run it!']},
-      'Paid Ads':{owner:'Local Market POC',steps:['Project owner runs QualityGuard.','Project owner requests proofread from local POCs (CRM: use #proofread-crm — no dedicated channel yet for other channels).','Local Market POC takes charge of the review.'],tools:['QualityGuard — always run it!']},
+      'CRM':{owner:'Local Market POC',steps:['Project owner runs QualityGuard.','Project owner requests proofread from local Market POCs (CRM: use #proofread-crm — no dedicated channel yet for other channels).','Local Market POC takes charge of the review.'],tools:['QualityGuard — always run it!']},
+      'Website':{owner:'Local Market POC',steps:['Project owner runs QualityGuard.','Project owner requests proofread from local Market POCs (CRM: use #proofread-crm — no dedicated channel yet for other channels).','Local Market POC takes charge of the review.'],tools:['QualityGuard — always run it!']},
+      'Paid Ads':{owner:'Local Market POC',steps:['Project owner runs QualityGuard.','Project owner requests proofread from local Market POCs (CRM: use #proofread-crm — no dedicated channel yet for other channels).','Local Market POC takes charge of the review.'],tools:['QualityGuard — always run it!']},
     },
     notes:['Compliance remains your responsibility regardless of tooling.'],
     gaps:['No dedicated proofread channel for Website or Paid Ads (only #proofread-crm exists for CRM).'],
@@ -1144,7 +1144,7 @@ function LocalPOCsCompact(){
       <div onClick={e=>{e.stopPropagation();setOpen(!open);}} style={{padding:'9px 14px',background:'#F9F7FF',display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer'}}>
         <div style={{display:'flex',alignItems:'center',gap:6}}>
           <IUsers size={13} style={{color:'#7B4DB8'}}/>
-          <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#7B4DB8'}}>Local POCs — BAU & Global S only</span>
+          <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#7B4DB8'}}>Local Market POCs — BAU & Global S only</span>
         </div>
         <IChevD size={13} style={{color:'#7B4DB8',transition:'transform 0.25s',transform:open?'rotate(180deg)':'rotate(0deg)'}}/>
       </div>
@@ -1308,11 +1308,11 @@ function LocalPOCsBlock(){
       <div style={{marginBottom:14,paddingBottom:12,borderBottom:'1px solid #F0EAFF'}}>
         <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
           <IUsers size={16} style={{color:'#7B4DB8'}}/>
-          <span style={{fontSize:14,fontWeight:700,color:'#050505'}}>Local POCs</span>
+          <span style={{fontSize:14,fontWeight:700,color:'#050505'}}>Local Market POCs</span>
           <span style={{fontSize:11,color:'#8F8F8F',marginLeft:'auto',fontWeight:500}}>BAU & Global S — Steps 2 & 3</span>
         </div>
         <div style={{fontSize:12,color:'#B45309',background:'#FFF9EC',border:'1px solid #FDE68A',borderRadius:7,padding:'6px 10px'}}>
-          ⚠️ For M & L projects, a dedicated Local POC per market is appointed at the quarterly planning meeting — not this list.
+          ⚠️ For M & L projects, a dedicated Local Market POC per market is appointed at the quarterly planning meeting — not this list.
         </div>
       </div>
       <div style={{display:'grid',gridTemplateColumns:'repeat(6,1fr)',gap:10,marginBottom:14}}>
@@ -1488,7 +1488,7 @@ function LocalPOCView(){
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
           Pocket guide
         </div>
-        <h2 style={{fontSize:18,fontWeight:800,color:'#050505',marginBottom:4,lineHeight:1.2}}>Local POCs — How it works</h2>
+        <h2 style={{fontSize:18,fontWeight:800,color:'#050505',marginBottom:4,lineHeight:1.2}}>Local Market POCs — How it works</h2>
         <p style={{fontSize:13,color:'#616161',lineHeight:1.55,margin:0}}>Across all workflows — what you own, and what needs to change.</p>
       </div>
       <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:12,overflow:'hidden',marginBottom:14}}>
@@ -1584,11 +1584,11 @@ function getPathResult(answers){
   if(projectType==='highvis') return{
     type:'highvis',track:'highvis',langs:langs||[],
     steps:[
-      {n:'↑',title:'Upstream — Market alignment',owner:'GLT + Global PMM + Local POC + Channels',
+      {n:'↑',title:'Upstream — Market alignment',owner:'GLT + Global PMM + Local Market POC + Channels',
         bullets:[
           'GLT sizes the project as L or M.',
           'Global PMM writes Step 0 (one-pager, incl. legal flags).',
-          'Local POC + PMM + SEO content manager run Local Orientation.',
+          'Local Market POC + PMM + SEO content manager run Local Orientation.',
           'Transcreation Gate (conditional): cascade EN Master Key messages OR trigger transcreation.',
           'In parallel: Channel Orientations (Paid · Website · CRM) + User Flow Mapping feed the Creative Brief.',
         ],
@@ -1598,7 +1598,7 @@ function getPathResult(answers){
           'Creative Brief (Comms Partners) — inputs gathering can start after Step 0; final brief to Creative Factory after Local Orientation (and Transcreation Gate if triggered).',
           'Creative Factory delivers concept pitch + key claims per channel + tagline for Paid Ads.',
           'Local CCs translate the CE into all needed locales.',
-          'Comms Partners keep Local POCs informed throughout.',
+          'Comms Partners keep Local Market POCs informed throughout.',
         ],
         tools:['Tolki','QualityGuard — always run it!']},
       {n:1,title:'Creative Asset Production',owner:'Creative Factory + Comms Partners (channel-specific)',
@@ -1610,9 +1610,9 @@ function getPathResult(answers){
         tools:['Qontent (Tolki & QualityGuard accessible from here)']},
       {n:2,title:'Localization & review',owner:'Local Market POC',mandatory:true,
         bullets:[
-          'Local POC reviews based on the Creative Essentials.',
+          'Local Market POC reviews based on the Creative Essentials.',
           'Full ownership: accuracy, tone of voice, message adaptation.',
-          'Paid Ads: Local POC also validates here (no separate Step 3).',
+          'Paid Ads: Local Market POC also validates here (no separate Step 3).',
         ],
         tools:['Qontent (Tolki & QualityGuard accessible from here)','QualityGuard — always run it!']},
       {n:3,title:'Final sign-off',owner:'Local Market POC',mandatory:true,
@@ -1624,7 +1624,7 @@ function getPathResult(answers){
         tools:[]},
       {n:4,title:'Upload & publish',owner:'Channel teams',
         bullets:[
-          'CRM — builds in Customer.io + (optional) Local POC review before publish.',
+          'CRM — builds in Customer.io + (optional) Local Market POC review before publish.',
           'Website — publishes via Qontent.',
           'Paid Ads — publishes on platform.',
         ],
@@ -1685,7 +1685,7 @@ function getPathResult(answers){
         tools:[ch!=='Paid Ads'?'Qontent (Tolki & QualityGuard accessible from here)':'Tolki'],
         showPOCs:true},
       {n:3,title:'Quality check',owner:'Local Market POC',mandatory:true,
-        note:ch==='CRM'?'Use #proofread-crm to request review.':'No dedicated channel yet — reach out to local POC directly.',
+        note:ch==='CRM'?'Use #proofread-crm to request review.':'No dedicated channel yet — reach out to local Market POC directly.',
         tools:['QualityGuard — always run it!'],
         showPOCs:true},
       {n:4,title:'Upload & publish',
@@ -1781,7 +1781,7 @@ function PathFinder({onViewWorkflow}){
           bullets:['PMM owns end-to-end','No Creative Factory, no local review (except CRM)','Edge cases → Red Bin']},
         {value:'bau',label:'BAU / Channel-owned',
           sizing:'Not in Panorama',accent:'#fff',accentBg:'#461068',
-          bullets:['Project owner manages copy + AI translation','Local POC = native review (last quality gate)','Per channel: CRM · Website · Paid Ads']},
+          bullets:['Project owner manages copy + AI translation','Local Market POC = native review (last quality gate)','Per channel: CRM · Website · Paid Ads']},
       ].map(o=><OptionBtn key={o.value} opt={o} selected={answers.projectType===o.value} onClick={()=>pick('projectType',o.value)}/>)}
     </Shell>
   );
@@ -1908,9 +1908,9 @@ function PathFinder({onViewWorkflow}){
 }
 /* ── TRACKS ── */
 const TRACKS=[
-  {id:'highvis',streamNum:1,label:'Global projects — High-visibility / Creativity',sizing:'In Panorama — L & M',desc:'Cascade. Creative Factory always involved. Local POC owns sign-off.',activeBg:'#050505',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
+  {id:'highvis',streamNum:1,label:'Global projects — High-visibility / Creativity',sizing:'In Panorama — L & M',desc:'Cascade. Creative Factory always involved. Local Market POC owns sign-off.',activeBg:'#050505',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
   {id:'selfserve',streamNum:2,label:'Global projects — Self-serve',sizing:'In Panorama — S',desc:'PMM owns end-to-end. No local review (except CRM).',activeBg:'#7B4DB8',badgeBg:'rgba(255,255,255,0.2)',badgeText:'rgba(255,255,255,0.9)'},
-  {id:'bau',streamNum:3,label:'BAU / Channel-owned',sizing:'Not in Panorama',desc:'Channel-owned (CRM, Paid, Website). Local POC = native review.',activeBg:'#461068',badgeBg:'rgba(255,255,255,0.15)',badgeText:'rgba(255,255,255,0.85)'},
+  {id:'bau',streamNum:3,label:'BAU / Channel-owned',sizing:'Not in Panorama',desc:'Channel-owned (CRM, Paid, Website). Local Market POC = native review.',activeBg:'#461068',badgeBg:'rgba(255,255,255,0.15)',badgeText:'rgba(255,255,255,0.85)'},
   {id:'localdriven',streamNum:4,label:'Local-driven projects — Market initiative',sizing:'In Panorama — M Local',desc:'Market owns end-to-end. Global PMM provides sense-check only.',activeBg:'#0E7490',badgeBg:'rgba(255,255,255,0.18)',badgeText:'rgba(255,255,255,0.85)'},
 ];
 /* ── VERSION HISTORY TOGGLE ── */
