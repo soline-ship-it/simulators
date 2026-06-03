@@ -431,8 +431,8 @@ const HV_STEPS=[
       'Paid Ads':{
         owner:'Comms Partners + Local Market POC + Paid Ads team',
         steps:[
-          'Comms Partners share copies + creative assets (for context) with Local Market POCs for copy validation.',
           'For PT / NL: available-language Comms Partner or Local Market POC adapts the copy.',
+          'The Comms Partner shares copies + creative assets (for context) with Local Market POCs to flag any blockers before the launch.',
           'Paid Ads team receives all-market copies + final creative assets.',
           'Paid Ads team builds and launches ads on platforms.',
         ],
@@ -441,7 +441,7 @@ const HV_STEPS=[
     },
     notes:[
       'Website & CRM: Local Market POC owns the full review — full message adaptation, not just grammar.',
-      'Paid Ads: Local Market POC validates here (visibility pre-launch). No separate Step 3 sign-off.',
+      'Paid Ads: Local Market POCs flag any blockers here (not a copy validation — they had upstream input). No separate Step 3 sign-off.',
       'PT / NL (no lead-language master copy): available-language Comms Partner or Local Market POC adapts.',
       'SLA — L: ~5 days · M: ~3 days.',
     ],
@@ -1612,14 +1612,14 @@ function getPathResult(answers){
         bullets:[
           'Local Market POC reviews based on the Creative Essentials.',
           'Full ownership: accuracy, tone of voice, message adaptation.',
-          'Paid Ads: Local Market POC also validates here (no separate Step 3).',
+          'Paid Ads: Local Market POCs flag any blockers here (no separate Step 3).',
         ],
         tools:['Qontent (Tolki & QualityGuard accessible from here)','QualityGuard — always run it!']},
       {n:3,title:'Final sign-off',owner:'Local Market POC',mandatory:true,
         bullets:[
           'L — blocking gate (no publish until signed off).',
           'M — SLA-based sign-off.',
-          'Paid Ads — no Step 3, already validated in Step 2.',
+          'Paid Ads — no Step 3, blockers flagged in Step 2.',
         ],
         tools:[]},
       {n:4,title:'Upload & publish',owner:'Channel teams',
