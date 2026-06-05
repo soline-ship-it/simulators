@@ -279,7 +279,6 @@ function StepCard({step,accentClr,gradBg,threadPrefix,showTradeOff}){
         {showTradeOff&&step.tradeOff&&<TradeOffCallout text={step.tradeOff}/>}
         <Accordion title="Process gaps" items={step.gaps} type="gaps" stepId={step.id}/>
         <Accordion title="Suggestions" items={step.suggestions} type="suggestions" stepId={step.id}/>
-        <CommentThread threadId={`${threadPrefix}-${step.id}`}/>
       </div>
     </div>
   );
@@ -351,7 +350,7 @@ const HV_UPSTREAM=[
 const HV_UPSTREAM_PARALLEL=[
   {
     label:'Marketing channels orientation',
-    owner:'Paid · Website · CRM · SEO',
+    owner:'Paid Ads · Website · CRM · SEO',
     detail:'High-level channel requirements: best practices, checklist, past learnings, high-level needs (videos, etc.).',
     feeds:'Creative Brief (Creative Essentials phase)',
     seoNote:'SEO: not concerned by the localization workflow itself, but still involved in these upstream phases.',
@@ -369,11 +368,11 @@ const HV_UPSTREAM_CE={
      info:'Inputs gathering from channels can start in parallel after Step 0. Final brief to Creative Factory only after Local Orientation (and Transcreation Gate if triggered).'},
     {title:'Creative Essentials (EN)',by:'Creative Factory (Brand Designer + Creative Writer)',
      desc:'Concept pitch + key claims per channel + tagline for Paid Ads.'},
-    {title:'Local CE translation',by:'Local Creative Copywriters',
+    {title:'Localization of Creative Essentials',by:'supporting Creative Writers',
      desc:'Translate Creative Essentials into all needed locales.'},
     {title:'Loop-in',by:'Comms Partners',
-     desc:'User Flow Mapping cross-check + keep Local Market POCs and Marketing channels informed throughout.',
-     info:'Merges market loop with User Flow Mapping. Marketing team maps the user journey; Comms Partners sync with Creative Factory at end-of-phase to cross-check experience continuity, then loop in Local Market POCs and channel owners.'},
+     desc:'Marketing channels + Local markets looped in throughout.',
+     info:'User Flow Mapping cross-check (Marketing team maps the user journey) + Comms Partners sync with Creative Factory at end-of-phase to cross-check experience continuity, then loop in Local markets and Marketing channels.'},
   ],
   notes:[
     'Creative Writer\'s lead language is project-dependent — can start in IT, DE, FR or EN.',
@@ -579,7 +578,6 @@ function HVStepCard({step,gradBg,selectedCh,onSelectCh}){
         })}
         <NoteFrame notes={step.notes} stepId={step.id}/>
         <Accordion title="Process gaps" items={step.gaps} type="gaps" stepId={step.id}/>
-        <CommentThread threadId={`hv-step-${step.id}`}/>
       </div>
     </div>
   );
@@ -711,17 +709,27 @@ function HighVisStream(){
         {showSetup&&(
           <div style={{marginTop:12,paddingTop:12,borderTop:'1px solid #BBF7D0'}} className="fade-in">
             <div style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#166534',marginBottom:8}}>Project team — identified at Quarterly Planning (2 weeks after Quarterly Reunion)</div>
-            <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(210px,1fr))',gap:8}}>
-              {[
-                {label:'Local Market POC',text:'1 per market — appointed by Local Head of Marketing. Single POC for the project.'},
-                {label:'Core team',text:'Comms Partner · Designer Builder · Creative Copywriter'},
-                {label:'Paid POC',text:'Regional Paid manager (if local initiative) — otherwise Alicia Dassance (Global Paid POC).'},
-              ].map(c=>(
-                <div key={c.label} style={{background:'#fff',border:'1px solid #BBF7D0',borderRadius:8,padding:'7px 11px'}}>
-                  <div style={{fontSize:10,fontWeight:700,color:'#166534',textTransform:'uppercase',letterSpacing:'0.04em',marginBottom:3}}>{c.label}</div>
-                  <div style={{fontSize:12,color:'#14532D',lineHeight:1.45}}>{c.text}</div>
-                </div>
-              ))}
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+              <div style={{background:'#fff',border:'1px solid #BBF7D0',borderRadius:8,padding:'9px 12px'}}>
+                <div style={{fontSize:10,fontWeight:700,color:'#166534',textTransform:'uppercase',letterSpacing:'0.04em',marginBottom:5}}>Local Market POC</div>
+                <div style={{fontSize:12,color:'#14532D',lineHeight:1.5}}>1 per market — appointed by the Local Head of Marketing. Single POC for the market initiative.</div>
+              </div>
+              <div style={{background:'#fff',border:'1px solid #BBF7D0',borderRadius:8,padding:'9px 12px'}}>
+                <div style={{fontSize:10,fontWeight:700,color:'#166534',textTransform:'uppercase',letterSpacing:'0.04em',marginBottom:5}}>Central teams</div>
+                <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:3}}>
+                  {[
+                    '1 Comms Partner',
+                    '1 Designer Builder',
+                    '1 Creative Copywriter',
+                    '1 POC per Marketing channel (Paid Ads, Website, CRM…)',
+                  ].map((t,i)=>(
+                    <li key={i} style={{display:'flex',gap:6,fontSize:12,color:'#14532D',lineHeight:1.5}}>
+                      <span style={{width:4,height:4,borderRadius:'50%',background:'#16A34A',flexShrink:0,marginTop:7}}/>
+                      <span>{t}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         )}
@@ -858,13 +866,14 @@ const STEPS_SS=[
   {
     id:1,title:'EN master copy',
     useCases:[{
-      owner:'PMM',
-      ruleOfThumb:'PMM owns and delivers the master copy end-to-end. No Comms Partners, no Creative Factory.',
+      owner:'PMM (global S) or Local Market POC dedicated to the initiative (local S)',
+      ruleOfThumb:'PMM (global S) or Local Market POC dedicated to the initiative (local S) owns and delivers the master copy end-to-end. No Comms Partners, no Creative Factory.',
       tools:['Tolki','QualityGuard — always run it!'],
     }],
     tradeOff:'PMM end-to-end. No Creative Essentials, no local orientation, no local review (except CRM). Edge cases → Red Bin.',
     notes:[
       'CRM: channel team validation required after the master copy.',
+      'Brand Design: no Creative Factory by default. Edge cases not covered by Qonto Studio yet → escalate to Brand team.',
     ],
   },
   {
@@ -924,7 +933,9 @@ const STEPS_BAU=[
       'Website':{owner:'Project owner (Website manager)',tools:['Qontent (Tolki & QualityGuard accessible from here)']},
       'Paid Ads':{owner:'Project owner (Paid Ads manager)',tools:['Tolki','QualityGuard — always run it!']},
     },
-    notes:[],
+    notes:[
+      'Brand Design: no Creative Factory by default. Edge cases not covered by Qonto Studio yet → escalate to Brand team.',
+    ],
   },
   {
     id:2,title:'First-pass translation',
@@ -977,13 +988,13 @@ const LD_GRADS=[
   'linear-gradient(135deg,#9BC5EA,#A585DB)',
   'linear-gradient(135deg,#FFB590,#CE6033)',
 ];
-/* Upstream phases for Local-driven (mirror Stream 1 structure, simpler) */
+/* Upstream phases for Local-driven (mirror Stream 1 structure, lighter) */
 const LD_UPSTREAM=[
   {
     letter:'A',
     label:'Sizing',
     owner:'GLT — quarterly reunion',
-    detail:'Sized M Local. Single-market initiative, not cascaded.',
+    detail:'Sized M or L Local. Single-market initiative, not cascaded.',
     trigger:true,
   },
   {
@@ -993,27 +1004,47 @@ const LD_UPSTREAM=[
     detail:'Brief from Global PMM — not co-creation, not a veto. Confirms alignment with the global strategy.',
   },
 ];
-/* Downstream steps for Local-driven (4 steps, mirror Self-serve / BAU structure) */
+/* Creative Essentials phase for Local-driven (Upstream C — lighter than Stream 1 Upstream D) */
+const LD_UPSTREAM_CE={
+  letter:'C',
+  label:'Creative Essentials',
+  owner:'Comms Partner + Creative Factory',
+  short:'Creative foundation built for this single market — concept + key claims + visual direction. No cascade, no Local Orientation, no Transcreation Gate.',
+  subSteps:[
+    {title:'Creative Brief',by:'Comms Partner',
+     desc:'Based on Step 0 sense-check + local market context.'},
+    {title:'Creative Essentials',by:'Creative Factory (Brand Designer + Creative Writer)',
+     desc:'Concept + key claims + visual direction — for this market only, in local language from the start.'},
+    {title:'Loop-in',by:'Comms Partner',
+     desc:'Local Market POC kept informed before Quality check.'},
+  ],
+  notes:[
+    'Lighter than Stream 1: no cascade, no Local Orientation, no Transcreation Gate.',
+    'No EN Master Key messages — the creative foundation is local-language from the start.',
+  ],
+  tools:['Tolki','QualityGuard — always run it!'],
+};
+/* Downstream steps for Local-driven (4 steps, mirror Stream 1 structure but lighter) */
 const LD_STEPS=[
   {
     id:1, title:'Local content production',
     useCases:[{
-      owner:'Local Market team',
+      owner:'Comms Partner + Creative Factory',
       tools:['Tolki','QualityGuard — always run it!'],
       steps:[
-        'Content produced directly in local language. No EN cascade, no AI first pass from a global master.',
-        'SEO input if the project is indexed.',
-        'Opportunistically, can ask for a second view / help from a Local Comms Partner.',
+        'Comms Partner + Creative Writers (from the Creative Factory) produce all channel-ready content in local language, based on the Creative Essentials.',
+        'No EN cascade — content is local-language from the start.',
+        'SEO input if the initiative is indexed.',
       ],
     }],
   },
   {
     id:2, title:'Quality check', mandatory:true,
     useCases:[{
-      owner:'Local Market team',
+      owner:'Local Market POC',
       tools:['QualityGuard — always run it!'],
       steps:[
-        'Run QualityGuard on the local content.',
+        'Local Market POC reviews and validates the local content.',
         'Final market sign-off before publish.',
       ],
     }],
@@ -1022,11 +1053,11 @@ const LD_STEPS=[
   {
     id:3, title:'Upload & publish',
     useCases:[{
-      owner:'Local Market team + relevant channel(s)',
+      owner:'Comms Partner + relevant channel team',
       tools:['Qontent','Customer.io (if CRM)','Platform (if Paid Ads)'],
       steps:[
-        'End-to-end ownership by the market.',
-        'If a central channel is needed (e.g. CRM), the market hands localized content to the channel for build — but the market drives.',
+        'Comms Partner hands the validated content to the relevant channel team.',
+        'Channel team builds + publishes (CRM team in Customer.io, Website team via Qontent, Paid Ads team on platform).',
       ],
     }],
   },
@@ -1054,10 +1085,11 @@ function LocalDrivenStream(){
         </div>
         <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:5,margin:'0 0 4px',padding:0}}>
           {[
-            <>Market owns end-to-end — content produced directly in local language</>,
-            <>Global PMM sense-checks only (not co-creation, not a veto)</>,
-            <>No cascade, no Creative Essentials, no localization downstream</>,
-            <>If a central channel is needed, the market hands content to channel — market still drives</>,
+            <>Single-market initiative — <strong>Comms Partner + Creative Factory</strong> produce all content</>,
+            <>Light Creative Essentials phase</>,
+            <>Local Market POC quality-checks only (Step 2)</>,
+            <>Global PMM sense-checks Step 0 (not co-creation, not a veto)</>,
+            <>No cascade, no downstream localization (content is born local)</>,
           ].map((b,i)=>(
             <li key={i} style={{display:'flex',gap:7,alignItems:'flex-start',fontSize:13,color:'#155E75',lineHeight:1.55}}>
               <span style={{width:5,height:5,borderRadius:'50%',background:'#0E7490',flexShrink:0,marginTop:8}}/>
@@ -1071,8 +1103,8 @@ function LocalDrivenStream(){
         <div onClick={()=>setShowUp(!showUp)} style={{padding:'14px 18px',display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer',background:showUp?'#FAFAFA':'#fff',borderRadius:'12px 12px 0 0'}}>
           <div style={{display:'flex',alignItems:'center',gap:8,flexWrap:'wrap'}}>
             <span style={{fontSize:12,fontWeight:800,textTransform:'uppercase',letterSpacing:'0.07em',color:'#050505'}}>Upstream phases</span>
-            <InfoBubble text="Market alignment only. Sizing by GLT, then a light global sense-check. No Local Orientation, no Transcreation Gate, no Creative Essentials."/>
-            <span style={{fontSize:11,color:'#8F8F8F',fontStyle:'italic'}}>A → B → Steps 1-4</span>
+            <InfoBubble text="Market alignment + a light Creative Essentials phase (Creative Factory + Comms Partner build a local-version creative foundation). No Local Orientation, no Transcreation Gate."/>
+            <span style={{fontSize:11,color:'#8F8F8F',fontStyle:'italic'}}>A → B → C → Steps 1-4</span>
           </div>
           <div style={{display:'flex',alignItems:'center',gap:6,flexShrink:0}}>
             <span style={{fontSize:11,fontWeight:600,color:'#0E7490'}}>{showUp?'Hide':'Click to expand'}</span>
@@ -1080,7 +1112,8 @@ function LocalDrivenStream(){
           </div>
         </div>
         {showUp&&<div style={{padding:'14px 18px',background:'#F5F5F5',borderTop:'1px solid #E0E0E0',borderRadius:'0 0 12px 12px'}} className="fade-in">
-          <div style={{display:'flex',gap:0,alignItems:'flex-start',overflowX:'auto'}}>
+          {/* Sequential row A → B */}
+          <div style={{display:'flex',gap:0,alignItems:'flex-start',overflowX:'auto',marginBottom:8}}>
             {LD_UPSTREAM.map((u,i)=>(
               <React.Fragment key={u.label}>
                 <UpstreamPhaseCard u={u}/>
@@ -1090,13 +1123,16 @@ function LocalDrivenStream(){
               </React.Fragment>
             ))}
           </div>
-          {/* Arrow down to Step 1 */}
-          <div style={{position:'relative',height:32,marginTop:10}}>
-            <div style={{position:'absolute',left:'50%',top:0,width:0,transform:'translateX(-50%)',display:'flex',flexDirection:'column',alignItems:'center'}}>
-              <div style={{width:2,height:18,background:'#3D3D3D'}}/>
+          {/* Convergence arrow to Creative Essentials (C) */}
+          <div style={{position:'relative',height:32,marginTop:6,marginBottom:6}}>
+            <div style={{position:'absolute',left:'10%',right:'10%',top:8,height:0,borderTop:'1.5px solid #3D3D3D'}}/>
+            <div style={{position:'absolute',left:'50%',top:8,width:0,transform:'translateX(-50%)',display:'flex',flexDirection:'column',alignItems:'center'}}>
+              <div style={{width:2,height:14,background:'#3D3D3D'}}/>
               <svg width="18" height="12" viewBox="0 0 18 12"><polyline points="1,1 9,10 17,1" fill="none" stroke="#3D3D3D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </div>
           </div>
+          {/* C — Creative Essentials rich card */}
+          <UpstreamCECard ce={LD_UPSTREAM_CE}/>
         </div>}
       </div>
       {/* Downstream toggle — collapsed by default */}
@@ -1144,7 +1180,7 @@ function LocalPOCsCompact(){
       <div onClick={e=>{e.stopPropagation();setOpen(!open);}} style={{padding:'9px 14px',background:'#F9F7FF',display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer'}}>
         <div style={{display:'flex',alignItems:'center',gap:6}}>
           <IUsers size={13} style={{color:'#7B4DB8'}}/>
-          <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#7B4DB8'}}>Local Market POCs — BAU & Global S only</span>
+          <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#7B4DB8'}}>Standard Local Market POC — BAU & Global S only</span>
         </div>
         <IChevD size={13} style={{color:'#7B4DB8',transition:'transform 0.25s',transform:open?'rotate(180deg)':'rotate(0deg)'}}/>
       </div>
@@ -1255,7 +1291,6 @@ function BAUStepCard({step,gradBg,selectedCh,onSelectCh}){
         <Accordion title="Process gaps" items={step.gaps} type="gaps" stepId={step.id}/>
         <Accordion title="Suggestions" items={step.suggestions} type="suggestions" stepId={step.id}/>
         {step.showPOCs&&<LocalPOCsCompact/>}
-        <CommentThread threadId={`bau-step-${step.id}`}/>
       </div>
     </div>
   );
@@ -1308,7 +1343,7 @@ function LocalPOCsBlock(){
       <div style={{marginBottom:14,paddingBottom:12,borderBottom:'1px solid #F0EAFF'}}>
         <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
           <IUsers size={16} style={{color:'#7B4DB8'}}/>
-          <span style={{fontSize:14,fontWeight:700,color:'#050505'}}>Local Market POCs</span>
+          <span style={{fontSize:14,fontWeight:700,color:'#050505'}}>Standard Local Market POC</span>
           <span style={{fontSize:11,color:'#8F8F8F',marginLeft:'auto',fontWeight:500}}>BAU & Global S — Steps 2 & 3</span>
         </div>
         <div style={{fontSize:12,color:'#B45309',background:'#FFF9EC',border:'1px solid #FDE68A',borderRadius:7,padding:'6px 10px'}}>
@@ -1366,7 +1401,7 @@ function ScopeToggle(){
       <div onClick={()=>setOpen(!open)} style={{padding:'14px 20px',display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer',gap:14}}>
         <div style={{display:'flex',alignItems:'center',gap:10,flexWrap:'wrap'}}>
           <ITarget size={17} style={{color:'#7B4DB8',flexShrink:0}}/>
-          <span style={{fontSize:15,fontWeight:600,color:'#050505'}}>Scope: <span style={{fontWeight:500,color:'#616161'}}>4 workflows documented — <strong>1.</strong> High-visibility (L & M) · <strong>2.</strong> Self-serve (S) · <strong>3.</strong> BAU / Channel-owned · <strong>4.</strong> Local-driven (M Local).</span></span>
+          <span style={{fontSize:15,fontWeight:600,color:'#050505'}}>Scope: <span style={{fontWeight:500,color:'#616161'}}>4 workflows documented — <strong>1.</strong> High-visibility (L & M Global) · <strong>2.</strong> Self-serve (S, global or local) · <strong>3.</strong> BAU / Channel-owned · <strong>4.</strong> Local-driven (L & M Local).</span></span>
         </div>
         <div style={{display:'flex',alignItems:'center',gap:5,fontSize:13,fontWeight:600,color:'#7B4DB8',flexShrink:0}}>
           {open?'Hide':'See details & exceptions'}
@@ -1381,7 +1416,7 @@ function ScopeToggle(){
                 <IBulb size={14} style={{color:'#7B4DB8'}}/>
                 <span style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#8F8F8F'}}>Not sure which stream applies to you?</span>
               </div>
-              <p style={{fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:'0 0 8px 0'}}>Check your project size in <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> first — <strong>L or M global = Stream 1</strong> (High-visibility), <strong>M Local = Stream 4</strong> (Local-driven), <strong>S = Stream 2</strong> (Self-serve), <strong>not in Panorama = Stream 3</strong> (BAU). Then use <strong>Find your path</strong> to get your personalised steps.</p>
+              <p style={{fontSize:14,color:'#3D3D3D',lineHeight:1.7,margin:'0 0 8px 0'}}>Check your project size in <a href="https://www.notion.so/qonto/PANORAMA-Growth-Roadmaps-27031ee4c69680d09b14db327e32e352" target="_blank" rel="noopener noreferrer">Panorama</a> first — <strong>L & M Global = Stream 1</strong> (High-visibility), <strong>L & M Local = Stream 4</strong> (Local-driven), <strong>S = Stream 2</strong> (Self-serve), <strong>not in Panorama = Stream 3</strong> (BAU). Then use <strong>Find your path</strong> to get your personalised steps.</p>
               <p style={{fontSize:13,color:'#616161',lineHeight:1.6,margin:'4px 0 0 0'}}>Full operating model on Notion: <a href="https://www.notion.so/qonto/Growth-Operating-Model-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658" target="_blank" rel="noopener noreferrer">Growth Operating Model — Roles, Responsibilities, Ways of Working</a>.</p>
               <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8,marginTop:16}}>
                 <IAlert size={14} style={{color:'#B45309'}}/>
@@ -1488,7 +1523,7 @@ function LocalPOCView(){
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
           Pocket guide
         </div>
-        <h2 style={{fontSize:18,fontWeight:800,color:'#050505',marginBottom:4,lineHeight:1.2}}>Local Market POCs — How it works</h2>
+        <h2 style={{fontSize:18,fontWeight:800,color:'#050505',marginBottom:4,lineHeight:1.2}}>Standard Local Market POC — How it works</h2>
         <p style={{fontSize:13,color:'#616161',lineHeight:1.55,margin:0}}>Across all workflows — what you own, and what needs to change.</p>
       </div>
       <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:12,overflow:'hidden',marginBottom:14}}>
@@ -1590,15 +1625,15 @@ function getPathResult(answers){
           'Global PMM writes Step 0 (one-pager, incl. legal flags).',
           'Local Market POC + PMM + SEO content manager run Local Orientation.',
           'Transcreation Gate (conditional): cascade EN Master Key messages OR trigger transcreation.',
-          'In parallel: Channel Orientations (Paid · Website · CRM) + User Flow Mapping feed the Creative Brief.',
+          'In parallel: Channel Orientations (Paid Ads · Website · CRM) + User Flow Mapping feed the Creative Brief.',
         ],
         tools:[]},
       {n:'CE',title:'Upstream — Creative Essentials',owner:'Global PMM + Comms Partners + Creative Factory',
         bullets:[
           'Creative Brief (Comms Partners) — inputs gathering can start after Step 0; final brief to Creative Factory after Local Orientation (and Transcreation Gate if triggered).',
           'Creative Factory delivers concept pitch + key claims per channel + tagline for Paid Ads.',
-          'Local CCs translate the CE into all needed locales.',
-          'Comms Partners keep Local Market POCs informed throughout.',
+          'Localization of Creative Essentials — supporting Creative Writers translate into all needed locales.',
+          'Loop-in — Marketing channels + Local markets looped in throughout.',
         ],
         tools:['Tolki','QualityGuard — always run it!']},
       {n:1,title:'Creative Asset Production',owner:'Creative Factory + Comms Partners (channel-specific)',
@@ -1634,27 +1669,27 @@ function getPathResult(answers){
   };
   if(projectType==='localdriven') return{
     type:'localdriven',track:'localdriven',langs:langs||[],
-    tradeOff:'Market owns end-to-end. Global PMM sense-checks only. Trade-off: no cascade, no Creative Essentials, no shared upstream — initiative stays scoped to one market.',
+    tradeOff:'Single-market initiative. Comms Partner + Creative Factory produce all content; Local Market POC quality-checks only. Light Creative Essentials phase. Global PMM sense-checks Step 0. Trade-off: no cascade, no downstream localization — initiative stays scoped to one market.',
     steps:[
-      {n:'↑',title:'Upstream — Market alignment',owner:'GLT + Global PMM',
+      {n:'↑',title:'Upstream — A → B → C',owner:'GLT + Global PMM + Comms Partner + Creative Factory',
         bullets:[
-          'A. Sizing — GLT sizes the project as M Local at Quarterly Reunion.',
+          'A. Sizing — GLT sizes the initiative as L or M Local at Quarterly Reunion.',
           'B. Step 0 — Global sense-check by Global PMM (not co-creation, not a veto).',
+          'C. Creative Essentials — Comms Partner + Creative Factory build the creative foundation for this market only.',
         ],
         tools:[]},
-      {n:1,title:'Local content production',owner:'Local Market team',
+      {n:1,title:'Local content production',owner:'Comms Partner + Creative Factory',
         bullets:[
-          'Content produced directly in local language.',
-          'No EN cascade, no AI first pass from a global master.',
-          'SEO input if the project is indexed.',
-          'Opportunistically, can ask for a second view / help from a Local Comms Partner.',
+          'Comms Partner + Creative Writers (from the Creative Factory) produce all channel-ready content in local language, based on the Creative Essentials.',
+          'No EN cascade — content is local-language from the start.',
+          'SEO input if the initiative is indexed.',
         ],
         tools:['Tolki','QualityGuard — always run it!']},
-      {n:2,title:'Quality check',owner:'Local Market team',mandatory:true,
-        bullets:['Run QualityGuard on the local content.','Final market sign-off before publish.','Compliance remains your responsibility regardless of tooling.'],
+      {n:2,title:'Quality check',owner:'Local Market POC',mandatory:true,
+        bullets:['Local Market POC reviews and validates the local content.','Final market sign-off before publish.','Compliance remains your responsibility regardless of tooling.'],
         tools:['QualityGuard — always run it!']},
-      {n:3,title:'Upload & publish',owner:'Local Market team + relevant channel(s)',
-        bullets:['End-to-end ownership by the market.','If a central channel is needed (e.g. CRM), market hands localized content to channel for build — market drives.'],
+      {n:3,title:'Upload & publish',owner:'Comms Partner + relevant channel team',
+        bullets:['Comms Partner hands the validated content to the relevant channel team.','Channel team builds + publishes (CRM team in Customer.io, Website team via Qontent, Paid Ads team on platform).'],
         tools:['Qontent','Customer.io (if CRM)','Platform (if Paid Ads)']},
       {n:4,title:'Red bin logging',owner:'Anyone involved',tools:['Red Bin logging form/database']},
     ],
@@ -1771,14 +1806,14 @@ function PathFinder({onViewWorkflow}){
     <Shell title="What type of project is this?" sub="Check Panorama first — the size determines which stream applies.">
       {[
         {value:'highvis',label:'Global — High-visibility / Creativity',
-          sizing:'Panorama · L or M',accent:'#fff',accentBg:'#050505',
-          bullets:['Creative Factory always involved','Heavy upstream investment + local sign-off','EN Master Key messages cascaded to all markets']},
+          sizing:'Panorama · L & M Global',accent:'#fff',accentBg:'#050505',
+          bullets:['Comms Partners and Creative Factory always involved','Heavy upstream investment + local sign-off','EN Master Key messages cascaded to all markets']},
         {value:'localdriven',label:'Local-driven — Market initiative',
-          sizing:'Panorama · M Local',accent:'#fff',accentBg:'#0E7490',
-          bullets:['Market owns end-to-end','Global PMM sense-checks only (not co-creation, not a veto)','No EN cascade — content produced directly in local language']},
-        {value:'selfserve',label:'Global — Self-serve',
-          sizing:'Panorama · S',accent:'#fff',accentBg:'#7B4DB8',
-          bullets:['PMM owns end-to-end','No Creative Factory, no local review (except CRM)','Edge cases → Red Bin']},
+          sizing:'Panorama · L & M Local',accent:'#fff',accentBg:'#0E7490',
+          bullets:['Single-market initiative — Comms Partner + Creative Factory produce all content','Light Creative Essentials phase','Local Market POC quality-checks only','Global PMM sense-checks Step 0 (no co-creation, no veto)']},
+        {value:'selfserve',label:'Self-serve',
+          sizing:'Panorama · S (global or local)',accent:'#fff',accentBg:'#7B4DB8',
+          bullets:['PMM (global S) or Local Market POC dedicated to the initiative (local S) owns end-to-end','No Comms Partners, no Creative Factory, no native review (except CRM)','Edge cases → Red Bin']},
         {value:'bau',label:'BAU / Channel-owned',
           sizing:'Not in Panorama',accent:'#fff',accentBg:'#461068',
           bullets:['Project owner manages copy + AI translation','Local Market POC = native review (last quality gate)','Per channel: CRM · Website · Paid Ads']},
@@ -1826,7 +1861,7 @@ function PathFinder({onViewWorkflow}){
     const trackMeta={
       highvis:{bg:'#050505',label:'Global — High-visibility / Creativity'},
       localdriven:{bg:'#0E7490',label:'Local-driven — Market initiative'},
-      selfserve:{bg:'#7B4DB8',label:'Global — Self-serve'+(answers.channel?` · ${answers.channel}`:'')},
+      selfserve:{bg:'#7B4DB8',label:'Self-serve'+(answers.channel?` · ${answers.channel}`:'')},
       bau:{bg:'#461068',label:'BAU / Channel-owned'+(result.channel?` · ${result.channel}`:'')},
     };
     const tc=trackMeta[result.type];
@@ -1908,10 +1943,10 @@ function PathFinder({onViewWorkflow}){
 }
 /* ── TRACKS ── */
 const TRACKS=[
-  {id:'highvis',streamNum:1,label:'Global projects — High-visibility / Creativity',sizing:'In Panorama — L & M',desc:'Cascade. Creative Factory always involved. Local Market POC owns sign-off.',activeBg:'#050505',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
-  {id:'selfserve',streamNum:2,label:'Global projects — Self-serve',sizing:'In Panorama — S',desc:'PMM owns end-to-end. No local review (except CRM).',activeBg:'#7B4DB8',badgeBg:'rgba(255,255,255,0.2)',badgeText:'rgba(255,255,255,0.9)'},
-  {id:'bau',streamNum:3,label:'BAU / Channel-owned',sizing:'Not in Panorama',desc:'Channel-owned (CRM, Paid, Website). Local Market POC = native review.',activeBg:'#461068',badgeBg:'rgba(255,255,255,0.15)',badgeText:'rgba(255,255,255,0.85)'},
-  {id:'localdriven',streamNum:4,label:'Local-driven projects — Market initiative',sizing:'In Panorama — M Local',desc:'Market owns end-to-end. Global PMM provides sense-check only.',activeBg:'#0E7490',badgeBg:'rgba(255,255,255,0.18)',badgeText:'rgba(255,255,255,0.85)'},
+  {id:'highvis',streamNum:1,label:'Global projects — High-visibility / Creativity',sizing:'In Panorama — L & M Global',desc:'Cascade. Comms Partners and Creative Factory always involved. Initiative-dedicated Local Market POC owns sign-off per market.',activeBg:'#050505',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
+  {id:'selfserve',streamNum:2,label:'Self-serve',sizing:'In Panorama — S (global or local)',desc:'PMM (global S) or Local Market POC dedicated to the initiative (local S) runs end-to-end with AI translation. No native review (except CRM).',activeBg:'#7B4DB8',badgeBg:'rgba(255,255,255,0.2)',badgeText:'rgba(255,255,255,0.9)'},
+  {id:'bau',streamNum:3,label:'BAU / Channel-owned',sizing:'Not in Panorama',desc:'Channel-owned (CRM, Paid Ads, Website). Local Market POC = native review.',activeBg:'#461068',badgeBg:'rgba(255,255,255,0.15)',badgeText:'rgba(255,255,255,0.85)'},
+  {id:'localdriven',streamNum:4,label:'Local-driven projects — Market initiative',sizing:'In Panorama — L & M Local',desc:'Comms Partner + Creative Factory produce all content. Local Market POC quality-checks only. Light Creative Essentials phase. Global PMM sense-checks Step 0 only.',activeBg:'#0E7490',badgeBg:'rgba(255,255,255,0.18)',badgeText:'rgba(255,255,255,0.85)'},
 ];
 /* ── VERSION HISTORY TOGGLE ── */
 /* ── APP ── */
