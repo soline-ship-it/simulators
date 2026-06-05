@@ -477,11 +477,11 @@ const HV_STEPS=[
       },
       'CRM':{
         owner:'CRM team',
-        tools:['Customer.io'],
+        tools:['Qontent','Customer.io'],
         steps:[
-          'CRM team builds the email in Customer.io.',
+          'CRM team pulls the validated content from Qontent and builds the email in Customer.io.',
           '(Optional) Sends for review to Local Market POC before publish — Comms Partners may be added for visibility.',
-          'CRM publishes.',
+          'CRM publishes via Customer.io.',
         ],
       },
       'Paid Ads':{
@@ -1057,7 +1057,7 @@ const LD_STEPS=[
       tools:['Qontent','Customer.io (if CRM)','Platform (if Paid Ads)'],
       steps:[
         'Comms Partner hands the validated content to the relevant channel team.',
-        'Channel team builds + publishes (CRM team in Customer.io, Website team via Qontent, Paid Ads team on platform).',
+        'Channel team builds + publishes (CRM: pulls from Qontent → builds the email in Customer.io → publishes via Customer.io · Website: publishes via Qontent · Paid Ads: publishes on platform).',
       ],
     }],
   },
@@ -1659,7 +1659,7 @@ function getPathResult(answers){
         tools:[]},
       {n:4,title:'Upload & publish',owner:'Channel teams',
         bullets:[
-          'CRM — builds in Customer.io + (optional) Local Market POC review before publish.',
+          'CRM — pulls from Qontent → builds the email in Customer.io → (optional) Local Market POC review → publishes via Customer.io.',
           'Website — publishes via Qontent.',
           'Paid Ads — publishes on platform.',
         ],
@@ -1689,7 +1689,7 @@ function getPathResult(answers){
         bullets:['Local Market POC reviews and validates the local content.','Final market sign-off before publish.','Compliance remains your responsibility regardless of tooling.'],
         tools:['QualityGuard — always run it!']},
       {n:3,title:'Upload & publish',owner:'Comms Partner + relevant channel team',
-        bullets:['Comms Partner hands the validated content to the relevant channel team.','Channel team builds + publishes (CRM team in Customer.io, Website team via Qontent, Paid Ads team on platform).'],
+        bullets:['Comms Partner hands the validated content to the relevant channel team.','Channel team builds + publishes (CRM: pulls from Qontent → builds in Customer.io → publishes via Customer.io · Website: publishes via Qontent · Paid Ads: publishes on platform).'],
         tools:['Qontent','Customer.io (if CRM)','Platform (if Paid Ads)']},
       {n:4,title:'Red bin logging',owner:'Anyone involved',tools:['Red Bin logging form/database']},
     ],
