@@ -335,7 +335,7 @@ const HV_UPSTREAM=[
   {
     letter:'C',
     label:'Local Orientation',
-    owner:'Local Market POC + PMM + SEO content manager',
+    owner:'Initiative-dedicated Local Market POC + PMM + SEO content manager',
     detail:'Local context, "dying on a hill" vs "good to have", SEO inputs. Local Orientation is key for SEO.',
     mandatory:true,
   },
@@ -416,22 +416,22 @@ const HV_STEPS=[
     id:2, title:'Localization & review', mandatory:true,
     channels:{
       'Website':{
-        owner:'Local Market POC + Website team',
+        owner:'Initiative-dedicated Local Market POC + Website team',
         steps:['Receive EN + local copies.','Build page structure.','Create local copy with AI.','Review (local mktg + PMM).'],
         tools:['Qontent (Tolki & QualityGuard accessible from here)'],
       },
       'CRM':{
-        owner:'Local Market POC',
+        owner:'Initiative-dedicated Local Market POC',
         steps:[
-          'Local Market POC reviews and proofreads the email in Qontent, based on the Creative Essentials.',
+          'Initiative-dedicated Local Market POC reviews and proofreads the email in Qontent, based on the Creative Essentials.',
         ],
         tools:['Qontent (Tolki & QualityGuard accessible from here)'],
       },
       'Paid Ads':{
-        owner:'Comms Partners + Local Market POC + Paid Ads team',
+        owner:'Comms Partners + Initiative-dedicated Local Market POC + Paid Ads team',
         steps:[
-          'For PT / NL: available-language Comms Partner or Local Market POC adapts the copy.',
-          'The Comms Partner shares copies + creative assets (for context) with Local Market POCs to flag any blockers before the launch.',
+          'For PT / NL: available-language Comms Partner or Initiative-dedicated Local Market POC adapts the copy.',
+          'The Comms Partner shares copies + creative assets (for context) with Initiative-dedicated Local Market POCs to flag any blockers before the launch.',
           'Paid Ads team receives all-market copies + final creative assets.',
           'Paid Ads team builds and launches ads on platforms.',
         ],
@@ -439,19 +439,19 @@ const HV_STEPS=[
       },
     },
     notes:[
-      'Website & CRM: Local Market POC owns the full review — full message adaptation, not just grammar.',
-      'Paid Ads: Local Market POCs flag any blockers here (not a copy validation — they had upstream input). No separate Step 3 sign-off.',
-      'PT / NL (no lead-language master copy): available-language Comms Partner or Local Market POC adapts.',
+      'Website & CRM: Initiative-dedicated Local Market POC owns the full review — full message adaptation, not just grammar.',
+      'Paid Ads: Initiative-dedicated Local Market POCs flag any blockers here (not a copy validation — they had upstream input). No separate Step 3 sign-off.',
+      'PT / NL (no lead-language master copy): available-language Comms Partner or Initiative-dedicated Local Market POC adapts.',
       'SLA — L: ~5 days · M: ~3 days.',
     ],
     gaps:[
-      'CRM: no automatic notification to Local Market POC when their review is needed. WIP — Madeleine + Sébastien working on auto-ping in Qontent.',
+      'CRM: no automatic notification to Initiative-dedicated Local Market POC when their review is needed. WIP — Madeleine + Sébastien working on auto-ping in Qontent.',
     ],
   },
   {
     id:3, title:'Final sign-off', mandatory:true,
     useCases:[{
-      owner:'Local Market POC',
+      owner:'Initiative-dedicated Local Market POC',
       steps:[
         'Validate cross-channel coherence, local accuracy, regulatory compliance.',
         'For L: blocking gate — no publish until signed off.',
@@ -460,8 +460,8 @@ const HV_STEPS=[
       tools:[],
     }],
     notes:[
-      'Local Market POC fully accountable — accuracy, tone of voice, consistency.',
-      'Paid Ads: no Step 3 sign-off. Local Market POC informed of in-flight variants once live.',
+      'Initiative-dedicated Local Market POC fully accountable — accuracy, tone of voice, consistency.',
+      'Paid Ads: no Step 3 sign-off. Initiative-dedicated Local Market POC informed of in-flight variants once live.',
     ],
   },
   {
@@ -480,7 +480,7 @@ const HV_STEPS=[
         tools:['Qontent','Customer.io'],
         steps:[
           'CRM team pulls the validated content from Qontent and builds the email in Customer.io.',
-          '(Optional) Sends for review to Local Market POC before publish — Comms Partners may be added for visibility.',
+          '(Optional) Sends for review to Initiative-dedicated Local Market POC before publish — Comms Partners may be added for visibility.',
           'CRM publishes via Customer.io.',
         ],
       },
@@ -689,7 +689,7 @@ function HighVisStream(){
           {[
             <>Heavy creative investment — <strong>Creative Factory always involved</strong></>,
             <>Global teams own the EN Master copy + AI first pass</>,
-            <>Local Market POC drives downstream proofing + sign-off</>,
+            <>Initiative-dedicated Local Market POC drives downstream proofing + sign-off</>,
             <>Channel teams execute upload</>,
           ].map((b,i)=>(
             <li key={i} style={{display:'flex',gap:7,alignItems:'flex-start',fontSize:13,color:'#14532D',lineHeight:1.55}}>
@@ -711,7 +711,7 @@ function HighVisStream(){
             <div style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#166534',marginBottom:8}}>Project team — identified at Quarterly Planning (2 weeks after Quarterly Reunion)</div>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
               <div style={{background:'#fff',border:'1px solid #BBF7D0',borderRadius:8,padding:'9px 12px'}}>
-                <div style={{fontSize:10,fontWeight:700,color:'#166534',textTransform:'uppercase',letterSpacing:'0.04em',marginBottom:5}}>Local Market POC</div>
+                <div style={{fontSize:10,fontWeight:700,color:'#166534',textTransform:'uppercase',letterSpacing:'0.04em',marginBottom:5}}>Initiative-dedicated Local Market POC</div>
                 <div style={{fontSize:12,color:'#14532D',lineHeight:1.5}}>1 per market — appointed by the Local Head of Marketing. Single POC for the market initiative.</div>
               </div>
               <div style={{background:'#fff',border:'1px solid #BBF7D0',borderRadius:8,padding:'9px 12px'}}>
@@ -1104,7 +1104,7 @@ function LocalDrivenStream(){
             <>Single-market initiative — <strong>Comms Partner + Creative Factory</strong> produce all content</>,
             <>Upstream <strong>Local Orientation + Marketing channels orientation</strong> (phase C) — Local PMM brings market inputs early</>,
             <>Creative Essentials phase (D)</>,
-            <>Local Market POC quality-checks only (Step 2)</>,
+            <>Initiative-dedicated Local Market POC quality-checks only (Step 2)</>,
             <>Global PMM sense-checks Step 0 (not co-creation, not a veto)</>,
             <>No cascade, no Transcreation Gate, no downstream localization (content is born local)</>,
           ].map((b,i)=>(
@@ -1670,11 +1670,11 @@ function getPathResult(answers){
   if(projectType==='highvis') return{
     type:'highvis',track:'highvis',langs:langs||[],
     steps:[
-      {n:'↑',title:'Upstream — Market alignment',owner:'GLT + Global PMM + Local Market POC + Channels',
+      {n:'↑',title:'Upstream — Market alignment',owner:'GLT + Global PMM + Initiative-dedicated Local Market POC + Channels',
         bullets:[
           'GLT sizes the project as L or M.',
           'Global PMM writes Step 0 (one-pager, incl. legal flags).',
-          'Local Market POC + PMM + SEO content manager run Local Orientation.',
+          'Initiative-dedicated Local Market POC + PMM + SEO content manager run Local Orientation.',
           'Transcreation Gate (conditional): cascade EN Master Key messages OR trigger transcreation.',
           'In parallel: Channel Orientations (Paid Ads · Website · CRM) + User Flow Mapping feed the Creative Brief.',
         ],
@@ -1694,14 +1694,14 @@ function getPathResult(answers){
           'Paid Ads — Creative Copywriter writes all copies (in-asset + external) + designer adapts to formats.',
         ],
         tools:['Qontent (Tolki & QualityGuard accessible from here)']},
-      {n:2,title:'Localization & review',owner:'Local Market POC',mandatory:true,
+      {n:2,title:'Localization & review',owner:'Initiative-dedicated Local Market POC',mandatory:true,
         bullets:[
-          'Local Market POC reviews based on the Creative Essentials.',
+          'Initiative-dedicated Local Market POC reviews based on the Creative Essentials.',
           'Full ownership: accuracy, tone of voice, message adaptation.',
-          'Paid Ads: Local Market POCs flag any blockers here (no separate Step 3).',
+          'Paid Ads: Initiative-dedicated Local Market POCs flag any blockers here (no separate Step 3).',
         ],
         tools:['Qontent (Tolki & QualityGuard accessible from here)','QualityGuard — always run it!']},
-      {n:3,title:'Final sign-off',owner:'Local Market POC',mandatory:true,
+      {n:3,title:'Final sign-off',owner:'Initiative-dedicated Local Market POC',mandatory:true,
         bullets:[
           'L — blocking gate (no publish until signed off).',
           'M — SLA-based sign-off.',
@@ -1710,7 +1710,7 @@ function getPathResult(answers){
         tools:[]},
       {n:4,title:'Upload & publish',owner:'Channel teams',
         bullets:[
-          'CRM — pulls from Qontent → builds the email in Customer.io → (optional) Local Market POC review → publishes via Customer.io.',
+          'CRM — pulls from Qontent → builds the email in Customer.io → (optional) Initiative-dedicated Local Market POC review → publishes via Customer.io.',
           'Website — publishes via Qontent.',
           'Paid Ads — publishes on platform.',
         ],
@@ -1720,7 +1720,7 @@ function getPathResult(answers){
   };
   if(projectType==='localdriven') return{
     type:'localdriven',track:'localdriven',langs:langs||[],
-    tradeOff:'Single-market initiative. Comms Partner + Creative Factory produce all content; Local Market POC quality-checks only. Creative Essentials phase. Global PMM sense-checks Step 0. Trade-off: no cascade, no downstream localization — initiative stays scoped to one market.',
+    tradeOff:'Single-market initiative. Comms Partner + Creative Factory produce all content; Initiative-dedicated Local Market POC quality-checks only. Creative Essentials phase. Global PMM sense-checks Step 0. Trade-off: no cascade, no downstream localization — initiative stays scoped to one market.',
     steps:[
       {n:'↑',title:'Upstream — A → B → C → D',owner:'GLT + Global PMM + Local PMM + Marketing channels + Comms Partner + Creative Factory',
         bullets:[
@@ -1862,7 +1862,7 @@ function PathFinder({onViewWorkflow}){
           bullets:['Comms Partners and Creative Factory always involved','Heavy upstream investment + local sign-off','EN Master Key messages cascaded to all markets']},
         {value:'localdriven',label:'Local-driven — Market initiative',
           sizing:'Panorama · L & M Local',accent:'#fff',accentBg:'#0E7490',
-          bullets:['Single-market initiative — Comms Partner + Creative Factory produce all content','Upstream Local Orientation + Marketing channels orientation (initiative-dedicated POC brings inputs early)','Creative Essentials phase','Local Market POC quality-checks only','Global PMM sense-checks Step 0 (no co-creation, no veto)']},
+          bullets:['Single-market initiative — Comms Partner + Creative Factory produce all content','Upstream Local Orientation + Marketing channels orientation (initiative-dedicated POC brings inputs early)','Creative Essentials phase','Initiative-dedicated Local Market POC quality-checks only','Global PMM sense-checks Step 0 (no co-creation, no veto)']},
         {value:'selfserve',label:'Self-serve',
           sizing:'Panorama · S (global or local)',accent:'#fff',accentBg:'#7B4DB8',
           bullets:['PMM (global S) or Local Market POC dedicated to the initiative (local S) owns end-to-end','No Comms Partners, no Creative Factory, no native review (except CRM)','Edge cases → Red Bin']},
@@ -1998,7 +1998,7 @@ const TRACKS=[
   {id:'highvis',streamNum:1,label:'Global projects — High-visibility / Creativity',sizing:'In Panorama — L & M Global',desc:'Cascade. Comms Partners and Creative Factory always involved. Initiative-dedicated Local Market POC owns sign-off per market.',activeBg:'#050505',badgeBg:'rgba(255,255,255,0.12)',badgeText:'rgba(255,255,255,0.8)'},
   {id:'selfserve',streamNum:2,label:'Self-serve',sizing:'In Panorama — S (global or local)',desc:'PMM (global S) or Local Market POC dedicated to the initiative (local S) runs end-to-end with AI translation. No native review (except CRM).',activeBg:'#7B4DB8',badgeBg:'rgba(255,255,255,0.2)',badgeText:'rgba(255,255,255,0.9)'},
   {id:'bau',streamNum:3,label:'BAU / Channel-owned',sizing:'Not in Panorama',desc:'Channel-owned (CRM, Paid Ads, Website). Local Market POC = native review.',activeBg:'#461068',badgeBg:'rgba(255,255,255,0.15)',badgeText:'rgba(255,255,255,0.85)'},
-  {id:'localdriven',streamNum:4,label:'Local-driven projects — Market initiative',sizing:'In Panorama — L & M Local',desc:'Global PMM sense-checks. Creative Essentials phase. Creative Writers + Comms Partners create the copy. Local Market POC checks only.',activeBg:'#0E7490',badgeBg:'rgba(255,255,255,0.18)',badgeText:'rgba(255,255,255,0.85)'},
+  {id:'localdriven',streamNum:4,label:'Local-driven projects — Market initiative',sizing:'In Panorama — L & M Local',desc:'Global PMM sense-checks. Creative Essentials phase. Creative Writers + Comms Partners create the copy. Initiative-dedicated Local Market POC checks only.',activeBg:'#0E7490',badgeBg:'rgba(255,255,255,0.18)',badgeText:'rgba(255,255,255,0.85)'},
 ];
 /* ── VERSION HISTORY TOGGLE ── */
 /* ── APP ── */
