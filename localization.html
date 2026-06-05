@@ -1006,7 +1006,7 @@ const LD_UPSTREAM=[
   {
     letter:'C',
     label:'Local Orientation',
-    owner:'Initiative-dedicated Local Market POC',
+    owner:'Local PMM',
     detail:'Market context, customer sensitivities, regulatory constraints, market-specific priorities, SEO inputs. Inputs feed the Creative Brief.',
     mandatory:true,
   },
@@ -1102,7 +1102,7 @@ function LocalDrivenStream(){
         <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:5,margin:'0 0 4px',padding:0}}>
           {[
             <>Single-market initiative — <strong>Comms Partner + Creative Factory</strong> produce all content</>,
-            <>Upstream <strong>Local Orientation + Marketing channels orientation</strong> (phase C) — initiative-dedicated Local Market POC brings inputs early</>,
+            <>Upstream <strong>Local Orientation + Marketing channels orientation</strong> (phase C) — Local PMM brings market inputs early</>,
             <>Creative Essentials phase (D)</>,
             <>Local Market POC quality-checks only (Step 2)</>,
             <>Global PMM sense-checks Step 0 (not co-creation, not a veto)</>,
@@ -1120,7 +1120,7 @@ function LocalDrivenStream(){
         <div onClick={()=>setShowUp(!showUp)} style={{padding:'14px 18px',display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer',background:showUp?'#FAFAFA':'#fff',borderRadius:'12px 12px 0 0'}}>
           <div style={{display:'flex',alignItems:'center',gap:8,flexWrap:'wrap'}}>
             <span style={{fontSize:12,fontWeight:800,textTransform:'uppercase',letterSpacing:'0.07em',color:'#050505'}}>Upstream phases</span>
-            <InfoBubble text="Market alignment (A → C) feeds the Creative Essentials phase (D). C includes Local Orientation + Marketing channels orientation in parallel — the initiative-dedicated Local Market POC brings inputs early. No Transcreation Gate."/>
+            <InfoBubble text="Market alignment (A → C) feeds the Creative Essentials phase (D). C includes Local Orientation + Marketing channels orientation in parallel — Local PMM brings market inputs early. No Transcreation Gate."/>
             <span style={{fontSize:11,color:'#8F8F8F',fontStyle:'italic'}}>A → B → C → D → Steps 1-4</span>
           </div>
           <div style={{display:'flex',alignItems:'center',gap:6,flexShrink:0}}>
@@ -1722,11 +1722,11 @@ function getPathResult(answers){
     type:'localdriven',track:'localdriven',langs:langs||[],
     tradeOff:'Single-market initiative. Comms Partner + Creative Factory produce all content; Local Market POC quality-checks only. Creative Essentials phase. Global PMM sense-checks Step 0. Trade-off: no cascade, no downstream localization — initiative stays scoped to one market.',
     steps:[
-      {n:'↑',title:'Upstream — A → B → C → D',owner:'GLT + Global PMM + Initiative-dedicated Local Market POC + Marketing channels + Comms Partner + Creative Factory',
+      {n:'↑',title:'Upstream — A → B → C → D',owner:'GLT + Global PMM + Local PMM + Marketing channels + Comms Partner + Creative Factory',
         bullets:[
           'A. Sizing — GLT sizes the initiative as L or M Local at Quarterly Reunion.',
           'B. Step 0 — Global sense-check by Global PMM (not co-creation, not a veto).',
-          'C. Local Orientation + Marketing channels orientation (in parallel, both mandatory) — the initiative-dedicated Local Market POC brings market context, regulatory inputs, SEO inputs. Channel teams (Paid Ads · Website · CRM · SEO) contribute high-level requirements.',
+          'C. Local Orientation + Marketing channels orientation (in parallel, both mandatory) — Local PMM brings market context, regulatory inputs, SEO inputs. Channel teams (Paid Ads · Website · CRM · SEO) contribute high-level requirements.',
           'D. Creative Essentials — Comms Partner + Creative Factory build the creative foundation for this market only.',
         ],
         tools:[]},
