@@ -1044,38 +1044,97 @@ const LD_UPSTREAM_CE={
 const LD_STEPS=[
   {
     id:1, title:'Local content production',
-    useCases:[{
-      owner:'Comms Partner + Creative Factory',
-      tools:['Tolki','QualityGuard — always run it!'],
-      steps:[
-        'Comms Partner + Creative Writers (from the Creative Factory) produce all channel-ready content in local language, based on the Creative Essentials.',
-        'No EN cascade — content is local-language from the start.',
-        'SEO input if the initiative is indexed.',
-      ],
-    }],
+    channels:{
+      'Website':{
+        owner:'Creative Factory',
+        steps:[
+          'Creative Factory delivers hero + key section copies in local language + visual assets.',
+          'No EN cascade — content is local-language from the start.',
+          'SEO input if the initiative is indexed.',
+        ],
+        tools:['Qontent (Tolki & QualityGuard accessible from here)'],
+      },
+      'CRM':{
+        owner:'Comms Partner',
+        steps:[
+          'Comms Partner writes the full email directly in local language, based on the Creative Essentials — with Creative Copywriter help if needed.',
+        ],
+        tools:['Qontent (Tolki & QualityGuard accessible from here)'],
+      },
+      'Paid Ads':{
+        owner:'Creative Factory (Lead Creative Writer + dedicated designer)',
+        steps:[
+          'Lead Creative Writer writes all Paid Ads copies — in-asset (tagline, subtitle, etc.) and external (primary text, headlines, etc.) — directly in local language, based on Channel Orientations inputs.',
+          'Dedicated designer adapts visual assets to ad formats.',
+        ],
+        tools:['Qontent (Tolki & QualityGuard accessible from here)'],
+      },
+    },
+    notes:[
+      'Kicks off as soon as Creative Essentials are signed off.',
+      'No EN cascade across all channels — content is born local.',
+    ],
   },
   {
     id:2, title:'Quality check', mandatory:true,
-    useCases:[{
-      owner:'Initiative-dedicated Local Market POC',
-      tools:['QualityGuard — always run it!'],
-      steps:[
-        'Initiative-dedicated Local Market POC reviews and validates the content.',
-        'Final market sign-off before publish.',
-      ],
-    }],
-    notes:['Compliance remains your responsibility regardless of tooling.'],
+    channels:{
+      'Website':{
+        owner:'Initiative-dedicated Local Market POC',
+        steps:[
+          'Initiative-dedicated Local Market POC reviews and validates the content in Qontent.',
+          'Final market sign-off before publish.',
+        ],
+        tools:['Qontent (Tolki & QualityGuard accessible from here)'],
+      },
+      'CRM':{
+        owner:'Initiative-dedicated Local Market POC',
+        steps:[
+          'Initiative-dedicated Local Market POC reviews and proofreads the email in Qontent, based on the Creative Essentials.',
+          'Final market sign-off before publish.',
+        ],
+        tools:['Qontent (Tolki & QualityGuard accessible from here)'],
+      },
+      'Paid Ads':{
+        owner:'Initiative-dedicated Local Market POC',
+        steps:[
+          'Initiative-dedicated Local Market POC reviews copies + creative assets to flag any blockers before launch.',
+          'No separate Step 3 sign-off — blockers flagged here.',
+        ],
+        tools:['QualityGuard — always run it!'],
+      },
+    },
+    notes:[
+      'Compliance remains your responsibility regardless of tooling.',
+      'Paid Ads: blockers flagged here, no separate sign-off step.',
+    ],
   },
   {
     id:3, title:'Upload & publish',
-    useCases:[{
-      owner:'Comms Partner + relevant channel team',
-      tools:['Qontent','Customer.io (if CRM)','Platform (if Paid Ads)'],
-      steps:[
-        'Comms Partner hands the validated content to the relevant channel team.',
-        'Channel team builds + publishes (CRM: pulls from Qontent → builds the email in Customer.io → publishes via Customer.io · Website: publishes via Qontent · Paid Ads: publishes on platform).',
-      ],
-    }],
+    channels:{
+      'Website':{
+        owner:'Website team',
+        steps:[
+          'Build assets.',
+          'Publish via Qontent.',
+        ],
+        tools:['Qontent (Tolki & QualityGuard accessible from here)'],
+      },
+      'CRM':{
+        owner:'CRM team',
+        steps:[
+          'CRM team pulls the validated content from Qontent and builds the email in Customer.io.',
+          'CRM publishes via Customer.io.',
+        ],
+        tools:['Qontent','Customer.io'],
+      },
+      'Paid Ads':{
+        owner:'Paid Ads team',
+        steps:[
+          'Publish on platform.',
+        ],
+        tools:['Platform'],
+      },
+    },
   },
   {
     id:4, title:'Red bin logging',
