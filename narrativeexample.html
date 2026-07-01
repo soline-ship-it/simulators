@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Earn Cashback — Worked example</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Manrope',Arial,sans-serif;background:#F5F5F5;color:#111;line-height:1.5;padding:26px 20px 60px;}
+  .wrap{max-width:1180px;margin:0 auto;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  /* header */
+  .top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap;margin-bottom:22px;}
+  .eyebrow{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#9a9a9a;margin-bottom:8px;}
+  h1{font-size:30px;font-weight:800;letter-spacing:-.02em;}
+  h1 .dot{color:#C7E600;}
+  .meta{font-family:'JetBrains Mono',monospace;font-size:11px;color:#9a9a9a;text-align:right;line-height:1.9;letter-spacing:.02em;}
+  .meta b{color:#111;font-weight:700;}
+  .rule{height:2px;background:#111;margin-bottom:0;}
+  /* deadline bar */
+  .deadline{background:#111;color:#fff;border-radius:0 0 4px 4px;padding:16px 22px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:26px;}
+  .deadline .l{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#B8B8B8;}
+  .deadline .l b{color:#fff;font-weight:700;text-transform:none;font-size:14px;letter-spacing:0;}
+  .deadline .pill{background:#E6F26B;color:#111;font-weight:800;font-size:13px;border-radius:8px;padding:5px 12px;white-space:nowrap;}
+  .deadline .r{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#8a8a8a;text-align:right;max-width:280px;line-height:1.7;}
+  /* gantt */
+  .gantt{position:relative;}
+  .months{display:flex;margin-left:250px;border-bottom:1px solid #E0E0E0;padding-bottom:6px;margin-bottom:4px;}
+  .months span{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#9a9a9a;}
+  .grouprow{display:flex;align-items:center;margin:16px 0 6px;}
+  .grouprow .glab{flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#111;padding-right:12px;}
+  .grouprow .glab span{color:#9a9a9a;font-weight:500;letter-spacing:.04em;}
+  .grouprow .gline{flex:1;height:1px;background:#D8D8D8;}
+  .row{display:flex;align-items:center;min-height:38px;border-bottom:1px solid #F0F0F0;}
+  .row .lab{width:250px;flex-shrink:0;padding-right:14px;}
+  .row .lab .n{font-size:13.5px;font-weight:700;color:#111;line-height:1.25;}
+  .row .lab .s{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;color:#9a9a9a;margin-top:2px;}
+  .track{position:relative;flex:1;height:38px;}
+  .grid{position:absolute;inset:0;pointer-events:none;}
+  .grid i{position:absolute;top:0;bottom:0;width:1px;background:#F2F2F2;}
+  .bar{position:absolute;top:9px;height:20px;border-radius:5px;display:flex;align-items:center;padding:0 8px;font-size:10.5px;font-weight:700;white-space:nowrap;}
+  .bar.market{background:#111;color:#fff;}
+  .bar.global{background:#E6F26B;color:#3a3a00;}
+  .bar.parallel{background:#F6F9C8;border:1.5px dashed #B9C94E;color:#7a7f2e;font-weight:700;}
+  .toplegend{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.03em;color:#8a8a8a;line-height:1.8;margin-bottom:22px;}
+  .toplegend b{color:#111;font-weight:700;}
+  .bar.buffer{background:repeating-linear-gradient(45deg,#FBF3D6,#FBF3D6 5px,#F5EAC2 5px,#F5EAC2 10px);border:1px solid #ECD98E;color:#8a6d1e;}
+  .datelab{position:absolute;top:11px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#6a6a6a;white-space:nowrap;}
+  .goliveband{margin-left:250px;position:relative;height:28px;}
+  .golive{position:absolute;right:0;top:0;background:#EAF7E9;border:1px solid #8FD69A;color:#166534;font-weight:800;font-size:12px;border-radius:20px;padding:4px 12px;display:flex;align-items:center;gap:6px;white-space:nowrap;z-index:3;transform:translateX(50%);}
+  .golive .g{width:9px;height:9px;border-radius:50%;background:#2FBF57;display:inline-block;}
+  .launch{position:absolute;top:-3px;bottom:-3px;left:100%;border-left:2px dashed #111;}
+  .legend{display:flex;gap:20px;flex-wrap:wrap;margin:18px 0 0 250px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:#6a6a6a;align-items:center;}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .sw{width:22px;height:11px;border-radius:3px;display:inline-block;}
+  .rolekey{margin:9px 0 0 250px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.03em;color:#9a9a9a;line-height:1.6;}
+  /* callout */
+  .insight{background:#F2F4EC;border:1px solid #D9E0C4;border-radius:12px;padding:16px 20px;margin-top:22px;font-size:13.5px;color:#3a3a3a;line-height:1.65;}
+  .insight b{color:#111;font-weight:800;}
+  .insight .i{font-style:italic;color:#8a8a8a;font-size:12.5px;}
+  /* sections */
+  h2{font-size:19px;font-weight:800;margin:40px 0 4px;}
+  .sub{font-size:13.5px;color:#6b6b6b;margin-bottom:16px;}
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #E6E6E6;border-radius:12px;overflow:hidden;font-size:13px;}
+  th{background:#FAFAFA;text-align:left;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#9a9a9a;padding:10px 13px;border-bottom:1px solid #E6E6E6;}
+  td{padding:11px 13px;border-bottom:1px solid #F0F0F0;color:#3a3a3a;vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  td.when{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#111;white-space:nowrap;font-weight:500;}
+  td.ph{font-weight:700;color:#111;}
+  td b{color:#111;font-weight:700;}
+  tr.section td{background:#F4F4F4;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6a6a6a;padding:7px 13px;}
+  .nowrap{white-space:nowrap;}
+  .redflag{color:#C0392B;font-weight:700;}
+  .foot{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#a8a8a8;margin-top:14px;letter-spacing:.03em;line-height:1.7;}
+  /* Q&A */
+  .qa{background:#fff;border:1px solid #E6E6E6;border-radius:12px;padding:6px 20px;}
+  .qa .item{padding:15px 0;border-bottom:1px solid #F0F0F0;}
+  .qa .item:last-child{border-bottom:none;}
+  .qa .q{font-size:14px;font-weight:700;color:#111;margin-bottom:5px;}
+  .qa .a{font-size:13.5px;color:#3a3a3a;line-height:1.6;}
+  .qa .a b{color:#111;font-weight:700;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div>
+      <div class="eyebrow">Stream 1 · L Global / Cascade · Growth Operating Model · worked example</div>
+      <h1>[Narrative] Earn on what you keep. Earn on what you spend — Retro-planning<span class="dot">.</span></h1>
+    </div>
+    <div class="meta">
+      AS OF · <b>WED 1 JUL 2026</b><br>
+      GO-LIVE · <b>TUE 22 SEP 2026</b><br>
+      SLA · <b>~45 WORKING DAYS</b> (~55 IF TRANSCREATION)<br>
+      MARKETS · <span class="nowrap">🇩🇪 🇪🇸 🇮🇹 🇳🇱</span><br>
+      <a href="https://app.notion.com/p/qonto/Narrative-Earn-on-what-you-keep-Earn-on-what-you-spend-37531ee4c696812bb458d269a4bf6909" target="_blank" rel="noopener" style="color:#7B4DB8;text-decoration:none;font-weight:700">OPEN IN PANORAMA ↗</a>
+    </div>
+  </div>
+  <div class="rule"></div>
+
+  <div class="deadline">
+    <div class="l">THE DEADLINE THAT PROTECTS THE LAUNCH &nbsp; <b>Local Orientation closes</b></div>
+    <div class="pill">Fri 24 July</div>
+    <div class="r">Hard gate — no market input after this deadline is considered. Last call to have the dedicated Local Market POC in place.</div>
+  </div>
+
+  <div class="toplegend"><b>Roles —</b> PMM · Product Marketing Manager &nbsp;·&nbsp; CP · Comms Partner &nbsp;·&nbsp; CW · Creative Writer &nbsp;·&nbsp; DB · Design Builder &nbsp;·&nbsp; POC · Local Market Point of Contact</div>
+
+  <!-- GANTT -->
+  <div class="gantt">
+    <div class="months">
+      <span style="width:25%">July</span>
+      <span style="width:44%">August</span>
+      <span style="width:31%">September</span>
+    </div>
+
+    <div class="goliveband"><div class="golive"><span class="g"></span>GO-LIVE · Tue Sep 22</div></div>
+    <div id="rows"></div>
+
+    <div class="legend">
+      <span><i class="sw" style="background:#111"></i> Market-owned (Local PMM / POC)</span>
+      <span><i class="sw" style="background:#E6F26B"></i> Global / Creative Factory</span>
+      <span><i class="sw" style="border:1.5px dashed #B9C94E;background:#F6F9C8;height:9px"></i> Parallel track (yellow, dashed)</span>
+      <span><i class="sw" style="background:repeating-linear-gradient(45deg,#FBF3D6,#FBF3D6 4px,#F5EAC2 4px,#F5EAC2 8px);border:1px solid #ECD98E"></i> Buffer / contingency</span>
+    </div>
+  </div>
+
+  <!-- WHO DOES WHAT WHEN -->
+  <h2>Who does what</h2>
+  <div class="sub">The same plan, read from each person on the project.</div>
+  <table>
+    <tr><th style="width:210px">Person</th><th style="width:200px">Role</th><th>On this project</th></tr>
+    <tr class="section"><td colspan="3">Markets — they lead the Why &amp; the What</td></tr>
+    <tr><td class="ph">Local Heads of Marketing <span style="color:#9a9a9a" class="nowrap">(per market)</span></td><td>Market leaders</td><td><b>Own the Why &amp; What</b> for their market. <b>Appoint one dedicated Local Market POC for the whole project</b> (at Quarterly Planning) and supervise.</td></tr>
+    <tr><td class="ph">Local Market POCs <span style="color:#9a9a9a" class="nowrap">🇩🇪&nbsp;🇪🇸&nbsp;🇮🇹&nbsp;🇳🇱</span></td><td>One per market · appointed at Quarterly Planning</td><td>Run <b>Local Orientation</b> — bring the market context &amp; must-haves, supervised by the Head of Marketing (Jul 20–24). Then <b>Localization &amp; review</b> (Sep 7–11) — reword &amp; adapt (respecting the concept), local accuracy, compliance — <b>sign-off + QA</b> (Sep 14–16), and drive to publish.</td></tr>
+    <tr class="section"><td colspan="3">Central — they lead the How</td></tr>
+    <tr><td class="ph">Marco Felletti</td><td>Global PMM · Accountable</td><td>Writes <b>Step 0</b> — the global outline: strategic intent, narrative, fixed vs. flexible, and the legal flags — when &amp; what (Jul 13–17). Accountable for the initiative end-to-end.</td></tr>
+    <tr><td class="ph">Céline Marzi</td><td>PMM · Responsible</td><td>Writes the <b>CommDoc + English master key messages</b> (Jul 27–31). <b>100% responsible for coordinating the Action Plan</b> and keeping the project smooth — co-owned with the Comms Partner.</td></tr>
+    <tr><td class="ph">Romuald Varin</td><td>Comms Partner</td><td>Writes the <b>Creative Brief</b> from Step 0 + Local Orientation + channel inputs (Aug 3–5); runs the <b>mandatory alignment gate</b> (loops markets &amp; channels in before production); co-owns the Action Plan; coordinates the launch and <b>hands off to the Local Market POCs</b> (Sep 4).</td></tr>
+    <tr><td class="ph">Mark Davis</td><td>Lead Creative Writer · Creative Factory</td><td>With the Design Builder, builds the <b>Creative Essentials</b> — concept + key claims per channel + tagline + visual direction (Aug 10–21) — then the <b>Website &amp; Paid Ads master copies</b> (Aug 24–Sep 4). <b>Supporting Creative Writers</b> may come in for the other languages, on the same Creative Essentials + hero copies.</td></tr>
+    <tr><td class="ph">Mathieu Locatin</td><td>Design Builder · Creative Factory</td><td>With the Lead Creative Writer: concept, visual direction and assets (Aug 10–Sep 4). A <b>Flying Designer</b> may come in to support on specific formats.</td></tr>
+    <tr><td class="ph">Channel teams</td><td>Paid · Website · CRM · SEO</td><td>Channels orientation upstream (Jul 20–24); build &amp; publish within the buffer (Website in Qontent · CRM in Customer.io · Paid Ads on platform).</td></tr>
+  </table>
+
+  <!-- MODEL APPLIED -->
+  <h2>The model, applied to this project</h2>
+  <div class="sub">The theory questions — answered with this exact case.</div>
+  <div class="qa">
+    <div class="item"><div class="q">Who owns the Why &amp; What?</div><div class="a"><b>The markets do</b> — each Local Head of Marketing sets what their market needs and the must-haves, surfaced at Local Orientation. The Global PMM (<b>Marco Felletti</b>) frames the global Step 0 outline and coordinates; the <b>How</b> belongs to the Centers of Excellence.</div></div>
+    <div class="item"><div class="q">Localize or transcreate for these four markets?</div><div class="a"><b>Localize</b> — the default. Each Local Market POC adapts the English master with their market in mind. Transcreation is only triggered upstream if a market has a compliance or radical-strategy blocker — and it adds ~10 working days (the 55-day SLA).</div></div>
+    <div class="item"><div class="q">How big is this — and how long does it take?</div><div class="a">It's an <b>L project</b>, the biggest tier. The SLA is <b>~45 working days</b> (~55 if a Transcreation Gate is triggered). That's why every phase is <b>back-planned from the 22 Sep go-live</b> — you start early enough to keep a buffer, not whenever the brief happens to land.</div></div>
+  </div>
+
+</div>
+
+<script>
+const P='<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8a8a8a" stroke-width="2.2" style="vertical-align:-1px;margin-right:3px"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg>';
+const rows=[
+  {group:"Upstream", sub:"plan & create — before production"},
+  {n:"Step 0 — Global Outline", s:`<span class="nowrap">${P}Marco Felletti · PMM</span> · done`, type:"global", l:0, w:5.6, d:"Jul 13–17"},
+  {n:"Local Orientation", s:"Local Market POC + PMM · hard gate", type:"market", l:9.9, w:5.6, d:"Jul 20–24"},
+  {n:"↳ Channels orientation", s:"Paid · Website · CRM · SEO · parallel", type:"parallel", l:9.9, w:5.6, d:""},
+  {n:"CommDoc + EN Master msgs", s:`<span class="nowrap">${P}Céline Marzi · PMM</span>`, type:"global", l:19.7, w:5.6, d:"Jul 27–31"},
+  {n:"Creative brief", s:`<span class="nowrap">${P}Romuald Varin · CP</span>`, type:"global", l:29.6, w:2.8, d:"Aug 3–5"},
+  {n:"↳ Global GTM Action Plan", s:"Channels · parallel", type:"parallel", l:29.6, w:5.6, d:""},
+  {n:"Creative Essentials", s:`<span class="nowrap">${P}Mark Davis · CW</span> &nbsp; <span class="nowrap">${P}Mathieu Locatin · DB</span>`, type:"global", l:39.4, w:15.5, d:"Aug 10–21"},
+  {group:"Downstream", sub:"produce · localize · sign off · ship"},
+  {n:"Creative Asset Production", s:`<span class="nowrap">${P}Mark Davis · CW</span> &nbsp; <span class="nowrap">${P}Mathieu Locatin · DB</span>`, type:"global", l:59.2, w:15.5, d:"Aug 24–Sep 4"},
+  {n:"Localization & review", s:"Local Market POC → DE·ES·IT·NL", type:"market", l:78.9, w:5.6, d:"Sep 7–11"},
+  {n:"↳ Global channels activation", s:"Global channels · parallel", type:"parallel", l:78.9, w:5.6, d:""},
+  {n:"Final market sign-off", s:"Local Market POC", type:"market", l:88.7, w:2.1, d:"Sep 14"},
+  {n:"Formal QA gate · blocking", s:"Local Market POC", type:"market", l:90.1, w:2.8, d:"Sep 15–16"},
+  {n:"Buffer / contingency", s:"Protects launch · 3 working days", type:"buffer", l:93.0, w:5.6, d:""},
+];
+const ticks=[0,9.9,19.7,29.6,39.4,49.3,59.2,69.0,78.9,88.7,98.6];
+const rowsEl=document.getElementById('rows');
+rowsEl.innerHTML=rows.map((r,idx)=>{
+  if(r.group){
+    return `<div class="grouprow"><div class="glab">${r.group} <span>${r.sub}</span></div><div class="gline"></div></div>`;
+  }
+  const grid=ticks.map(t=>`<i style="left:${t}%"></i>`).join('');
+  const datelab = r.d ? `<div class="datelab" style="left:calc(${r.l+r.w}% + 8px)">${r.d}</div>` : '';
+  return `<div class="row">
+    <div class="lab"><div class="n">${r.n}</div><div class="s">${r.s}</div></div>
+    <div class="track">
+      <div class="grid">${grid}</div>
+      <div class="bar ${r.type}" style="left:${r.l}%;width:${r.w}%"></div>
+      ${datelab}
+      <div class="launch"></div>
+    </div>
+  </div>`;
+}).join('');
+</script>
+</body>
+</html>
