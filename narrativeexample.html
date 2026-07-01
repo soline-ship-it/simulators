@@ -62,6 +62,12 @@
   .insight .i{font-style:italic;color:#8a8a8a;font-size:12.5px;}
   /* sections */
   h2{font-size:19px;font-weight:800;margin:40px 0 4px;}
+  details.sec{margin-top:34px;}
+  details.sec>summary{list-style:none;cursor:pointer;font-size:19px;font-weight:800;color:#111;display:flex;align-items:center;padding:10px 0;border-bottom:2px solid #111;}
+  details.sec>summary::-webkit-details-marker{display:none;}
+  details.sec>summary::after{content:"▸";color:#9a9a9a;font-size:15px;margin-left:auto;}
+  details.sec[open]>summary::after{content:"▾";}
+  details.sec>.secbody{padding-top:16px;}
   .sub{font-size:13.5px;color:#6b6b6b;margin-bottom:16px;}
   table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #E6E6E6;border-radius:12px;overflow:hidden;font-size:13px;}
   th{background:#FAFAFA;text-align:left;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#9a9a9a;padding:10px 13px;border-bottom:1px solid #E6E6E6;}
@@ -129,7 +135,9 @@
   </div>
 
   <!-- WHO DOES WHAT WHEN -->
-  <h2>Who does what</h2>
+  <details class="sec" open>
+  <summary>Who does what</summary>
+  <div class="secbody">
   <div class="sub">The same plan, read from each person on the project.</div>
   <table>
     <tr><th style="width:210px">Person</th><th style="width:200px">Role</th><th>On this project</th></tr>
@@ -142,17 +150,23 @@
     <tr><td class="ph">Romuald Varin</td><td>Comms Partner</td><td>Writes the <b>Creative Brief</b> from Step 0 + Local Orientation + channel inputs (Aug 3–5); runs the <b>mandatory alignment gate</b> (loops markets &amp; channels in before production); co-owns the Action Plan; coordinates the launch and <b>hands off to the Local Market POCs</b> (Sep 4).</td></tr>
     <tr><td class="ph">Mark Davis</td><td>Lead Creative Writer · Creative Factory</td><td>With the Design Builder, builds the <b>Creative Essentials</b> — concept + key claims per channel + tagline + visual direction (Aug 10–21) — then the <b>Website &amp; Paid Ads master copies</b> (Aug 24–Sep 4). <b>Supporting Creative Writers</b> may come in for the other languages, on the same Creative Essentials + hero copies.</td></tr>
     <tr><td class="ph">Mathieu Locatin</td><td>Design Builder · Creative Factory</td><td>With the Lead Creative Writer: concept, visual direction and assets (Aug 10–Sep 4). A <b>Flying Designer</b> may come in to support on specific formats.</td></tr>
-    <tr><td class="ph">Channel teams</td><td>Paid · Website · CRM · SEO</td><td>Channels orientation upstream (Jul 20–24); build &amp; publish within the buffer (Website in Qontent · CRM in Customer.io · Paid Ads on platform).</td></tr>
+    <tr><td class="ph">Channel teams</td><td>Paid · Website · CRM · SEO</td><td>Give the <b>channels orientation</b> upstream (Jul 20–24); then stay informed and flag any new constraint after Creative Essentials. At the end, <b>build &amp; support the Local Market POCs on publish</b>, within the buffer (Website in Qontent · CRM in Customer.io · Paid Ads on platform).</td></tr>
   </table>
+  </div>
+  </details>
 
   <!-- MODEL APPLIED -->
-  <h2>The model, applied to this project</h2>
+  <details class="sec">
+  <summary>The model, applied to this project</summary>
+  <div class="secbody">
   <div class="sub">The theory questions — answered with this exact case.</div>
   <div class="qa">
     <div class="item"><div class="q">Who owns the Why &amp; What?</div><div class="a"><b>The markets do</b> — each Local Head of Marketing sets what their market needs and the must-haves, surfaced at Local Orientation. The Global PMM (<b>Marco Felletti</b>) frames the global Step 0 outline and coordinates; the <b>How</b> belongs to the Centers of Excellence.</div></div>
     <div class="item"><div class="q">Localize or transcreate for these four markets?</div><div class="a"><b>Localize</b> — the default. Each Local Market POC adapts the English master with their market in mind. Transcreation is only triggered upstream if a market has a compliance or radical-strategy blocker — and it adds ~10 working days (the 55-day SLA).</div></div>
     <div class="item"><div class="q">How big is this — and how long does it take?</div><div class="a">It's an <b>L project</b>, the biggest tier. The SLA is <b>~45 working days</b> (~55 if a Transcreation Gate is triggered). That's why every phase is <b>back-planned from the 22 Sep go-live</b> — you start early enough to keep a buffer, not whenever the brief happens to land.</div></div>
   </div>
+  </div>
+  </details>
 
 </div>
 
@@ -162,17 +176,16 @@ const rows=[
   {group:"Upstream", sub:"plan & create — before production"},
   {n:"Step 0 — Global Outline", s:`<span class="nowrap">${P}Marco Felletti · PMM</span> · done`, type:"global", l:0, w:5.6, d:"Jul 13–17"},
   {n:"Local Orientation", s:"Local Market POC + PMM · hard gate", type:"market", l:9.9, w:5.6, d:"Jul 20–24"},
-  {n:"↳ Channels orientation", s:"Paid · Website · CRM · SEO · parallel", type:"parallel", l:9.9, w:5.6, d:""},
+  {n:"↳ Channels orientation", s:"Paid · Website · CRM · SEO · parallel", type:"parallel", l:9.9, w:5.6, d:"Jul 20–24"},
   {n:"CommDoc + EN Master msgs", s:`<span class="nowrap">${P}Céline Marzi · PMM</span>`, type:"global", l:19.7, w:5.6, d:"Jul 27–31"},
   {n:"Creative brief", s:`<span class="nowrap">${P}Romuald Varin · CP</span>`, type:"global", l:29.6, w:2.8, d:"Aug 3–5"},
-  {n:"↳ Global GTM Action Plan", s:"Channels · parallel", type:"parallel", l:29.6, w:5.6, d:""},
+  {n:"↳ Global GTM Action Plan", s:"Channels · parallel", type:"parallel", l:29.6, w:5.6, d:"Aug 3–7"},
   {n:"Creative Essentials", s:`<span class="nowrap">${P}Mark Davis · CW</span> &nbsp; <span class="nowrap">${P}Mathieu Locatin · DB</span>`, type:"global", l:39.4, w:15.5, d:"Aug 10–21"},
   {group:"Downstream", sub:"produce · localize · sign off · ship"},
   {n:"Creative Asset Production", s:`<span class="nowrap">${P}Mark Davis · CW</span> &nbsp; <span class="nowrap">${P}Mathieu Locatin · DB</span>`, type:"global", l:59.2, w:15.5, d:"Aug 24–Sep 4"},
   {n:"Localization & review", s:"Local Market POC → DE·ES·IT·NL", type:"market", l:78.9, w:5.6, d:"Sep 7–11"},
-  {n:"↳ Global channels activation", s:"Global channels · parallel", type:"parallel", l:78.9, w:5.6, d:""},
   {n:"Final market sign-off", s:"Local Market POC", type:"market", l:88.7, w:2.1, d:"Sep 14"},
-  {n:"Formal QA gate · blocking", s:"Local Market POC", type:"market", l:90.1, w:2.8, d:"Sep 15–16"},
+  {n:"Formal QA gate · blocking", s:"Local Market POC & Channel owners support", type:"market", l:90.1, w:2.8, d:"Sep 15–16"},
   {n:"Buffer / contingency", s:"Protects launch · 3 working days", type:"buffer", l:93.0, w:5.6, d:""},
 ];
 const ticks=[0,9.9,19.7,29.6,39.4,49.3,59.2,69.0,78.9,88.7,98.6];
