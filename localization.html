@@ -2062,6 +2062,127 @@ const TRACKS=[
 /* ── VERSION HISTORY TOGGLE ── */
 /* ── APP ── */
 function App(){
+  /* ══════════════════════════════════════════════
+   WHO DOES WHAT — ROLE EXPLORER
+══════════════════════════════════════════════ */
+const RX_ORDER=['hom','pmm','cp','cw','poc','chan'];
+const RXH=(html)=>(<span dangerouslySetInnerHTML={{__html:html}}/>);
+const RX_DATA={
+  hom:{name:`Head of Marketing`,where:`Local · the conductor`,chip:`Across every initiative`,
+    nut:`Owns the market's Why & What, and names the Local Market POC early for each M & L initiative.`,
+    owns:[`The market's strategy & framework: budget, focus, resourcing`,`The last word on the marketing <b>Why & What</b> for your market(s)`,`<b>Appointing the Local Market POC early</b> — at Step 0, ideally at Quarterly Planning, and always before any concept starts (you'll need strong alignment at the Local Orientation phase)`,`Speaking every Center of Excellence's language, through the Squad`],
+    not:[`The <b>How</b> — that's the Centers of Excellence's craft`,`Producing or signing off assets yourself (that's the Local Market POC)`,`Reopening a concept on preference`],
+    sc:[{tag:`Appoint early`,q:`A new L campaign is coming to your market. When do you name the Local Market POC?`,v:`As early as you can.`,a:`At Quarterly Planning at the latest — and always before any concept starts. The Local Market POC needs to be there for the Local Orientation, where alignment is set. Naming one per M & L initiative is your job.`},{tag:`Preference is not a veto`,q:`A concept comes back. You'd have done it differently, but it meets the brief. Do you send it back?`,v:`No — accept it.`,a:`“I would have done it differently” is not a red flag. You don't relitigate a clear brief on taste — a red flag needs a because tied to the brief, or a real change in context.`},{tag:`Voice of the market`,q:`There's a regulatory reality no one has raised yet. Whose job is it to put it on the table?`,v:`Yours.`,a:`You're the primary advocate for your market — if you don't surface the customer, competitive or regulatory context, it doesn't get there. (Two hats: when the market and Qonto conflict, Qonto wins.)`},{tag:`Staffing`,q:`Three initiatives, one strong candidate. One Local Market POC for all three?`,v:`It depends on their size.`,a:`A couple of small ones, maybe; three big L's and focus & accountability break down. You find the right setup.`}]},
+  pmm:{name:`PMM`,where:`Product marketing`,chip:`Step 0 on all · owns Self-serve (S)`,
+    nut:`Frames Step 0, and is 100% responsible for coordinating the Action Plan and smoothing the project — co-owned with CP.`,
+    owns:[`<b>Step 0</b> — the Global Outline: intent, narrative, and the <b>legal flags</b>`,`<b>The Action Plan</b> — coordinating and smoothing the project (100% responsible, co-owned with CP)`,`On <b>Self-serve (S)</b>: the master copy end-to-end`,`On Local-driven: the Local Orientation inputs (Local PMM)`],
+    not:[`The creative concept on L & M (that's CF)`,`A veto on Local-driven — the Global PMM only sense-checks alignment`,`The local sign-off (that's the Local Market POC)`],
+    sc:[{tag:`Action Plan`,q:`The project is drifting — deadlines slipping, next steps unclear. Whose job is it to smooth it?`,v:`Yours, with CP.`,a:`You're 100% responsible for coordinating the Action Plan and keeping things moving. It's co-owned with CP, who drives the creative process and the launch.`},{tag:`Self-serve`,q:`There's a small self-serve (S) piece for one market. Who writes it and ships it?`,v:`You, or the Local Market POC.`,a:`On S, CF and CP aren't involved. Write it, quality-check it, and lead the upload with the channel owner.`},{tag:`Sense-check`,q:`It's a Local-driven L campaign. What is the Global PMM's role?`,v:`A sense-check only.`,a:`You confirm Step 0 aligns with the global strategy. Not co-creation, not a veto — the market leads.`},{tag:`Step 0`,q:`You wrote Step 0 but left out the legal flags. Is that fine?`,v:`No — it's incomplete.`,a:`Step 0 must name the legal flags — when and what. It's the grounding everything downstream is built on.`}]},
+  cp:{name:`Comms Partner`,where:`Brand, Comms & Creativity`,chip:`Streams 1 & 4 only · L & M`,
+    nut:`Owns the project end-to-end — brief, process, launch — and co-owns the Action Plan with PMM. Writes the CRM email master copy.`,
+    owns:[`The project <b>end-to-end</b>: the Creative Brief, the process, the launch`,`<b>The Action Plan</b> — coordinating and smoothing the project, making it 100% smooth (co-owned with PMM)`,`The <b>CRM / email master copy</b> + its AI first-pass localization in Qontent`,`<b>Coordination</b>: keep marketing channels & local markets looped in`,`The official <b>hand-off to the Local Market POC</b> (Step 2)`],
+    not:[`The creative concept — that's the <b>CF duo</b> (Designer Builder + CW), unless no CW is assigned, then you fill in`,`Activating Flying Designers / Supporting CW — that's CF`,`Website & Paid Ads copies — that's CF (unless no CW is assigned, then you fill in)`],
+    matrix:true,
+    sc:[{tag:`Alignment gate`,q:`The creative concept is ready. Can you skip showing it to the channels to save time?`,v:`No.`,a:`The markets & channels loop-in is a mandatory alignment gate before production (on L & M). It's not optional.`},{tag:`Who writes what`,q:`On an L & M project, who writes the launch email vs. the landing-page copy?`,v:`It splits by channel.`,a:`CRM / email = you (CP). Website hero + section copy = the CF duo. Paid Ads = CF. See the channel table above.`},{tag:`Co-own the plan`,q:`The project is drifting. Who keeps it on track — you or the PMM?`,v:`Both of you.`,a:`You and the PMM co-own the Action Plan — you're both responsible for making the project 100% smooth. You drive the creative process and launch.`},{tag:`No CW assigned`,q:`No Creative Writer was assigned for Spain. What happens now?`,v:`You fill in.`,a:`When there's no CW (ES / NL / PT today, or a less creative-intensive project), you step in, partner with the Designer Builder, and own the Creative Essentials + production end-to-end. And that's ok.`}]},
+  cw:{name:`Creative Writer`,where:`Creative Factory (duo)`,chip:`Streams 1 & 4 only · L & M`,
+    nut:`With the Designer Builder, the sole creative owner — builds the Creative Essentials and writes the Website & Paid Ads master copies, including the first-pass localization.`,
+    owns:[`The <b>Creative Essentials</b> with the Designer Builder: concept, key claims, tagline`,`The <b>Website master copy</b>: hero + key section copies (EN + AI first pass into FR/DE/IT on Global; local language on Local-driven)`,`The <b>Paid Ads master copy</b>: all copies, in-asset + external (same first-pass logic)`,`The <b>creative decision</b> stays with CF`],
+    not:[`The brief — CP writes it; the Why & What belong to the market`,`The <b>CRM / email copies</b> — that's CP`,`Delivering the final local copies — that's the Local Market POC`],
+    matrix:true,
+    sc:[{tag:`Preference is not a veto`,q:`On an L & M project, a market representative bounces your master copy back: “I'd phrase it differently.” It meets the brief. Do you rework it?`,v:`No — not on preference.`,a:`“I would have done it differently” isn't a red flag; it needs a because tied to the brief. The creative decision stays with CF.`},{tag:`Who owns it`,q:`A market representative asks you to write their launch email. Should you?`,v:`It depends on the stream.`,a:`On M & L, the CRM / email copy is CP's master copy — you own Website + Paid Ads, so redirect and keep ownership clean. On S & BAU, the Local Market POC is autonomous. That said, process doesn't replace human interaction — if you have room to support as a consultant, go for it. This is just the baseline we should all abide by.`},{tag:`Need help`,q:`On a big L campaign, you'll need extra hands for the localization across Paid Ads formats and languages. What do you do?`,v:`Flag it early — it's on you.`,a:`You're part of the Creative Factory: make it known early that you'll need help from your colleagues (Flying Designers, Supporting Creative Writers). Raise it at the Creative Gathering — communicate the need, don't wait for it to become a blocker.`},{tag:`Concept validation`,q:`Your Creative Essentials are ready. Who validates the concept?`,v:`Julie & Didier.`,a:`The concept is validated inside CF before the alignment gate and before production.`}]},
+  poc:{name:`Local Market POC`,where:`Appointed early by the Head of Marketing`,chip:`All streams · scope varies`,
+    nut:`On S & BAU you produce end-to-end. On M & L you take over at hand-off, adapt the copies where needed, sign off, and drive to publish.`,
+    note:`<b>Two types of Local Market POC.</b> 1) <b>Initiative-dedicated</b> — named by the Local Head of Marketing at Quarterly Planning, one person per market per M & L initiative. 2) <b>‘Standard’</b> — the default per-market contact, used when no initiative-dedicated one is appointed.`,
+    owns:[`On <b>S & BAU</b>: produce end-to-end (no CF / CP / PMM involved)`,`On <b>M & L</b>: after the hand-off (Step 2), <b>reword & adapt the copies if needed — always respecting the concept</b>, not just tone of voice`,`Local accuracy & <b>regulatory compliance</b>`,`Sign-off (Website & CRM) + <b>driving it to publish</b>`],
+    not:[`The original concept on M & L (that's the CF duo)`,`Bouncing copies back and waiting — <b>you take them on</b>`,`Expecting a Center of Excellence to publish for you`],
+    matrix:true,
+    sc:[{tag:`In charge to the end`,q:`On an L project, you receive the master copies + a quick AI first pass at hand-off. What now?`,v:`You own it from here.`,a:`Reword & adapt the copies where needed — always respecting the concept, not just tone of voice — make sure they're compliant, sign off, and drive them to publish. You don't send them back for changes. This is real work, and it's part of production.`},{tag:`Who publishes?`,q:`You've signed off the Website page key copies (L or M). Who writes the rest and publishes it?`,v:`You do.`,a:`On Website, the dedicated Local Market POC writes the rest of the page in the language — based on the approved headlines etc. — then uploads and publishes it in Qontent itself. CRM is different — the CRM team builds and sends it in Customer.io. Paid Ads goes out on the platform.`},{tag:`Per channel`,q:`On an L & M project, a Paid Ads variant went live without your sign-off. Is that a problem?`,v:`No — correct for Paid Ads.`,a:`On Paid Ads you flag blockers upstream; there's no separate sign-off step. Website & CRM do need your full review + sign-off before publish.`},{tag:`Self-serve`,q:`It's a BAU email for your market. Who writes it?`,v:`You do.`,a:`On BAU, no Center of Excellence is involved. The CRM team makes it easy for you — they build & send in Customer.io — but you still own the copy and the review. Quality-check before it ships.`}]},
+  chan:{name:`Marketing Channels`,where:`Paid Ads · Website · CRM`,chip:`Requirements upstream · build & publish`,
+    nut:`The channel teams bring their requirements upstream, then handle the technical build and publish.`,
+    owns:[`<b>Upstream</b>: the Marketing channels orientation — best practices, formats, past learnings — feeding the Creative Brief`,`<b>CRM</b>: builds & sends the email in Customer.io (pulls validated content from Qontent)`,`<b>Paid Ads</b>: builds & launches on the platform`,`<b>Website</b>: the page is published in Qontent by the local team — the channel supports`],
+    not:[`The copy & the creative concept (that's CF / CP)`,`The local review & sign-off (that's the Local Market POC)`,`The Why & What (that's the market)`],
+    matrix:true,
+    sc:[{tag:`Requirements upstream`,q:`A campaign is coming. When do you share your channel requirements (formats, best practices)?`,v:`Upstream.`,a:`At the Marketing channels orientation, before the Creative Brief — your formats, best practices and past learnings feed the brief. Wait too long and it's too late to shape production.`},{tag:`Build & publish`,q:`The copy is validated and signed off. What's your job now?`,v:`Build & publish.`,a:`CRM builds & sends in Customer.io; Paid Ads launches on the platform; Website is published in Qontent by the local team. You handle the technical execution — not the copy.`},{tag:`Not the copy`,q:`You'd tweak the wording before it goes out. Can you?`,v:`No.`,a:`Copy is owned by CF / CP and signed off by the Local Market POC. Flag it — don't rewrite it.`}]}
+};
+function RXMatrix({role}){
+  const rows=[
+    {ch:`Website`,master:`CF — hero + key section copies + visuals`,mOwner:`cf`,sign:`Local Market POC — full review + sign-off`,pub:`Local team — publishes in Qontent itself`,pOwner:`poc`},
+    {ch:`CRM / email`,master:`CP — full email copy + AI first-pass localization in Qontent`,mOwner:`cp`,sign:`Local Market POC — full review + sign-off`,pub:`CRM team — builds & sends in Customer.io`,pOwner:`crm`},
+    {ch:`Paid Ads`,master:`CF — all copies (in-asset + external) + visuals`,mOwner:`cf`,sign:`Local Market POC — flags blockers only`,pub:`Paid Ads team — on platform`,pOwner:`paid`}
+  ];
+  const hlM=o=>(role==='cw'&&o==='cf')||(role==='cp'&&o==='cp');
+  const hlS=()=>role==='poc';
+  const hlP=o=>(role==='poc'&&o==='poc')||(role==='chan'&&(o==='crm'||o==='paid'));
+  const cell=(txt,hl)=>(<td style={{padding:'10px 12px',borderBottom:'1px solid #F0F0F0',verticalAlign:'top',fontSize:12.5,color:hl?'#461068':'#3D3D3D',background:hl?'#F5F0FB':'transparent',fontWeight:hl?600:400}}>{txt}</td>);
+  return(
+    <div style={{marginBottom:8}}>
+      <div style={{fontSize:12,fontWeight:800,letterSpacing:'0.08em',textTransform:'uppercase',color:'#8F8F8F',margin:'6px 0 10px'}}>Per channel — master copy → sign-off → publish (L &amp; M)</div>
+      <div style={{overflowX:'auto'}}>
+        <table style={{width:'100%',minWidth:700,borderCollapse:'collapse',background:'#fff',border:'1px solid #E0E0E0',borderRadius:12,overflow:'hidden'}}>
+          <tbody>
+          <tr>{['Channel','Master copy · Step 1','Sign-off · Step 2','Publish · Step 4'].map(h=><th key={h} style={{background:'#FAFAFA',textAlign:'left',fontSize:10.5,fontWeight:800,letterSpacing:'0.04em',textTransform:'uppercase',color:'#8F8F8F',padding:'9px 12px',borderBottom:'1px solid #E0E0E0'}}>{h}</th>)}</tr>
+          {rows.map(r=>(<tr key={r.ch}><td style={{padding:'10px 12px',borderBottom:'1px solid #F0F0F0',fontWeight:800,color:'#050505',whiteSpace:'nowrap',fontSize:12.5}}>{r.ch}</td>{cell(r.master,hlM(r.mOwner))}{cell(r.sign,hlS())}{cell(r.pub,hlP(r.pOwner))}</tr>))}
+          </tbody>
+        </table>
+      </div>
+      <div style={{fontSize:11.5,color:'#8F8F8F',lineHeight:1.5,margin:'8px 0 0'}}><strong>Stream 1 (Global L &amp; M):</strong> masters in EN + AI first-pass into FR/DE/IT. · <strong>Stream 4 (Local L &amp; M):</strong> written directly in the local language.</div>
+    </div>
+  );
+}
+function RXScenario({s}){
+  const[open,setOpen]=useState(false);
+  return(
+    <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:14,marginBottom:12,overflow:'hidden'}}>
+      <div style={{padding:'16px 18px',fontSize:14.5,fontWeight:600,color:'#050505'}}><span style={{display:'inline-block',fontSize:11,fontWeight:800,color:'#6a6a6a',background:'#EDEDED',borderRadius:6,padding:'2px 8px',marginBottom:8,letterSpacing:'0.04em'}}>{s.tag}</span><br/>{s.q}</div>
+      <button onClick={()=>setOpen(!open)} style={{background:open?'#7B4DB8':'#fff',border:'1.5px solid #7B4DB8',color:open?'#fff':'#7B4DB8',fontFamily:'inherit',fontSize:13,fontWeight:700,borderRadius:9,padding:'7px 14px',cursor:'pointer',margin:'0 18px 16px'}}>{open?'Hide the answer':'Reveal the answer'}</button>
+      {open&&<div style={{borderTop:'1px solid #EEE',background:'#FAFAFA',padding:'14px 18px',fontSize:13.5,color:'#3D3D3D',lineHeight:1.6}}><span style={{fontWeight:800,color:'#4a2a6b',display:'block',marginBottom:5}}>{s.v}</span>{RXH(s.a)}</div>}
+    </div>
+  );
+}
+function RoleExplorerView(){
+  const[cur,setCur]=useState('hom');
+  const d=RX_DATA[cur];
+  const legendItems=['<b>CP</b> = Comms Partners','<b>CF</b> = Creative Factory (Brand Design + Creative Writers)','<b>CW</b> = Creative Writers','<b>PMM</b> = Product Marketing Manager','<b>Upstream</b> = Sizing → Step 0 → Local Orientation / Channels Orientation → Creative Essentials','<b>Downstream</b> = Step 1 Production → Step 2 Localization & review → Step 3 Sign-off → Step 4 Publish → Step 5 Red bin'];
+  return(
+    <div style={{maxWidth:880,margin:'0 auto'}} className="fade-in">
+      <div style={{marginBottom:18}}>
+        <div style={{fontSize:11,fontWeight:800,letterSpacing:'0.12em',textTransform:'uppercase',color:'#7B4DB8',marginBottom:6}}>Growth Operating Model</div>
+        <div style={{fontSize:26,fontWeight:800,lineHeight:1.15,marginBottom:6,color:'#050505'}}>Who does what?</div>
+        <div style={{fontSize:14,color:'#6b6b6b'}}>Pick your role to see what you own, what you don't, and who does what per channel.</div>
+      </div>
+      <div style={{background:'#fff',border:'1px solid #E0E0E0',borderRadius:12,padding:'13px 16px',marginBottom:22}}>
+        <div style={{fontSize:11,fontWeight:800,letterSpacing:'0.08em',textTransform:'uppercase',color:'#B8B8B8',marginBottom:9}}>Legend</div>
+        <div style={{display:'flex',flexWrap:'wrap',gap:'7px 9px'}}>{legendItems.map((t,i)=><span key={i} style={{fontSize:12,color:'#4a4a4a',background:'#F6F6F6',border:'1px solid #ECECEC',borderRadius:8,padding:'4px 9px'}}>{RXH(t)}</span>)}</div>
+      </div>
+      <div style={{display:'flex',gap:8,flexWrap:'wrap',marginBottom:22}}>
+        {RX_ORDER.map(k=>{const a=cur===k;return(
+          <div key={k} onClick={()=>setCur(k)} style={{cursor:'pointer',flex:'1 1 130px',minWidth:130,background:a?'#F8F5FC':'#fff',border:`1.5px solid ${a?'#7B4DB8':'#E0E0E0'}`,borderRadius:11,padding:'11px 13px',transition:'all 0.15s'}}>
+            <div style={{fontSize:14,fontWeight:800,color:'#050505'}}>{RX_DATA[k].name}</div>
+            <div style={{fontSize:11,color:'#9a9a9a',marginTop:2}}>{RX_DATA[k].where}</div>
+          </div>);})}
+      </div>
+      <div style={{display:'inline-block',fontSize:11,fontWeight:800,letterSpacing:'0.03em',color:'#5a5a5a',background:'#EDEDED',borderRadius:20,padding:'4px 11px',marginBottom:10}}>{d.chip}</div>
+      <div style={{fontSize:15,color:'#2a2a2a',fontWeight:600,marginBottom:16}}>{RXH(d.nut)}</div>
+      {d.note&&<div style={{background:'#F8F5FC',border:'1px solid #E7DBF6',borderRadius:11,padding:'12px 15px',fontSize:12.5,color:'#4a3a5f',lineHeight:1.55,marginBottom:20}}>{RXH(d.note)}</div>}
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:20}}>
+        {[{h:'You own',c:'#2E9E5E',dot:'#8FCBA6',items:d.owns},{h:'Not your call',c:'#C85A3E',dot:'#E0A594',items:d.not}].map((b,bi)=>(
+          <div key={bi} style={{borderRadius:12,padding:'16px 18px',background:'#fff',border:'1px solid #E0E0E0'}}>
+            <div style={{fontSize:11,fontWeight:800,letterSpacing:'0.06em',textTransform:'uppercase',marginBottom:11,color:b.c}}>{b.h}</div>
+            <ul style={{listStyle:'none',margin:0,padding:0}}>{b.items.map((x,i)=><li key={i} style={{position:'relative',paddingLeft:16,fontSize:13,color:'#3a3a3a',lineHeight:1.5,marginBottom:9}}><span style={{position:'absolute',left:0,top:8,width:5,height:5,borderRadius:'50%',background:b.dot}}/>{RXH(x)}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+      {d.matrix&&<RXMatrix role={cur}/>}
+      <div style={{fontSize:12,fontWeight:800,letterSpacing:'0.08em',textTransform:'uppercase',color:'#8F8F8F',margin:'22px 0 12px'}}>Real situations — guess, then reveal</div>
+      {d.sc.map((s,i)=><RXScenario key={cur+i} s={s}/>)}
+      <div style={{marginTop:26,background:'#7B4DB8',borderRadius:16,padding:'22px 24px',color:'#fff'}}>
+        <div style={{fontSize:18,fontWeight:800,marginBottom:6}}>Questions?</div>
+        <p style={{fontSize:14,opacity:.92,marginBottom:14}}>The full model, roles and ways of working live on Notion — and the team is one Slack message away.</p>
+        <a href="https://www.notion.so/qonto/Growth-Operating-Model-Roles-Responsibilities-And-Ways-of-Working-2ae31ee4c69680428660d48ba4b67658" target="_blank" rel="noopener noreferrer" style={{display:'inline-block',background:'#fff',color:'#4a2a6b',fontWeight:800,fontSize:14,textDecoration:'none',borderRadius:10,padding:'10px 18px'}}>Full operating model on Notion →</a>
+      </div>
+    </div>
+  );
+}
   const[view,setView]=useState('workflow');
   const[activeTrack,setActiveTrack]=useState(null);
   const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
@@ -2082,10 +2203,17 @@ function App(){
           <button onClick={()=>setView('path')} style={{display:'flex',alignItems:'center',gap:6,padding:'7px 14px',borderRadius:8,border:'none',cursor:'pointer',fontSize:13,fontWeight:600,fontFamily:'inherit',background:view==='path'?'#050505':'transparent',color:view==='path'?'#fff':'#8F8F8F',boxShadow:view==='path'?'0 1px 3px rgba(0,0,0,0.12)':'none',transition:'all 0.15s'}}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
             Find your path
+          </button><button onClick={()=>setView('roles')} style={{display:'flex',alignItems:'center',gap:6,padding:'7px 14px',borderRadius:8,border:'none',cursor:'pointer',fontSize:13,fontWeight:600,fontFamily:'inherit',background:view==='roles'?'#7B4DB8':'transparent',color:view==='roles'?'#fff':'#8F8F8F',boxShadow:view==='roles'?'0 1px 3px rgba(0,0,0,0.12)':'none',transition:'all 0.15s'}}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Who does what?
           </button>
         </div>
       </header>
-      {view==='path'?(
+      {view==='roles'?(
+        <div style={{padding:'28px 32px 80px'}}>
+          <RoleExplorerView/>
+        </div>
+      ):view==='path'?(
         <div style={{padding:'0 32px 80px'}}>
           <PathFinder onViewWorkflow={handleViewWorkflow}/>
         </div>
