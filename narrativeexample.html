@@ -36,6 +36,11 @@
   .row{display:flex;align-items:center;min-height:38px;border-bottom:1px solid #F0F0F0;}
   .row .lab{width:250px;flex-shrink:0;padding-right:14px;}
   .row .lab .n{font-size:13.5px;font-weight:700;color:#111;line-height:1.25;}
+  .info{display:inline-block;margin-left:6px;width:15px;height:15px;border-radius:50%;background:#7B4DB8;color:#fff;font-size:10px;font-weight:800;text-align:center;line-height:15px;cursor:help;position:relative;vertical-align:middle;}
+  .info .tip{position:absolute;left:22px;top:-10px;width:340px;background:#111;color:#fff;font-size:13px;font-weight:500;line-height:1.6;letter-spacing:0;text-transform:none;padding:14px 16px;border-radius:11px;z-index:30;box-shadow:0 12px 34px rgba(0,0,0,.32);opacity:0;visibility:hidden;transform:scale(.85);transform-origin:left center;transition:transform .14s ease,opacity .14s ease;pointer-events:none;}
+  .info .tip .tiptitle{display:block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#E6F26B;margin-bottom:6px;}
+  .info .tip b{color:#E6F26B;font-weight:700;}
+  .info:hover .tip{opacity:1;visibility:visible;transform:scale(1);}
   .row .lab .s{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;color:#9a9a9a;margin-top:2px;}
   .track{position:relative;flex:1;height:38px;}
   .grid{position:absolute;inset:0;pointer-events:none;}
@@ -174,19 +179,30 @@
 const P='<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8a8a8a" stroke-width="2.2" style="vertical-align:-1px;margin-right:3px"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg>';
 const rows=[
   {group:"Upstream", sub:"plan & create — before production"},
-  {n:"Step 0 — Global Outline", s:`<span class="nowrap">${P}Marco Felletti · PMM</span> · done`, type:"global", l:0, w:5.6, d:"Jul 13–17"},
-  {n:"Local Orientation", s:"Local Market POC + PMM · hard gate", type:"market", l:9.9, w:5.6, d:"Jul 20–24"},
+  {n:"Step 0 — Global Outline", s:`<span class="nowrap">${P}Marco Felletti · PMM</span> · done`, type:"global", l:0, w:5.6, d:"Jul 13–17",
+   tip:"Ideally everyone who'll contribute is already lined up since <b>Quarterly Planning</b> — Local Market POCs included. The Global PMM writes the outline: intent, narrative, fixed vs. flexible, legal flags. Right after, a <b>public project Slack channel</b> is created for everyone."},
+  {n:"Local Orientation", s:"Local Market POC + PMM · hard gate", type:"market", l:9.9, w:5.6, d:"Jul 20–24",
+   tip:"Local &amp; channel orientation happen together here — a <b>real meeting where everyone comes prepared</b> (markets bring their context &amp; must-haves, channels their requirements) — and a <b>very clear place to put the input in writing</b>, with clear deadlines. Hard gate: after the deadline, no new input is considered."},
   {n:"↳ Channels orientation", s:"Paid · Website · CRM · SEO · parallel", type:"parallel", l:9.9, w:5.6, d:"Jul 20–24"},
-  {n:"CommDoc + EN Master msgs", s:`<span class="nowrap">${P}Céline Marzi · PMM</span>`, type:"global", l:19.7, w:5.6, d:"Jul 27–31"},
-  {n:"Creative brief", s:`<span class="nowrap">${P}Romuald Varin · CP</span>`, type:"global", l:29.6, w:2.8, d:"Aug 3–5"},
-  {n:"↳ Global GTM Action Plan", s:"Channels · parallel", type:"parallel", l:29.6, w:5.6, d:"Aug 3–7"},
-  {n:"Creative Essentials", s:`<span class="nowrap">${P}Mark Davis · CW</span> &nbsp; <span class="nowrap">${P}Mathieu Locatin · DB</span>`, type:"global", l:39.4, w:15.5, d:"Aug 10–21"},
+  {n:"CommDoc + EN Master msgs", s:`<span class="nowrap">${P}Céline Marzi · PMM</span>`, type:"global", l:19.7, w:5.6, d:"Jul 27–31",
+   tip:"The PMM writes the key messages + <b>English master copy</b>. Run <b>QualityGuard on the master</b> — a weak foundation multiplies across every market."},
+  {n:"Creative brief", s:`<span class="nowrap">${P}Romuald Varin · CP</span>`, type:"global", l:29.6, w:2.8, d:"Aug 3–5",
+   tip:"The Comms Partner writes the brief from Step 0 + Local Orientation + channel inputs, and presents it at the <b>mandatory alignment gate</b> before any production starts."},
+  {n:"↳ Global GTM Action Plan", s:"Channels · parallel", type:"parallel", l:29.6, w:5.6, d:"Aug 3–7",
+   tip:"The action plan takes shape: the full list of what's <b>produced &amp; localized, by whom, by when</b>. The source of truth for every market's resourcing."},
+  {n:"Creative Essentials", s:`<span class="nowrap">${P}Mark Davis · CW</span> &nbsp; <span class="nowrap">${P}Mathieu Locatin · DB</span>`, type:"global", l:39.4, w:15.5, d:"Aug 10–21",
+   tip:"The Creative Factory duo builds the concept + key claims + tagline + visual direction. The <b>Comms Partner loops channels &amp; markets in — they're kept informed all along</b> (not to approve the concept). Validated by Julie &amp; Didier."},
   {group:"Downstream", sub:"produce · localize · sign off · ship"},
-  {n:"Creative Asset Production", s:`<span class="nowrap">${P}Mark Davis · CW</span> &nbsp; <span class="nowrap">${P}Mathieu Locatin · DB</span>`, type:"global", l:59.2, w:15.5, d:"Aug 24–Sep 4"},
-  {n:"Localization & review", s:"Local Market POC → DE·ES·IT·NL", type:"market", l:78.9, w:5.6, d:"Sep 7–11"},
-  {n:"Final market sign-off", s:"Local Market POC", type:"market", l:88.7, w:2.1, d:"Sep 14"},
-  {n:"Formal QA gate · blocking", s:"Local Market POC & Channel owners support", type:"market", l:90.1, w:2.8, d:"Sep 15–16"},
-  {n:"Buffer / contingency", s:"Protects launch · 3 working days", type:"buffer", l:93.0, w:5.6, d:""},
+  {n:"Creative Asset Production", s:`<span class="nowrap">${P}Mark Davis · CW</span> &nbsp; <span class="nowrap">${P}Mathieu Locatin · DB</span>`, type:"global", l:59.2, w:15.5, d:"Aug 24–Sep 4",
+   tip:"Per-channel master copies + assets, <b>EN + AI first pass into FR/DE/IT</b>. Supporting Creative Writers may localize the Essentials/hero copies; a Flying Designer may help on specific formats."},
+  {n:"Localization & review", s:"Local Market POC → DE·ES·IT·NL", type:"market", l:78.9, w:5.6, d:"Sep 7–11",
+   tip:"Official hand-off to the <b>Local Market POC</b>. Reword &amp; adapt per market (respecting the concept), local accuracy, compliance — not just tone. SLA ~5 days on L. Run QualityGuard."},
+  {n:"Final market sign-off", s:"Local Market POC", type:"market", l:88.7, w:2.1, d:"Sep 14",
+   tip:"The Local Market POC checks cross-channel coherence, local accuracy &amp; compliance — <b>against the master copy</b>, not just reading the local version."},
+  {n:"Formal QA gate · blocking", s:"Local Market POC & Channel owners support", type:"market", l:90.1, w:2.8, d:"Sep 15–16",
+   tip:"<b>Blocking gate for L</b> — nothing publishes until the POC signs. Channel owners support the build &amp; publish (Website in Qontent · CRM in Customer.io · Paid Ads on platform)."},
+  {n:"Buffer / contingency", s:"Protects launch · 3 working days", type:"buffer", l:93.0, w:5.6, d:"",
+   tip:"~3 working days of protection before go-live. Absorbs slippage. A Transcreation Gate, if any, was triggered upstream and is already in the plan (55-day SLA)."},
 ];
 const ticks=[0,9.9,19.7,29.6,39.4,49.3,59.2,69.0,78.9,88.7,98.6];
 const rowsEl=document.getElementById('rows');
@@ -197,7 +213,7 @@ rowsEl.innerHTML=rows.map((r,idx)=>{
   const grid=ticks.map(t=>`<i style="left:${t}%"></i>`).join('');
   const datelab = r.d ? `<div class="datelab" style="left:calc(${r.l+r.w}% + 8px)">${r.d}</div>` : '';
   return `<div class="row">
-    <div class="lab"><div class="n">${r.n}</div><div class="s">${r.s}</div></div>
+    <div class="lab"><div class="n">${r.n}${r.tip?`<span class="info">i<span class="tip"><span class="tiptitle">${r.n.replace(/^↳ /,"")}</span>${r.tip}</span></span>`:""}</div><div class="s">${r.s}</div></div>
     <div class="track">
       <div class="grid">${grid}</div>
       <div class="bar ${r.type}" style="left:${r.l}%;width:${r.w}%"></div>
