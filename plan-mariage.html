@@ -198,6 +198,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
     <button class="nav-tab" onclick="showView('macro',this)">Macro planning</button>
     <button class="nav-tab" onclick="showView('cuisine',this)">Cuisine</button>
     <button class="nav-tab" onclick="showView('manutention',this)">Manutention</button>
+    <button class="nav-tab" onclick="showView('bar',this)">Bar — Samedi</button>
   </div>
 </nav>
 
@@ -230,6 +231,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
 <div class="view" id="view-manutention">
   <div class="page-header"><h1>Manutention</h1><p>Toutes les tâches manutention du week-end</p></div>
   <table class="team-table"><thead><tr><th>Horaire</th><th>Activité</th><th>Description</th><th>Équipe</th></tr></thead><tbody id="tbody-manutention"></tbody></table>
+</div>
+
+<div class="view" id="view-bar">
+  <div class="page-header"><h1>Bar — Samedi 8 août</h1><p>Planning complet du bar, de 19h45 au matin</p></div>
+  <div id="bar-timeline"></div>
 </div>
 
 <script>
@@ -348,7 +354,7 @@ function buildIndividual(){
     btn.className='person-btn';btn.textContent=person;btn.onclick=()=>selectPerson(person);
     grid.appendChild(btn);
 
-    const myTasks=TASKS.filter(t=>t.p.includes(person)).sort((a,b)=>(a.j+a.d).localeCompare(b.j+b.d));
+    const myTasks=TASKS.filter(t=>t.p.includes(person)).sort((a,b)=>(a.j===b.j?sortKey(a.d)-sortKey(b.d):a.j.localeCompare(b.j)));
     const div=document.createElement('div');
     div.className='person-planning';
     div.id='pl_'+person.replace(/[^a-zA-Z]/g,'_');
@@ -401,14 +407,18 @@ function selectPerson(name){
   document.getElementById('pl_'+name.replace(/[^a-zA-Z]/g,'_'))?.classList.add('active');
 }
 
+// ── sort helper: midnight hours (00-07) sort as 24-31 so they come after evening ──
+function sortKey(d){const h=parseInt(d);return(h<8?h+24:h)*100+parseInt(d.slice(3));}
+function sortTasks(arr){return arr.slice().sort((a,b)=>sortKey(a.d)-sortKey(b.d));}
+
 // ── macro ─────────────────────────────────────────────────────────────────────
 function buildMacro(){
   const cont=document.getElementById('macro-days');
   JOURS.forEach(jour=>{
-    const dayTasks=TASKS.filter(t=>t.j===jour).sort((a,b)=>a.d.localeCompare(b.d));
-    const matin=dayTasks.filter(t=>t.d<'14:00');
-    // soir: 14:00+ but for samedi also include 00:xx-06:xx
-    const soir=dayTasks.filter(t=>t.d>='14:00'||t.d<'08:00');
+    const dayTasks=sortTasks(TASKS.filter(t=>t.j===jour));
+    const matin=dayTasks.filter(t=>{const h=parseInt(t.d);return h>=8&&h<14;});
+    // soir: 14:00+ AND overnight (00:xx-07:xx treated as continuation of evening)
+    const soir=dayTasks.filter(t=>{const h=parseInt(t.d);return h>=14||(h>=0&&h<8);});
 
     const card=document.createElement('div');card.className='macro-day-card';
     card.innerHTML=`<div class="macro-day-head">${JOUR_FULL[jour]}</div>`;
@@ -459,7 +469,7 @@ function toggleMacroSec(sid){
 // ── team tables ───────────────────────────────────────────────────────────────
 function buildTeamTable(type,tbodyId){
   const tbody=document.getElementById(tbodyId);
-  const filtered=TASKS.filter(t=>t.t===type).sort((a,b)=>(a.j+a.d).localeCompare(b.j+b.d));
+  const filtered=TASKS.filter(t=>t.t===type).sort((a,b)=>a.j===b.j?sortKey(a.d)-sortKey(b.d):a.j.localeCompare(b.j));
   let lastJ=null;
   filtered.forEach(t=>{
     if(t.j!==lastJ){lastJ=t.j;const sep=document.createElement('tr');sep.className='day-sep-row';sep.innerHTML=`<td colspan="4">${JOUR_FULL[t.j]}</td>`;tbody.appendChild(sep);}
@@ -470,9 +480,86 @@ function buildTeamTable(type,tbodyId){
   });
 }
 
+// ── bar samedi ────────────────────────────────────────────────────────────────
+function buildBar(){
+  const cont=document.getElementById('bar-timeline');
+  const barTasks=sortTasks(TASKS.filter(t=>t.t==='Bar'&&t.j==='8/8/2026'));
+
+  // collect all bar people in order of first appearance
+  const allPeople=[];
+  barTasks.forEach(t=>t.p.forEach(p=>{if(!allPeople.includes(p))allPeople.push(p);}));
+
+  // header note
+  const note=document.createElement('p');
+  note.style.cssText='font-size:13px;color:var(--gray);margin-bottom:20px';
+  note.textContent=allPeople.length+' personnes au total : '+allPeople.join(', ');
+  cont.appendChild(note);
+
+  // table
+  const tbl=document.createElement('table');
+  tbl.className='team-table';
+  tbl.style.cssText='table-layout:fixed';
+
+  // thead
+  const thead=document.createElement('thead');
+  const hrow=document.createElement('tr');
+  ['Créneau','Activité','Équipe','Rôle / note'].forEach((h,i)=>{
+    const th=document.createElement('th');
+    th.textContent=h;
+    if(i===0) th.style.width='110px';
+    if(i===2) th.style.width='38%';
+    hrow.appendChild(th);
+  });
+  thead.appendChild(hrow);
+  tbl.appendChild(thead);
+
+  // tbody
+  const tbody=document.createElement('tbody');
+  barTasks.forEach(t=>{
+    const tr=document.createElement('tr');
+    // highlight briefing row
+    if(t.n.toLowerCase().includes('briefing')) tr.style.background='var(--ly)';
+    const who=t.p.join(', ');
+    // derive role note
+    let role='';
+    if(t.n.toLowerCase().includes('briefing')) role='Tout le monde se retrouve devant le bar';
+    tr.innerHTML=`<td class="t-time" style="white-space:nowrap">${t.d}–${t.f}</td>`+
+      `<td><strong>${t.n}</strong>${t.x?'<div style="font-size:12px;color:var(--gray);margin-top:3px">'+t.x+'</div>':''}</td>`+
+      `<td style="font-size:13px;line-height:1.5">${who}</td>`+
+      `<td style="font-size:12px;color:var(--gray)">${role}</td>`;
+    tbody.appendChild(tr);
+  });
+  tbl.appendChild(tbody);
+  cont.appendChild(tbl);
+
+  // person summary cards
+  const title=document.createElement('h3');
+  title.style.cssText='font-family:"Playfair Display",serif;font-weight:400;font-size:18px;color:var(--green);margin:32px 0 14px';
+  title.textContent='Récap par personne';
+  cont.appendChild(title);
+
+  const grid=document.createElement('div');
+  grid.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px';
+
+  allPeople.forEach(person=>{
+    const slots=barTasks.filter(t=>t.p.includes(person));
+    const card=document.createElement('div');
+    card.style.cssText='background:var(--white);border:1px solid var(--border);border-radius:8px;padding:12px 14px';
+    let html=`<div style="font-weight:600;font-size:14px;margin-bottom:8px;color:var(--dark)">${person}</div>`;
+    slots.forEach(t=>{
+      html+=`<div style="font-size:12px;padding:3px 0;border-bottom:1px solid var(--border);color:var(--dark)">`+
+        `<span style="font-weight:600;color:var(--green)">${t.d}–${t.f}</span>&nbsp; ${t.n}</div>`;
+    });
+    card.innerHTML=html;
+    grid.appendChild(card);
+  });
+  cont.appendChild(grid);
+}
+
 buildIndividual();buildMacro();
 buildTeamTable('Cuisine','tbody-cuisine');
 buildTeamTable('Manutention','tbody-manutention');
+buildBar();
 </script>
 </body>
 </html>
