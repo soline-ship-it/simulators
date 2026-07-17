@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planning Mariage Soline & Julien — 8 août 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+:root{
+  --cream:#FAF6EF; --green:#3B6B47; --green-light:#EEF5EF; --orange:#E07A3D;
+  --pink:#D4839A; --lavender:#9B8EC4; --yellow:#E8C84A;
+  --lg:#D0E8D1; --lo:#F8DABC; --lp:#F5D8E0; --ll:#E5E1F5; --ly:#FAF0BC; --lb:#D8EBF8;
+  --dark:#2C2825; --gray:#8A8580; --border:#E0D8CE; --white:#fff;
+  --nav-bg:#3B6B47; --nav-border:#2E5439;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
+
+/* ── NAV — faire-part green ─────────────────────────────────── */
+.nav{background:var(--nav-bg);display:flex;align-items:stretch;position:sticky;top:0;z-index:200;flex-wrap:wrap;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.nav-brand{font-family:'Playfair Display',serif;font-style:italic;color:#fff;font-size:17px;padding:13px 24px;border-right:1px solid var(--nav-border);display:flex;align-items:center;white-space:nowrap;letter-spacing:.3px}
+.nav-tabs{display:flex;flex-wrap:wrap}
+.nav-tab{background:none;border:none;color:rgba(255,255,255,.65);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:14px 22px;cursor:pointer;letter-spacing:.7px;text-transform:uppercase;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+.nav-tab:hover{color:#fff}
+.nav-tab.active{color:#fff;border-bottom-color:var(--orange)}
+
+/* ── VIEWS ───────────────────────────────────────────────────── */
+.view{display:none;padding:32px 44px;width:100%;max-width:1400px;margin:0 auto}
+.view.active{display:block}
+.page-header{margin-bottom:24px;padding-bottom:18px;border-bottom:1.5px solid var(--border)}
+.page-header h1{font-family:'Playfair Display',serif;font-size:28px;font-weight:400;color:var(--green)}
+.page-header p{color:var(--gray);font-size:14px;margin-top:5px}
+
+/* ── PERSON SELECTOR ─────────────────────────────────────────── */
+.person-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+.person-btn{background:var(--white);border:1.5px solid var(--border);border-radius:100px;padding:7px 18px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;color:var(--dark);transition:all .12s}
+.person-btn:hover{border-color:var(--green);color:var(--green)}
+.person-btn.active{background:var(--green);border-color:var(--green);color:#fff}
+
+/* ── INDIVIDUAL PLANNING ──────────────────────────────────────── */
+.person-planning{display:none}
+.person-planning.active{display:block}
+.person-header{display:flex;align-items:center;gap:14px;margin-bottom:18px;padding:16px 20px;background:var(--white);border-radius:10px;border:1px solid var(--border)}
+.person-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:19px;flex-shrink:0}
+.person-name{font-family:'Playfair Display',serif;font-size:24px;font-weight:400}
+
+/* day toggle */
+.day-section{margin-bottom:10px;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--white)}
+.day-toggle{width:100%;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:12px 18px;font-family:'DM Sans',sans-serif;text-align:left;transition:background .12s}
+.day-toggle:hover{background:var(--green-light)}
+.day-toggle-label{font-size:12px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--green);flex:1}
+.day-toggle-arrow{font-size:12px;color:var(--gray);transition:transform .2s}
+.day-toggle.open .day-toggle-arrow{transform:rotate(180deg)}
+.day-body{overflow:hidden;transition:max-height .25s ease}
+.day-body.closed{max-height:0!important}
+
+/* task rows */
+.task-row{display:grid;grid-template-columns:88px 1fr 86px;gap:14px;padding:13px 18px;border-top:1px solid var(--border);align-items:start}
+.task-row.is-event{background:#F7F3EC;border-top-color:var(--border)}
+.task-time{font-size:14px;font-weight:600;padding-top:1px;white-space:nowrap;color:var(--dark)}
+.task-time-end{font-size:12px;color:var(--gray);font-weight:300}
+.task-name{font-size:15px;font-weight:500;margin-bottom:2px;line-height:1.3}
+.task-desc{font-size:13px;color:var(--gray);line-height:1.45;margin-bottom:3px}
+.task-avec{font-size:13px;color:var(--gray)}
+.task-avec b{color:var(--dark);font-weight:500}
+.badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:100px;letter-spacing:.4px;text-transform:uppercase;display:inline-block}
+.b-Cuisine{background:var(--lo);color:#7A3800}
+.b-Manutention{background:var(--lg);color:#1E4A28}
+.b-Volant{background:var(--ll);color:#3B2A80}
+.b-Déco{background:var(--lp);color:#7A2040}
+.b-Bar{background:var(--ly);color:#5A4500}
+.b-Garde{background:var(--lb);color:#1A3A6A}
+.b-Répétition{background:#EBEBEB;color:#444}
+.b-Évènement{background:var(--green);color:#fff}
+
+/* ── MACRO ────────────────────────────────────────────────────── */
+/* each day is a card with matin+soir as accordion sections */
+.macro-days{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.macro-day-card{background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.macro-day-head{background:var(--green);color:#fff;padding:11px 14px;font-size:13px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;text-align:center}
+.macro-section-toggle{width:100%;background:none;border:none;border-top:1px solid var(--border);cursor:pointer;display:flex;align-items:center;padding:8px 12px;gap:6px;font-family:'DM Sans',sans-serif;transition:background .12s}
+.macro-section-toggle:hover{background:var(--green-light)}
+.macro-section-toggle:first-of-type{border-top:none}
+.macro-sec-label{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--green);flex:1;text-align:left}
+.macro-sec-arrow{font-size:11px;color:var(--gray);transition:transform .2s}
+.macro-section-toggle.open .macro-sec-arrow{transform:rotate(180deg)}
+.macro-sec-body{overflow:hidden;transition:max-height .25s ease;padding:0 8px}
+.macro-sec-body.closed{max-height:0!important}
+
+/* macro cards */
+.macro-card{padding:8px 10px;border-radius:6px;margin:5px 0;font-size:12px;border-left:3px solid transparent;cursor:default;position:relative}
+.mac-n{font-weight:600;line-height:1.3;margin-bottom:2px}
+.mac-time{font-size:11px;opacity:.75;font-weight:400;margin-bottom:1px}
+.mac-w{font-size:11px;opacity:.65}
+.mc-Cuisine{background:var(--lo);border-left-color:#E07A3D}
+.mc-Manutention{background:var(--lg);border-left-color:#3B6B47}
+.mc-Volant{background:var(--ll);border-left-color:#9B8EC4}
+.mc-Déco{background:var(--lp);border-left-color:#D4839A}
+.mc-Bar{background:var(--ly);border-left-color:#C9A000}
+.mc-Garde{background:var(--lb);border-left-color:#5B9BD5}
+.mc-Répétition{background:#EBEBEB;border-left-color:#999}
+.mc-Évènement{background:#2C2825;color:#fff;border-left-color:#E07A3D}
+.mc-Évènement .mac-w,.mc-Évènement .mac-time{opacity:.65}
+
+/* tooltip */
+.macro-card:hover .tip{display:block}
+.tip{display:none;position:absolute;left:calc(100% + 8px);top:0;z-index:300;background:var(--dark);color:#fff;border-radius:8px;padding:9px 12px;font-size:11px;width:200px;box-shadow:0 4px 16px rgba(0,0,0,.25);pointer-events:none;line-height:1.45}
+.tip-name{font-weight:600;margin-bottom:4px;font-size:12px}
+.tip-time{font-size:10px;opacity:.7;margin-bottom:4px}
+.tip-desc{font-size:11px;opacity:.85;margin-bottom:4px}
+.tip-who{font-size:10px;opacity:.7}
+/* flip tooltip left if near right edge */
+.macro-day-card:last-child .tip,.macro-day-card:nth-last-child(2) .tip{left:auto;right:calc(100% + 8px)}
+
+/* LEGEND */
+.legend{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;align-items:center}
+.legend-lbl{font-size:10px;color:var(--gray);letter-spacing:.5px;text-transform:uppercase;margin-right:2px}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--dark);background:var(--white);border:1px solid var(--border);border-radius:100px;padding:3px 10px}
+.leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+
+/* TEAM TABLES */
+.team-table{width:100%;border-collapse:collapse}
+.team-table th{background:var(--green);color:#fff;padding:11px 14px;font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;text-align:left}
+.team-table td{padding:12px 14px;border-bottom:1px solid var(--border);font-size:14px;vertical-align:top}
+.team-table tr:hover td{background:var(--green-light)}
+.day-sep-row td{background:var(--cream);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);padding:8px 14px}
+.t-time{white-space:nowrap;font-weight:600;font-size:14px}
+.t-desc{color:var(--gray);font-size:13px}
+
+@media print{
+  .nav{display:none}
+  .view{display:block!important;padding:12px;max-width:100%}
+  .person-planning{display:none!important}
+  .person-planning.active{display:block!important}
+  .person-grid{display:none}
+  .day-body,.macro-sec-body{max-height:none!important}
+  .day-body.closed,.macro-sec-body.closed{max-height:none!important}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">Soline &amp; Julien · 8 août 2026</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showView('individual',this)">Plannings individuels</button>
+    <button class="nav-tab" onclick="showView('macro',this)">Macro planning</button>
+    <button class="nav-tab" onclick="showView('cuisine',this)">Cuisine</button>
+    <button class="nav-tab" onclick="showView('manutention',this)">Manutention</button>
+  </div>
+</nav>
+
+<div class="view active" id="view-individual">
+  <div class="page-header"><h1>Plannings individuels</h1><p>Clique sur un prénom — chaque jour est rétractable</p></div>
+  <div class="person-grid" id="person-grid"></div>
+  <div id="plannings-container"></div>
+</div>
+
+<div class="view" id="view-macro">
+  <div class="page-header"><h1>Planning général</h1></div>
+  <div class="legend">
+    <span class="legend-lbl">Légende</span>
+    <div class="leg"><div class="leg-dot" style="background:var(--lo);border:1px solid #E07A3D"></div>Cuisine</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--lg);border:1px solid #3B6B47"></div>Manutention</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--ll);border:1px solid #9B8EC4"></div>Orga / Volant</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--lp);border:1px solid #D4839A"></div>Déco</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--ly);border:1px solid #C9A000"></div>Bar</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--lb);border:1px solid #5B9BD5"></div>Enfants</div>
+    <div class="leg"><div class="leg-dot" style="background:#2C2825"></div>Moment ensemble</div>
+  </div>
+  <div class="macro-days" id="macro-days"></div>
+</div>
+
+<div class="view" id="view-cuisine">
+  <div class="page-header"><h1>Cuisine</h1><p>Toutes les tâches cuisine du week-end</p></div>
+  <table class="team-table"><thead><tr><th>Horaire</th><th>Activité</th><th>Description</th><th>Équipe</th></tr></thead><tbody id="tbody-cuisine"></tbody></table>
+</div>
+
+<div class="view" id="view-manutention">
+  <div class="page-header"><h1>Manutention</h1><p>Toutes les tâches manutention du week-end</p></div>
+  <table class="team-table"><thead><tr><th>Horaire</th><th>Activité</th><th>Description</th><th>Équipe</th></tr></thead><tbody id="tbody-manutention"></tbody></table>
+</div>
+
+<script>
+const ALL_T=14;
+const CORE=['AJ','Anna','Anne-Lise','Ariana','Carole','Charles','Charlotte','Corentin','Gwel','Géraldine','Hélène C.','Jerem','Joël','Julien','Marie-Laure','Pauline','Samy','Simon','Soline','Thierry','Thomas','Églantine'];
+const JOURS=['6/8/2026','7/8/2026','8/8/2026','9/8/2026'];
+const JOUR_FULL={'6/8/2026':'Jeudi 6 août','7/8/2026':'Vendredi 7 août','8/8/2026':'Samedi 8 août','9/8/2026':'Dimanche 9 août'};
+
+const TASKS=[
+  {j:'6/8/2026',d:'14:00',f:'16:30',n:'Trajets Trélazé → Lieu → Rendre le camion',x:"Aller-retour avec le camion d'Adeline. Charger, décharger.",t:'Volant',p:['Soline','Julien','Samy','Anna']},
+  {j:'6/8/2026',d:'16:00',f:'18:00',n:'Montage barnum',x:"En fonction de la météo. Sinon, vendredi matin.",t:'Manutention',p:['Samy','Joël','Thierry','Jerem','Simon']},
+  {j:'6/8/2026',d:'16:00',f:'18:00',n:'Allers-retours gare',x:"Aller chercher les arrivants.",t:'Volant',p:['Anne-Lise']},
+  {j:'6/8/2026',d:'16:00',f:'18:00',n:'Ranger les affaires sur place',x:"Organiser les frigos, optimiser les espaces pour la déco.",t:'Volant',p:['Anne-Lise','Marie-Laure','Soline','Anna','Charlotte']},
+  {j:'6/8/2026',d:'16:30',f:'18:30',n:'Dernières courses',x:"Super U : récupérer commande, derniers achats, organiser les frigos.",t:'Volant',p:['Julien','Soline','Anna']},
+  {j:'6/8/2026',d:'18:00',f:'18:45',n:'Branchements et tests son cérémonie',x:"En option dès le jeudi pour prendre de l'avance.",t:'Répétition',p:['Thierry','Jerem','Julien','Samy','Joël']},
+  {j:'6/8/2026',d:'18:30',f:'19:15',n:'Répétition chansons (option)',x:"Si vous voulez vous entraîner dès le jeudi.",t:'Répétition',p:['Thierry','Joël','Anne-Lise','Charlotte','Samy','Pauline','Anna','Jerem','Marie-Laure','Corentin','Soline','Julien']},
+  {j:'6/8/2026',d:'19:30',f:'21:00',n:'🎂 Dîner partagé + anniversaire Ulysse',x:"Premier repas du séjour. Chacun ramène un plat. On fête l'anniversaire d'Ulysse !",t:'Évènement',p:['Thomas','Pauline','Joël','Anne-Lise','Samy','Marie-Laure','Thierry','Gwel','Géraldine','Ariana','AJ','Charlotte','Simon','Carole','Jerem','Soline','Julien','Anna','Corentin','Églantine']},
+  {j:'6/8/2026',d:'21:00',f:'22:00',n:'Vaisselle',x:"Tout le monde, pour que ça aille vite.",t:'Cuisine',p:['Thomas','Pauline','Joël','Anne-Lise','Samy','Marie-Laure','Thierry','Gwel','Géraldine','Ariana','AJ','Charlotte','Simon','Carole','Jerem','Soline','Julien','Anna','Corentin','Églantine']},
+  {j:'7/8/2026',d:'08:00',f:'10:00',n:"Avance sur les missions de l'aprem",x:"Pour les motivés et lève-tôt : chaises, déco, organisation.",t:'Volant',p:['Thomas','Pauline','Joël','Anne-Lise','Samy','Marie-Laure','Thierry','Gwel','Géraldine','Ariana','AJ','Charlotte','Simon','Carole','Jerem','Soline','Julien','Anna','Corentin','Églantine']},
+  {j:'7/8/2026',d:'10:00',f:'12:30',n:'✨ Mariage à la mairie',x:"RDV Hôtel de Ville Trélazé à 10h45. Partir à 10h max. Retour direct au lieu.",t:'Évènement',p:['Thomas','Pauline','Joël','Anne-Lise','Samy','Marie-Laure','Thierry','Gwel','Géraldine','Ariana','AJ','Charlotte','Simon','Hélène C.','Charles','Carole','Jerem','Soline','Julien','Anna','Corentin','Églantine']},
+  {j:'7/8/2026',d:'12:00',f:'12:15',n:'Récupération affaires (cave)',x:"Juste après la mairie, on va vite.",t:'Volant',p:['Hélène C.','Charles','Soline','Julien']},
+  {j:'7/8/2026',d:'12:30',f:'14:30',n:'Gestion boissons du déjeuner',x:"Champagne, etc.",t:'Volant',p:['Thierry','Charlotte']},
+  {j:'7/8/2026',d:'12:45',f:'14:30',n:'🥂 Déjeuner festif',x:"Au Gîte de la Douce Vie après la mairie.",t:'Évènement',p:['Thomas','Pauline','Joël','Anne-Lise','Samy','Marie-Laure','Thierry','Gwel','Géraldine','Ariana','AJ','Charlotte','Simon','Hélène C.','Charles','Carole','Jerem','Soline','Julien','Anna','Corentin','Églantine']},
+  {j:'7/8/2026',d:'14:45',f:'15:00',n:'Briefing général',x:"Rappel du planning par Julien, Soline, Thomas, Corentin et Anna.",t:'Volant',p:['Thomas','Pauline','Joël','Anne-Lise','Samy','Marie-Laure','Thierry','Gwel','Géraldine','Ariana','AJ','Charlotte','Simon','Hélène C.','Charles','Carole','Jerem','Soline','Julien','Anna','Corentin','Églantine']},
+  {j:'7/8/2026',d:'14:45',f:'19:00',n:'Supervision cuisine',x:"Diriger la cuisine : taboulé, cuisson pâtes, cakes, gâteaux.",t:'Cuisine',p:['Thomas']},
+  {j:'7/8/2026',d:'15:00',f:'15:30',n:'Réception vaisselle et matériel loué',x:"Réceptionner, ranger.",t:'Volant',p:['Charlotte','Julien']},
+  {j:'7/8/2026',d:'15:00',f:'16:00',n:'Installation guirlandes, tables et boules à facettes',x:"Tables en place rapidement pour la fleuriste.",t:'Manutention',p:['Samy','Charles','Corentin','AJ','Simon','Jerem','Thierry','Joël']},
+  {j:'7/8/2026',d:'15:00',f:'16:00',n:'Confection cakes',x:"Suivre la recette.",t:'Cuisine',p:['Marie-Laure','Géraldine','Thomas']},
+  {j:'7/8/2026',d:'15:00',f:'16:00',n:'Confection clafoutis',x:"Suivre la recette.",t:'Cuisine',p:['Anne-Lise','Ariana','Thomas']},
+  {j:'7/8/2026',d:'15:00',f:'16:00',n:'Garde enfants 15h–16h',x:"(Carole rejoint Cuisine/Découpe après 16h)",t:'Garde',p:['Carole','Pauline']},
+  {j:'7/8/2026',d:'15:00',f:'16:00',n:'Joker — là où il y a besoin',x:"Prenez des initiatives.",t:'Volant',p:['Anna','Charlotte','Gwel']},
+  {j:'7/8/2026',d:'15:00',f:'17:00',n:'Découpe',x:"Fruits et légumes selon le plan de Thomas.",t:'Cuisine',p:['Hélène C.','Églantine','Thomas','Carole']},
+  {j:'7/8/2026',d:'15:30',f:'16:30',n:'Accueil et aide fleuriste (Adeline)',x:"Déco arche cérémonie puis salle.",t:'Manutention',p:['Corentin','Samy']},
+  {j:'7/8/2026',d:'16:00',f:'17:00',n:'Garde enfants 16h–17h',x:'',t:'Garde',p:['Ariana','Charlotte']},
+  {j:'7/8/2026',d:'16:00',f:'17:00',n:"Dressage des tables, déco et livre d'or",x:"Une fois les tables en place.",t:'Déco',p:['Pauline','Anna','Soline','Géraldine','Anne-Lise','Marie-Laure']},
+  {j:'7/8/2026',d:'16:30',f:'17:00',n:'Installation bancs cérémonie',x:'',t:'Manutention',p:['Samy','Charles','Corentin','AJ','Simon','Jerem','Thierry','Joël']},
+  {j:'7/8/2026',d:'17:00',f:'18:00',n:'Garde enfants 17h–18h',x:'',t:'Garde',p:['Marie-Laure','Anne-Lise']},
+  {j:'7/8/2026',d:'17:00',f:'18:00',n:'Habillage chaises et mange-debout',x:"Il y en a beaucoup, on a besoin de monde.",t:'Déco',p:['Anne-Lise','Marie-Laure','Hélène C.','Géraldine','Pauline','Églantine','Charlotte']},
+  {j:'7/8/2026',d:'17:00',f:'18:00',n:'Branchements et tests son cérémonie',x:"Sinon samedi matin si météo menaçante.",t:'Répétition',p:['Thierry','Jerem','Julien','Joël']},
+  {j:'7/8/2026',d:'17:00',f:'18:00',n:'Installations restantes',x:"Guirlandes, jeux en bois. À voir sur place.",t:'Manutention',p:['Samy','Charles','Corentin','AJ','Simon','Soline','Anna','Ariana']},
+  {j:'7/8/2026',d:'17:30',f:'18:00',n:'Organisation frigos',x:"Prioriser l'espace.",t:'Cuisine',p:['Charlotte','Thomas']},
+  {j:'7/8/2026',d:'18:00',f:'18:30',n:'Répétition cérémonie — mariés',x:"Sous la direction d'Anna. Soline, Julien et Corentin.",t:'Répétition',p:['Soline','Julien','Anna','Corentin']},
+  {j:'7/8/2026',d:'18:00',f:'19:00',n:'Plonge',x:'',t:'Cuisine',p:['Carole','Thomas','Ariana','AJ','Simon']},
+  {j:'7/8/2026',d:'18:00',f:'19:00',n:'Garde enfants 18h–19h',x:'',t:'Garde',p:['Hélène C.','Géraldine','Églantine']},
+  {j:'7/8/2026',d:'18:30',f:'19:30',n:'Répétition cérémonie — sans les mariés',x:"Sous la direction d'Anna.",t:'Répétition',p:['Pauline','Anne-Lise','Joël','Samy','Thierry','Charlotte','Soline','Julien','Jerem','Anna','Corentin']},
+  {j:'7/8/2026',d:'20:00',f:'21:30',n:'🥘 Dîner vendredi',x:"Repas du soir tous ensemble. Mini briefing du lendemain.",t:'Évènement',p:['Thomas','Pauline','Joël','Anne-Lise','Samy','Marie-Laure','Thierry','Gwel','Géraldine','Ariana','AJ','Charlotte','Simon','Hélène C.','Charles','Carole','Jerem','Soline','Julien','Anna','Corentin','Églantine']},
+  {j:'7/8/2026',d:'21:30',f:'22:00',n:'Vaisselle',x:"Tout le monde, pour que ça aille vite.",t:'Cuisine',p:['Thomas','Pauline','Joël','Anne-Lise','Samy','Marie-Laure','Thierry','Gwel','Géraldine','Ariana','AJ','Charlotte','Simon','Hélène C.','Charles','Carole','Jerem','Soline','Julien','Anna','Corentin','Églantine']},
+  {j:'8/8/2026',d:'09:30',f:'10:00',n:'Installation tables traiteurs',x:"Mange-debout, 4 tables 1m80, nappes.",t:'Volant',p:['Simon','Joël','Anne-Lise','Soline','Jerem','Corentin','Thierry']},
+  {j:'8/8/2026',d:'10:30',f:'11:00',n:'Préparation eaux parfumées',x:"Suivre la recette.",t:'Cuisine',p:['Thomas','Géraldine','Simon']},
+  {j:'8/8/2026',d:'11:00',f:'11:30',n:'Accueil desserts (Priscilla & Arnaud)',x:"Réceptionner les choux, mettre au frigo.",t:'Volant',p:['Pauline','Charlotte']},
+  {j:'8/8/2026',d:'13:00',f:'13:15',n:"Installation poste d'accueil invités",x:"Mange-debout, liste invités, marque-verre, sirops, autocollants.",t:'Volant',p:['Anna','Anne-Lise','Marie-Laure','Soline','Pauline']},
+  {j:'8/8/2026',d:'13:15',f:'13:45',n:'📸 Photos mariés',x:"Soline & Julien. Et Ulysse un peu !",t:'Évènement',p:['Soline','Julien','Gwel']},
+  {j:'8/8/2026',d:'13:45',f:'14:15',n:'📸 Photos de groupe — tous en tenue',x:"Tout le monde prêt. Sous la direction de Gwel.",t:'Évènement',p:['Thomas','Pauline','Joël','Anne-Lise','Samy','Marie-Laure','Thierry','Gwel','Géraldine','Ariana','AJ','Charlotte','Simon','Hélène C.','Charles','Carole','Jerem','Soline','Julien','Anna','Corentin','Églantine']},
+  {j:'8/8/2026',d:'14:15',f:'15:00',n:'Accueil des invités',x:"Aider à se garer, donner autocollant + marque-verre, orienter.",t:'Volant',p:['Anna','Anne-Lise','Marie-Laure','Thierry','Pauline','Samy','Jerem','Joël']},
+  {j:'8/8/2026',d:'14:30',f:'14:45',n:'Accueil DJ (Nico Doro)',x:"L'orienter.",t:'Volant',p:['Jerem']},
+  {j:'8/8/2026',d:'14:30',f:'15:00',n:"Accueil traiteur vin d'honneur (Benoît Naud)",x:"Orienter, gestion boissons et verrerie.",t:'Volant',p:['Charlotte']},
+  {j:'8/8/2026',d:'15:00',f:'16:00',n:'✨ Cérémonie',x:"La vraie !",t:'Évènement',p:['Thomas','Pauline','Joël','Anne-Lise','Samy','Marie-Laure','Thierry','Gwel','Géraldine','Ariana','AJ','Charlotte','Simon','Hélène C.','Charles','Carole','Jerem','Soline','Julien','Anna','Corentin','Églantine']},
+  {j:'8/8/2026',d:'16:00',f:'16:10',n:'📸 Photo avec tous les invités',x:"Gwel aux manettes.",t:'Évènement',p:['Thomas','Pauline','Joël','Anne-Lise','Samy','Marie-Laure','Thierry','Gwel','Géraldine','Ariana','AJ','Charlotte','Simon','Hélène C.','Charles','Carole','Jerem','Soline','Julien','Anna','Corentin','Églantine']},
+  {j:'8/8/2026',d:'16:10',f:'16:15',n:'Déplacement mange-debout → cocktail',x:"",t:'Manutention',p:['Samy','Simon','Joël','Thomas']},
+  {j:'8/8/2026',d:'16:10',f:'17:00',n:'🎲 Jeu surprise',x:"En groupe. Aidez les gens à trouver leur équipe selon l'autocollant !",t:'Évènement',p:['Thomas','Pauline','Joël','Anne-Lise','Samy','Marie-Laure','Thierry','Gwel','Géraldine','Ariana','AJ','Charlotte','Simon','Hélène C.','Charles','Carole','Jerem','Soline','Julien','Anna','Corentin','Églantine']},
+  {j:'8/8/2026',d:'16:30',f:'17:00',n:'Accueil prestataires enfants (Odyssée des Kids)',x:"Point de contact toute la journée.",t:'Garde',p:['Pauline']},
+  {j:'8/8/2026',d:'16:30',f:'18:30',n:"🍹 Vin d'honneur",x:"",t:'Évènement',p:['Thomas','Pauline','Joël','Anne-Lise','Samy','Marie-Laure','Thierry','Gwel','Géraldine','Ariana','AJ','Charlotte','Simon','Hélène C.','Charles','Carole','Jerem','Soline','Julien','Anna','Corentin','Églantine']},
+  {j:'8/8/2026',d:'17:00',f:'02:00',n:'👶 Accueil enfants — Odyssée des Kids',x:"Dépôt enfants à partir de 17h. Référente = Pauline.",t:'Garde',p:['Pauline']},
+  {j:'8/8/2026',d:'17:30',f:'18:00',n:'Accueil fouées (Moulin de Sarré)',x:"Installation, buffet, ranger le pain.",t:'Volant',p:['Samy','Marie-Laure','Anna','Anne-Lise']},
+  {j:'8/8/2026',d:'18:00',f:'18:15',n:'Déplacement bancs → chapelle (impro)',x:"",t:'Manutention',p:['Samy']},
+  {j:'8/8/2026',d:'18:15',f:'18:30',n:"Spectacle d'impro — Rabattage du public",x:"Clôturer le cocktail, inciter les invités à rejoindre la chapelle.",t:'Évènement',p:['Charlotte','Géraldine','Samy']},
+  {j:'8/8/2026',d:'18:30',f:'19:30',n:"🎭 Spectacle d'impro",x:"",t:'Évènement',p:['Thomas','Pauline','Joël','Anne-Lise','Samy','Marie-Laure','Thierry','Gwel','Géraldine','Ariana','AJ','Charlotte','Simon','Hélène C.','Charles','Carole','Jerem','Soline','Julien','Anna','Corentin','Églantine']},
+  {j:'8/8/2026',d:'19:30',f:'19:45',n:"Déplacement tables vin d'honneur → buffet fouées",x:"Changer nappes, remettre un peu de déco.",t:'Manutention',p:['Simon','Thomas','Anne-Lise','Joël','Jerem','Corentin','Thierry','Anna']},
+  {j:'8/8/2026',d:'19:45',f:'20:00',n:'Bar — Briefing',x:"Fonctionnement bar, plonge, rondes.",t:'Bar',p:['Jerem','Samy','Géraldine','Corentin','Charlotte']},
+  {j:'8/8/2026',d:'20:00',f:'21:00',n:'Bar — Permanence 20h–21h',x:"Rondes, plonge, cocktails.",t:'Bar',p:['Pauline','Géraldine']},
+  {j:'8/8/2026',d:'20:00',f:'22:00',n:'🥙 Repas du soir — Fouées',x:"",t:'Évènement',p:['Thomas','Pauline','Joël','Anne-Lise','Samy','Marie-Laure','Thierry','Gwel','Géraldine','Ariana','AJ','Charlotte','Simon','Hélène C.','Charles','Carole','Jerem','Soline','Julien','Anna','Corentin','Églantine']},
+  {j:'8/8/2026',d:'21:00',f:'22:00',n:'Bar — Permanence 21h–22h',x:"Rondes, plonge, cocktails.",t:'Bar',p:['Géraldine']},
+  {j:'8/8/2026',d:'21:45',f:'22:00',n:'Enlever des tables pour le dancefloor',x:"2–4 tables à retirer.",t:'Manutention',p:['Thomas','Pauline','Joël','Samy','Thierry','Simon','Jerem','Anna','Corentin']},
+  {j:'8/8/2026',d:'22:00',f:'23:00',n:'Bar — Permanence 22h–23h',x:"Rondes, plonge, cocktails.",t:'Bar',p:['Corentin']},
+  {j:'8/8/2026',d:'22:00',f:'05:00',n:'🪩 Dancefloor',x:"",t:'Évènement',p:['Thomas','Pauline','Joël','Anne-Lise','Samy','Marie-Laure','Thierry','Gwel','Géraldine','Ariana','AJ','Charlotte','Simon','Hélène C.','Charles','Carole','Jerem','Soline','Julien','Anna','Corentin','Églantine']},
+  {j:'8/8/2026',d:'22:45',f:'23:30',n:'Service du dessert (choux)',x:"Aller les chercher, bien présenter.",t:'Cuisine',p:['Julien','Soline','Samy','Pauline','Anna','Jerem']},
+  {j:'8/8/2026',d:'23:00',f:'00:00',n:'Bar — Permanence 23h–00h',x:"Rondes, plonge, cocktails.",t:'Bar',p:['Jerem','Samy']},
+  {j:'8/8/2026',d:'00:00',f:'01:00',n:'Bar — Permanence 00h–1h',x:"Rondes, plonge, cocktails.",t:'Bar',p:['Samy','Jerem']},
+  {j:'8/8/2026',d:'01:00',f:'02:00',n:'Bar — Permanence 1h–2h',x:"Rondes, plonge, cocktails.",t:'Bar',p:['Corentin']},
+  {j:'8/8/2026',d:'01:00',f:'02:00',n:'Heure max récupération enfants',x:"Les animatrices doivent être parties.",t:'Garde',p:['Pauline']},
+  {j:'8/8/2026',d:'02:00',f:'06:00',n:'Bar — Permanence 2h–matin',x:"Plonge, rangement, nettoyage. Merci !",t:'Bar',p:['Jerem','Samy','Corentin','Charlotte']},
+  {j:'9/8/2026',d:'09:00',f:'10:00',n:'Préparation et installation brunch',x:"Découpe fruits, café, salades, yaourt, charcuterie, tables, nappes.",t:'Cuisine',p:['Anne-Lise','Marie-Laure','Pauline','Anna','Soline','Julien','Joël','Charlotte','Thierry','Thomas','Simon']},
+  {j:'9/8/2026',d:'15:30',f:'17:00',n:'Rangement brunch',x:"Pour ceux qui restent. Merci !",t:'Cuisine',p:['Thomas','Pauline','Joël','Anne-Lise','Samy','Marie-Laure','Thierry','Gwel','Géraldine','Ariana','AJ','Charlotte','Simon','Carole','Jerem','Soline','Julien','Anna','Corentin','Églantine']},
+];
+
+// ── helpers ───────────────────────────────────────────────────────────────────
+function isTM(p){return p.filter(x=>CORE.includes(x)).length>=ALL_T;}
+function avecStr(p,self){
+  if(isTM(p))return'tout le monde';
+  const o=p.filter(x=>x!==self);
+  return o.length?o.join(', '):'—';
+}
+function whoMacro(p){return isTM(p)?'Tout le monde':(p.length<=3?p.join(', '):p.slice(0,3).join(', ')+' +'+(p.length-3));}
+const BC={Cuisine:'b-Cuisine',Manutention:'b-Manutention',Volant:'b-Volant','Déco':'b-Déco',Bar:'b-Bar',Garde:'b-Garde',Répétition:'b-Répétition',Évènement:'b-Évènement'};
+const BL={Cuisine:'Cuisine',Manutention:'Manutention',Volant:'Orga','Déco':'Déco',Bar:'Bar',Garde:'Enfants',Répétition:'Répét.',Évènement:'Ensemble'};
+const MCC={Cuisine:'mc-Cuisine',Manutention:'mc-Manutention',Volant:'mc-Volant','Déco':'mc-Déco',Bar:'mc-Bar',Garde:'mc-Garde',Répétition:'mc-Répétition',Évènement:'mc-Évènement'};
+const PCOLS=['#E07A3D','#3B6B47','#9B8EC4','#D4839A','#C9A000','#5B9BD5','#C17E4A'];
+function pcol(n){return PCOLS[Math.max(0,CORE.indexOf(n))%PCOLS.length];}
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function showView(name,btn){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── individual ────────────────────────────────────────────────────────────────
+function buildIndividual(){
+  const grid=document.getElementById('person-grid');
+  const cont=document.getElementById('plannings-container');
+  CORE.forEach(person=>{
+    const btn=document.createElement('button');
+    btn.className='person-btn';btn.textContent=person;btn.onclick=()=>selectPerson(person);
+    grid.appendChild(btn);
+
+    const myTasks=TASKS.filter(t=>t.p.includes(person)).sort((a,b)=>(a.j+a.d).localeCompare(b.j+b.d));
+    const div=document.createElement('div');
+    div.className='person-planning';
+    div.id='pl_'+person.replace(/[^a-zA-Z]/g,'_');
+    const color=pcol(person);
+
+    let html=`<div class="person-header">
+      <div class="person-avatar" style="background:${color}22;color:${color}">${person[0]}</div>
+      <div class="person-name">${person}</div>
+    </div>`;
+
+    JOURS.forEach(jour=>{
+      const jt=myTasks.filter(t=>t.j===jour);
+      if(!jt.length)return;
+      const uid='tog_'+person.replace(/[^a-zA-Z]/g,'_')+'_'+jour.replace(/\//g,'');
+      html+=`<div class="day-section">
+        <button class="day-toggle open" id="${uid}" onclick="toggleDay('${uid}')">
+          <span class="day-toggle-label">${JOUR_FULL[jour]}</span>
+          <span class="day-toggle-arrow">▼</span>
+        </button>
+        <div class="day-body" id="body_${uid}" style="max-height:2000px">`;
+      jt.forEach(t=>{
+        const avec=avecStr(t.p,person);
+        html+=`<div class="task-row${t.t==='Évènement'?' is-event':''}">
+          <div class="task-time">${t.d}<div class="task-time-end">${t.f}</div></div>
+          <div>
+            <div class="task-name">${t.n}</div>
+            ${t.x?`<div class="task-desc">${t.x}</div>`:''}
+            <div class="task-avec">Avec\u00a0: <b>${avec}</b></div>
+          </div>
+          <div style="text-align:right"><span class="badge ${BC[t.t]||'b-Volant'}">${BL[t.t]||t.t}</span></div>
+        </div>`;
+      });
+      html+=`</div></div>`;
+    });
+    div.innerHTML=html;cont.appendChild(div);
+  });
+  selectPerson(CORE[0]);
+}
+
+function toggleDay(uid){
+  const btn=document.getElementById(uid),body=document.getElementById('body_'+uid);
+  const open=btn.classList.contains('open');
+  btn.classList.toggle('open',!open);
+  if(open){body.style.maxHeight=body.scrollHeight+'px';requestAnimationFrame(()=>{body.style.maxHeight='0';body.classList.add('closed');});}
+  else{body.classList.remove('closed');body.style.maxHeight=body.scrollHeight+'px';setTimeout(()=>body.style.maxHeight='2000px',260);}
+}
+function selectPerson(name){
+  document.querySelectorAll('.person-btn').forEach(b=>b.classList.toggle('active',b.textContent===name));
+  document.querySelectorAll('.person-planning').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pl_'+name.replace(/[^a-zA-Z]/g,'_'))?.classList.add('active');
+}
+
+// ── macro ─────────────────────────────────────────────────────────────────────
+function buildMacro(){
+  const cont=document.getElementById('macro-days');
+  JOURS.forEach(jour=>{
+    const dayTasks=TASKS.filter(t=>t.j===jour).sort((a,b)=>a.d.localeCompare(b.d));
+    const matin=dayTasks.filter(t=>t.d<'14:00');
+    // soir: 14:00+ but for samedi also include 00:xx-06:xx
+    const soir=dayTasks.filter(t=>t.d>='14:00'||t.d<'08:00');
+
+    const card=document.createElement('div');card.className='macro-day-card';
+    card.innerHTML=`<div class="macro-day-head">${JOUR_FULL[jour]}</div>`;
+
+    function makeSection(tasks,label,openByDefault){
+      if(!tasks.length)return'';
+      const sid='ms_'+jour.replace(/\//g,'')+'_'+label;
+      let html=`<button class="macro-section-toggle${openByDefault?' open':''}" id="${sid}" onclick="toggleMacroSec('${sid}')">
+        <span class="macro-sec-label">${label}</span>
+        <span class="macro-sec-arrow">▼</span>
+      </button>
+      <div class="macro-sec-body${openByDefault?'':' closed'}" id="body_${sid}" style="max-height:${openByDefault?'3000':'0'}px">
+        <div style="height:6px"></div>`;
+      tasks.forEach(t=>{
+        const who=whoMacro(t.p);
+        const descSafe=esc(t.x||'');
+        const whoSafe=esc(who);
+        const nameSafe=esc(t.n);
+        html+=`<div class="macro-card ${MCC[t.t]||'mc-Volant'}">
+          <div class="mac-time">${t.d}–${t.f}</div>
+          <div class="mac-n">${t.n}</div>
+          <div class="mac-w">${who}</div>
+          <div class="tip">
+            <div class="tip-name">${nameSafe}</div>
+            <div class="tip-time">${t.d} → ${t.f}</div>
+            ${t.x?`<div class="tip-desc">${descSafe}</div>`:''}
+            <div class="tip-who">${whoSafe}</div>
+          </div>
+        </div>`;
+      });
+      html+=`<div style="height:6px"></div></div>`;
+      return html;
+    }
+
+    card.innerHTML+=makeSection(matin,'Matin',true)+makeSection(soir,'Après-midi & nuit',true);
+    cont.appendChild(card);
+  });
+}
+
+function toggleMacroSec(sid){
+  const btn=document.getElementById(sid),body=document.getElementById('body_'+sid);
+  const open=btn.classList.contains('open');
+  btn.classList.toggle('open',!open);
+  if(open){body.style.maxHeight=body.scrollHeight+'px';requestAnimationFrame(()=>{body.style.maxHeight='0';body.classList.add('closed');});}
+  else{body.classList.remove('closed');body.style.maxHeight=body.scrollHeight+'px';setTimeout(()=>body.style.maxHeight='3000px',260);}
+}
+
+// ── team tables ───────────────────────────────────────────────────────────────
+function buildTeamTable(type,tbodyId){
+  const tbody=document.getElementById(tbodyId);
+  const filtered=TASKS.filter(t=>t.t===type).sort((a,b)=>(a.j+a.d).localeCompare(b.j+b.d));
+  let lastJ=null;
+  filtered.forEach(t=>{
+    if(t.j!==lastJ){lastJ=t.j;const sep=document.createElement('tr');sep.className='day-sep-row';sep.innerHTML=`<td colspan="4">${JOUR_FULL[t.j]}</td>`;tbody.appendChild(sep);}
+    const tr=document.createElement('tr');
+    const who=isTM(t.p)?'Tout le monde':t.p.join(', ');
+    tr.innerHTML=`<td class="t-time">${t.d}–${t.f}</td><td><strong>${t.n}</strong></td><td class="t-desc">${t.x||'—'}</td><td style="font-size:13px">${who}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+buildIndividual();buildMacro();
+buildTeamTable('Cuisine','tbody-cuisine');
+buildTeamTable('Manutention','tbody-manutention');
+</script>
+</body>
+</html>
