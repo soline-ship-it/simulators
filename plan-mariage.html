@@ -63,7 +63,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
 .ii:hover .tip{display:block;animation:ttin .15s ease}
 @keyframes ttin{from{opacity:0;transform:translateX(-50%) translateY(3px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 
-/* ── MACRO GRID TIMELINE ──────────────────────────────────────────────────── */
+/* ── DONE STATE ──────────────────────────────────────────────────────────── */
+.task-done{opacity:.45!important;text-decoration:line-through}
+.task-done .mc-name,.task-done .tc-name{text-decoration:line-through}
+.mc.task-done{opacity:.4}
+.check-btn{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;border:2px solid currentColor;background:transparent;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;opacity:.5;transition:all .15s;flex-shrink:0;padding:0;color:inherit}
+.check-btn:hover,.check-btn.checked{opacity:1;background:var(--green);border-color:var(--green);color:#fff}
+.mc{position:relative}
+
+
 .mac-outer{overflow-x:auto}
 .mac-grid{display:grid;gap:0;border:1px solid var(--border);border-radius:10px;overflow:hidden;min-width:600px}
 /* columns: time-axis | logistics (flex) | events */
@@ -188,9 +196,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
 <script>
 const TASKS=[
   {j:"6/8/2026",d:"14:00",f:"16:30",n:"Trajets Trélazé -> Lieu -> Trélazé -> Rendre le camion -> Lieu",x:"Aller-retour avec le camion d'Adeline (à récupérer à 13h). Charger, décharger les affaires.",t:"Volant",p:["Soline","Julien","Samy","Anna"]},
-  {j:"6/8/2026",d:"16:00",f:"18:00",n:"Montage barnum",x:"À voir en fonction du temps et de qui est déjà sur place, sinon ce sera le vendredi matin ! Choix de l'emplacement puis montage efficace.",t:"Manutention",p:["Samy","Joël","Thierry","Jerem","Simon"]},
+  {j:"6/8/2026",d:"16:00",f:"18:00",n:"Montage barnum",x:"À voir en fonction du temps et de qui est déjà sur place, sinon ce sera le vendredi matin ! Choix de l'emplacement puis montage efficace.",t:"Manutention",p:["Samy","Joël","Thierry","Jerem","Simon","Corentin","AJ"]},
   {j:"6/8/2026",d:"16:00",f:"18:00",n:"Allers-retours éventuels jusque la gare",x:"Aller chercher les arrivants.",t:"Volant",p:["Jerem","Carole"]},
-  {j:"6/8/2026",d:"16:00",f:"18:00",n:"Organiser / ranger les affaires sur place",x:"Commencer à organiser les frigos, optimiser le espaces pour stocker la déco, etc.",t:"Volant",p:["Anne-Lise","Marie-Laure","Soline","Anna","Charlotte"]},
+  {j:"6/8/2026",d:"16:00",f:"18:00",n:"Organiser / ranger les affaires sur place",x:"Commencer à organiser les frigos, optimiser le espaces pour stocker la déco, etc.",t:"Volant",p:["Anne-Lise","Marie-Laure","Soline","Anna","Charlotte","Églantine","Ariana"]},
   {j:"6/8/2026",d:"16:30",f:"18:30",n:"Dernières courses",x:"Le but : aller au Super U d'à côté et récupérer une commande / acheter les derniers trucs dont on a besoin. Puis organiser les frigos.",t:"Volant",p:["Julien","Soline","Anna"]},
   {j:"6/8/2026",d:"18:00",f:"18:45",n:"Branchements et tests son cérémonie",x:"Dès le jeudi, si on peut prendre de l'avance et si vous voulez faire de premières répétitions pour la musique.",t:"Répétition",p:["Thierry","Jerem","Julien","Samy","Joël"]},
   {j:"6/8/2026",d:"18:30",f:"19:15",n:"[Option] Répétition chansons Cérémonie",x:"Si dès le jeudi vous voulez vous entraîner, surtout pour les chansons ou même faire un filage cérémonie, c'est possible !",t:"Répétition",p:["Thierry","Joël","Anne-Lise","Charlotte","Samy","Pauline","Anna","Jerem","Marie-Laure","Corentin","Soline","Julien"]},
@@ -276,6 +284,29 @@ const MC={Cuisine:'mc-Cuisine',Manutention:'mc-Manutention',Volant:'mc-Volant','
 const PCOLS=['#E07A3D','#3B6B47','#9B8EC4','#D4839A','#C9A000','#5B9BD5','#C17E4A'];
 
 // Tasks use native Unicode characters — no fix needed
+
+// ── Task IDs + check state ───────────────────────────────────────────────────
+TASKS.forEach((t,i)=>{ t._id='t'+i; });
+const CHECKED_KEY='sj_checked_tasks';
+function loadChecked(){
+  try{ return new Set(JSON.parse(localStorage.getItem(CHECKED_KEY)||'[]')); }
+  catch(e){ return new Set(); }
+}
+function saveChecked(set){
+  try{ localStorage.setItem(CHECKED_KEY,JSON.stringify([...set])); }catch(e){}
+}
+let checkedIds=loadChecked();
+
+function toggleCheck(id){
+  if(checkedIds.has(id)) checkedIds.delete(id);
+  else checkedIds.add(id);
+  saveChecked(checkedIds);
+  // Update all elements bearing this task id
+  document.querySelectorAll('[data-tid="'+id+'"]').forEach(el=>{
+    el.classList.toggle('task-done', checkedIds.has(id));
+  });
+}
+function isChecked(id){ return checkedIds.has(id); }
 
 function isTM(p){return p.filter(x=>CORE.includes(x)).length>=14;}
 function avec(p,me){
@@ -395,7 +426,8 @@ function buildIndiv(){
           const av=avec(t.p,person);
           const whoStr=isTM(t.p)?'Tout le monde':t.p.join(', ');
           const card=document.createElement('div');
-          card.className='task-card'+(t.t==='Évènement'?' ev':'');
+          card.className='task-card'+(t.t==='Évènement'?' ev':'')+(isChecked(t._id)?' task-done':'');
+          card.dataset.tid=t._id;
           card.innerHTML=
             '<div class="tc-time"><div class="tc-ts">'+t.d+'</div><div class="tc-te">'+t.f+'</div></div>'+
             '<div class="tc-body">'+
@@ -586,10 +618,17 @@ function buildMacro(){
 
           startingHere.forEach(tt=>{
             const card=document.createElement('div');
-            card.className='mc '+(MC[tt.t]||'mc-Volant');
+            card.className='mc '+(MC[tt.t]||'mc-Volant')+(isChecked(tt._id)?' task-done':'');
+            card.dataset.tid=tt._id;
+            const btn=document.createElement('button');
+            btn.className='check-btn'+(isChecked(tt._id)?' checked':'');
+            btn.title='Marquer comme fait';
+            btn.textContent='✓';
+            btn.onclick=function(e){e.stopPropagation();toggleCheck(tt._id);this.classList.toggle('checked',checkedIds.has(tt._id));};
             card.innerHTML='<div class="mc-time">'+tt.d+'–'+tt.f+'</div>'
               +'<div class="mc-name">'+sn(tt.n)+'</div>'
               +'<div class="mc-who">'+who(tt.p)+'</div>';
+            card.appendChild(btn);
             td.appendChild(card);
           });
           tr.appendChild(td);
@@ -618,10 +657,17 @@ function buildMacro(){
           // If multiple events start here, stack them
           startingEv.forEach(tt=>{
             const card=document.createElement('div');
-            card.className='mc mc-Évènement';
+            card.className='mc mc-Évènement'+(isChecked(tt._id)?' task-done':'');
+            card.dataset.tid=tt._id;
+            const btn=document.createElement('button');
+            btn.className='check-btn'+(isChecked(tt._id)?' checked':'');
+            btn.title='Marquer comme fait';
+            btn.textContent='✓';
+            btn.onclick=function(e){e.stopPropagation();toggleCheck(tt._id);this.classList.toggle('checked',checkedIds.has(tt._id));};
             card.innerHTML='<div class="mc-time">'+tt.d+'–'+tt.f+'</div>'
               +'<div class="mc-name">'+sn(tt.n)+'</div>'
               +'<div class="mc-who">'+who(tt.p)+'</div>';
+            card.appendChild(btn);
             td.appendChild(card);
           });
           tr.appendChild(td);
