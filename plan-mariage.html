@@ -63,7 +63,28 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
 .ii:hover .tip{display:block;animation:ttin .15s ease}
 @keyframes ttin{from{opacity:0;transform:translateX(-50%) translateY(3px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 
-/* ── DONE STATE ──────────────────────────────────────────────────────────── */
+/* ── VIEW TOGGLE (liste / macro) ─────────────────────────────────────────── */
+.view-toggle{display:flex;gap:6px;margin-bottom:14px}
+.vtbtn{background:var(--white);border:1.5px solid var(--border);border-radius:100px;padding:5px 16px;font-size:13px;font-weight:500;cursor:pointer;color:var(--gray);transition:all .12s;font-family:'DM Sans',sans-serif;letter-spacing:.2px}
+.vtbtn:hover:not(.active){border-color:var(--green);color:var(--green)}
+.vtbtn.active.vt-list{background:var(--green);border-color:var(--green);color:#fff}
+.vtbtn.active.vt-macro{background:var(--dark);border-color:var(--dark);color:#fff}
+.day-list{display:block}.day-list.hidden{display:none}
+.day-macro{display:none}.day-macro.visible{display:block}
+/* highlight mode: faded = not mine */
+.mc.dim{opacity:.5}
+/* category filter chips */
+.catfilter{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;align-items:center}
+.catfilter-lbl{font-size:12px;color:var(--gray);letter-spacing:.5px;text-transform:uppercase;margin-right:2px}
+.catchip{display:flex;align-items:center;gap:6px;font-size:14px;background:var(--white);border:1.5px solid var(--border);border-radius:100px;padding:5px 13px;cursor:pointer;transition:all .12s;user-select:none;font-weight:500}
+.catchip:hover{border-color:var(--green)}
+.catchip.on{background:var(--green);border-color:var(--green);color:#fff}
+.catchip .catdot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.catchip.on .catdot{outline:1.5px solid rgba(255,255,255,.6)}
+/* dimmed by category filter */
+.mc.catdim{opacity:.14}
+
+
 .task-done{opacity:.45!important;text-decoration:line-through}
 .task-done .mc-name,.task-done .tc-name{text-decoration:line-through}
 .mc.task-done{opacity:.4}
@@ -153,8 +174,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
   <div class="nav-tabs">
     <button class="nav-tab active" onclick="showView('indiv',this)">Plannings individuels</button>
     <button class="nav-tab" onclick="showView('macro',this)">Macro planning</button>
-    <button class="nav-tab" onclick="showView('cuisine',this)">Cuisine</button>
-    <button class="nav-tab" onclick="showView('manut',this)">Manutention</button>
     <button class="nav-tab" onclick="showView('bar',this)">Bar — Samedi</button>
   </div>
 </nav>
@@ -164,27 +183,20 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark)}
   <div id="person-panels"></div>
 </div>
 <div class="view" id="view-macro">
-  <div class="ph"><h1>Planning général</h1></div>
-  <div class="legend">
-    <span class="legend-lbl">Légende</span>
-    <div class="leg"><div class="leg-d" style="background:var(--lo);border:1px solid #E07A3D"></div>Cuisine</div>
-    <div class="leg"><div class="leg-d" style="background:var(--lg);border:1px solid #3B6B47"></div>Manutention</div>
-    <div class="leg"><div class="leg-d" style="background:var(--ll);border:1px solid #9B8EC4"></div>Orga</div>
-    <div class="leg"><div class="leg-d" style="background:var(--lp);border:1px solid #D4839A"></div>Déco</div>
-    <div class="leg"><div class="leg-d" style="background:var(--ly);border:1px solid #C9A000"></div>Bar</div>
-    <div class="leg"><div class="leg-d" style="background:var(--lb);border:1px solid #5B9BD5"></div>Enfants</div>
-    <div class="leg"><div class="leg-d" style="background:#2C2825"></div>Moments ensemble</div>
+  <div class="ph"><h1>Planning général</h1><p>Clique sur une catégorie pour la mettre en avant</p></div>
+  <div class="catfilter" id="cat-filter">
+    <span class="catfilter-lbl">Filtrer</span>
+    <div class="catchip" data-cat="Cuisine"><span class="catdot" style="background:#E07A3D"></span>Cuisine</div>
+    <div class="catchip" data-cat="Manutention"><span class="catdot" style="background:#3B6B47"></span>Manutention</div>
+    <div class="catchip" data-cat="Volant"><span class="catdot" style="background:#9B8EC4"></span>Orga</div>
+    <div class="catchip" data-cat="Déco"><span class="catdot" style="background:#D4839A"></span>Déco</div>
+    <div class="catchip" data-cat="Bar"><span class="catdot" style="background:#C9A000"></span>Bar</div>
+    <div class="catchip" data-cat="Garde"><span class="catdot" style="background:#5B9BD5"></span>Enfants</div>
+    <div class="catchip" data-cat="Répétition"><span class="catdot" style="background:#999"></span>Répét.</div>
+    <div class="catchip" data-cat="Évènement"><span class="catdot" style="background:#2C2825"></span>Ensemble</div>
   </div>
   <div class="tabs" id="macro-tabs"></div>
   <div id="macro-panels"></div>
-</div>
-<div class="view" id="view-cuisine">
-  <div class="ph"><h1>Cuisine</h1></div>
-  <table class="tt-table"><thead><tr><th>Horaire</th><th>Activité</th><th>Description</th><th>Équipe</th></tr></thead><tbody id="tb-cuisine"></tbody></table>
-</div>
-<div class="view" id="view-manut">
-  <div class="ph"><h1>Manutention</h1></div>
-  <table class="tt-table"><thead><tr><th>Horaire</th><th>Activité</th><th>Description</th><th>Équipe</th></tr></thead><tbody id="tb-manut"></tbody></table>
 </div>
 <div class="view" id="view-bar">
   <div class="ph"><h1>Bar — Samedi 8 août</h1></div>
@@ -199,7 +211,7 @@ const TASKS=[
   {j:"6/8/2026",d:"16:00",f:"18:00",n:"Montage barnum",x:"À voir en fonction du temps et de qui est déjà sur place, sinon ce sera le vendredi matin ! Choix de l'emplacement puis montage efficace.",t:"Manutention",p:["Samy","Joël","Thierry","Jerem","Simon","Corentin","AJ"]},
   {j:"6/8/2026",d:"16:00",f:"18:00",n:"Allers-retours éventuels jusque la gare",x:"Aller chercher les arrivants.",t:"Volant",p:["Jerem","Carole"]},
   {j:"6/8/2026",d:"16:00",f:"18:00",n:"Organiser / ranger les affaires sur place",x:"Commencer à organiser les frigos, optimiser le espaces pour stocker la déco, etc.",t:"Volant",p:["Anne-Lise","Marie-Laure","Soline","Anna","Charlotte","Églantine","Ariana"]},
-  {j:"6/8/2026",d:"16:30",f:"18:30",n:"Dernières courses",x:"Le but : aller au Super U d'à côté et récupérer une commande / acheter les derniers trucs dont on a besoin. Puis organiser les frigos.",t:"Volant",p:["Julien","Soline","Anna"]},
+  {j:"6/8/2026",d:"16:30",f:"18:30",n:"Dernières courses",x:"Le but : aller au Super U d'à côté et récupérer une commande / acheter les derniers trucs dont on a besoin. Puis organiser les frigos.",t:"Volant",p:["Julien","Soline","Anna","Ariana"]},
   {j:"6/8/2026",d:"18:00",f:"18:45",n:"Branchements et tests son cérémonie",x:"Dès le jeudi, si on peut prendre de l'avance et si vous voulez faire de premières répétitions pour la musique.",t:"Répétition",p:["Thierry","Jerem","Julien","Samy","Joël"]},
   {j:"6/8/2026",d:"18:30",f:"19:15",n:"[Option] Répétition chansons Cérémonie",x:"Si dès le jeudi vous voulez vous entraîner, surtout pour les chansons ou même faire un filage cérémonie, c'est possible !",t:"Répétition",p:["Thierry","Joël","Anne-Lise","Charlotte","Samy","Pauline","Anna","Jerem","Marie-Laure","Corentin","Soline","Julien"]},
   {j:"6/8/2026",d:"19:30",f:"21:00",n:"🎂 Dîner partagé / Anniversaire d'Ulysse",x:"C'est le premier repas, le jeudi soir : le seul où on vous demande de ramener un plat salé et/ou du sucré. On en profitera pour fêter l'anniversaire d'Ulysse !",t:"Évènement",p:["Thomas","Pauline","Joël","Anne-Lise","Samy","Marie-Laure","Thierry","Gwel","Géraldine","Ariana","AJ","Charlotte","Simon","Carole","Jerem","Soline","Julien","Anna","Corentin","Églantine"]},
@@ -250,8 +262,8 @@ const TASKS=[
   {j:"8/8/2026",d:"16:30",f:"18:30",n:"🍹 Vin d'honneur",x:"",t:"Évènement",p:["Thomas","Pauline","Joël","Anne-Lise","Samy","Marie-Laure","Thierry","Gwel","Géraldine","Ariana","AJ","Charlotte","Simon","Hélène C.","Charles","Carole","Jerem","Soline","Julien","Anna","Corentin","Églantine"]},
   {j:"8/8/2026",d:"17:00",f:"02:00",n:"👶 Accueil des enfants par l'Odyssée des Kids",x:"Les parents peuvent aller déposer leurs enfants à partir de 17h. Référente = Pauline, la soeur de Juju mais svp, aidez-nous à orienter tout le monde.",t:"Garde",p:["Thomas","Pauline","Joël","Anne-Lise","Samy","Marie-Laure","Thierry","Gwel","Géraldine","Ariana","AJ","Charlotte","Simon","Hélène C.","Charles","Carole","Jerem","Soline","Julien","Anna","Corentin","Églantine"]},
   {j:"8/8/2026",d:"17:30",f:"18:00",n:"Accueil prestataires fouées - Moulin de Sarré",x:"Aider pour installation et faire la liaison, être le point de contact toute la journée, récupérer et ranger le pain, mettre en place le buffet.",t:"Volant",p:["Samy","Marie-Laure","Anna","Anne-Lise"]},
-  {j:"8/8/2026",d:"18:00",f:"18:15",n:"Déplacement bancs cérémonie -> chapelle pour spectacle d'impro",x:"En vue du spectacle d'impro, rapatrier tous ls bancs dans la chapelle.",t:"Manutention",p:["Simon G.","Valentin","Antoine F.","Nico","Hélène P.","Ronan","Samy"]},
-  {j:"8/8/2026",d:"18:15",f:"18:30",n:"🎭 Spectacle d'impro - Installation matos et mini échauffement",x:"",t:"Manutention",p:["Simon G.","Charles","Valentin","Antoine F.","Nico","Laure","Hélène C.","Cécile","Adeline"]},
+  {j:"8/8/2026",d:"18:00",f:"18:15",n:"Déplacement bancs cérémonie -> chapelle pour spectacle d'impro",x:"En vue du spectacle d'impro, rapatrier tous ls bancs dans la chapelle.",t:"Manutention",p:["Simon G.","Valentin","Antoine F.","Nico","Hélène P.","Ronan","Samy","Charles"]},
+  {j:"8/8/2026",d:"18:00",f:"18:30",n:"🎭 Impro — Installation & échauffement",x:"Installer le matériel scène puis mini échauffement en tenue !",t:"Manutention",p:["Simon G.","Charles","Valentin","Antoine F.","Nico","Laure","Hélène C.","Cécile","Adeline"]},
   {j:"8/8/2026",d:"18:15",f:"18:30",n:"🎭 Spectacle d'impro - Rabattage du public !",x:"Le but : clotûrer le cocktail et inciter les invités à aller assister au show.",t:"Volant",p:["Charlotte","Hélène P.","Loren","Géraldine","Samy","Ronan"]},
   {j:"8/8/2026",d:"18:30",f:"19:30",n:"🎭 Spectacle d'impro !",x:"",t:"Évènement",p:["Thomas","Pauline","Joël","Anne-Lise","Samy","Marie-Laure","Thierry","Gwel","Géraldine","Ariana","AJ","Charlotte","Simon","Hélène C.","Charles","Carole","Jerem","Soline","Julien","Anna","Corentin","Églantine","Simon G.","Cécile","Laure","Nico","Adeline","Antoine","Valentin"]},
   {j:"8/8/2026",d:"19:30",f:"19:45",n:"Déplacement tables vin d'honneur -> buffet fouées",x:"On aura besoin des mêmes tables pour le buffet des fouées. Bien organiser, changer les nappes, remettre un petit peu de déco.",t:"Manutention",p:["Simon","Thomas","Anne-Lise","Joël","Jerem","Corentin","Thierry","Anna"]},
@@ -260,6 +272,7 @@ const TASKS=[
   {j:"8/8/2026",d:"20:00",f:"22:00",n:"🥙 Repas du soir : Fouées",x:"",t:"Évènement",p:["Thomas","Pauline","Joël","Anne-Lise","Samy","Marie-Laure","Thierry","Gwel","Géraldine","Ariana","AJ","Charlotte","Simon","Hélène C.","Charles","Carole","Jerem","Soline","Julien","Anna","Corentin","Églantine"]},
   {j:"8/8/2026",d:"21:00",f:"22:00",n:"Permanence bar - 21h-22h",x:"Rondes pour récupérer les verres, lancer la plonge, nettoyer un peu les tables, gestion du bar, cocktails/alcools forts",t:"Bar",p:["Loren","Tiphaine"]},
   {j:"8/8/2026",d:"21:45",f:"22:00",n:"Enlever des tables pour le dancefloor",x:"Enlever au moins 2-4 tables pour avoir ++ de place.",t:"Manutention",p:["Thomas","Pauline","Joël","Samy","Thierry","Simon","Jerem","Anna","Corentin"]},
+  {j:"8/8/2026",d:"22:00",f:"22:15",n:"Lancement du Soul train — Ouverture du dancefloor",x:"Se coordonner avec le DJ, expliquer le principe (Jerem) et vous tenir prêts avec nous !",t:"Volant",p:["Jerem","Anna","Pauline","Samy"]},
   {j:"8/8/2026",d:"22:00",f:"23:00",n:"Permanence bar  - 22h-23h",x:"Rondes pour récupérer les verres, lancer la plonge, nettoyer un peu les tables, gestion du bar, cocktails/alcools forts",t:"Bar",p:["Adeline","Hélène P."]},
   {j:"8/8/2026",d:"22:00",f:"22:30",n:"🪩 Ouverture du dancefloor",x:"",t:"Évènement",p:["Thomas","Pauline","Joël","Anne-Lise","Samy","Marie-Laure","Thierry","Gwel","Géraldine","Ariana","AJ","Charlotte","Simon","Hélène C.","Charles","Carole","Jerem","Soline","Julien","Anna","Corentin","Églantine"]},
   {j:"8/8/2026",d:"22:45",f:"23:30",n:"🧁 Service du dessert (choux)",x:"Aller les chercher et présenter correctement, les gens se servent.",t:"Cuisine",p:["Julien","Soline","Samy","Pauline","Anna","Jerem"]},
@@ -375,7 +388,172 @@ function showView(id,btn){
   btn.classList.add('active');
 }
 
-// ── Individual plannings ──────────────────────────────────────────────────────
+// ── Shared: build a macro table for one day, optionally highlighting one person ──
+function buildMacroTable(jour, dayTasksRaw, highlightPerson){
+  const SLOT=15;
+  const dayTasks=dayTasksRaw.map(t=>Object.assign({},t));
+
+  const COL_DEFS={
+    '6/8/2026':[
+      {label:'Orga & Répét.',types:['Volant','Répétition','Manutention','Garde','Déco','Bar','Cuisine']},
+    ],
+    '7/8/2026':[
+      {label:'Cuisine',       types:['Cuisine']},
+      {label:'Manut. & Orga', types:['Manutention','Volant','Répétition']},
+      {label:'Déco & Enfants',types:['Déco','Garde']},
+    ],
+    '8/8/2026':[
+      {label:'Cuisine & Manut.',types:['Cuisine','Manutention']},
+      {label:'Orga & Bar',     types:['Volant','Répétition','Bar']},
+      {label:'Enfants',        types:['Garde']},
+    ],
+    '9/8/2026':[
+      {label:'Cuisine & Manut.',types:['Cuisine','Manutention','Volant']},
+    ],
+    '10/8/2026':[
+      {label:'Orga & Manut.',types:['Volant','Manutention','Cuisine','Garde']},
+    ],
+  };
+  const colDefs=COL_DEFS[jour]||[{label:'Logistique',types:['Cuisine','Manutention','Volant','Répétition','Déco','Bar','Garde']}];
+  const nLog=colDefs.length;
+
+  dayTasks.forEach(t=>{ t._ev=t.t==='Évènement'; t._log=!t._ev; });
+  dayTasks.filter(t=>t._log).forEach(t=>{
+    let col=nLog-1;
+    for(let c=0;c<colDefs.length;c++){ if(colDefs[c].types.includes(t.t)){ col=c; break; } }
+    t._col=col;
+  });
+  const logCols=colDefs.map(()=>[]);
+  dayTasks.filter(t=>t._log).forEach(t=>logCols[t._col].push(t));
+
+  const starts=dayTasks.map(t=>toMin(t.d));
+  const ends=dayTasks.map(t=>toMin(t.f));
+  const minT=Math.floor(Math.min(...starts)/SLOT)*SLOT;
+  const maxT=Math.ceil(Math.max(...ends)/SLOT)*SLOT;
+  const numSlots=(maxT-minT)/SLOT;
+  const totalCols=1+nLog+1;
+
+  const outer=document.createElement('div'); outer.className='mac-outer';
+  const table=document.createElement('table');
+  table.style.cssText='width:100%;border-collapse:collapse;min-width:600px;table-layout:fixed';
+
+  const thead=document.createElement('thead');
+  const hrow=document.createElement('tr');
+  const th0=document.createElement('th');
+  th0.style.cssText='background:var(--green);color:#fff;padding:10px;font-size:13px;width:42px;border-right:1px solid #2E5439';
+  hrow.appendChild(th0);
+  for(let c=0;c<nLog;c++){
+    const th=document.createElement('th');
+    th.style.cssText='background:var(--green);color:#fff;padding:10px;font-size:13px;font-weight:600;text-align:center;border-right:1px solid #2E5439;letter-spacing:.3px';
+    th.textContent=colDefs[c].label; hrow.appendChild(th);
+  }
+  const thEv=document.createElement('th');
+  thEv.style.cssText='background:var(--green);color:#fff;padding:10px;font-size:13px;font-weight:600;text-align:center;letter-spacing:.3px';
+  thEv.textContent='Moments ensemble'; hrow.appendChild(thEv);
+  thead.appendChild(hrow); table.appendChild(thead);
+
+  const tbody=document.createElement('tbody');
+  const occupied=new Array(totalCols).fill(0);
+
+  function mkCard(tt, isEv){
+    const isMine=!highlightPerson||tt.p.includes(highlightPerson);
+    const card=document.createElement('div');
+    card.className='mc '+(isEv?'mc-Évènement':(MC[tt.t]||'mc-Volant'))+(isChecked(tt._id)?' task-done':'')+(isMine?'':' dim');
+    card.dataset.tid=tt._id;
+    card.dataset.cat=tt.t;
+    let inner='<div class="mc-time">'+tt.d+'–'+tt.f+'</div>'+'<div class="mc-name">'+sn(tt.n)+'</div>';
+    if(highlightPerson){
+      inner+='<div class="mc-who">'+(isMine?'<b>'+avec(tt.p,highlightPerson)+'</b>':who(tt.p))+'</div>';
+    } else {
+      inner+='<div class="mc-who">'+who(tt.p)+'</div>';
+    }
+    card.innerHTML=inner;
+    if(!highlightPerson){
+      const btn=document.createElement('button');
+      btn.className='check-btn'+(isChecked(tt._id)?' checked':'');
+      btn.title='Marquer comme fait'; btn.textContent='✓';
+      btn.onclick=function(e){e.stopPropagation();toggleCheck(tt._id);this.classList.toggle('checked',checkedIds.has(tt._id));};
+      card.appendChild(btn);
+    }
+    return card;
+  }
+
+  for(let s=0;s<numSlots;s++){
+    const slotStart=minT+s*SLOT, slotEnd=slotStart+SLOT;
+    const h=Math.floor(slotStart/60); const displayH=h>=24?h-24:h; const m=slotStart%60;
+    const tr=document.createElement('tr');
+    const tdTime=document.createElement('td');
+    tdTime.className='mac-time-cell'; tdTime.style.height='18px';
+    if(m===0) tdTime.textContent=String(displayH).padStart(2,'0')+'h';
+    else if(m===30){ tdTime.textContent=':30'; tdTime.style.opacity='.45'; }
+    tr.appendChild(tdTime);
+
+    for(let c=0;c<nLog;c++){
+      const colIdx=1+c;
+      if(occupied[colIdx]>0){occupied[colIdx]--;continue;}
+      // All tasks in this column active during this slot (started now or earlier-but-unrendered)
+      const active=logCols[c]?logCols[c].filter(t=>toMin(t.d)>=slotStart&&toMin(t.d)<slotEnd):[];
+      if(active.length>0){
+        active.sort((a,b)=>toMin(a.d)-toMin(b.d));
+        // Cluster: extend to cover all overlapping tasks starting within the span
+        let clusterEnd=Math.max(...active.map(t=>toMin(t.f)));
+        let cluster=active.slice(), changed=true;
+        while(changed){
+          changed=false;
+          logCols[c].forEach(t=>{
+            if(cluster.includes(t))return;
+            if(toMin(t.d)>=slotStart && toMin(t.d)<clusterEnd && toMin(t.f)>slotStart){
+              cluster.push(t); clusterEnd=Math.max(clusterEnd,toMin(t.f)); changed=true;
+            }
+          });
+        }
+        cluster.sort((a,b)=>toMin(a.d)-toMin(b.d));
+        const rowspan=Math.max(1,Math.ceil((clusterEnd-slotStart)/SLOT));
+        occupied[colIdx]=rowspan-1;
+        const td=document.createElement('td');
+        td.className='mac-log-cell'; td.rowSpan=rowspan; td.style.verticalAlign='top';
+        cluster.forEach(tt=>td.appendChild(mkCard(tt,false)));
+        tr.appendChild(td);
+      } else {
+        const td=document.createElement('td'); td.className='mac-log-cell'; td.style.height='18px'; tr.appendChild(td);
+      }
+    }
+
+    const evColIdx=1+nLog;
+    if(occupied[evColIdx]>0){occupied[evColIdx]--;}
+    else{
+      const active=dayTasks.filter(t=>t._ev&&toMin(t.d)>=slotStart&&toMin(t.d)<slotEnd);
+      if(active.length>0){
+        active.sort((a,b)=>toMin(a.d)-toMin(b.d));
+        let clusterEnd=Math.max(...active.map(t=>toMin(t.f)));
+        let cluster=active.slice(), changed=true;
+        while(changed){
+          changed=false;
+          dayTasks.filter(t=>t._ev).forEach(t=>{
+            if(cluster.includes(t))return;
+            if(toMin(t.d)>=slotStart && toMin(t.d)<clusterEnd && toMin(t.f)>slotStart){
+              cluster.push(t); clusterEnd=Math.max(clusterEnd,toMin(t.f)); changed=true;
+            }
+          });
+        }
+        cluster.sort((a,b)=>toMin(a.d)-toMin(b.d));
+        const rowspan=Math.max(1,Math.ceil((clusterEnd-slotStart)/SLOT));
+        occupied[evColIdx]=rowspan-1;
+        const td=document.createElement('td'); td.className='mac-ev-cell'; td.rowSpan=rowspan; td.style.verticalAlign='top';
+        cluster.forEach(tt=>td.appendChild(mkCard(tt,true)));
+        tr.appendChild(td);
+      } else {
+        const td=document.createElement('td'); td.className='mac-ev-cell'; td.style.height='18px'; tr.appendChild(td);
+      }
+    }
+    tbody.appendChild(tr);
+  }
+  table.appendChild(tbody);
+  outer.appendChild(table);
+  return outer;
+}
+
+
 function buildIndiv(){
   const tabsEl=document.getElementById('person-tabs');
   const panelsEl=document.getElementById('person-panels');
@@ -416,6 +594,17 @@ function buildIndiv(){
       const dpid='dp_'+pid+'_'+jour.replace(/\//g,'');
       const dp=document.createElement('div');
       dp.className='dpanel'+(ji===0?' active':''); dp.id=dpid;
+
+      // Toggle Liste / Macro
+      const toggle=document.createElement('div');
+      toggle.className='view-toggle';
+      const vbList=document.createElement('button'); vbList.className='vtbtn vt-list active'; vbList.textContent='Liste';
+      const vbMac=document.createElement('button');  vbMac.className='vtbtn vt-macro';        vbMac.textContent='Planning général';
+      toggle.appendChild(vbList); toggle.appendChild(vbMac);
+      dp.appendChild(toggle);
+
+      // List view
+      const listView=document.createElement('div'); listView.className='day-list';
       const byTime={};
       byDay[jour].forEach(t=>{(byTime[t.d]||(byTime[t.d]=[])).push(t);});
       Object.keys(byTime).sort((a,b)=>sk(a)-sk(b)).forEach(time=>{
@@ -438,8 +627,29 @@ function buildIndiv(){
             '<div class="tc-badge"><span class="badge '+(BC[t.t]||'b-Volant')+'">'+(BL[t.t]||t.t)+'</span></div>';
           wrap.appendChild(card);
         });
-        dp.appendChild(wrap);
+        listView.appendChild(wrap);
       });
+      dp.appendChild(listView);
+
+      // Macro view (lazy — built on first click)
+      const macroView=document.createElement('div'); macroView.className='day-macro';
+      let macroBuilt=false;
+      dp.appendChild(macroView);
+
+      vbList.onclick=function(){
+        vbList.classList.add('active'); vbMac.classList.remove('active');
+        listView.classList.remove('hidden'); macroView.classList.remove('visible');
+      };
+      vbMac.onclick=function(){
+        vbMac.classList.add('active'); vbList.classList.remove('active');
+        macroView.classList.add('visible'); listView.classList.add('hidden');
+        if(!macroBuilt){
+          const allDay=sorted(TASKS.filter(t=>t.j===jour));
+          macroView.appendChild(buildMacroTable(jour,allDay,person));
+          macroBuilt=true;
+        }
+      };
+
       pl.appendChild(dp);
     });
     panelsEl.appendChild(pl);
@@ -460,19 +670,15 @@ function selectDay(personPlan,clickedBtn){
   if(target) target.classList.add('active');
 }
 
-// ── Macro planning — grid layout ──────────────────────────────────────────────
-// Strategy: build an HTML table where each row = one 30-min slot
-// Cells in each row: time | logistics cols (merged vertically by rowspan) | events col
+// ── Macro planning ────────────────────────────────────────────────────────────
 function buildMacro(){
   const tabsEl=document.getElementById('macro-tabs');
   const panelsEl=document.getElementById('macro-panels');
-  const SLOT=30; // minutes per row
 
   JOURS.forEach((jour,ji)=>{
     const dayTasks=sorted(TASKS.filter(t=>t.j===jour));
     if(!dayTasks.length)return;
 
-    // Tab button
     const btn=document.createElement('button');
     btn.className='tbtn'+(ji===0?' active':'');
     btn.textContent=JS[jour];
@@ -483,207 +689,40 @@ function buildMacro(){
       const el=document.getElementById(pid);
       if(el)el.classList.add('active');
       b.classList.add('active');
+      applyCatFilter();
     };})(mpid,btn);
     tabsEl.appendChild(btn);
 
-    // Time range
-    const starts=dayTasks.map(t=>toMin(t.d));
-    const ends=dayTasks.map(t=>toMin(t.f));
-    const minT=Math.floor(Math.min(...starts)/SLOT)*SLOT;
-    const maxT=Math.ceil(Math.max(...ends)/SLOT)*SLOT;
-    const numSlots=(maxT-minT)/SLOT;
-
-    // Classify tasks
-    dayTasks.forEach(t=>{ t._ev=t.t==='Évènement'; t._log=!t._ev; });
-
-    // Category-based column definitions per day
-    // Each column = array of type strings assigned to it
-    const COL_DEFS={
-      '6/8/2026':[
-        {label:'Orga & Répét.',types:['Volant','Répétition','Manutention','Garde','Déco','Bar','Cuisine']},
-      ],
-      '7/8/2026':[
-        {label:'Cuisine',       types:['Cuisine']},
-        {label:'Manut. & Orga', types:['Manutention','Volant','Répétition']},
-        {label:'Déco & Enfants',types:['Déco','Garde']},
-      ],
-      '8/8/2026':[
-        {label:'Cuisine & Manut.',types:['Cuisine','Manutention']},
-        {label:'Orga & Bar',     types:['Volant','Répétition','Bar']},
-        {label:'Enfants',        types:['Garde']},
-      ],
-      '9/8/2026':[
-        {label:'Cuisine & Manut.',types:['Cuisine','Manutention','Volant']},
-      ],
-      '10/8/2026':[
-        {label:'Orga & Manut.',types:['Volant','Manutention','Cuisine','Garde']},
-      ],
-    };
-
-    const colDefs=COL_DEFS[jour]||[{label:'Logistique',types:['Cuisine','Manutention','Volant','Répétition','Déco','Bar','Garde']}];
-    const nLog=colDefs.length;
-
-    // Assign each logistics task to a column based on its type
-    // If a task's type isn't in any defined column, put it in the last column
-    dayTasks.filter(t=>t._log).forEach(t=>{
-      let col=nLog-1; // default: last column
-      for(let c=0;c<colDefs.length;c++){
-        if(colDefs[c].types.includes(t.t)){ col=c; break; }
-      }
-      t._col=col;
-    });
-
-    // Build per-column task lists
-    const logCols=colDefs.map(()=>[] );
-    dayTasks.filter(t=>t._log).forEach(t=>logCols[t._col].push(t));
-
-    // Build grid: use CSS grid with explicit rows
-    // Total cols: 1 (time) + nLog (logistics) + 1 (events)
-    const totalCols=1+nLog+1;
     const panel=document.createElement('div');
     panel.className='dpanel'+(ji===0?' active':''); panel.id=mpid;
-    const outer=document.createElement('div'); outer.className='mac-outer';
-
-    // Use an HTML TABLE for perfect rowspan support
-    const table=document.createElement('table');
-    table.style.cssText='width:100%;border-collapse:collapse;min-width:600px;table-layout:fixed';
-
-    // Header row
-    const thead=document.createElement('thead');
-    const hrow=document.createElement('tr');
-    const th0=document.createElement('th');
-    th0.style.cssText='background:var(--green);color:#fff;padding:10px;font-size:13px;width:42px;border-right:1px solid #2E5439';
-    th0.textContent='';
-    hrow.appendChild(th0);
-    for(let c=0;c<nLog;c++){
-      const th=document.createElement('th');
-      th.style.cssText='background:var(--green);color:#fff;padding:10px;font-size:13px;font-weight:600;text-align:center;border-right:1px solid #2E5439;letter-spacing:.3px';
-      th.textContent=colDefs[c].label;
-      hrow.appendChild(th);
-    }
-    const thEv=document.createElement('th');
-    thEv.style.cssText='background:var(--green);color:#fff;padding:10px;font-size:13px;font-weight:600;text-align:center;letter-spacing:.3px';
-    thEv.textContent='Moments ensemble';
-    hrow.appendChild(thEv);
-    thead.appendChild(hrow);
-    table.appendChild(thead);
-
-    // Build slot rows
-    const tbody=document.createElement('tbody');
-
-    // Track which cells are already "occupied" by a rowspan from a previous row
-    // occupied[col] = number of remaining rows that col is already covered
-    const occupied=new Array(totalCols).fill(0);
-
-    // For each slot, find tasks starting in it
-    for(let s=0;s<numSlots;s++){
-      const slotStart=minT+s*SLOT;
-      const slotEnd=slotStart+SLOT;
-      const h=Math.floor(slotStart/60); const displayH=h>=24?h-24:h;
-      const m=slotStart%60;
-      const showHour=m===0;
-
-      const tr=document.createElement('tr');
-
-      // Time cell
-      const tdTime=document.createElement('td');
-      tdTime.className='mac-time-cell';
-      tdTime.style.height='28px';
-      if(showHour) tdTime.textContent=String(displayH).padStart(2,'0')+'h';
-      tr.appendChild(tdTime);
-
-      // Logistics columns
-      for(let c=0;c<nLog;c++){
-        const colIdx=1+c;
-        if(occupied[colIdx]>0){occupied[colIdx]--;continue;}
-
-        // Find tasks in this col that start in this slot
-        const startingHere=logCols[c]?logCols[c].filter(t=>{
-          const ts=toMin(t.d);
-          return ts>=slotStart&&ts<slotEnd;
-        }):[];
-
-        if(startingHere.length>0){
-          startingHere.sort((a,b)=>toMin(a.d)-toMin(b.d));
-          // rowspan = duration of the shortest task starting here
-          // (so the cell doesn't block a later task in the same col)
-          const minTe=Math.min(...startingHere.map(tt=>toMin(tt.f)));
-          const rowspan=Math.max(1,Math.ceil((minTe-slotStart)/SLOT));
-          occupied[colIdx]=rowspan-1;
-
-          const td=document.createElement('td');
-          td.className='mac-log-cell';
-          td.rowSpan=rowspan;
-          td.style.verticalAlign='top';
-
-          startingHere.forEach(tt=>{
-            const card=document.createElement('div');
-            card.className='mc '+(MC[tt.t]||'mc-Volant')+(isChecked(tt._id)?' task-done':'');
-            card.dataset.tid=tt._id;
-            const btn=document.createElement('button');
-            btn.className='check-btn'+(isChecked(tt._id)?' checked':'');
-            btn.title='Marquer comme fait';
-            btn.textContent='✓';
-            btn.onclick=function(e){e.stopPropagation();toggleCheck(tt._id);this.classList.toggle('checked',checkedIds.has(tt._id));};
-            card.innerHTML='<div class="mc-time">'+tt.d+'–'+tt.f+'</div>'
-              +'<div class="mc-name">'+sn(tt.n)+'</div>'
-              +'<div class="mc-who">'+who(tt.p)+'</div>';
-            card.appendChild(btn);
-            td.appendChild(card);
-          });
-          tr.appendChild(td);
-        } else {
-          // Empty cell for this slot
-          const td=document.createElement('td');
-          td.className='mac-log-cell';
-          td.style.height='32px';
-          tr.appendChild(td);
-        }
-      }
-
-      // Events column
-      const evColIdx=1+nLog;
-      if(occupied[evColIdx]>0){occupied[evColIdx]--;}
-      else{
-        const startingEv=dayTasks.filter(t=>t._ev&&toMin(t.d)>=slotStart&&toMin(t.d)<slotEnd);
-        if(startingEv.length>0){
-          const minTe=Math.min(...startingEv.map(tt=>toMin(tt.f)));
-          const rowspan=Math.max(1,Math.ceil((minTe-slotStart)/SLOT));
-          occupied[evColIdx]=rowspan-1;
-          const td=document.createElement('td');
-          td.className='mac-ev-cell';
-          td.rowSpan=rowspan;
-          td.style.verticalAlign='top';
-          // If multiple events start here, stack them
-          startingEv.forEach(tt=>{
-            const card=document.createElement('div');
-            card.className='mc mc-Évènement'+(isChecked(tt._id)?' task-done':'');
-            card.dataset.tid=tt._id;
-            const btn=document.createElement('button');
-            btn.className='check-btn'+(isChecked(tt._id)?' checked':'');
-            btn.title='Marquer comme fait';
-            btn.textContent='✓';
-            btn.onclick=function(e){e.stopPropagation();toggleCheck(tt._id);this.classList.toggle('checked',checkedIds.has(tt._id));};
-            card.innerHTML='<div class="mc-time">'+tt.d+'–'+tt.f+'</div>'
-              +'<div class="mc-name">'+sn(tt.n)+'</div>'
-              +'<div class="mc-who">'+who(tt.p)+'</div>';
-            card.appendChild(btn);
-            td.appendChild(card);
-          });
-          tr.appendChild(td);
-        } else {
-          const td=document.createElement('td');
-          td.className='mac-ev-cell'; td.style.height='32px';
-          tr.appendChild(td);
-        }
-      }
-
-      tbody.appendChild(tr);
-    }
-    table.appendChild(tbody);
-    outer.appendChild(table);
-    panel.appendChild(outer);
+    // null = no highlight person → show check buttons
+    panel.appendChild(buildMacroTable(jour, dayTasks, null));
     panelsEl.appendChild(panel);
+  });
+}
+
+// ── Category filter on macro ──────────────────────────────────────────────────
+let activeCats=new Set();
+function setupCatFilter(){
+  const filterEl=document.getElementById('cat-filter');
+  if(!filterEl)return;
+  filterEl.querySelectorAll('.catchip').forEach(chip=>{
+    chip.onclick=function(){
+      const cat=this.dataset.cat;
+      if(activeCats.has(cat)){activeCats.delete(cat);this.classList.remove('on');}
+      else{activeCats.add(cat);this.classList.add('on');}
+      applyCatFilter();
+    };
+  });
+}
+function applyCatFilter(){
+  const panels=document.getElementById('macro-panels');
+  panels.querySelectorAll('.mc[data-cat]').forEach(card=>{
+    if(activeCats.size===0){
+      card.classList.remove('catdim');
+    } else {
+      card.classList.toggle('catdim', !activeCats.has(card.dataset.cat));
+    }
   });
 }
 
@@ -765,8 +804,7 @@ function buildGuest(){
 if(!buildGuest()){
   buildIndiv();
   buildMacro();
-  buildTable('Cuisine','tb-cuisine');
-  buildTable('Manutention','tb-manut');
+  setupCatFilter();
   buildBar();
 }
 </script>
